@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 8fbdeecc519448945a75503828834805
+=======
+guid: 77361112363c7b54cb18c505aec57c3b
+>>>>>>> 6e17a40 (Movement.cs is making. It's currently has very basic features.)
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
