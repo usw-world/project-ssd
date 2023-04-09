@@ -8,117 +8,184 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(TPlayerInput))]
 [RequireComponent(typeof(StateMachine))]
+[RequireComponent(typeof(Movement))]
 public class TPlayer : MonoBehaviour
 {
     [Header("Player Status")]        
-    private float moveSpeed = 3f;       // Ä³¸¯ÅÍ ÀÌµ¿¼Óµµ
-    private float rotSpeed = 30f;       // Ä³¸¯ÅÍ È¸Àü¼Óµµ
-    private float idleTime = 0;         // idle À¯Áö ½Ã°£
-    private float idleActionTime = 10;  // idle ¾×¼Ç ³ª¿À´Â ½Ã°£
-    private bool isSuperArmour = false; // ½´ÆÛ ¾Æ¸Ó
-    private bool isSword = false;       // ¹«±â¸¦ µé°í ÀÖ´Â°¡
-    private bool isNotDamage = false;   // ¹«ÀûÀÎ°¡
-    private bool isAttack = false;      // °ø°İÁßÀÎ°¡
-    private int hitCount = 0;           // ¿¬¼ÓÀ¸·Î hit È¹¼ö
-
+    private float moveSpeed = 3f;       // ì´ë™ì†ë„
+    private float rotSpeed = 30f;       // íšŒì „ì†ë„
+    private float idleTime = 0;         // idle ì‹œê°„
+    private float idleActionTime = 10;  // idle ì•¡ì…˜ ì‹œê°„
+    [SerializeField]private bool isSuperArmour = false; // ìŠˆí¼ì•„ë¨¸?
+    [SerializeField]private bool isNotDamage = false;   // ë¬´ì ?
+    private bool isCanAttack = true;    // ê³µê²© ê°€ëŠ¥?
+    [SerializeField]private int hitCount = 0;           // ì—°ì† í”¼ê²© íšŸìˆ˜
+    private int attackCount = 0;        // ì—°ì† ê³µê²© íšŸìˆ˜
+    private int idleActionIdx = 0;      // ì•„ì´ë“¤ í–‰ë™ ì¸ë±ìŠ¤
+    string nowAnimationTrigger = "";                    // í˜„ì¬ ì• ë‹ˆë©”ì´ì…˜ íŠ¸ë¦¬ê±°
     private Vector3 lookVecter;
 
-    [SerializeField] private Transform sword;
-    [SerializeField] private Transform swordUnUse;
-    [SerializeField] private Transform swordUse;
+    [SerializeField] private Transform sword;       // ë¬´ê¸°
+    [SerializeField] private Transform swordUnUse;  // ë¬´ê¸° ì‚¬ìš© ì•ˆí• ë•Œ ìœ„ì¹˜
+    [SerializeField] private Transform swordUse;    // ë¬´ê¸° ì‚¬ìš© ìœ„ì¹˜
 
+    private Movement movement;
     private Animator ani;
     private Rigidbody rigi;
 
     private StateMachine playerStateMachine;
 
-    private State idleState     = new State("Idle");
+    private State idleState_1   = new State("Idle_1");
+    private State idleState_2   = new State("Idle_2");
+    private State idleState_3   = new State("Idle_3");
     private State moveState     = new State("Move");
-    private State damageState   = new State("Damage");
-    private State downState     = new State("Down");
+    private State attackState_1 = new State("Attack_1");
+    private State attackState_2 = new State("Attack_2");
+    private State attackState_3 = new State("Attack_3");
+    private State attackState_4 = new State("Attack_4");
+    private State attackState_S = new State("Attack_S");
     private State slideState    = new State("Slide");
-    private State attackState   = new State("Attack");
-    private void Start()
+    private State downState     = new State("Down");
+    private State damageState   = new State("Damage");
+    private State refleshState  = new State("Reflesh");
+
+    private List<State> attackStateGroup = new List<State>();
+    private List<State> idleStateGroup = new List<State>();
+    private void Awake()
     {
-        Cursor.lockState = CursorLockMode.Locked;
         ani = GetComponent<Animator>();
         rigi = GetComponent<Rigidbody>();
+        movement = GetComponent<Movement>();
         playerStateMachine = GetComponent<StateMachine>();
-        playerStateMachine.SetIntialState(idleState);
-        InitializeState();
+        Cursor.lockState = CursorLockMode.Locked;
     }
-    private void InitializeState()
+    private void Start()
     {
-        idleState.onActive      = (State prev) => idleTime = 0;
-        idleState.onStay        =           () => IdleTimeUpdate();
-
-        moveState.onStay        =           () => Move();
-
-        damageState.onActive    = (State prev) => hitCount = 1;
-        damageState.onStay      =           () => HitCountUpdate();
-
-        downState.onActive = (State prev) => 
-        {
-            isSuperArmour = true;
-            ani.SetTrigger("Down");
-        };
-        downState.onInactive = (State next) =>
-        {
-            isSuperArmour = false;
-        };
-
-        slideState.onActive     = (State prev) => isNotDamage = true;
-        slideState.onStay       =           () => Sliding();
-        slideState.onInactive   = (State next) => isNotDamage = false;
-
-        attackState.onActive    = (State prev) => ani.SetTrigger("Attack");
-        attackState.onInactive  = (State next) => ani.ResetTrigger("Attack");
+        InitializeStateOnActive();
+        InitializeStateOnStay();
+        InitializeStateOnInactive();
+        playerStateMachine.SetIntialState(idleState_1);
+        attackStateGroup.Add(attackState_1);
+        attackStateGroup.Add(attackState_2);
+        attackStateGroup.Add(attackState_3);
+        attackStateGroup.Add(attackState_4);
+        idleStateGroup.Add(idleState_1);
+        idleStateGroup.Add(idleState_2);
+        idleStateGroup.Add(idleState_3);
     }
+    private void InitializeStateOnActive()
+    {
+        idleState_1.onActive    = (State prev) => { ChangeAnimation("Idle1"); idleTime = 0; };
+        idleState_2.onActive    = (State prev) => { ChangeAnimation("Idle2"); };
+        idleState_3.onActive    = (State prev) => { ChangeAnimation("Idle3"); };
+        moveState.onActive      = (State prev) => { ChangeAnimation("Move"); SwordUnUse(); };
+        attackState_1.onActive  = (State prev) => { ChangeAnimation("Attack1"); SwordUse(); };
+        attackState_2.onActive  = (State prev) => { ChangeAnimation("Attack2"); };
+        attackState_3.onActive  = (State prev) => { ChangeAnimation("Attack3"); };
+        attackState_4.onActive  = (State prev) => { ChangeAnimation("Attack4"); };
+        attackState_S.onActive  = (State prev) => { ChangeAnimation("SAttack"); };
+        slideState.onActive     = (State prev) => { ChangeAnimation("Slide"); isNotDamage = true; };
+        downState.onActive      = (State prev) => { ChangeAnimation("Down"); isSuperArmour = true; };
+        damageState.onActive    = (State prev) => { ChangeAnimation("Damage"); hitCount = 0; };
+        refleshState.onActive   = (State prev) => { ChangeAnimation("Reflesh"); };
+    }
+    private void InitializeStateOnStay()
+    {
+        idleState_1.onStay   = () => { IdleTimeUpdate(); };
+        idleState_2.onStay   = () => {  };
+        idleState_3.onStay   = () => {  };
+        moveState.onStay     = () => { Move(); };
+        attackState_1.onStay = () => {  };
+        attackState_2.onStay = () => {  };
+        attackState_3.onStay = () => {  };
+        attackState_4.onStay = () => {  };
+        attackState_S.onStay = () => {  };
+        slideState.onStay    = () => { movement.MoveToward(Vector3.forward * moveSpeed * 2f * Time.deltaTime); };
+        downState.onStay     = () => {  };
+        damageState.onStay   = () => { HitCountUpdate(); };
+        refleshState.onStay  = () => {  };
+    }
+    private void InitializeStateOnInactive()
+    {
+        idleState_1.onInactive  = (State next) => {  };
+        idleState_2.onInactive = (State next) => {  };
+        idleState_3.onInactive = (State next) => {  };
+        moveState.onInactive = (State next) => {  };
+        attackState_1.onInactive = (State next) => {  };
+        attackState_2.onInactive = (State next) => {  };
+        attackState_3.onInactive = (State next) => {  };
+        attackState_4.onInactive = (State next) => {  };
+        attackState_S.onInactive = (State next) => {  };
+        slideState.onInactive = (State next) => { isNotDamage = false; };
+        downState.onInactive = (State next) => { isSuperArmour = false; };
+        damageState.onInactive = (State next) => {  };
+        refleshState.onInactive = (State next) => {  };
+    }
+    
     public void InputMove(Vector3 moveVecterInput)
     {
         lookVecter = moveVecterInput;
 
-        ani.SetBool("Move", (lookVecter == Vector3.zero) ? false : true);
-
-        if (playerStateMachine.currentState == damageState ||
+        if (playerStateMachine.currentState == attackState_1 ||
+            playerStateMachine.currentState == attackState_2 ||
+            playerStateMachine.currentState == attackState_3 ||
+            playerStateMachine.currentState == attackState_4 ||
+            playerStateMachine.currentState == attackState_S ||
             playerStateMachine.currentState == slideState ||
-            playerStateMachine.currentState == attackState ||
-            playerStateMachine.currentState == downState) return;
-
-        if (playerStateMachine.currentState == idleState ||
-            playerStateMachine.currentState == moveState)
+            playerStateMachine.currentState == downState ||
+            playerStateMachine.currentState == damageState ||
+            playerStateMachine.currentState == refleshState)
         {
-            playerStateMachine.ChangeState((lookVecter == Vector3.zero) ? idleState : moveState, false);
+            return;
         }
+        if (playerStateMachine.currentState == idleState_2 || 
+            playerStateMachine.currentState == idleState_3 )
+        {
+            if (lookVecter == Vector3.zero)
+            {
+                playerStateMachine.ChangeState(idleStateGroup[idleActionIdx], false);
+            }
+            else
+            {
+                ResetState();
+            }
+        }
+        else
+        {
+            ResetState();
+        }
+    }
+    public void ResetState()
+    {
+        isCanAttack = true;
+        attackCount = 0;
+        if (lookVecter == Vector3.zero)
+            playerStateMachine.ChangeState(idleState_1, false);
+        else
+            playerStateMachine.ChangeState(moveState, false);
     }
     public void OnDamage()
     {
-        if (isNotDamage) return;
+        if (isNotDamage) return;    // ë¬´ì ì´ë©´ ì‹¤í–‰ ì•Ší•¨
 
-        // hp -= damage
+        // hp -= damage         // hp ê°ì†Œ
 
         if (playerStateMachine.currentState == downState) return;
-
         if (isSuperArmour) return;
 
-        ani.SetTrigger("Damage");
-
         if (playerStateMachine.currentState == damageState)
+        {
             hitCount++;
+            ani.SetTrigger("Damage");
+        }
         else
+        {
             playerStateMachine.ChangeState(damageState, false);
+        }
     }
     public void OnDown()
     {
         playerStateMachine.ChangeState(downState, false); 
-    }
-    public void OnSwap()
-    {
-        if (playerStateMachine.currentState == damageState ||
-            playerStateMachine.currentState == attackState ||
-            playerStateMachine.currentState == downState ) return;
-
-        ani.SetTrigger( isSword ? "SwapToUnUse" : "SwapToUse");
     }
     public void OnSlide()
     {
@@ -126,40 +193,35 @@ public class TPlayer : MonoBehaviour
             playerStateMachine.currentState == slideState ||
             playerStateMachine.currentState == downState) return;
 
-        ani.SetTrigger("Slide");
         playerStateMachine.ChangeState(slideState, false);
     }
-    public void OnAttack(bool attack)
+    public void OnAttack()
     {
-        isAttack = attack;
-        if (!isAttack) return;
-        if (!isSword) return;
         if (playerStateMachine.currentState == damageState ||
-            playerStateMachine.currentState == slideState  ||
-            playerStateMachine.currentState == downState    ) return;
+            playerStateMachine.currentState == slideState ||
+            playerStateMachine.currentState == attackState_S ||
+            playerStateMachine.currentState == downState ||
+            isCanAttack == false) return;
 
-        playerStateMachine.ChangeState(attackState, false);
-    }
-    public void WeaponSwitch()
-    {
-        isSword = isSword ? false : true;
+        isCanAttack = false;
 
-        sword.parent = isSword ? swordUse : swordUnUse;
-        sword.localPosition = Vector3.zero;
-        sword.localEulerAngles = Vector3.zero;
-        ani.SetFloat("isSword", isSword ? 1 : -1);
+        Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
+        Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.LookRotation(look);
+        transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
+
+        playerStateMachine.ChangeState(attackStateGroup[attackCount], false);
+        attackCount++;
+        attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
     }
-    public void ResetState()
+    public void OnSAttack()
     {
-        playerStateMachine.ChangeState((lookVecter == Vector3.zero) ? idleState : moveState, false);
+        isCanAttack = false;
+        playerStateMachine.ChangeState(attackState_S, false);
     }
-    public void ChackNextAttack()
+    public void BeCanNextAttack()
     {
-        if (isAttack)
-            playerStateMachine.ChangeState(attackState);
-        
-        else
-            ResetState();
+        isCanAttack = true;
     }
     void Move()
     {
@@ -168,11 +230,7 @@ public class TPlayer : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(look);
         transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 
-        transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime);
-    }
-    void Sliding()
-    {
-        transform.Translate(Vector3.forward * moveSpeed * 2f * Time.deltaTime);
+        movement.MoveToward(Vector3.forward * moveSpeed * Time.deltaTime);
     }
     void IdleTimeUpdate()
     {
@@ -180,7 +238,8 @@ public class TPlayer : MonoBehaviour
         if (idleTime >= idleActionTime)
         {
             idleTime = 0;
-            ani.SetTrigger("Idle " + Random.Range(1, 3));
+            idleActionIdx = Random.Range(1, idleStateGroup.Count);
+            playerStateMachine.ChangeState(idleStateGroup[idleActionIdx], false);
         }
     }
     void HitCountUpdate()
@@ -189,5 +248,25 @@ public class TPlayer : MonoBehaviour
         {
             OnDown();
         }
+    }
+    void ChangeAnimation(string trigger)
+    {
+        ani.ResetTrigger(nowAnimationTrigger);
+        nowAnimationTrigger = trigger;
+        ani.SetTrigger(nowAnimationTrigger);
+    }
+    void SwordUse()
+    {
+        sword.parent = swordUse;
+        sword.localPosition = Vector3.zero;
+        sword.localEulerAngles = Vector3.zero;
+        sword.localScale = Vector3.one;
+    }
+    void SwordUnUse()
+    {
+        sword.parent = swordUnUse;
+        sword.localPosition = Vector3.zero;
+        sword.localEulerAngles = Vector3.zero;
+        sword.localScale = Vector3.one;
     }
 }
