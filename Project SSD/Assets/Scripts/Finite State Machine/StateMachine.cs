@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour {
     public State currentState { get; private set; }
+    State nextState;
 
     private void Start() {
         if(currentState == null) {
@@ -24,8 +25,13 @@ public class StateMachine : MonoBehaviour {
         } else {
             currentState?.onInactive?.Invoke(nextState);
             nextState?.onActive?.Invoke(currentState);
+            this.nextState = nextState;
             currentState = nextState;
         }
+    }
+    private void LateUpdate()
+    {
+        //currentState = nextState;
     }
     public bool Compare(State target) {
         return currentState == target;

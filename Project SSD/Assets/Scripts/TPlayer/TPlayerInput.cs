@@ -23,6 +23,7 @@ public class TPlayerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha2))   player.OnDown();      // 임시
         if (Input.GetKeyDown(KeyCode.Space))    player.OnSlide();     // 임시
         if (Input.GetMouseButtonDown(0))        player.OnAttack();    // 임시
+        if (Input.GetAxis("Mouse ScrollWheel") != 0) CameraManager.CM.CameraZoomInOut(Input.GetAxis("Mouse ScrollWheel"));
     }
     void SAttackChack()
     {
