@@ -10,42 +10,46 @@ public class TPlayerInput : MonoBehaviour
     private float mouseClikTime = 0;
     private float mouseClikTimeMax = 0.8f;
     private bool sAttackFirst = true;
+    public InputManager inputManager;
 
     RaycastHit hit;
     float MaxDistance = 15f; //Ray의 거리(길이)
 
-    private void Awake() => player = GetComponent<TPlayer>(); 
+    private void Awake() => player = GetComponent<TPlayer>();
+    private void Start()
+    {
+        inputManager = GameObject.FindObjectOfType<InputManager>();
+        if (inputManager == null)
+        {
+            print("널널하다~");
+        }
+    }
     private void Update()
     {
-        InputMove();
-        SAttackChack();
         if (Input.GetKeyDown(KeyCode.Alpha1))   player.OnDamage();    // 임시
         if (Input.GetKeyDown(KeyCode.Alpha2))   player.OnDown();      // 임시
-        if (Input.GetKeyDown(KeyCode.Space))    player.OnSlide();     // 임시
-        if (Input.GetMouseButtonDown(0))        player.OnAttack();    // 임시
-        if (Input.GetAxis("Mouse ScrollWheel") != 0) CameraManager.CM.CameraZoomInOut(Input.GetAxis("Mouse ScrollWheel"));
+        if (Input.GetAxis("Mouse ScrollWheel") != 0) CameraManager.CM.CameraZoomInOut(Input.GetAxis("Mouse ScrollWheel")); // 임시
     }
-    void SAttackChack()
+    void Move(Vector3 vec) => player.InputMove(vec);
+    void Dodge() => player.OnSlide();
+    void Attack() => player.OnAttack(); 
+    void SAttack() => player.OnSAttack();
+    void CameraZoom() => print("스크롤~");
+    void OnEnable()
     {
-        if (Input.GetMouseButtonUp(0))
-        {
-            sAttackFirst = true;
-            mouseClikTime = 0;
-        }
-
-        if (sAttackFirst == false) return; 
-
-        if (Input.GetMouseButton(0))
-        {
-            mouseClikTime += Time.deltaTime;
-            if (mouseClikTime >= mouseClikTimeMax)
-            {
-                sAttackFirst = false;
-                mouseClikTime = 0;
-                player.OnSAttack();
-            }
-        }
-        
+        inputManager.Move += Move;    
+        inputManager.Dodge += Dodge;        
+        inputManager.Attack += Attack;      
+        inputManager.SAttack += SAttack;    
+        inputManager.CameraZoom += CameraZoom; 
     }
-    void InputMove() => player.InputMove( new Vector3( Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical") ) );
+
+    void OnDisable()
+    {
+        inputManager.Move -= Move;
+        inputManager.Dodge -= Dodge;
+        inputManager.Attack -= Attack;
+        inputManager.SAttack -= SAttack;
+        inputManager.CameraZoom -= CameraZoom;
+    }
 }

@@ -27,6 +27,16 @@ public class CameraManager : MonoBehaviour
 
         _cNowPlayerCamera.CFT.m_CameraDistance = _cNowPlayerCamera.cameraDisrance;
     }
+    public void StartCutScene(GameObject camera)
+    {
+        camera.SetActive(true);
+        UIManager.UIM.StartCutScene();
+    }
+    public void EndCutScene(GameObject camera)
+    {
+        camera.SetActive(false);
+        UIManager.UIM.EndCutScene();
+    }
 }
 [Serializable]
 class PlayerCamera

@@ -15,18 +15,36 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Jump",
-                    "type": "Button",
-                    "id": "d93371de-bcda-4c87-acc0-f7a54f3fa890",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Attack",
                     "type": "Button",
                     "id": "11cd795f-5e93-4fe1-be70-3d3fee3288d2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SAttack",
+                    "type": "Button",
+                    "id": "c8955d6e-9ac9-418e-afd8-cb39d7d6ad80",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Dodge",
+                    "type": "Button",
+                    "id": "9d799f83-8041-468e-8a3f-54ab258ce8c4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CameraZoom",
+                    "type": "Button",
+                    "id": "1416dfb4-0927-40e5-8efd-b8bc579becfa",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -46,7 +64,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
+                    "name": "forward",
                     "id": "2ca5f4b0-2e95-472f-892b-59524ebc2df3",
                     "path": "<Keyboard>/w",
                     "interactions": "",
@@ -57,7 +75,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "down",
+                    "name": "backward",
                     "id": "715d1ae6-8f9f-40cf-b7e8-a09237371340",
                     "path": "<Keyboard>/s",
                     "interactions": "",
@@ -90,46 +108,46 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "forward",
-                    "id": "61a9e5e7-4197-44a3-8c1c-4388f26f5b5b",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "backward",
-                    "id": "7f18afa8-46f4-4391-889e-e6a7d0d63f1e",
-                    "path": "",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Move",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
                     "name": "",
-                    "id": "e8757d71-3a90-497b-a5f5-8e638f86182c",
-                    "path": "<Keyboard>/space",
+                    "id": "25d4ccba-9c33-49fb-a2af-0b5d9031a0a3",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Jump",
+                    "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "25d4ccba-9c33-49fb-a2af-0b5d9031a0a3",
-                    "path": "<Keyboard>/ctrl",
+                    "id": "f21c64af-b5dc-4d4b-9935-bae755704f1a",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Hold(duration=0.6,pressPoint=0.1)",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ebe5d88e-e16f-49f5-9cd0-f04064426c6c",
+                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack",
+                    "action": "Dodge",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2851b1ac-51e4-4821-abcf-ea406d377e92",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraZoom",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

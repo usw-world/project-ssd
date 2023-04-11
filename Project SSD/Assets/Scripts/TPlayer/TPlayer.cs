@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(SphereCollider))]
 [RequireComponent(typeof(CapsuleCollider))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(TPlayerInput))]
@@ -57,7 +56,7 @@ public class TPlayer : MonoBehaviour
         rigi = GetComponent<Rigidbody>();
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
     private void Start()
     {
