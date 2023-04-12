@@ -1,0 +1,154 @@
+{
+    "name": "QPlyerInputActions",
+    "maps": [
+        {
+            "name": "Player Map",
+            "id": "352a9f3d-6c84-47ea-a75f-b1ba234b5940",
+            "actions": [
+                {
+                    "name": "CameraZoomIn",
+                    "type": "Value",
+                    "id": "1416dfb4-0927-40e5-8efd-b8bc579becfa",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "CameraZoomOut",
+                    "type": "Value",
+                    "id": "2737f8ad-9827-4fee-a1ea-92eac8eb193e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Skill01",
+                    "type": "Button",
+                    "id": "c4d81bf7-785c-456d-a1d5-7ce390a1265e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Skill02",
+                    "type": "Button",
+                    "id": "7dfc9d9b-3522-45cf-ae27-c67edd42c57d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Skill03",
+                    "type": "Button",
+                    "id": "693d9b1c-3610-4a4f-990e-4cf95e64a578",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Skill04",
+                    "type": "Button",
+                    "id": "d80a17c2-62a3-4a0e-b2f9-7a0d541737f9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ComeBack",
+                    "type": "Button",
+                    "id": "74decf13-a815-4fc1-bc2b-a3f957132434",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "2851b1ac-51e4-4821-abcf-ea406d377e92",
+                    "path": "<Mouse>/scroll/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraZoomIn",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f581395e-dc1d-4916-b1e9-e2c757533080",
+                    "path": "<Mouse>/scroll/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CameraZoomOut",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "227f21c3-65ea-4298-baab-2fbcc19d7abe",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill01",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f3171d95-4ec8-425a-82da-29cc54f9bc66",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill02",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "301288ee-5a2a-4011-a350-8472e7d7256d",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill03",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "38788b8c-3432-4b6d-9232-352aa9357203",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill04",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c9ef4e56-4de8-496e-b196-01f639fbe0a3",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ComeBack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
