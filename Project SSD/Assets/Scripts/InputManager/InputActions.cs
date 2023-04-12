@@ -64,13 +64,22 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""CameraZoom"",
-                    ""type"": ""Button"",
+                    ""name"": ""CameraZoomIn"",
+                    ""type"": ""Value"",
                     ""id"": ""1416dfb4-0927-40e5-8efd-b8bc579becfa"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CameraZoomOut"",
+                    ""type"": ""Value"",
+                    ""id"": ""2737f8ad-9827-4fee-a1ea-92eac8eb193e"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -165,11 +174,22 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2851b1ac-51e4-4821-abcf-ea406d377e92"",
-                    ""path"": ""<Mouse>/middleButton"",
+                    ""path"": ""<Mouse>/scroll/up"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""CameraZoom"",
+                    ""action"": ""CameraZoomIn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f581395e-dc1d-4916-b1e9-e2c757533080"",
+                    ""path"": ""<Mouse>/scroll/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraZoomOut"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -184,7 +204,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_PlayerMap_Attack = m_PlayerMap.FindAction("Attack", throwIfNotFound: true);
         m_PlayerMap_SAttack = m_PlayerMap.FindAction("SAttack", throwIfNotFound: true);
         m_PlayerMap_Dodge = m_PlayerMap.FindAction("Dodge", throwIfNotFound: true);
-        m_PlayerMap_CameraZoom = m_PlayerMap.FindAction("CameraZoom", throwIfNotFound: true);
+        m_PlayerMap_CameraZoomIn = m_PlayerMap.FindAction("CameraZoomIn", throwIfNotFound: true);
+        m_PlayerMap_CameraZoomOut = m_PlayerMap.FindAction("CameraZoomOut", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -248,7 +269,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerMap_Attack;
     private readonly InputAction m_PlayerMap_SAttack;
     private readonly InputAction m_PlayerMap_Dodge;
-    private readonly InputAction m_PlayerMap_CameraZoom;
+    private readonly InputAction m_PlayerMap_CameraZoomIn;
+    private readonly InputAction m_PlayerMap_CameraZoomOut;
     public struct PlayerMapActions
     {
         private @InputActions m_Wrapper;
@@ -257,7 +279,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_PlayerMap_Attack;
         public InputAction @SAttack => m_Wrapper.m_PlayerMap_SAttack;
         public InputAction @Dodge => m_Wrapper.m_PlayerMap_Dodge;
-        public InputAction @CameraZoom => m_Wrapper.m_PlayerMap_CameraZoom;
+        public InputAction @CameraZoomIn => m_Wrapper.m_PlayerMap_CameraZoomIn;
+        public InputAction @CameraZoomOut => m_Wrapper.m_PlayerMap_CameraZoomOut;
         public InputActionMap Get() { return m_Wrapper.m_PlayerMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -279,9 +302,12 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Dodge.started -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnDodge;
                 @Dodge.performed -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnDodge;
                 @Dodge.canceled -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnDodge;
-                @CameraZoom.started -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnCameraZoom;
-                @CameraZoom.performed -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnCameraZoom;
-                @CameraZoom.canceled -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnCameraZoom;
+                @CameraZoomIn.started -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnCameraZoomIn;
+                @CameraZoomIn.performed -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnCameraZoomIn;
+                @CameraZoomIn.canceled -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnCameraZoomIn;
+                @CameraZoomOut.started -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnCameraZoomOut;
+                @CameraZoomOut.performed -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnCameraZoomOut;
+                @CameraZoomOut.canceled -= m_Wrapper.m_PlayerMapActionsCallbackInterface.OnCameraZoomOut;
             }
             m_Wrapper.m_PlayerMapActionsCallbackInterface = instance;
             if (instance != null)
@@ -298,9 +324,12 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Dodge.started += instance.OnDodge;
                 @Dodge.performed += instance.OnDodge;
                 @Dodge.canceled += instance.OnDodge;
-                @CameraZoom.started += instance.OnCameraZoom;
-                @CameraZoom.performed += instance.OnCameraZoom;
-                @CameraZoom.canceled += instance.OnCameraZoom;
+                @CameraZoomIn.started += instance.OnCameraZoomIn;
+                @CameraZoomIn.performed += instance.OnCameraZoomIn;
+                @CameraZoomIn.canceled += instance.OnCameraZoomIn;
+                @CameraZoomOut.started += instance.OnCameraZoomOut;
+                @CameraZoomOut.performed += instance.OnCameraZoomOut;
+                @CameraZoomOut.canceled += instance.OnCameraZoomOut;
             }
         }
     }
@@ -311,6 +340,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnSAttack(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
-        void OnCameraZoom(InputAction.CallbackContext context);
+        void OnCameraZoomIn(InputAction.CallbackContext context);
+        void OnCameraZoomOut(InputAction.CallbackContext context);
     }
 }

@@ -19,9 +19,9 @@ public class CameraManager : MonoBehaviour
         TPlayer.Set();
         _cNowPlayerCamera = TPlayer;
     }
-    public void CameraZoomInOut(float axis)
+    public void CameraZoomInOut(bool zoomIn)
     {
-        _cNowPlayerCamera.cameraDisrance += -axis * _cNowPlayerCamera.mouseScrollSpeed;
+        _cNowPlayerCamera.cameraDisrance += (zoomIn) ? -1f : 1f * _cNowPlayerCamera.mouseScrollSpeed * Time.deltaTime;
 
         _cNowPlayerCamera.cameraDisrance = Mathf.Clamp(_cNowPlayerCamera.cameraDisrance, _cNowPlayerCamera.minCameraDisrance, _cNowPlayerCamera.maxCameraDisrance);
 

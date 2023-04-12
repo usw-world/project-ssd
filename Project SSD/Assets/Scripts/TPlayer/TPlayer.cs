@@ -18,6 +18,7 @@ public class TPlayer : MonoBehaviour
     private bool isSuperArmour = false;         // 슈퍼아머?
     private bool isNotDamage = false;           // 무적?
     private bool isCanAttack = true;            // 공격 가능?
+
     private int hitCount = 0;                   // 연속 피격 횟수
     private int attackCount = 0;                // 연속 공격 횟수
     private int idleActionIdx = 0;              // 아이들 행동 인덱스
@@ -85,7 +86,7 @@ public class TPlayer : MonoBehaviour
         attackState_S.onActive = (State prev) => { ChangeAnimation("SAttack"); SwordUse(true); };
         slideState.onActive = (State prev) => { ChangeAnimation("Slide"); isNotDamage = true; };
         downState.onActive = (State prev) => { ChangeAnimation("Down"); isSuperArmour = true; };
-        damageState.onActive = (State prev) => { ChangeAnimation("Damage"); hitCount = 0; };
+        damageState.onActive = (State prev) => { hitCount = 0; };
         refleshState.onActive = (State prev) => { ChangeAnimation("Reflesh"); };
     }
     private void InitializeStateOnStay()
@@ -98,7 +99,7 @@ public class TPlayer : MonoBehaviour
         attackState_2.onStay = () => { };
         attackState_3.onStay = () => { };
         attackState_4.onStay = () => { };
-        attackState_S.onStay = () => { };
+        attackState_S.onStay = () => { Sliding(); };
         slideState.onStay = () => { Sliding(); };
         downState.onStay = () => { };
         damageState.onStay = () => { HitCountUpdate(); };
@@ -185,14 +186,26 @@ public class TPlayer : MonoBehaviour
     public void OnDown() => stateMachine.ChangeState(downState, false);  
     public void OnSlide()
     {
+        if (stateMachine.currentState == attackState_S) return; 
+        if (stateMachine.currentState == slideState)
+        {
+            OnSAttack();
+            return;
+        }
+
         if (stateMachine.currentState == damageState ||
-            stateMachine.currentState == slideState ||
             stateMachine.currentState == downState) return;
 
-        stateMachine.ChangeState(slideState, false);
+		stateMachine.ChangeState(slideState, false);
     }
     public void OnAttack()
     {
+        if (stateMachine.currentState == slideState)
+        {
+            OnSAttack();
+            return;
+        }
+
         if (stateMachine.currentState == damageState ||
             stateMachine.currentState == slideState ||
             stateMachine.currentState == attackState_S ||
@@ -209,16 +222,30 @@ public class TPlayer : MonoBehaviour
             transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
         }
 
+        
+
         stateMachine.ChangeState(attackStateGroup[attackCount], false);
         attackCount++;
         attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
     }
     public void OnSAttack()
     {
-        isCanAttack = false;
+        Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
+        Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 5f);
+        transform.rotation = Quaternion.LookRotation(look);
+        transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
         stateMachine.ChangeState(attackState_S, false);
+        isCanAttack = false;
     }
-    public void BeCanNextAttack() => isCanAttack = true; 
+    public void OnSkill_0()
+    {
+        
+    }
+    public void OnSkill_1()
+    {
+        
+    }
+    public void BeCanNextAttack() => isCanAttack = true;
     void Move()
     {
         Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;

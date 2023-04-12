@@ -1,55 +1,24 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(TPlayer))]
 public class TPlayerInput : MonoBehaviour
 {
-    private TPlayer player;
-    private Vector3 moveVecter;
-    private float mouseClikTime = 0;
-    private float mouseClikTimeMax = 0.8f;
-    private bool sAttackFirst = true;
-    public InputManager inputManager;
+    TPlayer player;
 
-    RaycastHit hit;
-    float MaxDistance = 15f; //RayÀÇ °Å¸®(±æÀÌ)
-
-    private void Awake() => player = GetComponent<TPlayer>();
-    private void Start()
-    {
-        inputManager = GameObject.FindObjectOfType<InputManager>();
-        if (inputManager == null)
-        {
-            print("³Î³ÎÇÏ´Ù~");
-        }
-    }
+	private void Awake() => player = GetComponent<TPlayer>();
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))   player.OnDamage();    // ÀÓ½Ã
-        if (Input.GetKeyDown(KeyCode.Alpha2))   player.OnDown();      // ÀÓ½Ã
-        if (Input.GetAxis("Mouse ScrollWheel") != 0) CameraManager.CM.CameraZoomInOut(Input.GetAxis("Mouse ScrollWheel")); // ÀÓ½Ã
+        if (Input.GetKeyDown(KeyCode.Alpha1))   player.OnDamage();    // ìž„ì‹œ
+        if (Input.GetKeyDown(KeyCode.Alpha2))   player.OnDown();      // ìž„ì‹œ
     }
-    void Move(Vector3 vec) => player.InputMove(vec);
-    void Dodge() => player.OnSlide();
-    void Attack() => player.OnAttack(); 
-    void SAttack() => player.OnSAttack();
-    void CameraZoom() => print("½ºÅ©·Ñ~");
-    void OnEnable()
-    {
-        inputManager.Move += Move;    
-        inputManager.Dodge += Dodge;        
-        inputManager.Attack += Attack;      
-        inputManager.SAttack += SAttack;    
-        inputManager.CameraZoom += CameraZoom; 
-    }
-
-    void OnDisable()
-    {
-        inputManager.Move -= Move;
-        inputManager.Dodge -= Dodge;
-        inputManager.Attack -= Attack;
-        inputManager.SAttack -= SAttack;
-        inputManager.CameraZoom -= CameraZoom;
-    }
+	void OnMove(InputValue value) => player.InputMove(value.Get<Vector3>());
+	void OnDodge() => player.OnSlide();
+	void OnAttack() => player.OnAttack();
+	void OnSAttack() => player.OnSAttack();
+	void OnCameraZoomIn() => CameraManager.CM.CameraZoomInOut(true);
+	void OnCameraZoomOut() => CameraManager.CM.CameraZoomInOut(false);
 }

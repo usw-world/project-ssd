@@ -12,7 +12,8 @@ public class InputManager : MonoBehaviour
     public event Action Attack;
     public event Action SAttack;
     public event Action Dodge;
-    public event Action CameraZoom;
+    public event Action CameraZoomIn;
+    public event Action CameraZoomOut;
 
     public static InputManager Instance { get; private set; }
     private void Awake()
@@ -32,5 +33,6 @@ public class InputManager : MonoBehaviour
     private void OnJump() => Jump?.Invoke(); 
     private void OnAttack() => Attack?.Invoke(); 
     private void OnSAttack() => SAttack?.Invoke(); 
-    private void OnCameraZoom() => CameraZoom?.Invoke(); 
+    private void OnCameraZoomIn() => CameraZoomIn?.Invoke(); 
+    private void OnCameraZoomOut() => CameraZoomOut?.Invoke(); 
 }

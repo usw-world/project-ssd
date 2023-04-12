@@ -6389,8 +6389,9 @@ GameObject:
   - component: {fileID: 1275966366}
   - component: {fileID: 1275966363}
   - component: {fileID: 690902255018422438}
-  - component: {fileID: 1275966364}
   - component: {fileID: 1275966362}
+  - component: {fileID: 1275966364}
+  - component: {fileID: 1580547243}
   - component: {fileID: 4024720941257573561}
   m_Layer: 0
   m_Name: TPlayer
@@ -6497,10 +6498,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.1
+  m_Radius: 0.4
   m_Height: 1.6
   m_Direction: 1
-  m_Center: {x: 0, y: 0.8, z: 0}
+  m_Center: {x: 0, y: 0.80372524, z: 0}
 --- !u!114 &1275966363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6527,19 +6528,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   frontCheckSize: {x: 0.15, y: 0.1, z: 0.05}
   pulldownDistance: 1
-  pullingCoef: 0.2
---- !u!114 &1275966364
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6410919741541939096}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: caf68d036c143b54e924f9e042ac7145, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  pullingCoef: 0.5
 --- !u!114 &1275966362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6555,6 +6544,49 @@ MonoBehaviour:
   sword: {fileID: 4861690785326901}
   swordUnUse: {fileID: 6187742542714504873}
   swordUse: {fileID: 1547742904}
+--- !u!114 &1275966364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6410919741541939096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf68d036c143b54e924f9e042ac7145, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1580547243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6410919741541939096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: df87974235d760a4ab6661f261db7a03,
+    type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player Map
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!114 &4024720941257573561
 MonoBehaviour:
   m_ObjectHideFlags: 0
