@@ -9,7 +9,11 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
+<<<<<<< Updated upstream
 /[Uu]serSettings/
+=======
+/[Uu]serSettings/Layouts/
+>>>>>>> Stashed changes
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta

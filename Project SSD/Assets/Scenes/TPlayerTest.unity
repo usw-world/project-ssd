@@ -510,7 +510,7 @@ GameObject:
   - component: {fileID: 489022937}
   - component: {fileID: 489022936}
   - component: {fileID: 489022935}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -1024,7 +1024,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254181566}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+<<<<<<< Updated upstream
   m_LocalPosition: {x: -0.11, y: 1.9399999, z: -1.0699999}
+=======
+  m_LocalPosition: {x: -0.11, y: 2.3, z: 0.059999943}
+>>>>>>> Stashed changes
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1072,6 +1076,7 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+<<<<<<< Updated upstream
     - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
       propertyPath: m_NotificationBehavior
       value: 0
@@ -1139,6 +1144,42 @@ PrefabInstance:
     - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
       propertyPath: m_DeviceLostEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
+=======
+    - target: {fileID: 1275966364, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: inputManager
+      value: 
+      objectReference: {fileID: 2070915552}
+    - target: {fileID: 1275966365, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275966366, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_Height
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275966366, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_Radius
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275966366, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_Center.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
+        type: 3}
+      propertyPath: height
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
+        type: 3}
+      propertyPath: radius
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
+        type: 3}
+      propertyPath: distanceFromBottom
+      value: 0.4
+>>>>>>> Stashed changes
       objectReference: {fileID: 0}
     - target: {fileID: 6410919741541939096, guid: 0eb800c82e837d74598e54dd92ec4a2f,
         type: 3}
@@ -1481,7 +1522,7 @@ GameObject:
   - component: {fileID: 1480574331}
   - component: {fileID: 1480574330}
   - component: {fileID: 1480574329}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (1)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -1792,7 +1833,7 @@ GameObject:
   - component: {fileID: 2013669317}
   - component: {fileID: 2013669316}
   - component: {fileID: 2013669315}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (2)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -1870,7 +1911,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2013669314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.3943, y: -0.77, z: 4.9799}
+  m_LocalPosition: {x: -3.3943, y: 1.29, z: 4.9799}
   m_LocalScale: {x: 6.124088, y: 2.9820127, z: 2.2658746}
   m_ConstrainProportionsScale: 0
   m_Children: []
