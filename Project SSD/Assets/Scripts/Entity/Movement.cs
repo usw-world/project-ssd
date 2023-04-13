@@ -32,7 +32,7 @@ public class Movement : MonoBehaviour {
         if(!TryGetComponent<CapsuleCollider>(out ownCollider)) {
             Debug.LogError("Movement Component should be with 'CapsuleCollider' in same GameObject.");
         } else {
-            ownCollider.radius = radius;
+            ownCollider.radius = radius * 1.01f;
         }
     }
     protected virtual void Start() {}
