@@ -510,7 +510,7 @@ GameObject:
   - component: {fileID: 489022937}
   - component: {fileID: 489022936}
   - component: {fileID: 489022935}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Cube
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -1024,7 +1024,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254181566}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.11, y: 2.3, z: 0.059999943}
+  m_LocalPosition: {x: -0.11, y: 1.9399999, z: -1.0699999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1072,40 +1072,73 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1275966364, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
-      propertyPath: inputManager
-      value: 
-      objectReference: {fileID: 2070915552}
-    - target: {fileID: 1275966365, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
-      propertyPath: m_UseGravity
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_NotificationBehavior
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1275966366, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
-      propertyPath: m_Height
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[0].m_ActionId
+      value: eda420a9-0e79-4719-ad79-f01f1a0c7226
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionId
+      value: 11cd795f-5e93-4fe1-be70-3d3fee3288d2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_ActionId
+      value: c8955d6e-9ac9-418e-afd8-cb39d7d6ad80
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_ActionId
+      value: 9d799f83-8041-468e-8a3f-54ab258ce8c4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_ActionId
+      value: 1416dfb4-0927-40e5-8efd-b8bc579becfa
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_ActionId
+      value: 2737f8ad-9827-4fee-a1ea-92eac8eb193e
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[0].m_ActionName
+      value: Player Map/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionName
+      value: Player Map/Attack[/Mouse/leftButton]
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_ActionName
+      value: Player Map/SAttack[/Mouse/leftButton]
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_ActionName
+      value: Player Map/Dodge[/Keyboard/space]
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[4].m_ActionName
+      value: Player Map/CameraZoomIn[/Mouse/scroll/up]
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_ActionName
+      value: Player Map/CameraZoomOut[/Mouse/scroll/down]
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_DeviceLostEvent.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_DeviceLostEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1275966366, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
-      propertyPath: m_Radius
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275966366, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
-      propertyPath: m_Center.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
-        type: 3}
-      propertyPath: height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
-        type: 3}
-      propertyPath: radius
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
-        type: 3}
-      propertyPath: distanceFromBottom
-      value: 0.4
+    - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_DeviceLostEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6410919741541939096, guid: 0eb800c82e837d74598e54dd92ec4a2f,
         type: 3}
@@ -1448,7 +1481,7 @@ GameObject:
   - component: {fileID: 1480574331}
   - component: {fileID: 1480574330}
   - component: {fileID: 1480574329}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -1759,7 +1792,7 @@ GameObject:
   - component: {fileID: 2013669317}
   - component: {fileID: 2013669316}
   - component: {fileID: 2013669315}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Cube (2)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -1837,7 +1870,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2013669314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.3943, y: 1.29, z: 4.9799}
+  m_LocalPosition: {x: -3.3943, y: -0.77, z: 4.9799}
   m_LocalScale: {x: 6.124088, y: 2.9820127, z: 2.2658746}
   m_ConstrainProportionsScale: 0
   m_Children: []
