@@ -14,6 +14,20 @@ public class TPlayer : MonoBehaviour
 {
 	[SerializeField] private PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;
+
+
+	Vector3 lookVecter;
+	string nowAnimationTrigger = "";
+	float idleTime = 0;
+	float rotSpeed = 30f;
+	float idleActionTime = 5f;
+	bool isNotDamage = false;
+	bool isSuperArmour = false;
+	bool isCanAttack = false;
+	int attackCount = 0;
+	int idleActionIdx = 0;
+	int hitCount = 0;
+
 	#region Component
 	private Movement movement;
     private Animator ani;

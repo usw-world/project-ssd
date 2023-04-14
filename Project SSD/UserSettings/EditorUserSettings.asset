@@ -6,9 +6,6 @@ EditorUserSettings:
   serializedVersion: 4
   m_ConfigSettings:
     RecentlyUsedSceneGuid-0:
-<<<<<<< Updated upstream
-      value: 065301025707080f0e0f0e2042770748154f49727d7e75657c7b4c36b3e1623d
-=======
       value: 500204020354085d5d5b082444715b434e4e4172792e7f352f281830e4b06d6d
       flags: 0
     RecentlyUsedSceneGuid-1:
@@ -31,13 +28,12 @@ EditorUserSettings:
       flags: 0
     RecentlyUsedSceneGuid-7:
       value: 5005075355515c0a0c560a77137b5e44104f1e7c2e7f23637c781c30bbb56368
->>>>>>> Stashed changes
       flags: 0
     RecentlyUsedSceneGuid-8:
-      value: 56020c0703040d5f5a0c0e71117b09444615417d742c23342e2b4d63b2b5316f
+      value: 0705015607510d58550b0e2445220744434f48792f7b71677c781965b1b46760
       flags: 0
     RecentlyUsedSceneGuid-9:
-      value: 0705015607510d58550b0e2445220744434f48792f7b71677c781965b1b46760
+      value: 56020c0703040d5f5a0c0e71117b09444615417d742c23342e2b4d63b2b5316f
       flags: 0
     UnityEditor.ShaderGraph.Blackboard:
       value: 18135939215a0a5004000b0e15254b524c030a3f2964643d120d1230e9e93a3fd6e826abbd2e2d293c4ead313b08042de6030a0afa240c0d020be94c4ba75e435d8715fa32c70d15d11612dacc11fee5d3c5d1fe9ab1bf968e93e2ffcbc3e7e2f0b3ffe0e8b0be9af8ffaeffff8e85dd8390e3949c8899daa7
@@ -56,7 +52,7 @@ EditorUserSettings:
   m_VCDebugCmd: 0
   m_VCDebugOut: 0
   m_SemanticMergeMode: 2
-  m_DesiredImportWorkerCount: 2
+  m_DesiredImportWorkerCount: 4
   m_StandbyImportWorkerCount: 2
   m_IdleImportWorkerShutdownDelay: 60000
   m_VCShowFailedCheckout: 1
