@@ -9,12 +9,19 @@ public class Skill : MonoBehaviour
 	public SkillArea area;
 	public SkillProperty property;
 
-	public virtual void Use(float playerAP)
+	public void Update()
 	{
-		GameObject temp = Instantiate(info.effect);
+		if (property.nowCollTime < property.collTime)
+			property.nowCollTime += Time.deltaTime;
+	}
+	public virtual void Use(Vector3 target, float playerAP)
+	{
+		property.nowCollTime = 0;
+		GameObject temp = Instantiate(info.effect, target, Quaternion.Euler(0,0,0));
 		SkillEffect skillEffect = temp.GetComponent<SkillEffect>();
 		skillEffect.Set(property, playerAP);
 	}
+	public bool CanUse(){ return (property.nowCollTime >= property.collTime) ? true : false;	}
 }
 [Serializable]
 public class SkillInfo
@@ -26,15 +33,15 @@ public class SkillInfo
 [Serializable]
 public class SkillArea
 {
-	public float skillDistance = 1;
-	public float skillRange = 1;
+	public float distance = 1;
+	public float range = 1;
 }
 [Serializable]
 public class SkillProperty
 {
 	public float collTime;
 	public float skillAP = 1;
-	[HideInInspector] public float nowCollTime;
+	[HideInInspector] public float nowCollTime = 100f;
 	public bool ready;
 	public bool quickUse;
 }

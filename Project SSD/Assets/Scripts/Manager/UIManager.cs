@@ -1,16 +1,60 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager UIM;
-    [SerializeField] private RectTransform cutSceneBannerTop;           // »ó´Ü ¹è³Ê
-    [SerializeField] private RectTransform cutSceneBannerBottom;        // ÇÏ´Ü ¹è³Ê
-    [SerializeField] private float CinemaMoveSpeed = 130f;      // ¹è³Ê°¡ ¿òÁ÷ÀÌ´Â ¼Óµµ
-    private UIManager() { }
+    [SerializeField] private RectTransform cutSceneBannerTop;           // ìƒë‹¨ ë°°ë„ˆ
+    [SerializeField] private RectTransform cutSceneBannerBottom;        // í•˜ë‹¨ ë°°ë„ˆ
+    [SerializeField] private float CinemaMoveSpeed = 130f;      // ë°°ë„ˆê°€ ì›€ì§ì´ëŠ” ì†ë„
+
+	[SerializeField] private List<Image> skillImage;
+	[SerializeField] private List<Image> skillCoolTimeFill;
+	[SerializeField] private List<Image> skillSelect;
+	List<Skill> playerSkills;
+
+	private UIManager() { }
     private void Awake() => UIM = this;
-    public void StartCutScene()
+	private void Update()
+	{
+		if (playerSkills != null)
+		{
+			for (int i = 0; i < playerSkills.Count; i++)
+			{
+				if (playerSkills[i] != null)
+				{
+					skillCoolTimeFill[i].fillAmount = 1 - playerSkills[i].property.nowCollTime / playerSkills[i].property.collTime;
+				}
+			}
+			
+		}
+	}
+	public void SetSkillImage(List<Skill> skills)
+	{
+		playerSkills = skills;
+		for (int i = 0; i < skillImage.Count; i++)
+		{
+			skillImage[i].sprite = skills[i].info.skillImage;
+		}
+	}
+	public void SelectSkill(Skill skill)
+	{
+		UnSelectSkill();
+		int idx = playerSkills.IndexOf(skill);
+		skillSelect[idx].enabled = true;
+	}
+	public void UnSelectSkill()
+	{
+		for (int i = 0; i < skillSelect.Count; i++)
+		{
+			skillSelect[i].enabled = false;
+		}
+	}
+
+
+	public void StartCutScene()
     {
         StartCoroutine(OnBanner());
     }

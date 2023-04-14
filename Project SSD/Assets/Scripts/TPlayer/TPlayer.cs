@@ -15,7 +15,6 @@ public class TPlayer : MonoBehaviour
 	[SerializeField] private PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;
 
-
 	Vector3 lookVecter;
 	string nowAnimationTrigger = "";
 	float idleTime = 0;
