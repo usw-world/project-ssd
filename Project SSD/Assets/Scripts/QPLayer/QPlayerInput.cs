@@ -16,5 +16,9 @@ public class QPlayerInput : MonoBehaviour
 	void OnSkill02() => print("2번스킬 사용");
 	void OnSkill03() => print("3번스킬 사용");
 	void OnSkill04() => print("4번스킬 사용");
-	void OnComeBack() => print("ComeBack 사용");
+	void OnComeBack() => player.QPreturn();
+	void OnMouseMove(InputValue valus) => player.posUpdate(valus.Get<Vector2>());
+	void OnRB_click() => player.RB_click();
+	void OnLB_click() => player.LB_click();
+
 }
