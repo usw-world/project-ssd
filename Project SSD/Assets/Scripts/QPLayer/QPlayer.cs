@@ -147,8 +147,5 @@ public class QPlayer : NetworkBehaviour
         stateMachine.ChangeState(solo);
     }
 
-    public void instanciateTest()
-    {
 
-    }
 }
