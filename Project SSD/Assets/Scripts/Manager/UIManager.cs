@@ -5,22 +5,25 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public static UIManager UIM;
-
-    private float cinemaMoveSpeed = 200f;      // ë°°ë„ˆê°€ ì›€ì§ì´ëŠ” ì†ë„
-
-	[SerializeField] private RectTransform cutSceneBannerTop;           // ìƒë‹¨ ë°°ë„ˆ
-    [SerializeField] private RectTransform cutSceneBannerBottom;        // í•˜ë‹¨ ë°°ë„ˆ
-
+    [SerializeField] private RectTransform cutSceneBannerTop;           // »ó´Ü ¹è³Ê
+    [SerializeField] private RectTransform cutSceneBannerBottom;        // ÇÏ´Ü ¹è³Ê
+    [SerializeField] private float CinemaMoveSpeed = 130f;      // ¹è³Ê°¡ ¿òÁ÷ÀÌ´Â ¼Óµµ
     private UIManager() { }
     private void Awake() => UIM = this;
-    public void StartCutScene() => StartCoroutine(OnBanner()); 
-    public void EndCutScene() => StartCoroutine(OffBanner()); 
+    public void StartCutScene()
+    {
+        StartCoroutine(OnBanner());
+    }
+    public void EndCutScene()
+    {
+        StartCoroutine(OffBanner());
+    }
     IEnumerator OnBanner()
     {
         while (cutSceneBannerTop.anchoredPosition.y >= -65f)
         {
-            cutSceneBannerTop.anchoredPosition -= new Vector2(0, cinemaMoveSpeed * Time.deltaTime);
-            cutSceneBannerBottom.anchoredPosition += new Vector2(0, cinemaMoveSpeed * Time.deltaTime);
+            cutSceneBannerTop.anchoredPosition -= new Vector2(0, CinemaMoveSpeed * Time.deltaTime);
+            cutSceneBannerBottom.anchoredPosition += new Vector2(0, CinemaMoveSpeed * Time.deltaTime);
             yield return null;
         }
         cutSceneBannerTop.anchoredPosition = new Vector2(0, -65f);
@@ -30,8 +33,8 @@ public class UIManager : MonoBehaviour
     {
         while (cutSceneBannerTop.anchoredPosition.y <= 65f)
         {
-            cutSceneBannerTop.anchoredPosition += new Vector2(0, cinemaMoveSpeed * Time.deltaTime);
-            cutSceneBannerBottom.anchoredPosition -= new Vector2(0, cinemaMoveSpeed * Time.deltaTime);
+            cutSceneBannerTop.anchoredPosition += new Vector2(0, CinemaMoveSpeed * Time.deltaTime);
+            cutSceneBannerBottom.anchoredPosition -= new Vector2(0, CinemaMoveSpeed * Time.deltaTime);
             yield return null;
         }
         cutSceneBannerTop.anchoredPosition = new Vector2(0, 65f);

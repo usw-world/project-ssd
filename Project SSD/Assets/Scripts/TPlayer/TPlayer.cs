@@ -14,29 +14,13 @@ public class TPlayer : MonoBehaviour
 {
 	[SerializeField] private PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;
-	#region State
-	[Header("Player State")]
-    private float rotSpeed = 30f;               // 회전속도 *** 용도가 무엇인가?
-	private float idleTime = 0;                 // idle 시간
-    private float idleActionTime = 10;          // idle 액션 시간
-    private bool isSuperArmour = false;         // 슈퍼아머?
-    private bool isNotDamage = false;           // 무적?
-    private bool isCanAttack = true;            // 공격 가능?
-	private int hitCount = 0;                   // 연속 피격 횟수
-    private int attackCount = 0;                // 연속 공격 횟수
-    private int idleActionIdx = 0;              // 아이들 행동 인덱스
-    private string nowAnimationTrigger = "";    // 현재 애니메이션 트리거
-    private Vector3 lookVecter;
-	#endregion
 	#region Component
-	[Header("Player Component")]
 	private Movement movement;
     private Animator ani;
     private Rigidbody rigi;
     private StateMachine stateMachine;
 	#endregion
 	#region State
-	[Header("Player State")]
 	private State idleState_1 = new State("Idle_1");
     private State idleState_2 = new State("Idle_2");
     private State idleState_3 = new State("Idle_3");
@@ -51,8 +35,7 @@ public class TPlayer : MonoBehaviour
     private State damageState = new State("Damage");
     private State refleshState = new State("Reflesh");
 
-	[Header("Player State Group")]
-	private List<State> attackStateGroup = new List<State>();
+    private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
 	#endregion
 
@@ -62,19 +45,22 @@ public class TPlayer : MonoBehaviour
         rigi = GetComponent<Rigidbody>();
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
-		InitializeStateOnActive();
-		InitializeStateOnStay();
-		InitializeStateOnInactive();
-		stateMachine.SetIntialState(idleState_1);
-		attackStateGroup.Add(attackState_1);
-		attackStateGroup.Add(attackState_2);
-		attackStateGroup.Add(attackState_3);
-		attackStateGroup.Add(attackState_4);
-		idleStateGroup.Add(idleState_1);
-		idleStateGroup.Add(idleState_2);
-		idleStateGroup.Add(idleState_3);
-		//Cursor.lockState = CursorLockMode.Locked;
-	}
+        //Cursor.lockState = CursorLockMode.Locked;
+    }
+    private void Start()
+    {
+        InitializeStateOnActive();
+        InitializeStateOnStay();
+        InitializeStateOnInactive();
+        stateMachine.SetIntialState(idleState_1);
+        attackStateGroup.Add(attackState_1);
+        attackStateGroup.Add(attackState_2);
+        attackStateGroup.Add(attackState_3);
+        attackStateGroup.Add(attackState_4);
+        idleStateGroup.Add(idleState_1);
+        idleStateGroup.Add(idleState_2);
+        idleStateGroup.Add(idleState_3);
+    }
     private void InitializeStateOnActive()
     {
         idleState_1.onActive = (State prev) => { ChangeAnimation("Idle1"); idleTime = 0; };
@@ -224,6 +210,8 @@ public class TPlayer : MonoBehaviour
             transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
         }
 
+        
+
         stateMachine.ChangeState(attackStateGroup[attackCount], false);
         attackCount++;
         attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
@@ -236,6 +224,14 @@ public class TPlayer : MonoBehaviour
         transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
         stateMachine.ChangeState(attackState_S, false);
         isCanAttack = false;
+    }
+    public void OnSkill_0()
+    {
+        
+    }
+    public void OnSkill_1()
+    {
+        
     }
     public void BeCanNextAttack() => isCanAttack = true;
     void Move()
