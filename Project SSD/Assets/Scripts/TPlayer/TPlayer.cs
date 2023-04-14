@@ -11,15 +11,23 @@ using UnityEngine;
 public class TPlayer : MonoBehaviour
 {
     [Header("Player Status")]
-    private float moveSpeed = 3f;               // 이동속도
-    private float rotSpeed = 30f;               // 회전속도
-    private float idleTime = 0;                 // idle 시간
+    private float statusSpeed	= 3f;		// 이동속도
+    private float statusMaxHP	= 100f;		// 최대 체력
+    private float statusHP		= 100f;		// 체력
+    private float statusMaxMP	= 100f;		// 최대 마나
+    private float statusMP		= 100f;     // 마나 ** 시작하면서 set 하는거 어떤지?
+	private float statusMaxSP	= 100f;		// 최대 스테미너
+    private float statusSP		= 100f;		// 스테미너 ** 시작하면서 set 하는거 어떤지?
+    private float statusAP		= 10f;		// 공격력
+
+	[Header("Player State")]
+    private float rotSpeed = 30f;               // 회전속도 *** 용도가 무엇인가?
+	private float idleTime = 0;                 // idle 시간
     private float idleActionTime = 10;          // idle 액션 시간
     private bool isSuperArmour = false;         // 슈퍼아머?
     private bool isNotDamage = false;           // 무적?
     private bool isCanAttack = true;            // 공격 가능?
-
-    private int hitCount = 0;                   // 연속 피격 횟수
+	private int hitCount = 0;                   // 연속 피격 횟수
     private int attackCount = 0;                // 연속 공격 횟수
     private int idleActionIdx = 0;              // 아이들 행동 인덱스
     private string nowAnimationTrigger = "";    // 현재 애니메이션 트리거
@@ -30,12 +38,14 @@ public class TPlayer : MonoBehaviour
     [SerializeField] private Transform swordUnUse;  // 무기 사용 안할때 위치
     [SerializeField] private Transform swordUse;    // 무기 사용 위치
 
-    private Movement movement;
+	[Header("Player Component")]
+	private Movement movement;
     private Animator ani;
     private Rigidbody rigi;
     private StateMachine stateMachine;
 
-    private State idleState_1 = new State("Idle_1");
+	[Header("Player State")]
+	private State idleState_1 = new State("Idle_1");
     private State idleState_2 = new State("Idle_2");
     private State idleState_3 = new State("Idle_3");
     private State moveState = new State("Move");
@@ -49,7 +59,8 @@ public class TPlayer : MonoBehaviour
     private State damageState = new State("Damage");
     private State refleshState = new State("Reflesh");
 
-    private List<State> attackStateGroup = new List<State>();
+	[Header("Player State Group")]
+	private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
     private void Awake()
     {
@@ -57,22 +68,19 @@ public class TPlayer : MonoBehaviour
         rigi = GetComponent<Rigidbody>();
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
-        //Cursor.lockState = CursorLockMode.Locked;
-    }
-    private void Start()
-    {
-        InitializeStateOnActive();
-        InitializeStateOnStay();
-        InitializeStateOnInactive();
-        stateMachine.SetIntialState(idleState_1);
-        attackStateGroup.Add(attackState_1);
-        attackStateGroup.Add(attackState_2);
-        attackStateGroup.Add(attackState_3);
-        attackStateGroup.Add(attackState_4);
-        idleStateGroup.Add(idleState_1);
-        idleStateGroup.Add(idleState_2);
-        idleStateGroup.Add(idleState_3);
-    }
+		InitializeStateOnActive();
+		InitializeStateOnStay();
+		InitializeStateOnInactive();
+		stateMachine.SetIntialState(idleState_1);
+		attackStateGroup.Add(attackState_1);
+		attackStateGroup.Add(attackState_2);
+		attackStateGroup.Add(attackState_3);
+		attackStateGroup.Add(attackState_4);
+		idleStateGroup.Add(idleState_1);
+		idleStateGroup.Add(idleState_2);
+		idleStateGroup.Add(idleState_3);
+		//Cursor.lockState = CursorLockMode.Locked;
+	}
     private void InitializeStateOnActive()
     {
         idleState_1.onActive = (State prev) => { ChangeAnimation("Idle1"); idleTime = 0; };
@@ -222,8 +230,6 @@ public class TPlayer : MonoBehaviour
             transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
         }
 
-        
-
         stateMachine.ChangeState(attackStateGroup[attackCount], false);
         attackCount++;
         attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
@@ -237,14 +243,6 @@ public class TPlayer : MonoBehaviour
         stateMachine.ChangeState(attackState_S, false);
         isCanAttack = false;
     }
-    public void OnSkill_0()
-    {
-        
-    }
-    public void OnSkill_1()
-    {
-        
-    }
     public void BeCanNextAttack() => isCanAttack = true;
     void Move()
     {
@@ -253,7 +251,7 @@ public class TPlayer : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(look);
         transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 
-        movement.MoveToward(Vector3.forward * moveSpeed * Time.deltaTime);
+        movement.MoveToward(Vector3.forward * statusSpeed * Time.deltaTime);
     }
     void IdleTimeUpdate()
     {
@@ -278,7 +276,7 @@ public class TPlayer : MonoBehaviour
         nowAnimationTrigger = trigger;
         ani.SetTrigger(nowAnimationTrigger);
     }
-    void Sliding() => movement.MoveToward(Vector3.forward * moveSpeed * 2f * Time.deltaTime); 
+    void Sliding() => movement.MoveToward(Vector3.forward * statusSpeed * 2f * Time.deltaTime); 
     void SwordUse(bool use)
     {
         sword.parent = (use) ? swordUse : swordUnUse;

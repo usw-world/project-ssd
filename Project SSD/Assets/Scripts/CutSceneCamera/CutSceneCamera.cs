@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class CutSceneCamera : MonoBehaviour
 {
-    public virtual void EEEEEEEEEndCutScene()
+    public virtual void EndCutScene()
     {
-        print("dddd");
         CameraManager.CM.EndCutScene(gameObject);
     }
 }
