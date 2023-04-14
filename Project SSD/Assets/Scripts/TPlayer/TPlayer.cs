@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
+using Mirror;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -10,7 +11,7 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(TPlayerInput))]
 [RequireComponent(typeof(StateMachine))]
 [RequireComponent(typeof(Movement))]
-public class TPlayer : MonoBehaviour
+public class TPlayer : NetworkBehaviour
 {
 	[SerializeField] private PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;

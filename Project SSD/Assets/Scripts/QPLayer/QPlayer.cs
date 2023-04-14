@@ -10,7 +10,7 @@ using Mirror;
 [RequireComponent(typeof(StateMachine))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(NavigateableMovement))]
-public class QPlayer : MonoBehaviour
+public class QPlayer : NetworkBehaviour
 {
     #region veriable
         float speed = 10.0f;
@@ -28,10 +28,10 @@ public class QPlayer : MonoBehaviour
         Movement movement;
         StateMachine stateMachine;
         Vector3 temp = Vector3.zero;
-        Camera camera;
+        new Camera camera;
         float moveSpeed = 0.5f;
 
-        public Text testText;
+        // public Text testText;
     #endregion
 
     #region state
@@ -47,13 +47,7 @@ public class QPlayer : MonoBehaviour
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
         //Cursor.lockState = CursorLockMode.Locked;
-        duel.onStay = () => {
-            Vector3 targetPos = TPtransform.position;
-            float returnSpeed = 10.0f * Time.deltaTime;
-            targetPos.y += 2;
-            targetPos.x -= 1;
-            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref temp, returnSpeed);
-        };
+
 
         stateMachine.SetIntialState(duel);
     }
@@ -64,11 +58,21 @@ public class QPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        distance = 10.0f;
+        TPlayer = GameObject.FindGameObjectWithTag("TPlayer");
         TPtransform = TPlayer.GetComponent<Transform>();
+        duel.onStay = () => {
+            Vector3 targetPos = TPtransform.position;
+            float returnSpeed = 10.0f * Time.deltaTime;
+            targetPos.y += 2;
+            targetPos.x -= 1;
+            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref temp, returnSpeed);
+        };
+
+        distance = 10.0f;
         timer = 0.0f;
         moveTest = true;
         stamina = 10.0f;
+        camera = Camera.main;
         movePos = TPtransform.position;
         movePos.x -= 2;
         movePos.y += 1;
@@ -76,15 +80,18 @@ public class QPlayer : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {       
+    {
+        if (!isLocalPlayer)
+            return;
         Vector3 camPos = transform.position;
+        camera.transform.rotation = Quaternion.Euler(new Vector3(60f, 0, 0));
         camPos.y = 15;
         camPos.z -= 5;
         camera.transform.position  = camPos;
 
         #region move
         // 움직이는 부분
-        testText.text = stamina+"";
+        // testText.text = stamina+"";
         distance = Vector3.Distance(transform.position, TPtransform.position);
 
         if(stateMachine.currentState == solo){
@@ -124,10 +131,11 @@ public class QPlayer : MonoBehaviour
     
     public void RB_click(){
         RaycastHit hit;
-        Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-        
+
         if (Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out hit)) {
             movePos = hit.point;
+            if (stateMachine.currentState != solo)
+                stateMachine.ChangeState(solo);
             Debug.Log($"{hit.transform.position.ToString()} point : {hit.point}");
             movePos.y = 2.0f;
             // Debug.Log("QPLayer Move");
