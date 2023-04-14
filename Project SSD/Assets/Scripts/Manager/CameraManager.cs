@@ -21,7 +21,7 @@ public class CameraManager : MonoBehaviour
     }
     public void CameraZoomInOut(bool zoomIn)
     {
-        _cNowPlayerCamera.cameraDisrance += (zoomIn) ? -1f : 1f * _cNowPlayerCamera.mouseScrollSpeed * Time.deltaTime;
+        _cNowPlayerCamera.cameraDisrance += (zoomIn) ? -0.1f : 1f * _cNowPlayerCamera.mouseScrollSpeed * Time.deltaTime;
 
         _cNowPlayerCamera.cameraDisrance = Mathf.Clamp(_cNowPlayerCamera.cameraDisrance, _cNowPlayerCamera.minCameraDisrance, _cNowPlayerCamera.maxCameraDisrance);
 

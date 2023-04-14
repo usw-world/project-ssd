@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -10,16 +12,9 @@ using UnityEngine;
 [RequireComponent(typeof(Movement))]
 public class TPlayer : MonoBehaviour
 {
-    [Header("Player Status")]
-    private float statusSpeed	= 3f;		// 이동속도
-    private float statusMaxHP	= 100f;		// 최대 체력
-    private float statusHP		= 100f;		// 체력
-    private float statusMaxMP	= 100f;		// 최대 마나
-    private float statusMP		= 100f;     // 마나 ** 시작하면서 set 하는거 어떤지?
-	private float statusMaxSP	= 100f;		// 최대 스테미너
-    private float statusSP		= 100f;		// 스테미너 ** 시작하면서 set 하는거 어떤지?
-    private float statusAP		= 10f;		// 공격력
-
+	[SerializeField] private PlayerStatus status;
+	[SerializeField] private WeaponTransform sword;
+	#region State
 	[Header("Player State")]
     private float rotSpeed = 30f;               // 회전속도 *** 용도가 무엇인가?
 	private float idleTime = 0;                 // idle 시간
@@ -32,18 +27,15 @@ public class TPlayer : MonoBehaviour
     private int idleActionIdx = 0;              // 아이들 행동 인덱스
     private string nowAnimationTrigger = "";    // 현재 애니메이션 트리거
     private Vector3 lookVecter;
-
-    [Header("Sword Transform")]
-    [SerializeField] private Transform sword;       // 무기
-    [SerializeField] private Transform swordUnUse;  // 무기 사용 안할때 위치
-    [SerializeField] private Transform swordUse;    // 무기 사용 위치
-
+	#endregion
+	#region Component
 	[Header("Player Component")]
 	private Movement movement;
     private Animator ani;
     private Rigidbody rigi;
     private StateMachine stateMachine;
-
+	#endregion
+	#region State
 	[Header("Player State")]
 	private State idleState_1 = new State("Idle_1");
     private State idleState_2 = new State("Idle_2");
@@ -62,7 +54,9 @@ public class TPlayer : MonoBehaviour
 	[Header("Player State Group")]
 	private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
-    private void Awake()
+	#endregion
+
+	private void Awake()
     {
         ani = GetComponent<Animator>();
         rigi = GetComponent<Rigidbody>();
@@ -251,7 +245,7 @@ public class TPlayer : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(look);
         transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 
-        movement.MoveToward(Vector3.forward * statusSpeed * Time.deltaTime);
+        movement.MoveToward(Vector3.forward * status.speed * Time.deltaTime);
     }
     void IdleTimeUpdate()
     {
@@ -276,12 +270,32 @@ public class TPlayer : MonoBehaviour
         nowAnimationTrigger = trigger;
         ani.SetTrigger(nowAnimationTrigger);
     }
-    void Sliding() => movement.MoveToward(Vector3.forward * statusSpeed * 2f * Time.deltaTime); 
-    void SwordUse(bool use)
-    {
-        sword.parent = (use) ? swordUse : swordUnUse;
-        sword.localPosition = Vector3.zero;
-        sword.localEulerAngles = Vector3.zero;
-        sword.localScale = Vector3.one;
-    }
+    void Sliding() => movement.MoveToward(Vector3.forward * status.speed * 2f * Time.deltaTime); 
+    void SwordUse(bool use) => sword.Set(use); 
+}
+[Serializable]
+public class PlayerStatus
+{
+	public float speed = 3f;     // 이동속도
+	public float maxHP = 100f;       // 최대 체력
+	public float maxMP = 100f;       // 최대 마나
+	public float maxSP = 100f;       // 최대 스테미너
+	[HideInInspector] public float HP = 100f;      // 체력
+	[HideInInspector] public float MP = 100f;     // 마나 ** 시작하면서 set 하는거 어떤지?
+	[HideInInspector] public float SP = 100f;      // 스테미너 ** 시작하면서 set 하는거 어떤지?
+	[HideInInspector] public float AP = 10f;      // 공격력
+}
+[Serializable]
+public class WeaponTransform
+{
+	public Transform weapon;       // 무기
+	public Transform unUse;  // 무기 사용 안할때 위치
+	public Transform use;    // 무기 사용 위치
+	public void Set(bool useing)
+	{
+		weapon.parent = (useing) ? use : unUse;
+		weapon.localPosition = Vector3.zero;
+		weapon.localEulerAngles = Vector3.zero;
+		weapon.localScale = Vector3.one;
+	}
 }

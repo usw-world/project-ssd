@@ -1,5 +1,5 @@
 {
-    "name": "InputActions",
+    "name": "TPlyerInputActions",
     "maps": [
         {
             "name": "Player Map",
@@ -45,7 +45,7 @@
                     "name": "CameraZoomIn",
                     "type": "Value",
                     "id": "1416dfb4-0927-40e5-8efd-b8bc579becfa",
-                    "expectedControlType": "Axis",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
