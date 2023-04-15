@@ -11,7 +11,7 @@ using Mirror;
 [RequireComponent(typeof(TPlayerInput))]
 [RequireComponent(typeof(StateMachine))]
 [RequireComponent(typeof(Movement))]
-public class TPlayer : NetworkBehaviour
+public class TPlayer : MonoBehaviour
 {
 	[SerializeField] private PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;
