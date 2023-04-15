@@ -57,14 +57,14 @@ public class QPlyerSkillTest : MonoBehaviour
 			{
 				if (usingSkill.property.quickUse) // 바로 사용 ?
 				{
-					usingSkill.Use(targetPos, 10f); // [조준스킬] [퀵 사용] 사용
+					usingSkill.Use(targetPos, gameObject); // [조준스킬] [퀵 사용] 사용
 					usingSkill = null;
 				}
 				else
 				{
 					if (isLookSkillTarget)	// 조준 하는 중?
 					{
-						usingSkill.Use(targetPos, 10f); // [조준스킬] [조준 후] 사용
+						usingSkill.Use(targetPos, gameObject); // [조준스킬] [조준 후] 사용
 						usingSkill = null;
 						SkillAreaDisable();
 					}
@@ -73,7 +73,7 @@ public class QPlyerSkillTest : MonoBehaviour
 			}
 			else // 즉발 스킬
 			{
-				usingSkill.Use(targetPos, 10f); // [즉발스킬] 사용
+				usingSkill.Use(targetPos, gameObject); // [즉발스킬] 사용
 				usingSkill = null;
 			}
 		}
