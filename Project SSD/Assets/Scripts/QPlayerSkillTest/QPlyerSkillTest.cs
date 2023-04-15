@@ -11,6 +11,7 @@ public class QPlyerSkillTest : MonoBehaviour
 	[SerializeField] bool isLookSkillTarget = false;
 	[SerializeField] Skill usingSkill;
 	[SerializeField] Vector3 targetPos;
+	
 	private void Update()
 	{
 		if (isLookSkillTarget)
@@ -104,5 +105,9 @@ public class QPlyerSkillTest : MonoBehaviour
 		skillDistanceArea.enabled = false;
 		skillRangeArea.enabled = false;
 		UIManager.UIM.UnSelectSkill();
+	}
+	public float GetAP() 
+	{
+		return 10f;
 	}
 }
