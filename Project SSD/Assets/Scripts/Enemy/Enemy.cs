@@ -9,16 +9,19 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
 
     private float hp;
     private bool isDead;
+    private bool targetInRange;
 
     GameObject target;
     Vector3 targetPoint;
 
-    private void Awake() {
-        target = FindObjectOfType<TPlayer>().gameObject;
 
+    void Awake() {
+        target = FindObjectOfType<TPlayer>().gameObject;
+    }
+    void OnEnable() {
         
     }
-    private void Update() {
+    void Update() {
         
     }
 
@@ -26,11 +29,13 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         
     }
 
-    private bool TryDetectTarget() {
-        if(Vector3.Distance(transform.position, target.transform.position) < detectRange) {
-            return true;
-        } else {
-            return false;
+    private IEnumerator DetectTargetCoroutine() {
+        while(!isDead) {
+            if(Vector3.Distance(transform.position, target.transform.position) < detectRange)
+                targetInRange = true;
+            else
+                targetInRange = false;
+            yield return detectInterval;
         }
     }
 }

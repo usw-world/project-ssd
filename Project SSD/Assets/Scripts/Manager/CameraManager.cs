@@ -38,6 +38,16 @@ public class CameraManager : MonoBehaviour
         UIManager.UIM.EndCutScene();
     }
 }
+
+
+/* 
+    MonoBehavior 상속받는 컴포넌트로 만드셔서 따로 파일 분리하시고(ex >> PlayerCamera.cs)
+    상속 받는 'TPlayerCamera', 'QPlayerCamera' 만드신 뒤,
+    TPlayerCamera에 (벽에 붙어서 안쪽이 투과되어 보일만큼 가까워 질 때)Player의 GameObject 자동으로 투명화하는
+    기능 만들어두시면 됩니다.
+
+    - usoock13 -
+ */
 [Serializable]
 class PlayerCamera
 {
@@ -54,6 +64,15 @@ class PlayerCamera
         maxCameraDisrance = maxCD;
         minCameraDisrance = minCD;
     }
+    /* 
+        다른 MonoBehavior class의 'void Start()'에서 호출되는 메서드입니다.
+        따로 컴포넌트로 분리하실 때는 시그니쳐를 'viod Awake()' or 'void Start()'로 변경하시고 사용하길 권장한다네요. (by Hyunsoo218)
+
+        ┌                   ┐    ┌                     ┐
+        │ public void Set() │ >> │ public void Start() │
+        └                   ┘    └                     ┘
+        - usoock13 -
+     */
     public void Set()
     {
         CVC = camera.GetComponent<CinemachineVirtualCamera>();
