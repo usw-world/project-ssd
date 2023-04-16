@@ -11,8 +11,9 @@ using Mirror;
 [RequireComponent(typeof(TPlayerInput))]
 [RequireComponent(typeof(StateMachine))]
 [RequireComponent(typeof(Movement))]
-public class TPlayer : MonoBehaviour
-{
+public class TPlayer : MonoBehaviour {
+    static public TPlayer instance { get; private set; }
+    
 	[SerializeField] private PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;
 
@@ -55,6 +56,13 @@ public class TPlayer : MonoBehaviour
 
 	private void Awake()
     {
+        if(instance == null) {
+            instance = this;
+        } else {
+            Debug.LogWarning("There already is TPlayer on this scene.");
+            Destroy(this.gameObject);
+        }
+
         ani = GetComponent<Animator>();
         rigi = GetComponent<Rigidbody>();
         movement = GetComponent<Movement>();

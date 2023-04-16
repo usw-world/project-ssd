@@ -39,9 +39,12 @@ public class Movement : MonoBehaviour {
     }
     protected virtual void Start() {}
     
-    public void MoveToward(Vector3 direction) {
+    public void MoveToward(Vector3 direction, Space space = Space.Self) {
         (Vector3 point1, Vector3 point2, float radius) = colliderBounds.RaycastComponent;
-        direction = transform.localToWorldMatrix * direction;
+        
+        if(space == Space.Self)
+            direction = transform.localToWorldMatrix * direction;
+
         RaycastHit[] hits;
         Debug.DrawLine(point1, point2+ direction + Vector3.down*radius, Color.green);
         Debug.DrawLine(point1+ direction, point2 + Vector3.down*radius, Color.green);
@@ -83,7 +86,7 @@ public class Movement : MonoBehaviour {
         Gizmos.color = Color.red;
         if(ownCollider != null) {
             (Vector3 point1, Vector3 point2, _) = colliderBounds.RaycastComponent;
-            Gizmos.DrawWireCube(colliderBounds.center, new Vector3(radius*2, cylinderHeight, radius*2));
+            // Gizmos.DrawWireCube(colliderBounds.center, new Vector3(radius*2, cylinderHeight, radius*2));
             Gizmos.DrawWireSphere(point1, radius);
             Gizmos.DrawWireSphere(point2, radius);
         }

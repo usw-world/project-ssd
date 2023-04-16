@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class State {
     public delegate void ChangeEvent();
     public delegate void ChangeEventWithState(State state = null);
-    string stateName;
+    [SerializeField] string stateName;
     public string stateTag { get; private set; } = null;
 
     public State(string stateName) {

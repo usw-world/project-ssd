@@ -1,41 +1,58 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class Enemy : MonoBehaviour, IDamageable {
-    
     [SerializeField] private float detectRange = 5f;
-    [SerializeField] private float detectInterval = .25f;
+    [SerializeField] private float detectInterval = .05f;
+
+    protected StateMachine enemyStateMachine;
+    [SerializeField] protected Animator enemyAnimator;
 
     private float hp;
     private bool isDead;
-    private bool targetInRange;
 
-    GameObject target;
-    Vector3 targetPoint;
+    protected bool targetInRange;
 
+    protected GameObject target;
 
-    void Awake() {
+    protected Action updateTargetEvent;
+    protected Action lostTargetEvent;
+
+    protected virtual void Awake() {
+        enemyStateMachine = GetComponent<StateMachine>();
+        enemyAnimator = enemyAnimator==null ? GetComponent<Animator>() : enemyAnimator;
         target = FindObjectOfType<TPlayer>().gameObject;
     }
-    void OnEnable() {
-        
+    protected virtual void Start() {
+        /* temporary : Initialize function must be called on instantiated by other object. 
+                       reason : Pooling Issue >> */
+        Initialize();
+        /* << temporary */
     }
-    void Update() {
-        
+    protected virtual void Update() {}
+    public void Initialize() {
+        StartCoroutine(UpdateTargetCoroutine());
     }
-
-    public void OnDamage(GameObject origin, float amount) {
-        
-    }
-
-    private IEnumerator DetectTargetCoroutine() {
-        while(!isDead) {
-            if(Vector3.Distance(transform.position, target.transform.position) < detectRange)
-                targetInRange = true;
-            else
-                targetInRange = false;
-            yield return detectInterval;
+    public virtual void OnDamage(GameObject origin, float amount) {
+        hp -= amount;
+        if(hp <= 0) {
+            OnDie();
         }
+    }
+    private IEnumerator UpdateTargetCoroutine() {
+        while(!isDead) {
+            if(Vector3.Distance(transform.position, target.transform.position) < detectRange) {
+                targetInRange = true;
+                updateTargetEvent?.Invoke();
+            } else {
+                targetInRange = false;
+                lostTargetEvent?.Invoke();
+            }
+            yield return new WaitForSeconds(detectInterval);
+        }
+    }
+    protected void OnDie() {
+        isDead = true;
     }
 }
