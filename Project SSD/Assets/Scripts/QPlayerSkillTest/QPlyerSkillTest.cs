@@ -8,9 +8,9 @@ public class QPlyerSkillTest : MonoBehaviour
 	public DecalProjector skillDistanceArea;
 	public DecalProjector skillRangeArea;
 	public List<Skill> skills;
-	[SerializeField] bool isLookSkillTarget = false;
-	[SerializeField] Skill usingSkill;
-	[SerializeField] Vector3 targetPos;
+	bool isLookSkillTarget = false;
+	Skill usingSkill;
+	Vector3 targetPos;
 	
 	private void Update()
 	{
@@ -57,24 +57,20 @@ public class QPlyerSkillTest : MonoBehaviour
 			{
 				if (usingSkill.property.quickUse) // 바로 사용 ?
 				{
-					usingSkill.Use(targetPos, gameObject); // [조준스킬] [퀵 사용] 사용
-					usingSkill = null;
+					UseSkill(); // [조준스킬] [퀵 사용] 사용
 				}
 				else
 				{
 					if (isLookSkillTarget)	// 조준 하는 중?
 					{
-						usingSkill.Use(targetPos, gameObject); // [조준스킬] [조준 후] 사용
-						usingSkill = null;
-						SkillAreaDisable();
+						UseSkill(); // [조준스킬] [조준 후 사용] 사용
 					}
 					else SkillAreaEnable();
 				}
 			}
 			else // 즉발 스킬
 			{
-				usingSkill.Use(targetPos, gameObject); // [즉발스킬] 사용
-				usingSkill = null;
+				UseSkill(); // [즉발스킬] 사용
 			}
 		}
 		else
@@ -83,6 +79,17 @@ public class QPlyerSkillTest : MonoBehaviour
 			SkillAreaDisable();
 			OnSkill(num);
 		}
+	}
+	public void OnLB()
+	{
+		if (isLookSkillTarget)  // 조준 하는 중?
+		{
+			UseSkill(); // [조준스킬] [조준 후 사용] 사용
+		}
+	}
+	public void OnRB()
+	{
+		SkillAreaDisable();
 	}
 	public void SetSkillUI()
 	{
@@ -101,6 +108,7 @@ public class QPlyerSkillTest : MonoBehaviour
 	}
 	void SkillAreaDisable()
 	{
+		usingSkill = null;
 		isLookSkillTarget = false;
 		skillDistanceArea.enabled = false;
 		skillRangeArea.enabled = false;
@@ -109,5 +117,11 @@ public class QPlyerSkillTest : MonoBehaviour
 	public float GetAP() 
 	{
 		return 10f;
+	}
+	void UseSkill()
+	{
+		usingSkill.Use(targetPos, gameObject); // [조준스킬] [조준 후] 사용
+		usingSkill = null;
+		SkillAreaDisable();
 	}
 }

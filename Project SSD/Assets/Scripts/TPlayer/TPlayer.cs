@@ -96,7 +96,7 @@ public class TPlayer : MonoBehaviour {
         attackState_S.onActive = (State prev) => { ChangeAnimation("SAttack"); SwordUse(true); };
         slideState.onActive = (State prev) => { ChangeAnimation("Slide"); isNotDamage = true; };
         downState.onActive = (State prev) => { ChangeAnimation("Down"); isSuperArmour = true; };
-        damageState.onActive = (State prev) => { hitCount = 0; };
+        damageState.onActive = (State prev) => { ChangeAnimation("Damage"); hitCount = 0; };
         refleshState.onActive = (State prev) => { ChangeAnimation("Reflesh"); };
     }
     private void InitializeStateOnStay()

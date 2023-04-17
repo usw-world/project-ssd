@@ -12,4 +12,6 @@ public class QPlayerInputTest : MonoBehaviour
 	void OnSkill02() => player.OnSkill(1);
 	void OnSkill03() => player.OnSkill(2);
 	void OnSkill04() => player.OnSkill(3);
+	void OnLB_click() => player.OnLB();
+	void OnRB_click() => player.OnRB();
 }
