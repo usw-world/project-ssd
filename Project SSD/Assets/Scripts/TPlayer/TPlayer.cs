@@ -69,7 +69,7 @@ public class TPlayer : MonoBehaviour , IDamageable{
         rigi = GetComponent<Rigidbody>();
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;
     }
     private void Start()
     {
@@ -207,7 +207,10 @@ public class TPlayer : MonoBehaviour , IDamageable{
 
         if (stateMachine.currentState == damageState ||
             stateMachine.currentState == downState) return;
-
+		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
+		Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 7f);
+		transform.rotation = Quaternion.LookRotation(look);
+		transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 		stateMachine.ChangeState(slideState, false);
     }
     public void OnAttack()
@@ -229,7 +232,7 @@ public class TPlayer : MonoBehaviour , IDamageable{
         if (lookVecter != Vector3.zero)
         {
             Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
-            Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 5f);
+            Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 7f);
             transform.rotation = Quaternion.LookRotation(look);
             transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
         }
@@ -240,7 +243,7 @@ public class TPlayer : MonoBehaviour , IDamageable{
     public void SlideAttack()
     {
         Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
-        Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 5f);
+        Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 7f);
         transform.rotation = Quaternion.LookRotation(look);
         transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
         stateMachine.ChangeState(slideAttackState, false);
@@ -356,7 +359,7 @@ public class TPlayer : MonoBehaviour , IDamageable{
 	{
 		float target = (fade) ? 1f : 0.5f;
 		float now = ani.GetFloat("Speed");
-
+		
 		if (fade)
 		{
 			isRush = true;
