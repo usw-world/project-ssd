@@ -23,14 +23,33 @@ class Enemy_XBot : MovableEnemy {
     private const float JUMP_ATTACK_COOLTIME = 5f;
     private float currentJumpAttackCooltime = 0f;
     private Coroutine jumpAttackCoroutine;
+    [SerializeField] private GameObject jumpAttackParticle;
+    [SerializeField] private Transform jumpAttackParticlePoint;
+    private ObjectPooler jumpAttackParticlePooler;
 
     private Coroutine assaultCoroutine;
 
     #region Unity Events
     protected override void Awake() {
         base.Awake();
+
         InitializeState();
         enemyStateMachine.SetIntialState(idleState);
+
+        jumpAttackParticlePooler = new ObjectPooler(
+            jumpAttackParticle,
+            (GameObject go) => {
+                go.SetActive(false);
+            },
+            (GameObject go) => {
+                IEnumerator OutPoolParticle() {
+                    yield return new WaitForSeconds(3f);
+                    jumpAttackParticlePooler.InPool(go);
+                }
+                StartCoroutine(OutPoolParticle());
+                go.SetActive(true);
+            }
+        );
     }
     protected override void Update() {
         if(currentJumpAttackCooltime > 0)
@@ -134,10 +153,10 @@ class Enemy_XBot : MovableEnemy {
         transform.LookAt(targetPosition);
         Vector3 dir = (targetPosition - transform.position).normalized;
 
-        while(offset < 2) {
+        while(offset < 1) {
             offset += Time.deltaTime;
             
-            enemyMovement.MoveToward(dir * 5f * Time.deltaTime, Space.World);
+            enemyMovement.MoveToward(dir * 10f * Time.deltaTime, Space.World);
             yield return null;
         }
         enemyStateMachine.ChangeState(idleState);
@@ -146,6 +165,11 @@ class Enemy_XBot : MovableEnemy {
     #region Animation Events
     public void AnimationEvent_OnEndJumpAttack() {
         enemyStateMachine.ChangeState(basicState);
+    }
+    public void AnimationEvent_OnJumpAttackAction() {
+        /* temporary >> */
+        jumpAttackParticlePooler.OutPool(jumpAttackParticlePoint.position, Quaternion.identity, null);
+        /* << temporary */
     }
     public void AnimationEvent_OnEndCrouch() {
         enemyAnimator.SetBool("Assault Crouch", false);

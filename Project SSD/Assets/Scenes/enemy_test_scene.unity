@@ -137,7 +137,7 @@ GameObject:
   - component: {fileID: 60586324}
   - component: {fileID: 60586328}
   m_Layer: 0
-  m_Name: 'Enemy : Boss : Dummy'
+  m_Name: Enemy_Boss_Dino
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1315,7 +1315,7 @@ PrefabInstance:
     - target: {fileID: 1653327185496528104, guid: 21b4e86d4d1498245b1cb7a921b50818,
         type: 3}
       propertyPath: m_Name
-      value: Enemy _ X-Bot
+      value: Enemy_X-Bot
       objectReference: {fileID: 0}
     - target: {fileID: 2142056443031064146, guid: 21b4e86d4d1498245b1cb7a921b50818,
         type: 3}
@@ -1374,8 +1374,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8716094362318642817, guid: 21b4e86d4d1498245b1cb7a921b50818,
         type: 3}
-      propertyPath: moveSpeed
-      value: 4.5
+      propertyPath: detectRange
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21b4e86d4d1498245b1cb7a921b50818, type: 3}

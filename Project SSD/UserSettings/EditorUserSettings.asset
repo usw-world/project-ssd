@@ -6,6 +6,7 @@ EditorUserSettings:
   serializedVersion: 4
   m_ConfigSettings:
     RecentlyUsedSceneGuid-0:
+<<<<<<< HEAD
       value: 010907005d545c5e540c542044770d484f461a292e2974612e7a1867e0b9606b
       flags: 0
     RecentlyUsedSceneGuid-1:
@@ -27,6 +28,20 @@ EditorUserSettings:
       value: 065301025707080f0e0f0e2042770748154f49727d7e75657c7b4c36b3e1623d
       flags: 0
     RecentlyUsedSceneGuid-7:
+=======
+      value: 0100560557000d0d0e0c5d7b11745d444216492c2970206975704435e6b26539
+      flags: 0
+    RecentlyUsedSceneGuid-1:
+      value: 065301025707080f0e0f0e2042770748154f49727d7e75657c7b4c36b3e1623d
+      flags: 0
+    RecentlyUsedSceneGuid-2:
+      value: 0705015607510d58550b0e2445220744434f48792f7b71677c781965b1b46760
+      flags: 0
+    RecentlyUsedSceneGuid-3:
+      value: 5005075355515c0a0c560a77137b5e44104f1e7c2e7f23637c781c30bbb56368
+      flags: 0
+    RecentlyUsedSceneGuid-4:
+>>>>>>> c564d4c (Object pooler is running.)
       value: 55050c5254545b5d5e0c0d7615730f44404f4c2c2d2923617f7f1b62b5e4323e
       flags: 0
     RecentlyUsedSceneGuid-8:
