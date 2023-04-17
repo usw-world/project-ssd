@@ -12,13 +12,15 @@ public class TPlayerInput : MonoBehaviour
 	private void Awake() => player = GetComponent<TPlayer>();
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))   player.OnDamage();    // 임시
+        if (Input.GetKeyDown(KeyCode.Alpha1))   player.OnDamage(null, 10);    // 임시
         if (Input.GetKeyDown(KeyCode.Alpha2))   player.OnDown();      // 임시
     }
 	void OnMove(InputValue value) => player.InputMove(value.Get<Vector3>());
 	void OnDodge() => player.OnSlide();
 	void OnAttack() => player.OnAttack();
-	void OnSAttack() => player.OnSAttack();
 	void OnCameraZoomIn() => CameraManager.CM.CameraZoomInOut(true);
 	void OnCameraZoomOut() => CameraManager.CM.CameraZoomInOut(false);
+	void OnConvertWalkRun() => player.OnMoveSpeedConvert();
+	void OnStartRush() => player.OnRunToRush();
+	void OnEndRush() => player.OnRushToRun();
 }

@@ -6,7 +6,7 @@ public class SkillEffect : MonoBehaviour
 {
 	protected SkillProperty property;
 	protected GameObject origin;
-	protected List<Enemy> attackedEnemy = new List<Enemy>();
+	protected List<IDamageable> targets = new List<IDamageable>();
 	private void Start()
 	{
 		Destroy(gameObject, 1f);
@@ -18,14 +18,17 @@ public class SkillEffect : MonoBehaviour
 	}
 	private void OnTriggerEnter(Collider other)
 	{
-		Enemy hitEnemy = other.GetComponent<Enemy>();
-		if (hitEnemy != null)
+		if (other.gameObject.layer == 1 << LayerMask.NameToLayer("Enemy"))
 		{
-			if (!attackedEnemy.Contains(hitEnemy))
+			IDamageable target = other.GetComponent<IDamageable>();
+			if (target != null)
 			{
-				attackedEnemy.Add(hitEnemy);
-				float amount = property.skillAP * origin.GetComponent<QPlyerSkillTest>().GetAP();
-				hitEnemy.OnDamage(origin, amount);
+				if (!targets.Contains(target))
+				{
+					targets.Add(target);
+					float amount = property.skillAP * origin.GetComponent<QPlyerSkillTest>().GetAP();
+					target.OnDamage(origin, amount);
+				}
 			}
 		}
 	}
