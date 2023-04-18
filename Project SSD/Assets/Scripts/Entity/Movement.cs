@@ -57,6 +57,8 @@ public class Movement : MonoBehaviour {
                 float zz = direction.normalized.z + (Mathf.Abs(direction.normalized.z)>Mathf.Abs(hit.normal.z) ? hit.normal.z : -direction.normalized.z);
                 normal = new Vector3(xx, yy, zz);
             }
+            Debug.DrawLine(transform.position + normal, transform.position + normal*5, Color.red);
+            transform.Translate(direction.magnitude * normal, Space.World);
         } else {
             transform.Translate(direction, Space.World);
         }
