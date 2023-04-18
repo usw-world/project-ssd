@@ -57,11 +57,13 @@ public class Movement : MonoBehaviour {
                 float zz = direction.normalized.z + (Mathf.Abs(direction.normalized.z)>Mathf.Abs(hit.normal.z) ? hit.normal.z : -direction.normalized.z);
                 normal = new Vector3(xx, yy, zz);
             }
-            Debug.DrawLine(transform.position + normal, transform.position + normal*5, Color.red);
-            transform.Translate(direction.magnitude * normal, Space.World);
         } else {
             transform.Translate(direction, Space.World);
         }
+    }
+    public RaycastHit[] CheckDirection(Vector3 dir, float distance, int layerMask=~0) {
+        (Vector3 point1, Vector3 point2, float radius) = colliderBounds.RaycastComponent;
+        return Physics.CapsuleCastAll(point1, point2, radius, dir, distance, layerMask);
     }
     private void Pulldown() {
         (Vector3 point1, Vector3 point2, float radius) = colliderBounds.RaycastComponent;
