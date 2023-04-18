@@ -63,15 +63,12 @@ public class Movement : MonoBehaviour {
             transform.Translate(direction, Space.World);
         }
     }
-<<<<<<< HEAD
+
     public RaycastHit[] CheckDirection(Vector3 dir, float distance, int layerMask=~0) {
         (Vector3 point1, Vector3 point2, float radius) = colliderBounds.RaycastComponent;
         return Physics.CapsuleCastAll(point1, point2, radius, dir, distance, layerMask);
     }
     private void Pulldown() {
-=======
-	private void Pulldown() {
->>>>>>> 68ea2ba (T Player functions was updated.)
         (Vector3 point1, Vector3 point2, float radius) = colliderBounds.RaycastComponent;
         RaycastHit hit;
         bool isGround = Physics.CapsuleCast(point1, point2, radius, Vector3.down, out hit, distanceFromBottom+pullingDistance, blockLayer);

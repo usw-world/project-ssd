@@ -131,7 +131,8 @@ public class TPlayer : MonoBehaviour , IDamageable
 		{
 			Vector3 z = Vector3.zero;
 			targetPos.y = transform.position.y;
-			transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref z, 3f * Time.deltaTime);
+			Vector3 dir = Vector3.SmoothDamp(transform.position, targetPos, ref z, 0.045f) - transform.position;
+			movement.MoveToward(dir, Space.World);
 		};
         slideState.onStay = () => { Sliding(); };
         downState.onStay = () => { };
@@ -309,21 +310,19 @@ public class TPlayer : MonoBehaviour , IDamageable
 	Vector3 targetPos;
 	void SlideAttackStateOnActive()
 	{
-		RaycastHit hit;
-		Vector3 offset = new Vector3(0, 0.5f, 0);
-		Vector3 from = transform.position + offset;
-		Vector3 to = transform.forward;
-		float dist = 5f;
+		RaycastHit[] hits = movement.CheckDirection(transform.forward, 5f, 5 << 6);
 
-		if (Physics.Raycast(from, to, out hit, dist))
-		{
-			targetPos = transform.position - hit.point;
-			targetPos.y = 0;
-			targetPos = hit.point + targetPos.normalized * 0.5f;
-		}
+		if (hits.Length == 0)
+			targetPos = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
 		else
 		{
-			targetPos = to + transform.position + (transform.forward * 5f + Vector3.up * .5f);
+			targetPos = transform.position - hits[0].point;
+			targetPos.y = 0;
+			targetPos = hits[0].point + targetPos.normalized * 0.5f;
+			for (int i = 0; i < hits.Length; i++)
+			{
+				print(hits[i].collider.name);
+			}
 		}
 
 		SwordUse(true);

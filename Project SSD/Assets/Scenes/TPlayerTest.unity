@@ -709,7 +709,7 @@ GameObject:
   - component: {fileID: 489022937}
   - component: {fileID: 489022936}
   - component: {fileID: 489022935}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -27054,6 +27054,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1275966365, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275966366, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_Height
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275966366, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_Radius
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275966366, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: m_Center.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1580547243, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
       propertyPath: m_NotificationBehavior
       value: 0
@@ -27136,6 +27152,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_WarningMessage
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
+        type: 3}
+      propertyPath: radius
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
+        type: 3}
+      propertyPath: useGravity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
+        type: 3}
+      propertyPath: cylinderHeight
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
+        type: 3}
+      propertyPath: distanceFromBottom
+      value: 0.62
       objectReference: {fileID: 0}
     - target: {fileID: 6410919741541939096, guid: 0eb800c82e837d74598e54dd92ec4a2f,
         type: 3}
@@ -32522,7 +32558,7 @@ GameObject:
   - component: {fileID: 1480574331}
   - component: {fileID: 1480574330}
   - component: {fileID: 1480574329}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Cube (1)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -32600,7 +32636,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1480574328}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.0406, y: -0.1401, z: 3.7411}
+  m_LocalPosition: {x: -1.0406, y: -0.412, z: 3.7411}
   m_LocalScale: {x: 10.831425, y: 2.2518866, z: 4.7433004}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -43887,7 +43923,7 @@ GameObject:
   - component: {fileID: 2013669317}
   - component: {fileID: 2013669316}
   - component: {fileID: 2013669315}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (2)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -43965,8 +44001,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2013669314}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.3943, y: -0.77, z: 4.9799}
-  m_LocalScale: {x: 6.124088, y: 2.9820127, z: 2.2658746}
+  m_LocalPosition: {x: -9.02, y: 1.9153, z: 5.8392}
+  m_LocalScale: {x: 6.124088, y: 8.352618, z: 0.5472087}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
