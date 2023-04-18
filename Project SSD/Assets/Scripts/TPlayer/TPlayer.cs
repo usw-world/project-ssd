@@ -11,8 +11,10 @@ using Mirror;
 [RequireComponent(typeof(TPlayerInput))]
 [RequireComponent(typeof(StateMachine))]
 [RequireComponent(typeof(Movement))]
-public class TPlayer : MonoBehaviour , IDamageable{
-    static public TPlayer instance { get; private set; }
+public class TPlayer : MonoBehaviour , IDamageable
+{
+	#region Init
+	static public TPlayer instance { get; private set; }
     
 	[SerializeField] private PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;
@@ -55,6 +57,7 @@ public class TPlayer : MonoBehaviour , IDamageable{
     private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
 	#endregion
+	#endregion
 
 	private void Awake()
     {
@@ -85,7 +88,20 @@ public class TPlayer : MonoBehaviour , IDamageable{
         idleStateGroup.Add(idleState_2);
         idleStateGroup.Add(idleState_3);
     }
-    private void InitializeStateOnActive()
+	private void Update()
+	{
+		RaycastHit hit;
+		Vector3 offset = new Vector3(0, 0.5f, 0);
+		Vector3 from = transform.position + offset;
+		Vector3 to = transform.forward - transform.position + offset;
+
+		//Gizmos.DrawLine(from, transform.forward + offset );
+		if (Physics.Raycast(from, to, out hit, 5f))
+		{
+			//print("질풍참 인식 : " + hit.collider.gameObject.name);
+		}
+	}
+	private void InitializeStateOnActive()
     {
         idleState_1.onActive = (State prev) => { ChangeAnimation("Idle1"); idleTime = 0; };
         idleState_2.onActive = (State prev) => { ChangeAnimation("Idle2"); };
@@ -95,13 +111,13 @@ public class TPlayer : MonoBehaviour , IDamageable{
         attackState_2.onActive = (State prev) => { ChangeAnimation("Attack2"); };
         attackState_3.onActive = (State prev) => { ChangeAnimation("Attack3"); };
         attackState_4.onActive = (State prev) => { ChangeAnimation("Attack4"); };
-		slideAttackState.onActive = (State prev) => { ChangeAnimation("SlideAttack"); SwordUse(true); };
+		slideAttackState.onActive = (State prev) => { SlideAttackStateOnActive(); };
         slideState.onActive = (State prev) => { ChangeAnimation("Slide"); isImnune = true; };
         downState.onActive = (State prev) => { ChangeAnimation("Down"); isSuperArmour = true; };
         damageState.onActive = (State prev) => { ChangeAnimation("Damage"); hitCount = 0; };
         refleshState.onActive = (State prev) => { ChangeAnimation("Reflesh"); };
     }
-    private void InitializeStateOnStay()
+	private void InitializeStateOnStay()
     {
         idleState_1.onStay = () => { IdleTimeUpdate(); };
         idleState_2.onStay = () => { };
@@ -111,7 +127,12 @@ public class TPlayer : MonoBehaviour , IDamageable{
         attackState_2.onStay = () => { };
         attackState_3.onStay = () => { };
         attackState_4.onStay = () => { };
-		slideAttackState.onStay = () => { Sliding(); };
+		slideAttackState.onStay = () => 
+		{
+			Vector3 z = Vector3.zero;
+			targetPos.y = transform.position.y;
+			transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref z, 3f * Time.deltaTime);
+		};
         slideState.onStay = () => { Sliding(); };
         downState.onStay = () => { };
         damageState.onStay = () => { HitCountUpdate(); };
@@ -207,10 +228,13 @@ public class TPlayer : MonoBehaviour , IDamageable{
 
         if (stateMachine.currentState == damageState ||
             stateMachine.currentState == downState) return;
-		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
-		Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 7f);
-		transform.rotation = Quaternion.LookRotation(look);
-		transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
+		if (lookVecter != Vector3.zero)
+		{
+			Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
+			Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 7f);
+			transform.rotation = Quaternion.LookRotation(look);
+			transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
+		}
 		stateMachine.ChangeState(slideState, false);
     }
     public void OnAttack()
@@ -239,15 +263,6 @@ public class TPlayer : MonoBehaviour , IDamageable{
         stateMachine.ChangeState(attackStateGroup[attackCount], false);
         attackCount++;
         attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
-    }
-    public void SlideAttack()
-    {
-        Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
-        Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 7f);
-        transform.rotation = Quaternion.LookRotation(look);
-        transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
-        stateMachine.ChangeState(slideAttackState, false);
-        isCanAttack = false;
     }
     public void OnSkill_0()
     {
@@ -286,10 +301,47 @@ public class TPlayer : MonoBehaviour , IDamageable{
 		for (int i = 0; i < hit.Length; i++)
 		{
 			IDamageable target = hit[i].GetComponent<IDamageable>();
-			target.OnDamage(gameObject, status.AP);
+			target?.OnDamage(gameObject, status.AP);
 		}
 	}
-    void Move()
+
+	[System.NonSerialized] public int blockLayer = 1 << 6;
+	Vector3 targetPos;
+	void SlideAttackStateOnActive()
+	{
+		RaycastHit hit;
+		Vector3 offset = new Vector3(0, 0.5f, 0);
+		Vector3 from = transform.position + offset;
+		Vector3 to = transform.forward;
+		float dist = 5f;
+
+		if (Physics.Raycast(from, to, out hit, dist))
+		{
+			targetPos = transform.position - hit.point;
+			targetPos.y = 0;
+			targetPos = hit.point + targetPos.normalized * 0.5f;
+		}
+		else
+		{
+			targetPos = to + transform.position + (transform.forward * 5f + Vector3.up * .5f);
+		}
+
+		SwordUse(true);
+		ChangeAnimation("SlideAttack");
+	}
+	void SlideAttack()
+    {
+		if (lookVecter != Vector3.zero)
+		{
+			Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
+			Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 7f);
+			transform.rotation = Quaternion.LookRotation(look);
+			transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
+		}
+        stateMachine.ChangeState(slideAttackState, false);
+        isCanAttack = false;
+    }
+	void Move()
     {
         Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
         Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime);
@@ -383,7 +435,6 @@ public class TPlayer : MonoBehaviour , IDamageable{
 		now = target;
 		ani.SetFloat("Speed", now);
 	}
-
 	void OnDrawGizmos()
 	{
 		Vector3 size = new Vector3(1f,2f,1f);
@@ -392,6 +443,16 @@ public class TPlayer : MonoBehaviour , IDamageable{
 		Gizmos.DrawCube(position, size);
 		Gizmos.color = Color.white;
 		Gizmos.DrawWireCube(position, size);
+
+		Gizmos.color = Color.yellow;
+		Vector3 offset = new Vector3(0, 0.5f, 0);
+		Vector3 from = transform.position + offset;
+		Vector3 to = transform.forward - transform.position;
+
+		to += transform.forward * 5f;
+		to += offset;
+
+		Gizmos.DrawLine(from, transform.position + (transform.forward * 5f + Vector3.up * .5f));
 	}
 }
 [Serializable]
