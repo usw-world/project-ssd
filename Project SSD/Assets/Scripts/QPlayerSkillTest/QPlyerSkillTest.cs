@@ -120,7 +120,7 @@ public class QPlyerSkillTest : MonoBehaviour
 	}
 	void UseSkill()
 	{
-		usingSkill.Use(targetPos, gameObject); // [조준스킬] [조준 후] 사용
+		usingSkill.Use(targetPos); // [조준스킬] [조준 후] 사용
 		usingSkill = null;
 		SkillAreaDisable();
 	}

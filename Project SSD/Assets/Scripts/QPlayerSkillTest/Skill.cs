@@ -9,17 +9,18 @@ public class Skill : MonoBehaviour
 	public SkillArea area;
 	public SkillProperty property;
 
-	public void Update()
+	public virtual void Update()
 	{
 		if (property.nowCollTime < property.collTime)
 			property.nowCollTime += Time.deltaTime;
 	}
-	public virtual void Use(Vector3 target, GameObject origin)
+	public virtual void Use() { }
+	public virtual void Use(Vector3 target)
 	{
 		property.nowCollTime = 0;
 		GameObject temp = Instantiate(info.effect, target, Quaternion.Euler(0,0,0));
 		SkillEffect skillEffect = temp.GetComponent<SkillEffect>();
-		skillEffect.Set(property, origin);
+		skillEffect.OnActive(property); ;
 	}
 	public bool CanUse(){ return (property.nowCollTime >= property.collTime) ? true : false;	}
 }

@@ -11,15 +11,15 @@ using Mirror;
 [RequireComponent(typeof(TPlayerInput))]
 [RequireComponent(typeof(StateMachine))]
 [RequireComponent(typeof(Movement))]
-public class TPlayer : MonoBehaviour , IDamageable
+public class TPlayer : MonoBehaviour , IDamageable, IGetAPable
 {
 	#region Init
 	static public TPlayer instance { get; private set; }
     
 	[SerializeField] private PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;
-	[SerializeField] private GameObject dodgeEffect;
-
+	[SerializeField] private Skill dodgeAttackSkill;
+	[SerializeField] private Skill[] attackSkills;
 
 	Coroutine dodgeCoroutine;
 	Coroutine rushCoroutine;
@@ -109,19 +109,18 @@ public class TPlayer : MonoBehaviour , IDamageable
         attackState_1.onActive = (State prev) => {
 			ChangeAnimation("Attack1");
 			SwordUse(true);
-			dodgeEffect.SetActive(true);
 		};
         attackState_2.onActive = (State prev) => { ChangeAnimation("Attack2"); };
         attackState_3.onActive = (State prev) => { ChangeAnimation("Attack3"); };
         attackState_4.onActive = (State prev) => { ChangeAnimation("Attack4"); };
 		dodgeAttackState.onActive = (State prev) => {
-			ChangeAnimation("SlideAttack");
+			ChangeAnimation("DodgeAttack");
 			SwordUse(true);
-			dodgeHits = movement.CheckDirection(transform.forward, 5f, 5 << 6);
+			dodgeHits = movement.CheckDirection(transform.forward, 8f, 5 << 6);
 			targetPos = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
 		};
         dodgeState.onActive = (State prev) => {
-			ChangeAnimation("Slide");
+			ChangeAnimation("Dodge");
 			isImnune = true;
 			dodgeCoroutine = StartCoroutine(DodgeCoroutine());
 		};
@@ -157,16 +156,20 @@ public class TPlayer : MonoBehaviour , IDamageable
 			}
 			movement.MoveToward(Vector3.forward * ((isWalk) ? status.speed / 2 : status.speed) * Time.deltaTime);
 		};
-        attackState_1.onStay = () => { };
-        attackState_2.onStay = () => { };
-        attackState_3.onStay = () => { };
-        attackState_4.onStay = () => { };
-		dodgeAttackState.onStay = () => 
-		{
-			Vector3 z = Vector3.zero;
-			targetPos.y = transform.position.y;
-			Vector3 dir = Vector3.SmoothDamp(transform.position, targetPos, ref z, 0.045f) - transform.position;
-			movement.MoveToward(dir, Space.World);
+        attackState_1.onStay = () => {
+			MoveToTargetPos();
+		};
+        attackState_2.onStay = () => {
+			MoveToTargetPos();
+		};
+        attackState_3.onStay = () => {
+			MoveToTargetPos();
+		};
+        attackState_4.onStay = () => {
+			MoveToTargetPos();
+		};
+		dodgeAttackState.onStay = () => {
+			MoveToTargetPos();
 		};
 		dodgeState.onStay = () => { };
         downState.onStay = () => { };
@@ -175,20 +178,17 @@ public class TPlayer : MonoBehaviour , IDamageable
 		};
         refleshState.onStay = () => { };
     }
-    private void InitializeStateOnInactive()
+	private void InitializeStateOnInactive()
     {
         idleState_1.onInactive  = (State next) => {  };
         idleState_2.onInactive = (State next) => {  };
         idleState_3.onInactive = (State next) => {  };
         moveState.onInactive = (State next) => {  };
-        attackState_1.onInactive = (State next) => {
-			dodgeEffect.SetActive(false);
-		};
+        attackState_1.onInactive = (State next) => {  };
         attackState_2.onInactive = (State next) => {  };
         attackState_3.onInactive = (State next) => {  };
         attackState_4.onInactive = (State next) => {  };
 		dodgeAttackState.onInactive = (State next) => {
-			dodgeEffect.SetActive(false);
 			dodgeHits = null;
 		};
         dodgeState.onInactive = (State next) => {
@@ -267,7 +267,7 @@ public class TPlayer : MonoBehaviour , IDamageable
         if (stateMachine.currentState == dodgeAttackState) return; 
         if (stateMachine.currentState == dodgeState)
         {
-			OnSlideAttack();
+			OnDodgeAttack();
             return;
         }
 
@@ -280,15 +280,14 @@ public class TPlayer : MonoBehaviour , IDamageable
     {
         if (stateMachine.currentState == dodgeState)
         {
-			OnSlideAttack();
+			OnDodgeAttack();
             return;
         }
 		if (stateMachine.currentState == moveState && isRush)
 		{
-			OnSlideAttack();
+			OnDodgeAttack();
 			return;
 		}
-
         if (stateMachine.currentState == damageState ||
             stateMachine.currentState == dodgeState ||
             stateMachine.currentState == dodgeAttackState ||
@@ -298,9 +297,10 @@ public class TPlayer : MonoBehaviour , IDamageable
         isCanAttack = false;
 
         if (lookVecter != Vector3.zero) rotate(10f);
+
+		//attackCoroutine = StartCoroutine(AttackCoroutine());
+		targetPos = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
 		stateMachine.ChangeState(attackStateGroup[attackCount], false);
-        attackCount++;
-        attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
     }
     public void OnSkill_0()
     {
@@ -332,24 +332,33 @@ public class TPlayer : MonoBehaviour , IDamageable
 	public void BeCanNextAttack() => isCanAttack = true;
 	public void ChackAttackZone()
 	{
-		Vector3 position = transform.position - transform.forward + transform.forward + transform.forward + Vector3.up;
-		Vector3 size = new Vector3(1f, 2f, 1f);
-		Collider[] hit = Physics.OverlapBox(position, size, transform.rotation, 1 << LayerMask.NameToLayer("Enemy"));
+		attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
+		attackSkills[attackCount].Use(); // 임시
+		attackCount++;
+		attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
 
-		for (int i = 0; i < hit.Length; i++)
-		{
-			IDamageable target = hit[i].GetComponent<IDamageable>();
-			target?.OnDamage(gameObject, status.AP);
-		}
+		//Vector3 position = transform.position - transform.forward + transform.forward + transform.forward + Vector3.up;
+		//Vector3 size = new Vector3(1f, 2f, 1f);
+		//Collider[] hit = Physics.OverlapBox(position, size, transform.rotation, 1 << LayerMask.NameToLayer("Enemy"));
+
+		//for (int i = 0; i < hit.Length; i++)
+		//{
+		//	IDamageable target = hit[i].GetComponent<IDamageable>();
+		//	target?.OnDamage(gameObject, status.AP);
+		//}
 	}
 	public void ChackDodgeAttackZone()
 	{
-		dodgeEffect.SetActive(true);
-		for (int i = 0; i < dodgeHits.Length; i++)
-		{
-			IDamageable temp = dodgeHits[i].collider.GetComponent<IDamageable>();
-			temp?.OnDamage(gameObject, 10f);
-		}
+		dodgeAttackSkill.Use();
+		//for (int i = 0; i < dodgeHits.Length; i++)
+		//{
+		//	IDamageable temp = dodgeHits[i].collider.GetComponent<IDamageable>();
+		//	temp?.OnDamage(gameObject, 10f);
+		//}
+	}
+	public float GetAP()
+	{
+		return status.AP;
 	}
 
 	void rotate(float rotSppedPoint = 1f)
@@ -359,7 +368,14 @@ public class TPlayer : MonoBehaviour , IDamageable
 		transform.rotation = Quaternion.LookRotation(look);
 		transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 	}
-	void OnSlideAttack()
+	void MoveToTargetPos()
+	{
+		Vector3 z = Vector3.zero;
+		targetPos.y = transform.position.y;
+		Vector3 dir = Vector3.SmoothDamp(transform.position, targetPos, ref z, 0.02f) - transform.position;
+		movement.MoveToward(dir, Space.World);
+	}
+	void OnDodgeAttack()
     {
 		if (lookVecter != Vector3.zero)
 		{
@@ -444,28 +460,28 @@ public class TPlayer : MonoBehaviour , IDamageable
 			offset += Time.deltaTime * 4;
 			Vector3 d = Vector3.Lerp(Vector3.zero, targetPoint, Mathf.Sin(Mathf.PI * .5f + offset * .5f * Mathf.PI));
 			d.y = 0;
-			movement.MoveToward(d * Time.deltaTime * 20f);
+			movement.MoveToward(d * Time.deltaTime * 30f);
 			yield return null;
 		}
 	}
 	void OnDrawGizmos()
 	{
-		Vector3 size = new Vector3(1f,2f,1f);
-		Vector3 position = transform.position - transform.forward + transform.forward + transform.forward + Vector3.up;
-		Gizmos.color = new Color(0, 0, 1, 0.5f);
-		Gizmos.DrawCube(position, size);
-		Gizmos.color = Color.white;
-		Gizmos.DrawWireCube(position, size);
+		//Vector3 size = new Vector3(1f,2f,1f);
+		//Vector3 position = transform.position - transform.forward + transform.forward + transform.forward + Vector3.up;
+		//Gizmos.color = new Color(0, 0, 1, 0.5f);
+		//Gizmos.DrawCube(position, size);
+		//Gizmos.color = Color.white;
+		//Gizmos.DrawWireCube(position, size);
 
-		Gizmos.color = Color.yellow;
-		Vector3 offset = new Vector3(0, 0.5f, 0);
-		Vector3 from = transform.position + offset;
-		Vector3 to = transform.forward - transform.position;
+		//Gizmos.color = Color.yellow;
+		//Vector3 offset = new Vector3(0, 0.5f, 0);
+		//Vector3 from = transform.position + offset;
+		//Vector3 to = transform.forward - transform.position;
 
-		to += transform.forward * 5f;
-		to += offset;
+		//to += transform.forward * 5f;
+		//to += offset;
 
-		Gizmos.DrawLine(from, transform.position + (transform.forward * 5f + Vector3.up * .5f));
+		//Gizmos.DrawLine(from, transform.position + (transform.forward * 5f + Vector3.up * .5f));
 	}
 }
 [Serializable]
