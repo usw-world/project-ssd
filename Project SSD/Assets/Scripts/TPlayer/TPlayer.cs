@@ -48,11 +48,13 @@ public class TPlayer : MonoBehaviour , IDamageable
     private State attackState_2 = new State("Attack_2");
     private State attackState_3 = new State("Attack_3");
     private State attackState_4 = new State("Attack_4");
-    private State slideAttackState = new State("SlideAttack");
-    private State slideState = new State("Slide");
+    private State dodgeAttackState = new State("Dodge Attack");
+    private State dodgeState = new State("Dodge");
     private State downState = new State("Down");
     private State damageState = new State("Damage");
     private State refleshState = new State("Reflesh");
+
+	private Coroutine dodgeCoroutine;
 
     private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
@@ -111,8 +113,12 @@ public class TPlayer : MonoBehaviour , IDamageable
         attackState_2.onActive = (State prev) => { ChangeAnimation("Attack2"); };
         attackState_3.onActive = (State prev) => { ChangeAnimation("Attack3"); };
         attackState_4.onActive = (State prev) => { ChangeAnimation("Attack4"); };
-		slideAttackState.onActive = (State prev) => { SlideAttackStateOnActive(); };
-        slideState.onActive = (State prev) => { ChangeAnimation("Slide"); isImnune = true; };
+		dodgeAttackState.onActive = (State prev) => { SlideAttackStateOnActive(); };
+        dodgeState.onActive = (State prev) => {
+			ChangeAnimation("Slide");
+			isImnune = true;
+			dodgeCoroutine = StartCoroutine(DodgeCoroutine());
+		};
         downState.onActive = (State prev) => { ChangeAnimation("Down"); isSuperArmour = true; };
         damageState.onActive = (State prev) => { ChangeAnimation("Damage"); hitCount = 0; };
         refleshState.onActive = (State prev) => { ChangeAnimation("Reflesh"); };
@@ -127,18 +133,33 @@ public class TPlayer : MonoBehaviour , IDamageable
         attackState_2.onStay = () => { };
         attackState_3.onStay = () => { };
         attackState_4.onStay = () => { };
-		slideAttackState.onStay = () => 
+		dodgeAttackState.onStay = () => 
 		{
 			Vector3 z = Vector3.zero;
 			targetPos.y = transform.position.y;
 			Vector3 dir = Vector3.SmoothDamp(transform.position, targetPos, ref z, 0.045f) - transform.position;
 			movement.MoveToward(dir, Space.World);
 		};
-        slideState.onStay = () => { Sliding(); };
+		dodgeState.onStay = () => { };
         downState.onStay = () => { };
         damageState.onStay = () => { HitCountUpdate(); };
         refleshState.onStay = () => { };
     }
+
+    private IEnumerator DodgeCoroutine() {
+		float offset = 0;
+		Vector3 targetPoint = Vector3.forward;
+
+		while(offset < 1) {
+			offset += Time.deltaTime * 3;
+			Vector3 d = Vector3.Lerp(Vector3.zero, targetPoint, Mathf.Sin(Mathf.PI*.5f + offset*.5f*Mathf.PI));
+			d.y = 0;
+			movement.MoveToward(d * Time.deltaTime * 30f);
+			yield return null;
+		}
+		ResetState();
+    }
+
     private void InitializeStateOnInactive()
     {
         idleState_1.onInactive  = (State next) => {  };
@@ -149,8 +170,12 @@ public class TPlayer : MonoBehaviour , IDamageable
         attackState_2.onInactive = (State next) => {  };
         attackState_3.onInactive = (State next) => {  };
         attackState_4.onInactive = (State next) => {  };
-		slideAttackState.onInactive = (State next) => {  };
-        slideState.onInactive = (State next) => { isImnune = false; };
+		dodgeAttackState.onInactive = (State next) => {  };
+        dodgeState.onInactive = (State next) => {
+			isImnune = false;
+			if(dodgeCoroutine != null)
+				StopCoroutine(dodgeCoroutine);
+		};
         downState.onInactive = (State next) => { isSuperArmour = false; };
         damageState.onInactive = (State next) => {  };
         refleshState.onInactive = (State next) => {  };
@@ -164,8 +189,8 @@ public class TPlayer : MonoBehaviour , IDamageable
             stateMachine.currentState == attackState_2 ||
             stateMachine.currentState == attackState_3 ||
             stateMachine.currentState == attackState_4 ||
-            stateMachine.currentState == slideAttackState ||
-            stateMachine.currentState == slideState ||
+            stateMachine.currentState == dodgeAttackState ||
+            stateMachine.currentState == dodgeState ||
             stateMachine.currentState == downState ||
             stateMachine.currentState == damageState ||
             stateMachine.currentState == refleshState)
@@ -220,8 +245,8 @@ public class TPlayer : MonoBehaviour , IDamageable
     public void OnDown() => stateMachine.ChangeState(downState, false);  
     public void OnSlide()
     {
-        if (stateMachine.currentState == slideAttackState) return; 
-        if (stateMachine.currentState == slideState)
+        if (stateMachine.currentState == dodgeAttackState) return; 
+        if (stateMachine.currentState == dodgeState)
         {
 			SlideAttack();
             return;
@@ -236,19 +261,19 @@ public class TPlayer : MonoBehaviour , IDamageable
 			transform.rotation = Quaternion.LookRotation(look);
 			transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 		}
-		stateMachine.ChangeState(slideState, false);
+		stateMachine.ChangeState(dodgeState, false);
     }
     public void OnAttack()
     {
-        if (stateMachine.currentState == slideState)
+        if (stateMachine.currentState == dodgeState)
         {
 			SlideAttack();
             return;
         }
 
         if (stateMachine.currentState == damageState ||
-            stateMachine.currentState == slideState ||
-            stateMachine.currentState == slideAttackState ||
+            stateMachine.currentState == dodgeState ||
+            stateMachine.currentState == dodgeAttackState ||
             stateMachine.currentState == downState ||
             isCanAttack == false) return;
 
@@ -306,7 +331,6 @@ public class TPlayer : MonoBehaviour , IDamageable
 		}
 	}
 
-	[System.NonSerialized] public int blockLayer = 1 << 6;
 	Vector3 targetPos;
 	void SlideAttackStateOnActive()
 	{
@@ -337,7 +361,7 @@ public class TPlayer : MonoBehaviour , IDamageable
 			transform.rotation = Quaternion.LookRotation(look);
 			transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 		}
-        stateMachine.ChangeState(slideAttackState, false);
+        stateMachine.ChangeState(dodgeAttackState, false);
         isCanAttack = false;
     }
 	void Move()
@@ -378,7 +402,6 @@ public class TPlayer : MonoBehaviour , IDamageable
         nowAnimationTrigger = trigger;
         ani.SetTrigger(nowAnimationTrigger);
     }
-    void Sliding() => movement.MoveToward(Vector3.forward * status.speed * 2f * Time.deltaTime); 
     void SwordUse(bool use) => sword.Set(use);
 	IEnumerator SmoothConvert(bool fade)
 	{

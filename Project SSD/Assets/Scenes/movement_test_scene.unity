@@ -712,7 +712,7 @@ GameObject:
   - component: {fileID: 1948624677}
   - component: {fileID: 1948624676}
   m_Layer: 6
-  m_Name: wall
+  m_Name: wall maria
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -809,7 +809,7 @@ GameObject:
   - component: {fileID: 2013669316}
   - component: {fileID: 2013669315}
   m_Layer: 6
-  m_Name: wall
+  m_Name: wall f
   m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
