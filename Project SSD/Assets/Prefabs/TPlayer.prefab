@@ -6392,7 +6392,7 @@ GameObject:
   - component: {fileID: 1275966364}
   - component: {fileID: 1580547243}
   - component: {fileID: 4024720941257573561}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -6413,6 +6413,7 @@ Transform:
   m_Children:
   - {fileID: 6178132841950188900}
   - {fileID: 8860071223830208548}
+  - {fileID: 1275198697288152914}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6498,9 +6499,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.25
-  m_Height: 1
+  m_Height: 1.1
   m_Direction: 1
-  m_Center: {x: 0, y: 1.15, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &1275966363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6525,9 +6526,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4eaf08e371b4e2f4d917932bd8983901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cylinderHeight: 1
-  radius: 0.3
-  distanceFromBottom: 0.7
+  cylinderHeight: 0.45
+  radius: 0.25
+  distanceFromBottom: 0.62
   pullingDistance: 0.4
   useGravity: 1
   pullingCoef: 0.2
@@ -6556,6 +6557,7 @@ MonoBehaviour:
     weapon: {fileID: 543450653158560035}
     unUse: {fileID: 6187742542714504873}
     use: {fileID: 1547742904}
+  dodgeEffect: {fileID: 1275198697288152913}
 --- !u!114 &1275966364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6593,7 +6595,31 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: eda420a9-0e79-4719-ad79-f01f1a0c7226
+    m_ActionName: Player Map/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 11cd795f-5e93-4fe1-be70-3d3fee3288d2
+    m_ActionName: Player Map/Attack[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c8955d6e-9ac9-418e-afd8-cb39d7d6ad80
+    m_ActionName: Player Map/SAttack[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 9d799f83-8041-468e-8a3f-54ab258ce8c4
+    m_ActionName: Player Map/Dodge[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1416dfb4-0927-40e5-8efd-b8bc579becfa
+    m_ActionName: Player Map/CameraZoomIn[/Mouse/scroll/up]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2737f8ad-9827-4fee-a1ea-92eac8eb193e
+    m_ActionName: Player Map/CameraZoomOut[/Mouse/scroll/down]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player Map
@@ -10321,6 +10347,87 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 58645f3606ff7f048a229e157a52779c,
     type: 3}
   m_PrefabInstance: {fileID: 549795528}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &778628925
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 7972339259538638219}
+    m_Modifications:
+    - target: {fileID: 1275198696711936108, guid: 1b065340ad3239149a30cb86de527d37,
+        type: 3}
+      propertyPath: m_Name
+      value: sword trail
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275198696711936111, guid: 1b065340ad3239149a30cb86de527d37,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275198696711936111, guid: 1b065340ad3239149a30cb86de527d37,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.63
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275198696711936111, guid: 1b065340ad3239149a30cb86de527d37,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.42
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275198696711936111, guid: 1b065340ad3239149a30cb86de527d37,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275198696711936111, guid: 1b065340ad3239149a30cb86de527d37,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7421652
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275198696711936111, guid: 1b065340ad3239149a30cb86de527d37,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.6640149
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275198696711936111, guid: 1b065340ad3239149a30cb86de527d37,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.058043987
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275198696711936111, guid: 1b065340ad3239149a30cb86de527d37,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.0700424
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275198696711936111, guid: 1b065340ad3239149a30cb86de527d37,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -77.819
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275198696711936111, guid: 1b065340ad3239149a30cb86de527d37,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -58.122
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275198696711936111, guid: 1b065340ad3239149a30cb86de527d37,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 59.1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1b065340ad3239149a30cb86de527d37, type: 3}
+--- !u!1 &1275198697288152913 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1275198696711936108, guid: 1b065340ad3239149a30cb86de527d37,
+    type: 3}
+  m_PrefabInstance: {fileID: 778628925}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1275198697288152914 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1275198696711936111, guid: 1b065340ad3239149a30cb86de527d37,
+    type: 3}
+  m_PrefabInstance: {fileID: 778628925}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1947479469
 PrefabInstance:

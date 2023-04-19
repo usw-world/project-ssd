@@ -20,6 +20,10 @@ public class TPlayer : MonoBehaviour , IDamageable
 	[SerializeField] private WeaponTransform sword;
 	[SerializeField] private GameObject dodgeEffect;
 
+
+	Coroutine dodgeCoroutine;
+	Coroutine rushCoroutine;
+	Coroutine WalkCoroutine;
 	RaycastHit[] dodgeHits;
 	Vector3 lookVecter;
 	Vector3 targetPos;
@@ -57,8 +61,6 @@ public class TPlayer : MonoBehaviour , IDamageable
     private State damageState = new State("Damage");
     private State refleshState = new State("Reflesh");
 
-	private Coroutine dodgeCoroutine;
-
     private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
 	#endregion
@@ -94,10 +96,16 @@ public class TPlayer : MonoBehaviour , IDamageable
     }
 	private void InitializeStateOnActive()
     {
-        idleState_1.onActive = (State prev) => { ChangeAnimation("Idle1"); idleTime = 0; };
+        idleState_1.onActive = (State prev) => {
+			ChangeAnimation("Idle1");
+			idleTime = 0;
+		};
         idleState_2.onActive = (State prev) => { ChangeAnimation("Idle2"); };
         idleState_3.onActive = (State prev) => { ChangeAnimation("Idle3"); };
-        moveState.onActive = (State prev) => { ChangeAnimation("Move"); SwordUse(false); };
+        moveState.onActive = (State prev) => {
+			ChangeAnimation("Move");
+			SwordUse(false);
+		};
         attackState_1.onActive = (State prev) => {
 			ChangeAnimation("Attack1");
 			SwordUse(true);
@@ -106,22 +114,49 @@ public class TPlayer : MonoBehaviour , IDamageable
         attackState_2.onActive = (State prev) => { ChangeAnimation("Attack2"); };
         attackState_3.onActive = (State prev) => { ChangeAnimation("Attack3"); };
         attackState_4.onActive = (State prev) => { ChangeAnimation("Attack4"); };
-		dodgeAttackState.onActive = (State prev) => { SlideAttackStateOnActive(); };
+		dodgeAttackState.onActive = (State prev) => {
+			ChangeAnimation("SlideAttack");
+			SwordUse(true);
+			dodgeHits = movement.CheckDirection(transform.forward, 5f, 5 << 6);
+			targetPos = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
+		};
         dodgeState.onActive = (State prev) => {
 			ChangeAnimation("Slide");
 			isImnune = true;
 			dodgeCoroutine = StartCoroutine(DodgeCoroutine());
 		};
-        downState.onActive = (State prev) => { ChangeAnimation("Down"); isSuperArmour = true; };
-        damageState.onActive = (State prev) => { ChangeAnimation("Damage"); hitCount = 0; };
+        downState.onActive = (State prev) => {
+			ChangeAnimation("Down");
+			isSuperArmour = true;
+		};
+        damageState.onActive = (State prev) => {
+			ChangeAnimation("Damage");
+			hitCount = 0;
+		};
         refleshState.onActive = (State prev) => { ChangeAnimation("Reflesh"); };
     }
 	private void InitializeStateOnStay()
     {
-        idleState_1.onStay = () => { IdleTimeUpdate(); };
+        idleState_1.onStay = () => {
+			idleTime += Time.deltaTime;
+			if (idleTime >= idleActionTime)
+			{
+				idleTime = 0;
+				idleActionIdx = Random.Range(1, idleStateGroup.Count);
+				stateMachine.ChangeState(idleStateGroup[idleActionIdx], false);
+			}
+		};
         idleState_2.onStay = () => { };
         idleState_3.onStay = () => { };
-        moveState.onStay = () => { Move(); };
+        moveState.onStay = () => {
+			rotate();
+			if (isRush)
+			{
+				movement.MoveToward(Vector3.forward * status.speed * 2f * Time.deltaTime);
+				return;
+			}
+			movement.MoveToward(Vector3.forward * ((isWalk) ? status.speed / 2 : status.speed) * Time.deltaTime);
+		};
         attackState_1.onStay = () => { };
         attackState_2.onStay = () => { };
         attackState_3.onStay = () => { };
@@ -130,15 +165,14 @@ public class TPlayer : MonoBehaviour , IDamageable
 		{
 			Vector3 z = Vector3.zero;
 			targetPos.y = transform.position.y;
-
-			//Vector3 dir = Vector3.SmoothDamp(transform.position, targetPos, ref z, 0.045f) - transform.position;
-			//movement.MoveToward(dir, Space.World);
-
-			transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref z, 0.045f);
+			Vector3 dir = Vector3.SmoothDamp(transform.position, targetPos, ref z, 0.045f) - transform.position;
+			movement.MoveToward(dir, Space.World);
 		};
 		dodgeState.onStay = () => { };
         downState.onStay = () => { };
-        damageState.onStay = () => { HitCountUpdate(); };
+        damageState.onStay = () => {
+			if (hitCount >= 3) OnDown(); 
+		};
         refleshState.onStay = () => { };
     }
     private void InitializeStateOnInactive()
@@ -159,8 +193,7 @@ public class TPlayer : MonoBehaviour , IDamageable
 		};
         dodgeState.onInactive = (State next) => {
 			isImnune = false;
-			if (dodgeCoroutine != null)
-				StopCoroutine(dodgeCoroutine);
+			if (dodgeCoroutine != null) StopCoroutine(dodgeCoroutine);
 		};
         downState.onInactive = (State next) => { isSuperArmour = false; };
         damageState.onInactive = (State next) => {  };
@@ -234,31 +267,25 @@ public class TPlayer : MonoBehaviour , IDamageable
         if (stateMachine.currentState == dodgeAttackState) return; 
         if (stateMachine.currentState == dodgeState)
         {
-			SlideAttack();
+			OnSlideAttack();
             return;
         }
 
         if (stateMachine.currentState == damageState ||
             stateMachine.currentState == downState) return;
-		if (lookVecter != Vector3.zero)
-		{
-			Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
-			Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 7f);
-			transform.rotation = Quaternion.LookRotation(look);
-			transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
-		}
+		if (lookVecter != Vector3.zero) rotate(10f); 
 		stateMachine.ChangeState(dodgeState, false);
     }
     public void OnAttack()
     {
         if (stateMachine.currentState == dodgeState)
         {
-			SlideAttack();
+			OnSlideAttack();
             return;
         }
 		if (stateMachine.currentState == moveState && isRush)
 		{
-			SlideAttack();
+			OnSlideAttack();
 			return;
 		}
 
@@ -270,14 +297,8 @@ public class TPlayer : MonoBehaviour , IDamageable
 
         isCanAttack = false;
 
-        if (lookVecter != Vector3.zero)
-        {
-            Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
-            Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 7f);
-            transform.rotation = Quaternion.LookRotation(look);
-            transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
-        }
-        stateMachine.ChangeState(attackStateGroup[attackCount], false);
+        if (lookVecter != Vector3.zero) rotate(10f);
+		stateMachine.ChangeState(attackStateGroup[attackCount], false);
         attackCount++;
         attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
     }
@@ -293,20 +314,20 @@ public class TPlayer : MonoBehaviour , IDamageable
 	{
 		if (isRush) return;
 		isWalk = (isWalk) ? false : true;
-		StopAllCoroutines();
-		StartCoroutine(SmoothConvert(isWalk));
+		if(WalkCoroutine != null) StopCoroutine(WalkCoroutine);
+		WalkCoroutine = StartCoroutine(SmoothConvert(isWalk));
 	}
 	public void OnRunToRush()
 	{
 		isWalk = false;
-		StopAllCoroutines();
-		StartCoroutine(SmoothConvertRush(true));
+		if (rushCoroutine != null) StopCoroutine(rushCoroutine); 
+		rushCoroutine = StartCoroutine(SmoothConvertRush(true));
 	}
 	public void OnRushToRun()
 	{
 		isRush = false;
-		StopAllCoroutines();
-		StartCoroutine(SmoothConvertRush(false));
+		if (rushCoroutine != null) StopCoroutine(rushCoroutine);
+		rushCoroutine = StartCoroutine(SmoothConvertRush(false));
 	}
 	public void BeCanNextAttack() => isCanAttack = true;
 	public void ChackAttackZone()
@@ -331,14 +352,14 @@ public class TPlayer : MonoBehaviour , IDamageable
 		}
 	}
 
-	void SlideAttackStateOnActive()
+	void rotate(float rotSppedPoint = 1f)
 	{
-		dodgeHits = movement.CheckDirection(transform.forward, 5f, 5 << 6);
-		targetPos = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
-		SwordUse(true);
-		ChangeAnimation("SlideAttack");
+		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
+		Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * rotSppedPoint * Time.deltaTime);
+		transform.rotation = Quaternion.LookRotation(look);
+		transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 	}
-	void SlideAttack()
+	void OnSlideAttack()
     {
 		if (lookVecter != Vector3.zero)
 		{
@@ -349,37 +370,6 @@ public class TPlayer : MonoBehaviour , IDamageable
 		}
         stateMachine.ChangeState(dodgeAttackState, false);
         isCanAttack = false;
-    }
-	void Move()
-    {
-        Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
-        Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.LookRotation(look);
-        transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
-
-		if (isRush)
-		{
-			movement.MoveToward(Vector3.forward * status.speed * 2f * Time.deltaTime);
-			return;
-		}
-        movement.MoveToward(Vector3.forward * ((isWalk) ? status.speed / 2 : status.speed ) * Time.deltaTime);
-    }
-    void IdleTimeUpdate()
-    {
-        idleTime += Time.deltaTime;
-        if (idleTime >= idleActionTime)
-        {
-            idleTime = 0;
-            idleActionIdx = Random.Range(1, idleStateGroup.Count);
-            stateMachine.ChangeState(idleStateGroup[idleActionIdx], false);
-        }
-    }
-    void HitCountUpdate()
-    {
-        if (hitCount >= 3)
-        {
-            OnDown();
-        }
     }
     void ChangeAnimation(string trigger)
     {
@@ -493,7 +483,7 @@ public class PlayerStatus
 [Serializable]
 public class WeaponTransform
 {
-	public Transform weapon;       // 무기
+	public Transform weapon; // 무기
 	public Transform unUse;  // 무기 사용 안할때 위치
 	public Transform use;    // 무기 사용 위치
 	public void Set(bool useing)
