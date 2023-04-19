@@ -460,51 +460,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1275966364, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
-      propertyPath: inputManager
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275966365, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275966366, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
-      propertyPath: m_Height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275966366, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
-      propertyPath: m_Radius
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 1275966366, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
-      propertyPath: m_Center.y
-      value: 1.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
-        type: 3}
-      propertyPath: height
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
-        type: 3}
-      propertyPath: radius
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
-        type: 3}
-      propertyPath: useGravity
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
-        type: 3}
-      propertyPath: pullingCoef
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 690902255018422438, guid: 0eb800c82e837d74598e54dd92ec4a2f,
-        type: 3}
-      propertyPath: distanceFromBottom
-      value: 0.7
-      objectReference: {fileID: 0}
     - target: {fileID: 6410919741541939096, guid: 0eb800c82e837d74598e54dd92ec4a2f,
         type: 3}
       propertyPath: m_Name

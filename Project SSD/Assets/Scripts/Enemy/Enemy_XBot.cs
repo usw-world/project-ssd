@@ -176,4 +176,11 @@ class Enemy_XBot : MovableEnemy {
         assaultCoroutine = StartCoroutine(AssaultCoroutine());
     }
     #endregion Animation Events
+
+    public override void OnDamage(GameObject origin, float amount) {
+        base.OnDamage(origin, amount);
+    }
+    protected override void OnDie() {
+        enemyStateMachine.ChangeState(dieState);
+    }
 }

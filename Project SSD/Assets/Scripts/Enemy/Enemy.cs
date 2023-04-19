@@ -9,8 +9,8 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     protected StateMachine enemyStateMachine;
     [SerializeField] protected Animator enemyAnimator;
 
-    private float hp;
-    private bool isDead;
+    protected float hp;
+    protected bool isDead;
 
     protected bool targetInRange;
 
@@ -52,7 +52,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
             yield return new WaitForSeconds(detectInterval);
         }
     }
-    protected void OnDie() {
+    protected virtual void OnDie() {
         isDead = true;
     }
 }

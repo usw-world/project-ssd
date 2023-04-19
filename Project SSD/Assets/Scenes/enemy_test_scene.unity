@@ -308,7 +308,7 @@ GameObject:
   - component: {fileID: 490187040}
   - component: {fileID: 490187039}
   - component: {fileID: 490187038}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -699,6 +699,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TPlayer
+      objectReference: {fileID: 0}
+    - target: {fileID: 6410919741541939096, guid: 0eb800c82e837d74598e54dd92ec4a2f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 7972339259538638219, guid: 0eb800c82e837d74598e54dd92ec4a2f,
         type: 3}
@@ -1371,11 +1376,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8716094362318642817, guid: 21b4e86d4d1498245b1cb7a921b50818,
-        type: 3}
-      propertyPath: detectRange
-      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21b4e86d4d1498245b1cb7a921b50818, type: 3}
