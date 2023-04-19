@@ -18,8 +18,11 @@ public class TPlayer : MonoBehaviour , IDamageable
     
 	[SerializeField] private PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;
+	[SerializeField] private GameObject dodgeEffect;
 
+	RaycastHit[] dodgeHits;
 	Vector3 lookVecter;
+	Vector3 targetPos;
 	string nowAnimationTrigger = "";
 	float idleTime = 0;
 	float rotSpeed = 30f;
@@ -69,7 +72,6 @@ public class TPlayer : MonoBehaviour , IDamageable
             Debug.LogWarning("There already is TPlayer on this scene.");
             Destroy(this.gameObject);
         }
-
         ani = GetComponent<Animator>();
         rigi = GetComponent<Rigidbody>();
         movement = GetComponent<Movement>();
@@ -90,26 +92,17 @@ public class TPlayer : MonoBehaviour , IDamageable
         idleStateGroup.Add(idleState_2);
         idleStateGroup.Add(idleState_3);
     }
-	private void Update()
-	{
-		RaycastHit hit;
-		Vector3 offset = new Vector3(0, 0.5f, 0);
-		Vector3 from = transform.position + offset;
-		Vector3 to = transform.forward - transform.position + offset;
-
-		//Gizmos.DrawLine(from, transform.forward + offset );
-		if (Physics.Raycast(from, to, out hit, 5f))
-		{
-			//print("질풍참 인식 : " + hit.collider.gameObject.name);
-		}
-	}
 	private void InitializeStateOnActive()
     {
         idleState_1.onActive = (State prev) => { ChangeAnimation("Idle1"); idleTime = 0; };
         idleState_2.onActive = (State prev) => { ChangeAnimation("Idle2"); };
         idleState_3.onActive = (State prev) => { ChangeAnimation("Idle3"); };
         moveState.onActive = (State prev) => { ChangeAnimation("Move"); SwordUse(false); };
-        attackState_1.onActive = (State prev) => { ChangeAnimation("Attack1"); SwordUse(true); };
+        attackState_1.onActive = (State prev) => {
+			ChangeAnimation("Attack1");
+			SwordUse(true);
+			dodgeEffect.SetActive(true);
+		};
         attackState_2.onActive = (State prev) => { ChangeAnimation("Attack2"); };
         attackState_3.onActive = (State prev) => { ChangeAnimation("Attack3"); };
         attackState_4.onActive = (State prev) => { ChangeAnimation("Attack4"); };
@@ -137,43 +130,36 @@ public class TPlayer : MonoBehaviour , IDamageable
 		{
 			Vector3 z = Vector3.zero;
 			targetPos.y = transform.position.y;
-			Vector3 dir = Vector3.SmoothDamp(transform.position, targetPos, ref z, 0.045f) - transform.position;
-			movement.MoveToward(dir, Space.World);
+
+			//Vector3 dir = Vector3.SmoothDamp(transform.position, targetPos, ref z, 0.045f) - transform.position;
+			//movement.MoveToward(dir, Space.World);
+
+			transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref z, 0.045f);
 		};
 		dodgeState.onStay = () => { };
         downState.onStay = () => { };
         damageState.onStay = () => { HitCountUpdate(); };
         refleshState.onStay = () => { };
     }
-
-    private IEnumerator DodgeCoroutine() {
-		float offset = 0;
-		Vector3 targetPoint = Vector3.forward;
-
-		while(offset < 1) {
-			offset += Time.deltaTime * 3;
-			Vector3 d = Vector3.Lerp(Vector3.zero, targetPoint, Mathf.Sin(Mathf.PI*.5f + offset*.5f*Mathf.PI));
-			d.y = 0;
-			movement.MoveToward(d * Time.deltaTime * 30f);
-			yield return null;
-		}
-		ResetState();
-    }
-
     private void InitializeStateOnInactive()
     {
         idleState_1.onInactive  = (State next) => {  };
         idleState_2.onInactive = (State next) => {  };
         idleState_3.onInactive = (State next) => {  };
         moveState.onInactive = (State next) => {  };
-        attackState_1.onInactive = (State next) => {  };
+        attackState_1.onInactive = (State next) => {
+			dodgeEffect.SetActive(false);
+		};
         attackState_2.onInactive = (State next) => {  };
         attackState_3.onInactive = (State next) => {  };
         attackState_4.onInactive = (State next) => {  };
-		dodgeAttackState.onInactive = (State next) => {  };
+		dodgeAttackState.onInactive = (State next) => {
+			dodgeEffect.SetActive(false);
+			dodgeHits = null;
+		};
         dodgeState.onInactive = (State next) => {
 			isImnune = false;
-			if(dodgeCoroutine != null)
+			if (dodgeCoroutine != null)
 				StopCoroutine(dodgeCoroutine);
 		};
         downState.onInactive = (State next) => { isSuperArmour = false; };
@@ -270,6 +256,11 @@ public class TPlayer : MonoBehaviour , IDamageable
 			SlideAttack();
             return;
         }
+		if (stateMachine.currentState == moveState && isRush)
+		{
+			SlideAttack();
+			return;
+		}
 
         if (stateMachine.currentState == damageState ||
             stateMachine.currentState == dodgeState ||
@@ -330,25 +321,20 @@ public class TPlayer : MonoBehaviour , IDamageable
 			target?.OnDamage(gameObject, status.AP);
 		}
 	}
+	public void ChackDodgeAttackZone()
+	{
+		dodgeEffect.SetActive(true);
+		for (int i = 0; i < dodgeHits.Length; i++)
+		{
+			IDamageable temp = dodgeHits[i].collider.GetComponent<IDamageable>();
+			temp?.OnDamage(gameObject, 10f);
+		}
+	}
 
-	Vector3 targetPos;
 	void SlideAttackStateOnActive()
 	{
-		RaycastHit[] hits = movement.CheckDirection(transform.forward, 5f, 5 << 6);
-
-		if (hits.Length == 0)
-			targetPos = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
-		else
-		{
-			targetPos = transform.position - hits[0].point;
-			targetPos.y = 0;
-			targetPos = hits[0].point + targetPos.normalized * 0.5f;
-			for (int i = 0; i < hits.Length; i++)
-			{
-				print(hits[i].collider.name);
-			}
-		}
-
+		dodgeHits = movement.CheckDirection(transform.forward, 5f, 5 << 6);
+		targetPos = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
 		SwordUse(true);
 		ChangeAnimation("SlideAttack");
 	}
@@ -403,6 +389,7 @@ public class TPlayer : MonoBehaviour , IDamageable
         ani.SetTrigger(nowAnimationTrigger);
     }
     void SwordUse(bool use) => sword.Set(use);
+
 	IEnumerator SmoothConvert(bool fade)
 	{
 		float target = (fade) ? 0 : 0.5f;
@@ -456,6 +443,20 @@ public class TPlayer : MonoBehaviour , IDamageable
 		}
 		now = target;
 		ani.SetFloat("Speed", now);
+	}
+	IEnumerator DodgeCoroutine()
+	{
+		float offset = 0;
+		Vector3 targetPoint = Vector3.forward;
+
+		while (offset < 1)
+		{
+			offset += Time.deltaTime * 4;
+			Vector3 d = Vector3.Lerp(Vector3.zero, targetPoint, Mathf.Sin(Mathf.PI * .5f + offset * .5f * Mathf.PI));
+			d.y = 0;
+			movement.MoveToward(d * Time.deltaTime * 20f);
+			yield return null;
+		}
 	}
 	void OnDrawGizmos()
 	{
