@@ -39,7 +39,7 @@ public class Movement : MonoBehaviour {
     }
     protected virtual void Start() {}
     
-    public void MoveToward(Vector3 direction, Space space = Space.Self) {
+    public void MoveToward(Vector3 direction, Space space = Space.Self, int layerMask=1<<6) {
         (Vector3 point1, Vector3 point2, float radius) = colliderBounds.RaycastComponent;
         
         if(space == Space.Self)
@@ -48,7 +48,7 @@ public class Movement : MonoBehaviour {
         RaycastHit[] hits;
         Debug.DrawLine(point1, point2+ direction + Vector3.down*radius, Color.green);
         Debug.DrawLine(point1+ direction, point2 + Vector3.down*radius, Color.green);
-        hits = Physics.CapsuleCastAll(point1, point2, radius, direction, direction.magnitude, blockLayer);
+        hits = Physics.CapsuleCastAll(point1, point2, radius, direction, direction.magnitude, layerMask);
         Vector3 normal = direction.normalized;
         if(hits.Length > 0) {
             foreach(RaycastHit hit in hits) {

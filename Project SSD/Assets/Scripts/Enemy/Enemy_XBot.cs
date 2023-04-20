@@ -91,10 +91,12 @@ class Enemy_XBot : MovableEnemy {
             StopCoroutine(jumpAttackCoroutine);
         };
         dieState.onActive += (State prevState) => {
-            enemyAnimator.SetBool("Die", true);
+            // enemyAnimator.SetBool("Die", true);
+            enemyAnimator.enabled = false;
         };
         dieState.onInactive += (State prevState) => {
-            enemyAnimator.SetBool("Die", false);
+            // enemyAnimator.SetBool("Die", false);
+            enemyAnimator.enabled = true;
         };
         assaultState.onActive += (State prevState) => {
             enemyMovement.Stop();
@@ -103,7 +105,8 @@ class Enemy_XBot : MovableEnemy {
         };
         assaultState.onInactive += (State prevState) => {
             enemyAnimator.SetBool("Assault Crouch", false);
-            StopCoroutine(assaultCoroutine);
+            if(assaultCoroutine != null)
+                StopCoroutine(assaultCoroutine);
         };
     }
     protected override void ChaseTarget(Vector3 point) {
@@ -182,5 +185,6 @@ class Enemy_XBot : MovableEnemy {
     }
     protected override void OnDie() {
         enemyStateMachine.ChangeState(dieState);
+        enemyStateMachine.isMuted = true;
     }
 }
