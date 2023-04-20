@@ -11,18 +11,21 @@ public class Skill : MonoBehaviour
 
 	public virtual void Update()
 	{
-		if (property.nowCollTime < property.collTime)
-			property.nowCollTime += Time.deltaTime;
+		if (property.nowCoolTime < property.coolTime)
+			property.nowCoolTime += Time.deltaTime;
 	}
 	public virtual void Use() { }
 	public virtual void Use(Vector3 target)
 	{
-		property.nowCollTime = 0;
+		property.nowCoolTime = 0;
 		GameObject temp = Instantiate(info.effect, target, Quaternion.Euler(0,0,0));
 		SkillEffect skillEffect = temp.GetComponent<SkillEffect>();
 		skillEffect.OnActive(property); ;
 	}
-	public bool CanUse(){ return (property.nowCollTime >= property.collTime) ? true : false;	}
+	public virtual bool CanUse()
+	{ 
+		return (property.nowCoolTime >= property.coolTime) ? true : false;	
+	}
 }
 [Serializable]
 public class SkillInfo
@@ -40,9 +43,9 @@ public class SkillArea
 [Serializable]
 public class SkillProperty
 {
-	public float collTime;
+	public float coolTime;
 	public float skillAP = 1;
-	[HideInInspector] public float nowCollTime = 100f;
+	[HideInInspector] public float nowCoolTime = 100f;
 	public bool ready;
 	public bool quickUse;
 }

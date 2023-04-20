@@ -25,7 +25,7 @@ public class UIManager : MonoBehaviour
 			{
 				if (playerSkills[i] != null)
 				{
-					skillCoolTimeFill[i].fillAmount = 1 - playerSkills[i].property.nowCollTime / playerSkills[i].property.collTime;
+					skillCoolTimeFill[i].fillAmount = 1 - playerSkills[i].property.nowCoolTime / playerSkills[i].property.coolTime;
 				}
 			}
 			

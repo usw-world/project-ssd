@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_swrod_trail_bace
-  m_Shader: {fileID: -6465566751694194690, guid: d4c5fb07f76f97e4aad9f0a51a496133,
+  m_Shader: {fileID: -6465566751694194690, guid: 02ad923c4a4ca4a4ea04651022384be4,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []

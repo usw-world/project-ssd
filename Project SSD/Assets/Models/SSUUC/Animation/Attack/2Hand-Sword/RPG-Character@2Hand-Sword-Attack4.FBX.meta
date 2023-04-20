@@ -755,7 +755,7 @@ ModelImporter:
       takeName: Take 001
       internalID: 7400000
       firstFrame: 0
-      lastFrame: 36
+      lastFrame: 27
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -782,7 +782,7 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.4986226
+      - time: 0.594513
         functionName: BeCanNextAttack
         data: 
         objectReferenceParameter: {instanceID: 0}

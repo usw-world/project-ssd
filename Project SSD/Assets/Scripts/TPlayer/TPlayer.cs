@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 using Random = UnityEngine.Random;
 using Mirror;
@@ -16,17 +17,16 @@ public class TPlayer : MonoBehaviour , IDamageable
 	#region Init
 	static public TPlayer instance { get; private set; }
     
-	[SerializeField] private PlayerStatus status;
+	public PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;
-	[SerializeField] private Skill dodgeAttackSkill;
-	[SerializeField] private Skill[] attackSkills;
-
+	[SerializeField] private TPlayerSkillManager skill;
+	[SerializeField] TrackEffect dodgeMaehwa;
+	[SerializeField] TrackEffect moveSmoke;
 
 	Coroutine attackCoroutine;
 	Coroutine dodgeCoroutine;
 	Coroutine rushCoroutine;
 	Coroutine WalkCoroutine;
-	RaycastHit[] dodgeHits;
 	Vector3 lookVecter;
 	Vector3 targetPos;
 	string nowAnimationTrigger = "";
@@ -45,7 +45,6 @@ public class TPlayer : MonoBehaviour , IDamageable
 	#region Component
 	private Movement movement;
     private Animator ani;
-    private Rigidbody rigi;
     private StateMachine stateMachine;
 	#endregion
 	#region State
@@ -58,6 +57,7 @@ public class TPlayer : MonoBehaviour , IDamageable
     private State attackState_3 = new State("Attack_3");
     private State attackState_4 = new State("Attack_4");
     private State dodgeAttackState = new State("Dodge Attack");
+    private State downAttackState = new State("Down Attack");
     private State dodgeState = new State("Dodge");
     private State downState = new State("Down");
     private State damageState = new State("Damage");
@@ -68,6 +68,13 @@ public class TPlayer : MonoBehaviour , IDamageable
 	#endregion
 	#endregion
 
+	#region temp
+
+	public Slider sliderHP;
+	public Slider sliderMP;
+	public Slider sliderSP;
+
+	#endregion
 	private void Awake()
     {
         if(instance == null) {
@@ -77,7 +84,6 @@ public class TPlayer : MonoBehaviour , IDamageable
             Destroy(this.gameObject);
         }
         ani = GetComponent<Animator>();
-        rigi = GetComponent<Rigidbody>();
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
         Cursor.lockState = CursorLockMode.Locked;
@@ -95,7 +101,19 @@ public class TPlayer : MonoBehaviour , IDamageable
         idleStateGroup.Add(idleState_1);
         idleStateGroup.Add(idleState_2);
         idleStateGroup.Add(idleState_3);
-    }
+		moveSmoke.Enable();
+		sliderHP.maxValue = status.maxHP;
+		sliderMP.maxValue = status.maxMP;
+		sliderSP.maxValue = status.maxSP;
+	}
+	private void Update()
+	{
+		status.Update();
+		sliderHP.value = status.HP;
+		sliderMP.value = status.MP;
+		sliderSP.value = status.SP;
+	}
+
 	private void InitializeStateOnActive()
     {
         idleState_1.onActive = (State prev) => {
@@ -118,13 +136,20 @@ public class TPlayer : MonoBehaviour , IDamageable
 		dodgeAttackState.onActive = (State prev) => {
 			ChangeAnimation("DodgeAttack");
 			SwordUse(true);
-			dodgeHits = movement.CheckDirection(transform.forward, 8f, 5 << 6);
 			targetPos = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
+			dodgeMaehwa.Enable();
 		};
-        dodgeState.onActive = (State prev) => {
+		downAttackState.onActive = (State prev) => {
+			ChangeAnimation("DownAttack");
+			SwordUse(true);
+			targetPos = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
+			dodgeMaehwa.Enable();
+		};
+		dodgeState.onActive = (State prev) => {
 			ChangeAnimation("Dodge");
 			isImnune = true;
 			dodgeCoroutine = StartCoroutine(DodgeCoroutine());
+			dodgeMaehwa.Enable();
 		};
         downState.onActive = (State prev) => {
 			ChangeAnimation("Down");
@@ -163,6 +188,7 @@ public class TPlayer : MonoBehaviour , IDamageable
         attackState_3.onStay = () => {  };
         attackState_4.onStay = () => {  };
 		dodgeAttackState.onStay = () => { MoveToTargetPos(); };
+		downAttackState.onStay = () => { MoveToTargetPos(); };
 		dodgeState.onStay = () => { };
         downState.onStay = () => { };
         damageState.onStay = () => {
@@ -176,16 +202,24 @@ public class TPlayer : MonoBehaviour , IDamageable
         idleState_2.onInactive = (State next) => {  };
         idleState_3.onInactive = (State next) => {  };
         moveState.onInactive = (State next) => {  };
-        attackState_1.onInactive = (State next) => {  };
-        attackState_2.onInactive = (State next) => {  };
-        attackState_3.onInactive = (State next) => {  };
-        attackState_4.onInactive = (State next) => {  };
-		dodgeAttackState.onInactive = (State next) => {
-			dodgeHits = null;
+        attackState_1.onInactive = (State next) => { 
+			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
 		};
+        attackState_2.onInactive = (State next) => { 
+			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
+		};
+        attackState_3.onInactive = (State next) => { 
+			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
+		};
+        attackState_4.onInactive = (State next) => { 
+			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
+		};
+		dodgeAttackState.onInactive = (State next) => {  };
+		downAttackState.onInactive = (State next) => {  };
         dodgeState.onInactive = (State next) => {
 			isImnune = false;
 			if (dodgeCoroutine != null) StopCoroutine(dodgeCoroutine);
+			dodgeMaehwa.Disable();
 		};
         downState.onInactive = (State next) => { isSuperArmour = false; };
         damageState.onInactive = (State next) => {  };
@@ -256,7 +290,9 @@ public class TPlayer : MonoBehaviour , IDamageable
     public void OnDown() => stateMachine.ChangeState(downState, false);  
     public void OnSlide()
     {
-        if (stateMachine.currentState == dodgeAttackState) return; 
+		if (!skill.dodge.CanUse()) return;
+
+		if (stateMachine.currentState == dodgeAttackState) return; 
         if (stateMachine.currentState == dodgeState)
         {
 			OnDodgeAttack();
@@ -264,7 +300,7 @@ public class TPlayer : MonoBehaviour , IDamageable
         }
 		if (stateMachine.currentState == downState)
 		{
-			OnDodgeAttack();
+			OnDownAttack();
 			return;
 		}
 
@@ -272,18 +308,21 @@ public class TPlayer : MonoBehaviour , IDamageable
             stateMachine.currentState == downState) return;
 		if (lookVecter != Vector3.zero) rotate(10f); 
 		stateMachine.ChangeState(dodgeState, false);
-    }
+		skill.dodge.Use();
+	}
     public void OnAttack()
     {
         if (stateMachine.currentState == dodgeState)
         {
-			OnDodgeAttack();
-            return;
+			OnDodgeAttack(); return;
         }
 		if (stateMachine.currentState == moveState && isRush)
 		{
-			OnDodgeAttack();
-			return;
+			if (skill.dodgeAttack.CanUse()) 
+			{
+				OnDodgeAttack();
+				return;
+			}
 		}
         if (stateMachine.currentState == damageState ||
             stateMachine.currentState == dodgeState ||
@@ -330,7 +369,7 @@ public class TPlayer : MonoBehaviour , IDamageable
 	public void ChackAttackZone()
 	{
 		attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
-		attackSkills[attackCount].Use(); // 임시
+		skill.nomalAttacks[attackCount].Use();
 		attackCount++;
 		attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
 		if (attackCoroutine != null) StopCoroutine(attackCoroutine);
@@ -338,7 +377,13 @@ public class TPlayer : MonoBehaviour , IDamageable
 	}
 	public void ChackDodgeAttackZone()
 	{
-		dodgeAttackSkill.Use();
+		skill.dodgeAttack.Use();
+		dodgeMaehwa.Disable();
+	}
+	public void ChackDownAttackZone()
+	{
+		skill.downAttack.Use();
+		dodgeMaehwa.Disable();
 	}
 	public float GetAP()
 	{
@@ -360,6 +405,7 @@ public class TPlayer : MonoBehaviour , IDamageable
 	}
 	void OnDodgeAttack()
     {
+		if (!skill.dodgeAttack.CanUse()) return;
 		if (lookVecter != Vector3.zero)
 		{
 			Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
@@ -370,7 +416,20 @@ public class TPlayer : MonoBehaviour , IDamageable
         stateMachine.ChangeState(dodgeAttackState, false);
         isCanAttack = false;
     }
-    void ChangeAnimation(string trigger)
+	void OnDownAttack()
+	{
+		if (!skill.downAttack.CanUse()) return;
+		if (lookVecter != Vector3.zero)
+		{
+			Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
+			Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 7f);
+			transform.rotation = Quaternion.LookRotation(look);
+			transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
+		}
+		stateMachine.ChangeState(downAttackState, false);
+		isCanAttack = false;
+	}
+	void ChangeAnimation(string trigger)
     {
 		if (nowAnimationTrigger != "") 
 			ani.ResetTrigger(nowAnimationTrigger);
@@ -462,6 +521,7 @@ public class TPlayer : MonoBehaviour , IDamageable
 		}
 		attackCoroutine = null;
 	}
+
 	void OnDrawGizmos()
 	{
 		//Vector3 size = new Vector3(1f,2f,1f);
@@ -489,13 +549,23 @@ public class PlayerStatus
 	public float maxHP = 100f;       // 최대 체력
 	public float maxMP = 100f;       // 최대 마나
 	public float maxSP = 100f;       // 최대 스테미너
-	[HideInInspector] public float HP = 100f;      // 체력
-	[HideInInspector] public float MP = 100f;     // 마나 ** 시작하면서 set 하는거 어떤지?
-	[HideInInspector] public float SP = 100f;      // 스테미너 ** 시작하면서 set 하는거 어떤지?
-	[HideInInspector] public float AP = 10f;      // 공격력
+	public float HP = 100f;      // 체력
+	public float MP = 100f;     // 마나 ** 시작하면서 set 하는거 어떤지?
+	public float SP = 100f;      // 스테미너 ** 시작하면서 set 하는거 어떤지?
+	public float AP = 10f;      // 공격력
+	public float HPRecovery = 1f;     
+	public float MPRecovery = 1f;     
+	public float SPRecovery = 1f;    
+
+	public void Update() 
+	{
+		HP = (HP < maxHP) ? HP += Time.deltaTime * HPRecovery : maxHP;
+		MP = (MP < maxMP) ? MP += Time.deltaTime * MPRecovery : maxMP;
+		SP = (SP < maxSP) ? SP += Time.deltaTime * SPRecovery : maxSP;
+	}
 }
 [Serializable]
-public class WeaponTransform
+class WeaponTransform
 {
 	public Transform weapon; // 무기
 	public Transform unUse;  // 무기 사용 안할때 위치
@@ -507,4 +577,12 @@ public class WeaponTransform
 		weapon.localEulerAngles = Vector3.zero;
 		weapon.localScale = Vector3.one;
 	}
+}
+[Serializable]
+class TPlayerSkillManager 
+{
+	public Skill[] nomalAttacks;
+	public Skill dodge;
+	public Skill dodgeAttack;
+	public Skill downAttack;
 }
