@@ -4971,7 +4971,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c205cd3b16d2b194687586fc5bfc0621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageZoneSize: {x: 3, y: 1, z: 7}
+  test: {fileID: 6531961707366093403, guid: 57b2e983f0c5505448323ad946822063, type: 3}
+  testing: 0
+  mode: 1
+  damageZoneSize: {x: 3, y: 1, z: 8}
   localPos: {x: 0, y: 1.2, z: 0}
   localRot: {x: -81.907, y: -46.748, z: 47.589}
   runTime: 0.5

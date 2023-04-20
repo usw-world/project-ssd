@@ -11,7 +11,7 @@ using Mirror;
 [RequireComponent(typeof(TPlayerInput))]
 [RequireComponent(typeof(StateMachine))]
 [RequireComponent(typeof(Movement))]
-public class TPlayer : MonoBehaviour , IDamageable, IGetAPable
+public class TPlayer : MonoBehaviour , IDamageable
 {
 	#region Init
 	static public TPlayer instance { get; private set; }
@@ -21,6 +21,8 @@ public class TPlayer : MonoBehaviour , IDamageable, IGetAPable
 	[SerializeField] private Skill dodgeAttackSkill;
 	[SerializeField] private Skill[] attackSkills;
 
+
+	Coroutine attackCoroutine;
 	Coroutine dodgeCoroutine;
 	Coroutine rushCoroutine;
 	Coroutine WalkCoroutine;
@@ -156,21 +158,11 @@ public class TPlayer : MonoBehaviour , IDamageable, IGetAPable
 			}
 			movement.MoveToward(Vector3.forward * ((isWalk) ? status.speed / 2 : status.speed) * Time.deltaTime);
 		};
-        attackState_1.onStay = () => {
-			MoveToTargetPos();
-		};
-        attackState_2.onStay = () => {
-			MoveToTargetPos();
-		};
-        attackState_3.onStay = () => {
-			MoveToTargetPos();
-		};
-        attackState_4.onStay = () => {
-			MoveToTargetPos();
-		};
-		dodgeAttackState.onStay = () => {
-			MoveToTargetPos();
-		};
+        attackState_1.onStay = () => {  };
+        attackState_2.onStay = () => {  };
+        attackState_3.onStay = () => {  };
+        attackState_4.onStay = () => {  };
+		dodgeAttackState.onStay = () => { MoveToTargetPos(); };
 		dodgeState.onStay = () => { };
         downState.onStay = () => { };
         damageState.onStay = () => {
@@ -270,8 +262,13 @@ public class TPlayer : MonoBehaviour , IDamageable, IGetAPable
 			OnDodgeAttack();
             return;
         }
+		if (stateMachine.currentState == downState)
+		{
+			OnDodgeAttack();
+			return;
+		}
 
-        if (stateMachine.currentState == damageState ||
+		if (stateMachine.currentState == damageState ||
             stateMachine.currentState == downState) return;
 		if (lookVecter != Vector3.zero) rotate(10f); 
 		stateMachine.ChangeState(dodgeState, false);
@@ -336,25 +333,12 @@ public class TPlayer : MonoBehaviour , IDamageable, IGetAPable
 		attackSkills[attackCount].Use(); // 임시
 		attackCount++;
 		attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
-
-		//Vector3 position = transform.position - transform.forward + transform.forward + transform.forward + Vector3.up;
-		//Vector3 size = new Vector3(1f, 2f, 1f);
-		//Collider[] hit = Physics.OverlapBox(position, size, transform.rotation, 1 << LayerMask.NameToLayer("Enemy"));
-
-		//for (int i = 0; i < hit.Length; i++)
-		//{
-		//	IDamageable target = hit[i].GetComponent<IDamageable>();
-		//	target?.OnDamage(gameObject, status.AP);
-		//}
+		if (attackCoroutine != null) StopCoroutine(attackCoroutine);
+		attackCoroutine = StartCoroutine(AttackCoroutine());
 	}
 	public void ChackDodgeAttackZone()
 	{
 		dodgeAttackSkill.Use();
-		//for (int i = 0; i < dodgeHits.Length; i++)
-		//{
-		//	IDamageable temp = dodgeHits[i].collider.GetComponent<IDamageable>();
-		//	temp?.OnDamage(gameObject, 10f);
-		//}
 	}
 	public float GetAP()
 	{
@@ -370,9 +354,8 @@ public class TPlayer : MonoBehaviour , IDamageable, IGetAPable
 	}
 	void MoveToTargetPos()
 	{
-		Vector3 z = Vector3.zero;
 		targetPos.y = transform.position.y;
-		Vector3 dir = Vector3.SmoothDamp(transform.position, targetPos, ref z, 0.02f) - transform.position;
+		Vector3 dir = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * 10f) - transform.position;
 		movement.MoveToward(dir, Space.World);
 	}
 	void OnDodgeAttack()
@@ -463,6 +446,21 @@ public class TPlayer : MonoBehaviour , IDamageable, IGetAPable
 			movement.MoveToward(d * Time.deltaTime * 30f);
 			yield return null;
 		}
+	}
+	IEnumerator AttackCoroutine()
+	{
+		float offset = 0;
+		Vector3 targetPoint = Vector3.forward;
+
+		while (offset < 1)
+		{
+			offset += Time.deltaTime * 6f;
+			targetPos.y = transform.position.y;
+			Vector3 dir = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * 10f) - transform.position;
+			movement.MoveToward(dir, Space.World);
+			yield return null;
+		}
+		attackCoroutine = null;
 	}
 	void OnDrawGizmos()
 	{

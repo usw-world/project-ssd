@@ -9928,8 +9928,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c205cd3b16d2b194687586fc5bfc0621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 6531961707366093403, guid: 57b2e983f0c5505448323ad946822063, type: 3}
+  testing: 0
+  mode: 0
   damageZoneSize: {x: 3, y: 1, z: 2}
-  localPos: {x: 0, y: 1.1, z: 0}
+  localPos: {x: 0, y: 1.1, z: 1}
   localRot: {x: -48.225, y: -81.502, z: 84.506}
   runTime: 0.5
   tPlayer: {fileID: 0}
