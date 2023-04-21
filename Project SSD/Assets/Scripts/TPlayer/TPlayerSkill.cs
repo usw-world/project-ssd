@@ -4,20 +4,14 @@ using UnityEngine;
 
 public class TPlayerSkill : Skill
 {
-	PlayerStatus status;
-
 	[SerializeField] float usingSP = 0f;
-	[SerializeField] float usingMP = 0f;
-	private void Start() 
-	{
-		status = TPlayer.instance.status; 
-	}
+
+	PlayerStatus status;
 	public override void Use()
 	{
 		property.nowCoolTime = 0;
-		status.SP -= usingSP;
-		status.MP -= usingMP;
-		TPlayer.instance.status = status;
+		TPlayer.instance.status.SP -= usingSP;
+
 		if (info.effect != null)
 		{
 			GameObject temp = Instantiate(info.effect);
@@ -27,8 +21,9 @@ public class TPlayerSkill : Skill
 	}
 	public override bool CanUse()
 	{
-		print(gameObject.name + " CanUse ");
-		if (ChackSP() && ChackMP() && ChackCoolTime()) 
+		status = TPlayer.instance.status;
+
+		if (ChackSP() && ChackCoolTime())  
 			return true;
 		return false;
 	}
@@ -38,13 +33,8 @@ public class TPlayerSkill : Skill
 			return true;
 		return false;
 	}
-	bool ChackMP()
+	bool ChackCoolTime() 
 	{
-		if (status.MP >= usingMP)
-			return true;
-		return false;
-	}
-	bool ChackCoolTime() {
 		if (property.nowCoolTime >= property.coolTime)
 			return true; ;
 		return false;

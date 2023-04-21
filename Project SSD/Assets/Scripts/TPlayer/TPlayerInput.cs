@@ -10,7 +10,7 @@ public class TPlayerInput : MonoBehaviour
     TPlayer player;
 
 	private void Awake() => player = GetComponent<TPlayer>();
-    private void Update()
+	private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))   player.OnDamage(null, 10);    // 임시
         if (Input.GetKeyDown(KeyCode.Alpha2))   player.OnDown();      // 임시

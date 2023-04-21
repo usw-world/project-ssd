@@ -20,8 +20,8 @@ public class TPlayer : MonoBehaviour , IDamageable
 	public PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;
 	[SerializeField] private TPlayerSkillManager skill;
-	[SerializeField] TrackEffect dodgeMaehwa;
-	[SerializeField] TrackEffect moveSmoke;
+	[SerializeField] private TPlayerTrackEffect trackEffect;
+	
 
 	Coroutine attackCoroutine;
 	Coroutine dodgeCoroutine;
@@ -47,6 +47,7 @@ public class TPlayer : MonoBehaviour , IDamageable
     private Animator ani;
     private StateMachine stateMachine;
 	#endregion
+
 	#region State
 	private State idleState_1 = new State("Idle_1");
     private State idleState_2 = new State("Idle_2");
@@ -66,15 +67,16 @@ public class TPlayer : MonoBehaviour , IDamageable
     private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
 	#endregion
+
 	#endregion
 
 	#region temp
 
 	public Slider sliderHP;
-	public Slider sliderMP;
 	public Slider sliderSP;
 
 	#endregion
+
 	private void Awake()
     {
         if(instance == null) {
@@ -101,16 +103,14 @@ public class TPlayer : MonoBehaviour , IDamageable
         idleStateGroup.Add(idleState_1);
         idleStateGroup.Add(idleState_2);
         idleStateGroup.Add(idleState_3);
-		moveSmoke.Enable();
+		trackEffect.moveSmoke.Enable();
 		sliderHP.maxValue = status.maxHP;
-		sliderMP.maxValue = status.maxMP;
 		sliderSP.maxValue = status.maxSP;
 	}
 	private void Update()
 	{
 		status.Update();
 		sliderHP.value = status.HP;
-		sliderMP.value = status.MP;
 		sliderSP.value = status.SP;
 	}
 
@@ -137,19 +137,19 @@ public class TPlayer : MonoBehaviour , IDamageable
 			ChangeAnimation("DodgeAttack");
 			SwordUse(true);
 			targetPos = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
-			dodgeMaehwa.Enable();
+			trackEffect.dodgeMaehwa.Enable();
 		};
 		downAttackState.onActive = (State prev) => {
 			ChangeAnimation("DownAttack");
 			SwordUse(true);
 			targetPos = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
-			dodgeMaehwa.Enable();
+			trackEffect.dodgeMaehwa.Enable();
 		};
 		dodgeState.onActive = (State prev) => {
 			ChangeAnimation("Dodge");
 			isImnune = true;
 			dodgeCoroutine = StartCoroutine(DodgeCoroutine());
-			dodgeMaehwa.Enable();
+			trackEffect.dodgeMaehwa.Enable();
 		};
         downState.onActive = (State prev) => {
 			ChangeAnimation("Down");
@@ -219,7 +219,7 @@ public class TPlayer : MonoBehaviour , IDamageable
         dodgeState.onInactive = (State next) => {
 			isImnune = false;
 			if (dodgeCoroutine != null) StopCoroutine(dodgeCoroutine);
-			dodgeMaehwa.Disable();
+			trackEffect.dodgeMaehwa.Disable();
 		};
         downState.onInactive = (State next) => { isSuperArmour = false; };
         damageState.onInactive = (State next) => {  };
@@ -272,7 +272,8 @@ public class TPlayer : MonoBehaviour , IDamageable
 	{
 		if (isImnune) return;    // 무적이면 실행 않함
 
-		// hp -= damage         // hp 감소
+		status.HP -= amount;
+		LookTatger(origin.transform);
 
 		if (stateMachine.currentState == downState) return;
 		if (isSuperArmour) return;
@@ -287,7 +288,10 @@ public class TPlayer : MonoBehaviour , IDamageable
 			stateMachine.ChangeState(damageState, false);
 		}
 	}
-    public void OnDown() => stateMachine.ChangeState(downState, false);  
+	public void OnDown() 
+	{ 
+		stateMachine.ChangeState(downState, false); 
+	}
     public void OnSlide()
     {
 		if (!skill.dodge.CanUse()) return;
@@ -334,17 +338,8 @@ public class TPlayer : MonoBehaviour , IDamageable
 
         if (lookVecter != Vector3.zero) rotate(10f);
 
-		//attackCoroutine = StartCoroutine(AttackCoroutine());
 		targetPos = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
 		stateMachine.ChangeState(attackStateGroup[attackCount], false);
-    }
-    public void OnSkill_0()
-    {
-        
-    }
-    public void OnSkill_1()
-    {
-        
     }
 	public void OnMoveSpeedConvert()
 	{
@@ -365,7 +360,10 @@ public class TPlayer : MonoBehaviour , IDamageable
 		if (rushCoroutine != null) StopCoroutine(rushCoroutine);
 		rushCoroutine = StartCoroutine(SmoothConvertRush(false));
 	}
-	public void BeCanNextAttack() => isCanAttack = true;
+	public void BeCanNextAttack() 
+	{
+		isCanAttack = true; 
+	}
 	public void ChackAttackZone()
 	{
 		attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
@@ -378,12 +376,12 @@ public class TPlayer : MonoBehaviour , IDamageable
 	public void ChackDodgeAttackZone()
 	{
 		skill.dodgeAttack.Use();
-		dodgeMaehwa.Disable();
+		trackEffect.dodgeMaehwa.Disable();
 	}
 	public void ChackDownAttackZone()
 	{
 		skill.downAttack.Use();
-		dodgeMaehwa.Disable();
+		trackEffect.dodgeMaehwa.Disable();
 	}
 	public float GetAP()
 	{
@@ -396,6 +394,11 @@ public class TPlayer : MonoBehaviour , IDamageable
 		Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * rotSppedPoint * Time.deltaTime);
 		transform.rotation = Quaternion.LookRotation(look);
 		transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
+	}
+	void LookTatger(Transform target) 
+	{
+		transform.LookAt(target);
+		transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 	}
 	void MoveToTargetPos()
 	{
@@ -436,7 +439,10 @@ public class TPlayer : MonoBehaviour , IDamageable
         nowAnimationTrigger = trigger;
         ani.SetTrigger(nowAnimationTrigger);
     }
-    void SwordUse(bool use) => sword.Set(use);
+	void SwordUse(bool use) 
+	{
+		sword.Set(use); 
+	}
 
 	IEnumerator SmoothConvert(bool fade)
 	{
@@ -521,46 +527,22 @@ public class TPlayer : MonoBehaviour , IDamageable
 		}
 		attackCoroutine = null;
 	}
-
-	void OnDrawGizmos()
-	{
-		//Vector3 size = new Vector3(1f,2f,1f);
-		//Vector3 position = transform.position - transform.forward + transform.forward + transform.forward + Vector3.up;
-		//Gizmos.color = new Color(0, 0, 1, 0.5f);
-		//Gizmos.DrawCube(position, size);
-		//Gizmos.color = Color.white;
-		//Gizmos.DrawWireCube(position, size);
-
-		//Gizmos.color = Color.yellow;
-		//Vector3 offset = new Vector3(0, 0.5f, 0);
-		//Vector3 from = transform.position + offset;
-		//Vector3 to = transform.forward - transform.position;
-
-		//to += transform.forward * 5f;
-		//to += offset;
-
-		//Gizmos.DrawLine(from, transform.position + (transform.forward * 5f + Vector3.up * .5f));
-	}
 }
 [Serializable]
 public class PlayerStatus
 {
 	public float speed = 3f;     // 이동속도
 	public float maxHP = 100f;       // 최대 체력
-	public float maxMP = 100f;       // 최대 마나
 	public float maxSP = 100f;       // 최대 스테미너
 	public float HP = 100f;      // 체력
-	public float MP = 100f;     // 마나 ** 시작하면서 set 하는거 어떤지?
 	public float SP = 100f;      // 스테미너 ** 시작하면서 set 하는거 어떤지?
 	public float AP = 10f;      // 공격력
-	public float HPRecovery = 1f;     
-	public float MPRecovery = 1f;     
+	public float HPRecovery = 1f;      
 	public float SPRecovery = 1f;    
 
 	public void Update() 
 	{
 		HP = (HP < maxHP) ? HP += Time.deltaTime * HPRecovery : maxHP;
-		MP = (MP < maxMP) ? MP += Time.deltaTime * MPRecovery : maxMP;
 		SP = (SP < maxSP) ? SP += Time.deltaTime * SPRecovery : maxSP;
 	}
 }
@@ -585,4 +567,10 @@ class TPlayerSkillManager
 	public Skill dodge;
 	public Skill dodgeAttack;
 	public Skill downAttack;
+}
+[Serializable]
+class TPlayerTrackEffect
+{
+	public TrackEffect dodgeMaehwa;
+	public TrackEffect moveSmoke;
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Skill : MonoBehaviour
+abstract public class Skill : MonoBehaviour
 {
 	public SkillInfo info;
 	public SkillArea area;
@@ -15,17 +15,8 @@ public class Skill : MonoBehaviour
 			property.nowCoolTime += Time.deltaTime;
 	}
 	public virtual void Use() { }
-	public virtual void Use(Vector3 target)
-	{
-		property.nowCoolTime = 0;
-		GameObject temp = Instantiate(info.effect, target, Quaternion.Euler(0,0,0));
-		SkillEffect skillEffect = temp.GetComponent<SkillEffect>();
-		skillEffect.OnActive(property); ;
-	}
-	public virtual bool CanUse()
-	{ 
-		return (property.nowCoolTime >= property.coolTime) ? true : false;	
-	}
+	public virtual void Use(Vector3 target) { }
+	public abstract bool CanUse();
 }
 [Serializable]
 public class SkillInfo

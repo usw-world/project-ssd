@@ -4972,7 +4972,7 @@ MonoBehaviour:
   test: {fileID: 6531961707366093403, guid: 57b2e983f0c5505448323ad946822063, type: 3}
   testing: 0
   mode: 0
-  damageZoneSize: {x: 3, y: 1, z: 2}
+  damageZoneSize: {x: 2, y: 1, z: 2}
   localPos: {x: 0, y: 1.1, z: 1.5}
   localRot: {x: -48.225, y: -81.502, z: 84.506}
   runTime: 5

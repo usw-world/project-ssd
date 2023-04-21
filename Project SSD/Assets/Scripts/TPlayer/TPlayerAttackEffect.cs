@@ -13,6 +13,7 @@ public class TPlayerAttackEffect : SkillEffect
     [SerializeField] float runTime = 0.5f;
 	[SerializeField] TPlayer tPlayer;
     List<IDamageable> targets = new List<IDamageable>();
+
 	void Awake() => tPlayer = TPlayer.instance;
 	void HideGameobject()
 	{
@@ -23,11 +24,10 @@ public class TPlayerAttackEffect : SkillEffect
 	{
 		this.property = property;
 
-		Transform temp = transform.parent;
 		transform.parent = tPlayer.transform;
 		transform.localPosition = localPos;
 		transform.localEulerAngles = localRot;
-		transform.parent = temp;
+		transform.parent = null;
 
 		Invoke("HideGameobject", runTime);
 
