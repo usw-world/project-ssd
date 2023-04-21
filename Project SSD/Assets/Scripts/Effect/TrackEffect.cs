@@ -7,7 +7,7 @@ public class TrackEffect : MonoBehaviour
     [SerializeField] Transform target;
     [SerializeField] Vector3 offset;
 	[SerializeField] bool enable = false;
-	private void Awake() => transform.parent = null;
+	 
 	private void Update() 
 	{
 		if(enable)
