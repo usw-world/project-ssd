@@ -353,6 +353,7 @@ GameObject:
   - component: {fileID: 4780322083290458231}
   - component: {fileID: 5034361268524169665}
   - component: {fileID: 5034361270393294746}
+  - component: {fileID: 7190533031384974589}
   m_Layer: 8
   m_Name: Barrel-Cactus
   m_TagString: Untagged
@@ -404,6 +405,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ca4e025b32a5474dabe1cda67dbdbed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &7190533031384974589
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5268311300706661069}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &5551735651360797403
 GameObject:
   m_ObjectHideFlags: 0

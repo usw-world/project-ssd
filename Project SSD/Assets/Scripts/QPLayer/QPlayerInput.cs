@@ -12,10 +12,10 @@ public class QPlayerInput : MonoBehaviour
 	private void Awake() => player = GetComponent<QPlayer>();
 	void OnCameraZoomIn() => CameraManager.CM.CameraZoomInOut(true);
 	void OnCameraZoomOut() => CameraManager.CM.CameraZoomInOut(false);
-	void OnSkill01() => print("1번스킬 사용");
-	void OnSkill02() => print("2번스킬 사용");
-	void OnSkill03() => print("3번스킬 사용");
-	void OnSkill04() => print("4번스킬 사용");
+	void OnSkill01() => player.OnSkill(0);
+	void OnSkill02() => player.OnSkill(1);
+	void OnSkill03() => player.OnSkill(2);
+	void OnSkill04() => player.OnSkill(3);
 	void OnComeBack() => player.QPreturn();
 	void OnMouseMove(InputValue valus) => player.posUpdate(valus.Get<Vector2>());
 	void OnRB_click() => player.RB_click();

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
-
+using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -12,7 +12,9 @@ using Mirror;
 [RequireComponent(typeof(NavigateableMovement))]
 public class QPlayer : NetworkBehaviour
 {
+    public static QPlayer instance { get; private set; }
     #region veriable
+    public PlayerStatus status;
         float speed = 10.0f;
         Vector2 mousePos;
         Vector3 movePos;
@@ -39,8 +41,19 @@ public class QPlayer : NetworkBehaviour
         State solo = new State("QP_solo");
     #endregion
 
+    public DecalProjector skillDistanceArea;
+    public DecalProjector skillRangeArea;
+    public List<Skill> skills;
+    bool isLookSkillTarget = false;
+    Skill usingSkill;
+    Vector3 skillTargetPos;
+
     private void Awake()
     {
+        if (instance == null)
+            instance = this;
+        else Destroy(gameObject); 
+
         camera  = Camera.main;
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -81,6 +94,7 @@ public class QPlayer : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        SetSkillTargetPos();
         if (!isLocalPlayer)
             return;
         Vector3 camPos = transform.position;
@@ -130,12 +144,17 @@ public class QPlayer : NetworkBehaviour
     }
     
     public void RB_click(){
+		if (isLookSkillTarget)
+		{
+            SkillAreaDisable();
+            return;
+        }
+        
         RaycastHit hit;
 
         if (Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out hit)) {
             movePos = hit.point;
-            if (stateMachine.currentState != solo)
-                stateMachine.ChangeState(solo);
+            stateMachine.ChangeState(solo, false) ;
             Debug.Log($"{hit.transform.position.ToString()} point : {hit.point}");
             movePos.y = 2.0f;
             // Debug.Log("QPLayer Move");
@@ -144,8 +163,103 @@ public class QPlayer : NetworkBehaviour
     }
 
     public void LB_click(){
-        stateMachine.ChangeState(solo);
+        UseSkill();
     }
 
+    public void OnSkill(int idx) 
+    {
+        if (idx > skills.Count) return;
+        Skill selectSkill = skills[idx];    // 사용하고자 하는 스킬 가져오기
+        if (!selectSkill.CanUse()) return;
+        if (usingSkill == null) usingSkill = selectSkill; // 널이면 바로 넣기
 
+        if (usingSkill == selectSkill)
+        {
+            if (usingSkill.property.ready)  // 조준 해야하는 스킬?
+            {
+                if (usingSkill.property.quickUse) // 바로 사용 ?
+                {
+                    UseSkill(); // [조준스킬] [퀵 사용] 사용
+                }
+                else
+                {
+                    if (isLookSkillTarget)  // 조준 하는 중?
+                    {
+                        UseSkill(); // [조준스킬] [조준 후 사용] 사용
+                    }
+                    else SkillAreaEnable();
+                }
+            }
+            else // 즉발 스킬
+            {
+                UseSkill(); // [즉발스킬] 사용
+            }
+        }
+        else
+        {
+            usingSkill = selectSkill;
+            SkillAreaDisable();
+            OnSkill(idx);
+        }
+    }
+    public float GetAP() 
+    {
+        return status.AP;
+    }
+    void SkillAreaEnable()
+    {
+        float distance = usingSkill.area.distance * 2f;
+        float range = usingSkill.area.range;
+        isLookSkillTarget = true;
+        skillDistanceArea.size = new Vector3(distance, distance, 100f);
+        skillRangeArea.size = new Vector3(range, range, 100f);
+        skillDistanceArea.enabled = true;
+        skillRangeArea.enabled = true;
+    }
+    void SkillAreaDisable()
+    {
+        usingSkill = null;
+        isLookSkillTarget = false;
+        skillDistanceArea.enabled = false;
+        skillRangeArea.enabled = false;
+    }
+    void SetSkillTargetPos() 
+    {
+        if (isLookSkillTarget)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 10000f, 1 << LayerMask.NameToLayer("Block")))
+            {
+                skillTargetPos = hit.point;
+                Vector3 temp = skillTargetPos;
+                temp.y = skillDistanceArea.transform.position.y;
+
+                float dist = Vector3.Distance(temp, skillDistanceArea.transform.position);
+                if (dist > usingSkill.area.distance)
+                {
+                    temp = temp - skillDistanceArea.transform.position;
+                    temp = temp.normalized * usingSkill.area.distance;
+                    temp.y += 3f;
+                    skillRangeArea.transform.localPosition = temp;
+
+                    RaycastHit hit2;
+                    if (Physics.Raycast(skillRangeArea.transform.position, skillRangeArea.transform.forward, out hit2, 1 << LayerMask.NameToLayer("Block")))
+                    {
+                        skillTargetPos = hit2.point;
+                    }
+                }
+                else
+                    skillRangeArea.transform.position = temp;
+            }
+        }
+    }
+    void UseSkill()
+    {
+        if (!isLookSkillTarget) return;
+        usingSkill.Use(skillTargetPos); // [조준스킬] [조준 후] 사용
+        usingSkill = null;
+        SkillAreaDisable();
+    }
 }

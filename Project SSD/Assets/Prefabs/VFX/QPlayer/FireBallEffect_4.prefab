@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 7052915477074928552}
   - component: {fileID: 7052915477074928551}
   - component: {fileID: 7052915477074928550}
-  - component: {fileID: 7052915477074928554}
+  - component: {fileID: 3158120532954690806}
   m_Layer: 0
-  m_Name: FireBallEffect
+  m_Name: FireBallEffect_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,8 +28,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7052915477074928549}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.53, y: 0, z: -18.91995}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 5, y: 1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -93,12 +93,12 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7052915477074928549}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7052915477074928554
+--- !u!114 &3158120532954690806
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,6 +107,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7052915477074928549}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f6d193df727e8644ac145959abc3a79, type: 3}
+  m_Script: {fileID: 11500000, guid: 3e4b9fad44a05044ea5469ce86baa95b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

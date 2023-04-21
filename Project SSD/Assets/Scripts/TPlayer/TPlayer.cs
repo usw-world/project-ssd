@@ -88,7 +88,7 @@ public class TPlayer : MonoBehaviour , IDamageable
         ani = GetComponent<Animator>();
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
     private void Start()
     {
@@ -288,7 +288,7 @@ public class TPlayer : MonoBehaviour , IDamageable
 			stateMachine.ChangeState(damageState, false);
 		}
 	}
-	public void OnDown() 
+	public void OnDown()
 	{ 
 		stateMachine.ChangeState(downState, false); 
 	}
