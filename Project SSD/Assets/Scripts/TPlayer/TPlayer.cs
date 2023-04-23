@@ -104,14 +104,14 @@ public class TPlayer : MonoBehaviour , IDamageable
         idleStateGroup.Add(idleState_2);
         idleStateGroup.Add(idleState_3);
 		trackEffect.moveSmoke.Enable();
-		sliderHP.maxValue = status.maxHP;
-		sliderSP.maxValue = status.maxSP;
+		sliderHP.maxValue = status.maxHp;
+		sliderSP.maxValue = status.maxSp;
 	}
 	private void Update()
 	{
 		status.Update();
-		sliderHP.value = status.HP;
-		sliderSP.value = status.SP;
+		sliderHP.value = status.hp;
+		sliderSP.value = status.sp;
 	}
 
 	private void InitializeStateOnActive()
@@ -272,7 +272,7 @@ public class TPlayer : MonoBehaviour , IDamageable
 	{
 		if (isImnune) return;    // 무적이면 실행 않함
 
-		status.HP -= amount;
+		status.hp -= amount;
 		LookTatger(origin.transform);
 
 		if (stateMachine.currentState == downState) return;
@@ -385,7 +385,7 @@ public class TPlayer : MonoBehaviour , IDamageable
 	}
 	public float GetAP()
 	{
-		return status.AP;
+		return status.ap;
 	}
 
 	void rotate(float rotSppedPoint = 1f)
@@ -532,18 +532,18 @@ public class TPlayer : MonoBehaviour , IDamageable
 public class PlayerStatus
 {
 	public float speed = 3f;     // 이동속도
-	public float maxHP = 100f;       // 최대 체력
-	public float maxSP = 100f;       // 최대 스테미너
-	public float HP = 100f;      // 체력
-	public float SP = 100f;      // 스테미너 ** 시작하면서 set 하는거 어떤지?
-	public float AP = 10f;      // 공격력
-	public float HPRecovery = 1f;      
-	public float SPRecovery = 1f;    
+	public float maxHp = 100f;       // 최대 체력
+	public float maxSp = 100f;       // 최대 스테미너
+	public float hp = 100f;      // 체력
+	public float sp = 100f;      // 스테미너 ** 시작하면서 set 하는거 어떤지?
+	public float ap = 10f;      // 공격력
+	public float hpRecovery = 1f;
+	public float spRecovery = 1f;
 
 	public void Update() 
 	{
-		HP = (HP < maxHP) ? HP += Time.deltaTime * HPRecovery : maxHP;
-		SP = (SP < maxSP) ? SP += Time.deltaTime * SPRecovery : maxSP;
+		hp = (hp < maxHp) ? hp += Time.deltaTime * hpRecovery : maxHp;
+		sp = (sp < maxSp) ? sp += Time.deltaTime * spRecovery : maxSp;
 	}
 }
 [Serializable]

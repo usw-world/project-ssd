@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9e40e7aece85e334e8915778dde5a34a
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - cutSceneBannerTop: {instanceID: 0}
+  - cutSceneBannerBottom: {instanceID: 0}
+  - alertUi: {fileID: 1057589465317526947, guid: 7662a645b2e3b5d4d99f5d7c2c95916d,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

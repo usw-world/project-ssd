@@ -204,7 +204,7 @@ public class QPlayer : NetworkBehaviour
     }
     public float GetAP() 
     {
-        return status.AP;
+        return status.ap;
     }
     void SkillAreaEnable()
     {

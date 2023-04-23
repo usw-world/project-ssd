@@ -530,72 +530,6 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
---- !u!1 &2063875352 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2834331384921636666, guid: aa11705bff95d44da87050b1a3dad015,
-    type: 3}
-  m_PrefabInstance: {fileID: 2834331385609224738}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2063875355 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2834331384921636665, guid: aa11705bff95d44da87050b1a3dad015,
-    type: 3}
-  m_PrefabInstance: {fileID: 2834331385609224738}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2063875352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b0fecffa3f624585964b0d0eb21b18e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2063875357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2063875352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89df250e219b04907819897a9cd21f2c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dontDestroyOnLoad: 1
-  runInBackground: 1
-  autoStartServerBuild: 1
-  autoConnectClientBuild: 0
-  sendRate: 30
-  offlineScene: Assets/Scenes/network_feature_develop.unity
-  onlineScene: 
-  transport: {fileID: 2063875355}
-  networkAddress: localhost
-  maxConnections: 100
-  authenticator: {fileID: 0}
-  playerPrefab: {fileID: 0}
-  autoCreatePlayer: 0
-  playerSpawnMethod: 0
-  spawnPrefabs:
-  - {fileID: 2982010509068348624, guid: cee75155cf9514f8db0eae531f1b7884, type: 3}
-  - {fileID: 9169070648355577561, guid: 43b89b80fd56b49b8ae6411590e1d815, type: 3}
-  timeInterpolationGui: 0
-  count: 0
-  TPlayer: {fileID: 9169070648355577561, guid: 43b89b80fd56b49b8ae6411590e1d815, type: 3}
-  QPlayer: {fileID: 2982010509068348624, guid: cee75155cf9514f8db0eae531f1b7884, type: 3}
-  Player: {fileID: 0}
---- !u!114 &2063875359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2063875352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offsetX: 0
-  offsetY: 0
 --- !u!1001 &2834331385609224738
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -603,20 +537,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2834331384921636665, guid: aa11705bff95d44da87050b1a3dad015,
-        type: 3}
-      propertyPath: Port
-      value: 7878
-      objectReference: {fileID: 0}
     - target: {fileID: 2834331384921636666, guid: aa11705bff95d44da87050b1a3dad015,
         type: 3}
       propertyPath: m_Name
       value: Network Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 2834331384921636666, guid: aa11705bff95d44da87050b1a3dad015,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2834331384921636667, guid: aa11705bff95d44da87050b1a3dad015,
         type: 3}

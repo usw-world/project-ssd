@@ -93,7 +93,7 @@ public class QPlyerSkillTest : MonoBehaviour
 	}
 	public void SetSkillUI()
 	{
-		UIManager.UIM.SetSkillImage(skills);
+		UIManager.instance.SetSkillImage(skills);
 	}
 	void SkillAreaEnable()
 	{
@@ -104,7 +104,7 @@ public class QPlyerSkillTest : MonoBehaviour
 		skillRangeArea.size = new Vector3(range, range, 100f);
 		skillDistanceArea.enabled = true;
 		skillRangeArea.enabled = true;
-		UIManager.UIM.SelectSkill(usingSkill);
+		UIManager.instance.SelectSkill(usingSkill);
 	}
 	void SkillAreaDisable()
 	{
@@ -112,7 +112,7 @@ public class QPlyerSkillTest : MonoBehaviour
 		isLookSkillTarget = false;
 		skillDistanceArea.enabled = false;
 		skillRangeArea.enabled = false;
-		UIManager.UIM.UnSelectSkill();
+		UIManager.instance.UnSelectSkill();
 	}
 	public float GetAP() 
 	{

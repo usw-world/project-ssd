@@ -7,7 +7,7 @@ public class QPlyerSkill : Skill
 	[SerializeField] float usingSp = 0;
 	public override void Use(Vector3 target)
 	{
-		QPlayer.instance.status.SP -= usingSp;
+		QPlayer.instance.status.sp -= usingSp;
 
 		GameObject effect = Instantiate(info.effect);
 		effect.transform.position = target;
@@ -15,7 +15,7 @@ public class QPlyerSkill : Skill
 	}
 	public override bool CanUse()
 	{
-		if (QPlayer.instance.status.SP >= usingSp) {
+		if (QPlayer.instance.status.sp >= usingSp) {
 			if (property.nowCoolTime >= property.coolTime)
 			{
 				return true;

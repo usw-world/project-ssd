@@ -10,7 +10,7 @@ public class TPlayerSkill : Skill
 	public override void Use()
 	{
 		property.nowCoolTime = 0;
-		TPlayer.instance.status.SP -= usingSP;
+		TPlayer.instance.status.sp -= usingSP;
 
 		if (info.effect != null)
 		{
@@ -29,7 +29,7 @@ public class TPlayerSkill : Skill
 	}
 	bool ChackSP() 
 	{
-		if (status.SP >= usingSP)
+		if (status.sp >= usingSP)
 			return true;
 		return false;
 	}
