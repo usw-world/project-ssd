@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17409799, g: 0.21770814, b: 0.29989916, a: 1}
+  m_IndirectSpecularColor: {r: 0.17410308, g: 0.21771519, b: 0.2999072, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1383,7 +1383,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1173005594}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3033226869151653829, guid: 2e9172096aa2e804e88ac5eff8475619,
         type: 3}
@@ -1408,7 +1408,7 @@ PrefabInstance:
     - target: {fileID: 3033226870010222230, guid: 2e9172096aa2e804e88ac5eff8475619,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3033226870010222230, guid: 2e9172096aa2e804e88ac5eff8475619,
         type: 3}
@@ -1418,7 +1418,7 @@ PrefabInstance:
     - target: {fileID: 3033226870010222230, guid: 2e9172096aa2e804e88ac5eff8475619,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.3
+      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 3033226870010222230, guid: 2e9172096aa2e804e88ac5eff8475619,
         type: 3}
@@ -26981,6 +26981,22 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 582224120, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: usingSP
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 896612880, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: usingSP
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 1275966362, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: status.spRecovery
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1313301119, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: usingSP
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 1558941236, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -26988,6 +27004,19 @@ PrefabInstance:
     - target: {fileID: 1558941236, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1899042714, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: usingSP
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1902763025, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
+      propertyPath: usingSP
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4699335426286350918, guid: 0eb800c82e837d74598e54dd92ec4a2f,
+        type: 3}
+      propertyPath: sceneId
+      value: 1221360212
       objectReference: {fileID: 0}
     - target: {fileID: 6410919741541939096, guid: 0eb800c82e837d74598e54dd92ec4a2f,
         type: 3}
@@ -43072,6 +43101,7 @@ MonoBehaviour:
   skillImage: []
   skillCoolTimeFill: []
   skillSelect: []
+  alertUi: {fileID: 0}
 --- !u!1 &2078105883
 GameObject:
   m_ObjectHideFlags: 0

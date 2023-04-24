@@ -62,7 +62,6 @@ public class TPlayer : MonoBehaviour , IDamageable
     private State dodgeState = new State("Dodge");
     private State downState = new State("Down");
     private State damageState = new State("Damage");
-    private State refleshState = new State("Reflesh");
 
     private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
@@ -109,7 +108,6 @@ public class TPlayer : MonoBehaviour , IDamageable
 	}
 	private void Update()
 	{
-		status.Update();
 		sliderHP.value = status.hp;
 		sliderSP.value = status.sp;
 	}
@@ -159,7 +157,6 @@ public class TPlayer : MonoBehaviour , IDamageable
 			ChangeAnimation("Damage");
 			hitCount = 0;
 		};
-        refleshState.onActive = (State prev) => { ChangeAnimation("Reflesh"); };
     }
 	private void InitializeStateOnStay()
     {
@@ -171,16 +168,30 @@ public class TPlayer : MonoBehaviour , IDamageable
 				idleActionIdx = Random.Range(1, idleStateGroup.Count);
 				stateMachine.ChangeState(idleStateGroup[idleActionIdx], false);
 			}
+			status.Update();
 		};
-        idleState_2.onStay = () => { };
-        idleState_3.onStay = () => { };
+        idleState_2.onStay = () => {
+			status.Update();
+		};
+        idleState_3.onStay = () => {
+			status.Update();
+		};
         moveState.onStay = () => {
 			rotate();
 			if (isRush)
 			{
-				movement.MoveToward(Vector3.forward * status.speed * 2f * Time.deltaTime);
-				return;
+				if (status.sp > 0)
+				{
+					status.sp -= Time.deltaTime * 10f;
+					movement.MoveToward(Vector3.forward * status.speed * 2f * Time.deltaTime);
+					return;
+				}
+				else
+				{
+					OnRushToRun();
+				}
 			}
+			status.Update();
 			movement.MoveToward(Vector3.forward * ((isWalk) ? status.speed / 2 : status.speed) * Time.deltaTime);
 		};
         attackState_1.onStay = () => {  };
@@ -194,7 +205,6 @@ public class TPlayer : MonoBehaviour , IDamageable
         damageState.onStay = () => {
 			if (hitCount >= 3) OnDown(); 
 		};
-        refleshState.onStay = () => { };
     }
 	private void InitializeStateOnInactive()
     {
@@ -223,7 +233,6 @@ public class TPlayer : MonoBehaviour , IDamageable
 		};
         downState.onInactive = (State next) => { isSuperArmour = false; };
         damageState.onInactive = (State next) => {  };
-        refleshState.onInactive = (State next) => {  };
     }
    
     public void InputMove(Vector3 moveVecterInput)
@@ -237,8 +246,7 @@ public class TPlayer : MonoBehaviour , IDamageable
             stateMachine.currentState == dodgeAttackState ||
             stateMachine.currentState == dodgeState ||
             stateMachine.currentState == downState ||
-            stateMachine.currentState == damageState ||
-            stateMachine.currentState == refleshState)
+            stateMachine.currentState == damageState)
         {
             return;
         }
@@ -273,7 +281,10 @@ public class TPlayer : MonoBehaviour , IDamageable
 		if (isImnune) return;    // 무적이면 실행 않함
 
 		status.hp -= amount;
-		LookTatger(origin.transform);
+		if (origin != null)
+		{
+			LookTatger(origin.transform);
+		}
 
 		if (stateMachine.currentState == downState) return;
 		if (isSuperArmour) return;
@@ -297,11 +308,11 @@ public class TPlayer : MonoBehaviour , IDamageable
 		if (!skill.dodge.CanUse()) return;
 
 		if (stateMachine.currentState == dodgeAttackState) return; 
-        if (stateMachine.currentState == dodgeState)
-        {
-			OnDodgeAttack();
-            return;
-        }
+   //     if (stateMachine.currentState == dodgeState)
+   //     {
+			//OnDodgeAttack();
+   //         return;
+   //     }
 		if (stateMachine.currentState == downState)
 		{
 			OnDownAttack();
@@ -309,13 +320,16 @@ public class TPlayer : MonoBehaviour , IDamageable
 		}
 
 		if (stateMachine.currentState == damageState ||
-            stateMachine.currentState == downState) return;
+            stateMachine.currentState == downState ||
+			stateMachine.currentState == dodgeState ) return;
 		if (lookVecter != Vector3.zero) rotate(10f); 
 		stateMachine.ChangeState(dodgeState, false);
 		skill.dodge.Use();
 	}
     public void OnAttack()
     {
+		if (!skill.nomalAttacks[attackCount].CanUse()) return;
+
         if (stateMachine.currentState == dodgeState)
         {
 			OnDodgeAttack(); return;
@@ -332,7 +346,7 @@ public class TPlayer : MonoBehaviour , IDamageable
             stateMachine.currentState == dodgeState ||
             stateMachine.currentState == dodgeAttackState ||
             stateMachine.currentState == downState ||
-            isCanAttack == false) return;
+			isCanAttack == false) return;
 
         isCanAttack = false;
 
@@ -360,7 +374,7 @@ public class TPlayer : MonoBehaviour , IDamageable
 		if (rushCoroutine != null) StopCoroutine(rushCoroutine);
 		rushCoroutine = StartCoroutine(SmoothConvertRush(false));
 	}
-	public void BeCanNextAttack() 
+	public void BeCanNextAttack()
 	{
 		isCanAttack = true; 
 	}
