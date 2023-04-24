@@ -7,18 +7,18 @@ using Mirror;
 using C2SMessage;
 using S2CMessage;
 
-public class SSDNetworkManager : NetworkManager {
+public partial class SSDNetworkManager : NetworkManager {
     public static SSDNetworkManager instance;
     
-    public bool isHost = false;
+    public bool isHost { get; private set; } = false;
 
     public (NetworkConnectionToClient connection, string userName) hostUser;
     public (NetworkConnectionToClient connection, string userName) guestUser;
     
-    public GameObject TPlayerObject;
-    public GameObject QPlayerObject;
+    public GameObject tPlayerObject;
+    public GameObject qPlayerObject;
 
-    public GameObject Player;
+    public GameObject player;
     
     public override void Awake() {
         base.Awake();
@@ -53,35 +53,15 @@ public class SSDNetworkManager : NetworkManager {
         if(NetworkServer.active){
             StopHost();
             isHost = false;
-            // var message = new S2CMessage.ServerDieMessage("Host closed the room.");
-            // NetworkServer.SendToAll(message);
         }
         if(NetworkClient.isConnected) {
-            NetworkClient.OnDisconnectedEvent -= OnServerDie;
+            NetworkClient.OnDisconnectedEvent -= OnCloseRoom;
             StopClient();
-            // C2SMessage.LeaveRoomMessage message = new C2SMessage.LeaveRoomMessage(isHost);
-            // NetworkClient.Send(message);
         }
     }
 
-    #region Message Handlers
-    private void InitilizeHandler() {
-        #region Server Handler Initialize
-        if(isHost) {
-            NetworkServer.RegisterHandler<C2SMessage.CreateTPlayerPrefabMessage>(OnCreateTPlayerPrefab);
-            NetworkServer.RegisterHandler<C2SMessage.CreateQPlayerPrefabMessage>(OnCreateQPlayerPrefab);
-            NetworkServer.RegisterHandler<C2SMessage.JoinRoomMessage>(OnJoinRoom);
-            NetworkServer.RegisterHandler<C2SMessage.LeaveRoomMessage>(OnLeaveRoom);
-        }
-        #endregion Server Handler Initialize
-
-        #region Client Handler Initialize
-        NetworkClient.RegisterHandler<S2CMessage.ShareUserInformations>(OnShareUserInformations);
-        NetworkClient.RegisterHandler<S2CMessage.AllowLeaveRoomMessage>(OnAllowLeaveRoom);
-        #endregion Client Handler Initialize
-    }
-    private void OnServerDie() {
-        NetworkClient.OnDisconnectedEvent -= OnServerDie;
+    private void OnCloseRoom() {
+        NetworkClient.OnDisconnectedEvent -= OnCloseRoom;
         if(isHost) return;
         GameObject gobj = UIManager.instance.AlertMessage();
         AlertUI alert = gobj.GetComponent<AlertUI>();
@@ -94,11 +74,10 @@ public class SSDNetworkManager : NetworkManager {
             }
         });
     }
-
     public override void OnClientConnect() { // both host and guest.
         base.OnClientConnect();
         InitilizeHandler();
-        NetworkClient.OnDisconnectedEvent += OnServerDie;
+        NetworkClient.OnDisconnectedEvent += OnCloseRoom;
         
         var lobbyManager = LobbyManager.instance;
 
@@ -112,7 +91,23 @@ public class SSDNetworkManager : NetworkManager {
         C2SMessage.JoinRoomMessage message = new C2SMessage.JoinRoomMessage(isHost, playerName);
         NetworkClient.Send(message);
     }
+    public void StartGame() {
+        LoadScene("usoock_duo_test");
+    }
+    #region Message Handlers
+    private void InitilizeHandler() {
+        #region Server Handler Initialize
+        if(isHost) {
+            NetworkServer.RegisterHandler<C2SMessage.CreateTPlayerPrefabMessage>(OnCreateTPlayerPrefab);
+            NetworkServer.RegisterHandler<C2SMessage.CreateQPlayerPrefabMessage>(OnCreateQPlayerPrefab);
+            NetworkServer.RegisterHandler<C2SMessage.JoinRoomMessage>(OnJoinRoom);
+        }
+        #endregion Server Handler Initialize
 
+        #region Client Handler Initialize
+        NetworkClient.RegisterHandler<S2CMessage.ShareUserInformations>(OnShareUserInformations);
+        #endregion Client Handler Initialize
+    }
     private void OnJoinRoom(NetworkConnectionToClient conn, JoinRoomMessage message) {
         if(message.isHost) {
             hostUser = (conn, message.userName);
@@ -122,26 +117,6 @@ public class SSDNetworkManager : NetworkManager {
             S2CMessage.ShareUserInformations userInformations = new S2CMessage.ShareUserInformations(hostUser.userName, guestUser.userName);
             NetworkServer.SendToAll(userInformations);
         }
-    }
-    private void OnLeaveRoom(NetworkConnectionToClient conn, LeaveRoomMessage message) {
-        if(message.isHost) {
-            LobbyManager.instance.guestName = null;
-            LobbyManager.instance.RefreshRoom();
-        } else {
-            conn.Send(new AllowLeaveRoomMessage());
-        }
-    }
-    private void OnAllowLeaveRoom(AllowLeaveRoomMessage message) {
-        StopClient();
-        LobbyManager.instance.OpenLobbyUi();
-    }
-    private void OnCreateTPlayerPrefab(NetworkConnectionToClient conn,  CreateTPlayerPrefabMessage message) {
-        // Player = Instantiate(TPlayerObject);
-        // NetworkServer.AddPlayerForConnection(conn, Player);
-    }
-    private void OnCreateQPlayerPrefab(NetworkConnectionToClient conn,  CreateQPlayerPrefabMessage message) {
-        // Player = Instantiate(QPlayerObject);
-        // NetworkServer.AddPlayerForConnection(conn, Player);
     }
     private void OnShareUserInformations(ShareUserInformations message) {
         LobbyManager.instance.hostName = message.hostName;

@@ -22,7 +22,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     protected virtual void Awake() {
         enemyStateMachine = GetComponent<StateMachine>();
         enemyAnimator = enemyAnimator==null ? GetComponent<Animator>() : enemyAnimator;
-        target = FindObjectOfType<TPlayer>().gameObject;
+        target = FindObjectOfType<TPlayer>()?.gameObject;
     }
     protected virtual void Start() {
         /* temporary : Initialize function must be called on instantiated by other object. 
@@ -42,7 +42,12 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     }
     private IEnumerator UpdateTargetCoroutine() {
         while(!isDead) {
-            if(Vector3.Distance(transform.position, target.transform.position) < detectRange) {
+            Collider[] inners = Physics.OverlapSphere(transform.position, detectRange, 1<<7);
+            if(inners.Length > 0)
+                target = inners[0].gameObject;
+
+            if(target != null
+            && Vector3.Distance(transform.position, target.transform.position) < detectRange) {
                 targetInRange = true;
                 updateTargetEvent?.Invoke();
             } else {

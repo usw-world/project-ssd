@@ -18,8 +18,8 @@ public class TPlayerInput : MonoBehaviour
 	void OnMove(InputValue value) => player.InputMove(value.Get<Vector3>());
 	void OnDodge() => player.OnSlide();
 	void OnAttack() => player.OnAttack();
-	void OnCameraZoomIn() => CameraManager.CM.CameraZoomInOut(true);
-	void OnCameraZoomOut() => CameraManager.CM.CameraZoomInOut(false);
+	void OnCameraZoomIn() => PlayerCamera.instance.CameraZoomInOut(true);
+	void OnCameraZoomOut() => PlayerCamera.instance.CameraZoomInOut(false);
 	void OnConvertWalkRun() => player.OnMoveSpeedConvert();
 	void OnStartRush() => player.OnRunToRush();
 	void OnEndRush() => player.OnRushToRun();

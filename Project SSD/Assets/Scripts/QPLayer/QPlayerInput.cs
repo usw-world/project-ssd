@@ -10,8 +10,8 @@ public class QPlayerInput : MonoBehaviour
     QPlayer player;
 
 	private void Awake() => player = GetComponent<QPlayer>();
-	void OnCameraZoomIn() => CameraManager.CM.CameraZoomInOut(true);
-	void OnCameraZoomOut() => CameraManager.CM.CameraZoomInOut(false);
+	void OnCameraZoomIn() => PlayerCamera.instance.CameraZoomInOut(true);
+	void OnCameraZoomOut() => PlayerCamera.instance.CameraZoomInOut(false);
 	void OnSkill01() => player.OnSkill(0);
 	void OnSkill02() => player.OnSkill(1);
 	void OnSkill03() => player.OnSkill(2);

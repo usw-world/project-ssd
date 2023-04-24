@@ -7,9 +7,6 @@ public class LobbyManager : MonoBehaviour {
     static public LobbyManager instance;
 
     bool isHost { get => SSDNetworkManager.instance.isHost; }
-    
-    [SerializeField] private InputField addressField;
-    [SerializeField] private InputField portField;
 
     #region UIs
     [SerializeField] private GameObject lobbyUis;
@@ -20,6 +17,11 @@ public class LobbyManager : MonoBehaviour {
 
     [SerializeField] private Text hostNameText;
     [SerializeField] private Text guestNameText;
+
+    [SerializeField] private InputField addressField;
+    [SerializeField] private InputField portField;
+
+    [SerializeField] private Button startButton;
     #endregion UIs
 
     private void Awake() {
@@ -54,6 +56,7 @@ public class LobbyManager : MonoBehaviour {
     public void RefreshRoom() {
         hostNameText.text = hostName ?? "_";
         guestNameText.text = guestName ?? "_";
+        startButton.gameObject.SetActive(SSDNetworkManager.instance.isHost);
     }
     public void OpenLobbyUi() {
         roomUis.SetActive(false);
@@ -62,5 +65,8 @@ public class LobbyManager : MonoBehaviour {
     public void OpenRoomUi() {
         lobbyUis.SetActive(false);
         roomUis.SetActive(true);
+    }
+    public void OnClickStartButton() {
+        SSDNetworkManager.instance.StartGame();
     }
 }

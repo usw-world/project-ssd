@@ -1,3 +1,4 @@
+using UnityEngine;
 using Mirror;
 
 namespace C2SMessage {
@@ -5,7 +6,12 @@ namespace C2SMessage {
         string sceneName;
     }
 
-    public struct CreateTPlayerPrefabMessage : NetworkMessage {}
+    public struct CreateTPlayerPrefabMessage : NetworkMessage {
+        Transform spawnPoint;
+        public CreateTPlayerPrefabMessage(Transform spawnPoint) {
+            this.spawnPoint = spawnPoint;
+        }
+    }
     public struct CreateQPlayerPrefabMessage : NetworkMessage {}
     
     public struct JoinRoomMessage : NetworkMessage {
@@ -14,13 +20,6 @@ namespace C2SMessage {
         public JoinRoomMessage(bool isHost, string userName) {
             this.isHost = isHost;
             this.userName = userName;
-        }
-    }
-    
-    public struct LeaveRoomMessage : NetworkMessage {
-        public bool isHost;
-        public LeaveRoomMessage(bool isHost) {
-            this.isHost = isHost;
         }
     }
 }
@@ -34,13 +33,4 @@ namespace S2CMessage {
             this.guestName = guestName;
         }
     }
-    
-    public struct ServerDieMessage : NetworkMessage {
-        public string text;
-        public ServerDieMessage(string message) {
-            this.text = message;
-        }
-    }
-    
-    public struct AllowLeaveRoomMessage : NetworkMessage {}
 }

@@ -1385,6 +1385,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 837600681, guid: 2e9172096aa2e804e88ac5eff8475619, type: 3}
+      propertyPath: mouseScrollSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 837600681, guid: 2e9172096aa2e804e88ac5eff8475619, type: 3}
+      propertyPath: maxCameraDisrance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 837600681, guid: 2e9172096aa2e804e88ac5eff8475619, type: 3}
+      propertyPath: minCameraDisrance
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3033226869151653829, guid: 2e9172096aa2e804e88ac5eff8475619,
         type: 3}
       propertyPath: m_TrackedObjectOffset.y
@@ -32287,24 +32299,6 @@ Transform:
   m_Father: {fileID: 1283973467}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1482253581 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3033226870010222224, guid: 2e9172096aa2e804e88ac5eff8475619,
-    type: 3}
-  m_PrefabInstance: {fileID: 489136426}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1482253582
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1482253581}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d8c1f392336adf44ac1d2f0e2da48a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1488879163
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43052,22 +43046,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2eb112af294ea8438ed0add3281fe45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TPlayer:
-    mouseScrollSpeed: 10
-    maxCameraDisrance: 3.5
-    minCameraDisrance: 1
-    camera: {fileID: 1482253581}
-    cameraDisrance: 0
-    CVC: {fileID: 0}
-    CFT: {fileID: 0}
-  QPlayer:
-    mouseScrollSpeed: 2
-    maxCameraDisrance: 15
-    minCameraDisrance: 2
-    camera: {fileID: 0}
-    cameraDisrance: 0
-    CVC: {fileID: 0}
-    CFT: {fileID: 0}
 --- !u!4 &2070915549
 Transform:
   m_ObjectHideFlags: 0

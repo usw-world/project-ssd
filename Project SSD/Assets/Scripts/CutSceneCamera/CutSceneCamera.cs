@@ -6,7 +6,6 @@ public class CutSceneCamera : MonoBehaviour
 {
     public virtual void EEEEEEEEEndCutScene()
     {
-        print("dddd");
-        CameraManager.CM.EndCutScene(gameObject);
+        PlayerCamera.instance.EndCutScene(gameObject);
     }
 }

@@ -519,10 +519,10 @@ public class TPlayer : MonoBehaviour , IDamageable
 
 		while (offset < 1)
 		{
-			offset += Time.deltaTime * 4;
+			offset += Time.deltaTime * 2.5f;
 			Vector3 d = Vector3.Lerp(Vector3.zero, targetPoint, Mathf.Sin(Mathf.PI * .5f + offset * .5f * Mathf.PI));
 			d.y = 0;
-			movement.MoveToward(d * Time.deltaTime * 30f);
+			movement.MoveToward(d * Time.deltaTime * 16f);
 			yield return null;
 		}
 	}
