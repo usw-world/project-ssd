@@ -692,6 +692,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2063875357, guid: aa11705bff95d44da87050b1a3dad015, type: 3}
+      propertyPath: qPlayerObject
+      value: 
+      objectReference: {fileID: 2136718358471616647, guid: d8bf16506c20a4c72bf06419ea2bd1ef,
+        type: 3}
+    - target: {fileID: 2063875357, guid: aa11705bff95d44da87050b1a3dad015, type: 3}
+      propertyPath: tPlayerObject
+      value: 
+      objectReference: {fileID: 6410919741541939096, guid: 0eb800c82e837d74598e54dd92ec4a2f,
+        type: 3}
     - target: {fileID: 2834331384921636666, guid: aa11705bff95d44da87050b1a3dad015,
         type: 3}
       propertyPath: m_Name

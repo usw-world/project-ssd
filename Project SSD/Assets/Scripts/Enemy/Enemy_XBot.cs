@@ -20,14 +20,19 @@ class Enemy_XBot : MovableEnemy {
 
     private Vector3 targetPosition;
 
+    #region Jump Attack
     private const float JUMP_ATTACK_COOLTIME = 5f;
     private float currentJumpAttackCooltime = 0f;
     private Coroutine jumpAttackCoroutine;
     [SerializeField] private GameObject jumpAttackParticle;
     [SerializeField] private Transform jumpAttackParticlePoint;
     private ObjectPooler jumpAttackParticlePooler;
+    #endregion Jump Attack
 
+    #region Assault Attack
     private Coroutine assaultCoroutine;
+    [SerializeField] private GameObject assaultEffect;
+    #endregion Assault Attack
 
     #region Unity Events
     protected override void Awake() {
@@ -69,7 +74,7 @@ class Enemy_XBot : MovableEnemy {
         chaseState.onActive += (State prevState) => {
             enemyAnimator.SetBool("Chase", true);
             transform.LookAt(new Vector3(targetPosition.x, transform.position.y, targetPosition.z));
-            enemyMovement.MoveToPoint(targetPosition, moveSpeed);
+            enemyMovement.MoveToPoint(targetPosition, moveSpeed, 5<<6);
         };
         chaseState.onStay += () => {
             if(IsArrive) {
@@ -81,7 +86,7 @@ class Enemy_XBot : MovableEnemy {
         };
         jumpAttackState.onActive += (State prevState) => {
             enemyMovement.Stop();
-            transform.LookAt(targetPosition);
+            transform.LookAt(new Vector3(targetPosition.x, transform.position.y, targetPosition.z));
             enemyAnimator.SetBool("Jump Attack", true);
             currentJumpAttackCooltime = JUMP_ATTACK_COOLTIME;
             jumpAttackCoroutine = StartCoroutine(JumpAttackCoroutine());
@@ -107,6 +112,7 @@ class Enemy_XBot : MovableEnemy {
             enemyAnimator.SetBool("Assault Crouch", false);
             if(assaultCoroutine != null)
                 StopCoroutine(assaultCoroutine);
+            assaultEffect.SetActive(false);
         };
     }
     protected override void ChaseTarget(Vector3 point) {
@@ -137,10 +143,11 @@ class Enemy_XBot : MovableEnemy {
         Vector3 point1 = transform.position;
         Vector3 point2 = targetPosition;
         Vector3 distance = point2 - point1;
+        distance.y = 0;
         float offset = 0;
         while(offset < 1) {
             offset += Time.deltaTime;
-            enemyMovement.MoveToward(distance * Time.deltaTime*.8f, Space.World);
+            enemyMovement.MoveToward(distance * Time.deltaTime*.8f, Space.World, 5<<6);
             yield return null;
         }
     }
@@ -155,11 +162,12 @@ class Enemy_XBot : MovableEnemy {
         float offset = 0;
         transform.LookAt(targetPosition);
         Vector3 dir = (targetPosition - transform.position).normalized;
+        dir.y = 0;
 
         while(offset < 1) {
             offset += Time.deltaTime;
             
-            enemyMovement.MoveToward(dir * 10f * Time.deltaTime, Space.World);
+            enemyMovement.MoveToward(dir * 10f * Time.deltaTime, Space.World, 5<<6);
             yield return null;
         }
         enemyStateMachine.ChangeState(idleState);
@@ -176,6 +184,7 @@ class Enemy_XBot : MovableEnemy {
     }
     public void AnimationEvent_OnEndCrouch() {
         enemyAnimator.SetBool("Assault Crouch", false);
+        assaultEffect.SetActive(true);
         assaultCoroutine = StartCoroutine(AssaultCoroutine());
     }
     #endregion Animation Events

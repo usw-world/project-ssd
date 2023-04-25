@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TPlayerCamera : PlayerCamera
+public class QPlayerCamera : PlayerCamera
 {
     private float hidingDistance = 1f;
     private float minTransparency = -1f, maxTransparency = 0f;
