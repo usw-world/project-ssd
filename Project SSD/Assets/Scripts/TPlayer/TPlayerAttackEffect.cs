@@ -7,6 +7,7 @@ public class TPlayerAttackEffect : SkillEffect
 	public GameObject test;
 	public bool testing = false;
 	[SerializeField] Mode mode;
+	[SerializeField] GameObject hitEffect;
 	[SerializeField] Vector3 damageZoneSize;
     [SerializeField] Vector3 localPos;
     [SerializeField] Vector3 localRot;
@@ -52,7 +53,18 @@ public class TPlayerAttackEffect : SkillEffect
 			{
 				IDamageable target = hit[i].GetComponent<IDamageable>();
 				float amount = property.skillAP * tPlayer.GetAP();
-				target?.OnDamage(gameObject, amount);
+
+				if (target != null)
+				{
+					target.OnDamage(gameObject, amount);
+
+					GameObject temp = Instantiate(hitEffect, hit[i].transform);
+					temp.transform.position += Vector3.up;
+					temp.transform.parent = null;
+					SkillEffect skillEffect = temp.GetComponent<SkillEffect>();
+					skillEffect.OnActive(property);
+				}
+				
 			}
 		}
 

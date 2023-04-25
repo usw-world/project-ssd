@@ -405,7 +405,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1328670667}
   m_LocalRotation: {x: 0.43938205, y: 0.000000015456495, z: -0.000000007560174, w: 0.89830035}
-  m_LocalPosition: {x: 0, y: 20.33, z: -15.81}
+  m_LocalPosition: {x: 0, y: 20.33, z: -15.809998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2603,8 +2603,7 @@ GameObject:
   - component: {fileID: 2136718357887273199}
   - component: {fileID: 9030536872265318602}
   - component: {fileID: 431256683581693578}
-  - component: {fileID: 5754693221944652162}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: QPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: M_magic
-  m_Shader: {fileID: -6465566751694194690, guid: 4b0968b62b1db9a4aa1d67a6268aa123,
+  m_Shader: {fileID: -6465566751694194690, guid: b42e8c9d7d02cbf42a791abb10ffe975,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []

@@ -11,10 +11,14 @@ public class QPlayerSkillEffect : SkillEffect
 	{
 		property.nowCoolTime = 0;
 		this.property = property;
-		Invoke("HideGameobject", runTime);
+		StartCoroutine(HideGameobject());
 	}
-	void HideGameobject()
+	IEnumerator HideGameobject()
 	{
+		yield return new WaitForSeconds(0.2f);
+		Collider temp = GetComponent<Collider>();
+		if (temp != null) temp.enabled = false;
+		yield return new WaitForSeconds(runTime);
 		gameObject.SetActive(false);
 	}
 	private void OnTriggerEnter(Collider other)

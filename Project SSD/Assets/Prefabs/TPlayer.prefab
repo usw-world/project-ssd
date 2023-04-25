@@ -5185,7 +5185,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.513, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -4.2899933, y: 0}
   m_SizeDelta: {x: -0.4525, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5285,7 +5285,7 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 0
     quickUse: 0
-  usingSP: 0
+  usingSP: 5
 --- !u!1 &710440729
 GameObject:
   m_ObjectHideFlags: 0
@@ -5313,7 +5313,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 710440729}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.077, z: 1.23}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10048,7 +10048,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fc71c054851eac24590b173a4ad3d264, type: 2}
+  - {fileID: 2100000, guid: bee42bdd6cdad6047b15d5b54c3322b7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10172,7 +10172,7 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 0
     quickUse: 0
-  usingSP: 100
+  usingSP: 80
 --- !u!1 &986435316
 GameObject:
   m_ObjectHideFlags: 0
@@ -10372,7 +10372,7 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 0
     quickUse: 0
-  usingSP: 0
+  usingSP: 5
 --- !u!1 &1365441557
 GameObject:
   m_ObjectHideFlags: 0
@@ -10546,7 +10546,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.513, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -4.2899933, y: 0}
   m_SizeDelta: {x: -0.4525, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10885,7 +10885,7 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 0
     quickUse: 0
-  usingSP: 0
+  usingSP: 5
 --- !u!1 &1902763024
 GameObject:
   m_ObjectHideFlags: 0
@@ -10944,7 +10944,7 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 0
     quickUse: 0
-  usingSP: 0
+  usingSP: 5
 --- !u!1 &2235186266360338
 GameObject:
   m_ObjectHideFlags: 0
@@ -17343,11 +17343,11 @@ GameObject:
   - component: {fileID: 3159772802916435366}
   m_Layer: 7
   m_Name: TPlayer
-  m_TagString: Player
+  m_TagString: TPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7972339259538638219
 Transform:
   m_ObjectHideFlags: 0
@@ -17525,7 +17525,7 @@ MonoBehaviour:
     sp: 100
     ap: 10
     hpRecovery: 1
-    spRecovery: 1
+    spRecovery: 15
   sword:
     weapon: {fileID: 543450653158560035}
     unUse: {fileID: 6187742542714504873}
@@ -17741,7 +17741,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6533470572637779906}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0.0000000012162994}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

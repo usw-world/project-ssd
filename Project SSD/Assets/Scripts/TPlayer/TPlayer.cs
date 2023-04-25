@@ -102,7 +102,7 @@ public class TPlayer : MonoBehaviour , IDamageable
         idleStateGroup.Add(idleState_1);
         idleStateGroup.Add(idleState_2);
         idleStateGroup.Add(idleState_3);
-		trackEffect.moveSmoke.Enable();
+		
 		sliderHP.maxValue = status.maxHp;
 		sliderSP.maxValue = status.maxSp;
 	}
@@ -123,6 +123,7 @@ public class TPlayer : MonoBehaviour , IDamageable
         moveState.onActive = (State prev) => {
 			ChangeAnimation("Move");
 			SwordUse(false);
+			trackEffect.moveSmoke.Enable();
 		};
         attackState_1.onActive = (State prev) => {
 			ChangeAnimation("Attack1");
@@ -211,7 +212,9 @@ public class TPlayer : MonoBehaviour , IDamageable
         idleState_1.onInactive  = (State next) => {  };
         idleState_2.onInactive = (State next) => {  };
         idleState_3.onInactive = (State next) => {  };
-        moveState.onInactive = (State next) => {  };
+        moveState.onInactive = (State next) => {
+			trackEffect.moveSmoke.Disable();
+		};
         attackState_1.onInactive = (State next) => { 
 			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
 		};

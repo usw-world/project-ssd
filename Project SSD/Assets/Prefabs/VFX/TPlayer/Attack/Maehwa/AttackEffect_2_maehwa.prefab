@@ -4972,6 +4972,8 @@ MonoBehaviour:
   test: {fileID: 6531961707366093403, guid: 57b2e983f0c5505448323ad946822063, type: 3}
   testing: 0
   mode: 0
+  hitEffect: {fileID: 2722884100149935785, guid: 4ab924e499315454fb2a3bea29e94d06,
+    type: 3}
   damageZoneSize: {x: 2, y: 1, z: 2}
   localPos: {x: 0, y: 1.1, z: 1.5}
   localRot: {x: -48.225, y: -81.502, z: 84.506}
@@ -14752,7 +14754,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d8247dfb2d0156549ad85b1bdcc41c34, type: 2}
+  - {fileID: 2100000, guid: d45ef49133ec38a47880d7643c54080f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -19622,7 +19624,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a32128540dda71d4abc0b2481dc3bdc0, type: 2}
+  - {fileID: 2100000, guid: d8906a1d849929341879647667f85ae6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

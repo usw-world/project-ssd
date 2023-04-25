@@ -9790,6 +9790,8 @@ MonoBehaviour:
   test: {fileID: 0}
   testing: 0
   mode: 0
+  hitEffect: {fileID: 2722884100149935785, guid: 4ab924e499315454fb2a3bea29e94d06,
+    type: 3}
   damageZoneSize: {x: 1, y: 1, z: 2.5}
   localPos: {x: 0, y: 1, z: 1}
   localRot: {x: 0, y: 0, z: 0}
