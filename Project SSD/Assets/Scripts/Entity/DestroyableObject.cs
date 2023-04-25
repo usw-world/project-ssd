@@ -17,6 +17,7 @@ public class DestroyableObject: MonoBehaviour, IDamageable {
                 rb.AddForce((rb.transform.position - originPos) * amount, ForceMode.VelocityChange);
                 isDestroyed = true;
             }
+			gameObject.layer = 1;
 			GetComponent<Collider>().enabled = false;
         }
     }

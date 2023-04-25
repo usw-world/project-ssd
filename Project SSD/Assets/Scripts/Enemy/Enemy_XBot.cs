@@ -101,8 +101,8 @@ class Enemy_XBot : MovableEnemy {
         assaultState.onActive += (State prevState) => {
             enemyMovement.Stop();
             enemyAnimator.SetBool("Assault Crouch", true);
-            transform.LookAt(targetPosition);
-        };
+            transform.LookAt(Vector3.Scale(new Vector3(1,0,1), targetPosition));
+		};
         assaultState.onInactive += (State prevState) => {
             enemyAnimator.SetBool("Assault Crouch", false);
             if(assaultCoroutine != null)
