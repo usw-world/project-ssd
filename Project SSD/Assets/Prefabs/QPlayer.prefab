@@ -113,6 +113,29 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 1
     quickUse: 0
+  type: 0
+  speed: 0
+  isMultiple: 0
+  multipleCount: 0
+  multipleInterval: 0
+  isPenetration: 0
+  penetrationCount: 0
+  isContinuation: 0
+  continuationTime: 0
+  isDebuff: 0
+  debuffType: 0
+  debuffTime: 0
+  debuffAmount: 0
+  isChain: 0
+  chainCount: 0
+  chainInterval: 0
+  isCasting: 0
+  castingEffect: {fileID: 0}
+  castingTime: 0
+  isBuff: 0
+  buffType: 0
+  buffTime: 0
+  buffAmount: 0
   usingSp: 0
 --- !u!1 &357898121
 GameObject:
@@ -203,6 +226,29 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 1
     quickUse: 0
+  type: 0
+  speed: 0
+  isMultiple: 0
+  multipleCount: 0
+  multipleInterval: 0
+  isPenetration: 0
+  penetrationCount: 0
+  isContinuation: 0
+  continuationTime: 0
+  isDebuff: 0
+  debuffType: 0
+  debuffTime: 0
+  debuffAmount: 0
+  isChain: 0
+  chainCount: 0
+  chainInterval: 0
+  isCasting: 0
+  castingEffect: {fileID: 0}
+  castingTime: 0
+  isBuff: 0
+  buffType: 0
+  buffTime: 0
+  buffAmount: 0
   usingSp: 0
 --- !u!1 &1040615814
 GameObject:
@@ -262,6 +308,29 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 1
     quickUse: 0
+  type: 0
+  speed: 0
+  isMultiple: 0
+  multipleCount: 0
+  multipleInterval: 0
+  isPenetration: 0
+  penetrationCount: 0
+  isContinuation: 0
+  continuationTime: 0
+  isDebuff: 0
+  debuffType: 0
+  debuffTime: 0
+  debuffAmount: 0
+  isChain: 0
+  chainCount: 0
+  chainInterval: 0
+  isCasting: 0
+  castingEffect: {fileID: 0}
+  castingTime: 0
+  isBuff: 0
+  buffType: 0
+  buffTime: 0
+  buffAmount: 0
   usingSp: 0
 --- !u!1 &1063546360
 GameObject:
@@ -321,6 +390,29 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 1
     quickUse: 0
+  type: 0
+  speed: 0
+  isMultiple: 0
+  multipleCount: 0
+  multipleInterval: 0
+  isPenetration: 0
+  penetrationCount: 0
+  isContinuation: 0
+  continuationTime: 0
+  isDebuff: 0
+  debuffType: 0
+  debuffTime: 0
+  debuffAmount: 0
+  isChain: 0
+  chainCount: 0
+  chainInterval: 0
+  isCasting: 0
+  castingEffect: {fileID: 0}
+  castingTime: 0
+  isBuff: 0
+  buffType: 0
+  buffTime: 0
+  buffAmount: 0
   usingSp: 0
 --- !u!1 &1539545107
 GameObject:
@@ -2466,7 +2558,7 @@ GameObject:
   - component: {fileID: 2136718358464223823}
   - component: {fileID: 2136718357887272979}
   - component: {fileID: 2136718357887272978}
-  - component: {fileID: 2136718357887273197}
+  - component: {fileID: 5502086639659772829}
   - component: {fileID: 2136718357887273194}
   - component: {fileID: 2136718357887273195}
   - component: {fileID: 2136718357887272976}
@@ -2553,7 +2645,7 @@ CapsuleCollider:
   m_Height: 0
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &2136718357887273197
+--- !u!114 &5502086639659772829
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2562,9 +2654,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2136718358471616647}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fd27feed64870d4a8cbbc6b10b3409d, type: 3}
+  m_Script: {fileID: 11500000, guid: 055ee4a42a951294fa64695cdb45204d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMuted: 0
   isMuted: 0
 --- !u!195 &2136718357887273194
 NavMeshAgent:

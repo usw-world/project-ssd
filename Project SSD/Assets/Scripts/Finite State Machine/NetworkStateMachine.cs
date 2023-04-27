@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StateMachine : MonoBehaviour {
+public class NetworkStateMachine : StateMachine {
     public State currentState { get; private set; }
     State nextState;
 
