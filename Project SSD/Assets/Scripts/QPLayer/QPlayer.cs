@@ -30,7 +30,6 @@ public class QPlayer : NetworkBehaviour
         Movement movement;
         StateMachine stateMachine;
         Vector3 temp = Vector3.zero;
-        new Camera camera;
         float moveSpeed = 0.5f;
 
         // public Text testText;
@@ -53,8 +52,6 @@ public class QPlayer : NetworkBehaviour
         if (instance == null)
             instance = this;
         else Destroy(gameObject); 
-
-        camera  = Camera.main;
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
         movement = GetComponent<Movement>();
@@ -85,7 +82,6 @@ public class QPlayer : NetworkBehaviour
         timer = 0.0f;
         moveTest = true;
         stamina = 10.0f;
-        camera = Camera.main;
         movePos = TPtransform.position;
         movePos.x -= 2;
         movePos.y += 1;
@@ -97,11 +93,6 @@ public class QPlayer : NetworkBehaviour
         SetSkillTargetPos();
         if (!isLocalPlayer)
             return;
-        Vector3 camPos = transform.position;
-        camera.transform.rotation = Quaternion.Euler(new Vector3(60f, 0, 0));
-        camPos.y = 15;
-        camPos.z -= 5;
-        camera.transform.position  = camPos;
 
         #region move
         // 움직이는 부분
@@ -109,14 +100,6 @@ public class QPlayer : NetworkBehaviour
         distance = Vector3.Distance(transform.position, TPtransform.position);
 
         if(stateMachine.currentState == solo){
-        //     if (Input.GetKey(KeyCode.UpArrow))
-        //         transform.Translate(transform.forward * speed * Time.deltaTime);
-        //     if (Input.GetKey(KeyCode.DownArrow))
-        //         transform.Translate(-transform.forward * speed * Time.deltaTime);
-        //     if (Input.GetKey(KeyCode.RightArrow))
-        //         transform.Translate(transform.right * speed * Time.deltaTime);
-        //     if (Input.GetKey(KeyCode.LeftArrow))
-        //         transform.Translate(-transform.right * speed * Time.deltaTime);
 
             transform.position = Vector3.SmoothDamp(transform.position, movePos, ref temp, moveSpeed);
             stamina -= distance * Time.deltaTime * 0.1f;
@@ -152,7 +135,7 @@ public class QPlayer : NetworkBehaviour
         
         RaycastHit hit;
 
-        if (Physics.Raycast(camera.ScreenPointToRay(Input.mousePosition), out hit)) {
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit)) {
             movePos = hit.point;
             stateMachine.ChangeState(solo, false) ;
             Debug.Log($"{hit.transform.position.ToString()} point : {hit.point}");

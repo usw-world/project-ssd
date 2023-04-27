@@ -45,12 +45,18 @@ public class Movement : MonoBehaviour {
         if(space == Space.Self)
             direction = transform.localToWorldMatrix * direction;
 
-        RaycastHit[] hits;
+        RaycastHit[] hitsAll;
         Debug.DrawLine(point1, point2+ direction + Vector3.down*radius, Color.green);
         Debug.DrawLine(point1+ direction, point2 + Vector3.down*radius, Color.green);
-        hits = Physics.CapsuleCastAll(point1, point2, radius, direction, direction.magnitude, layerMask);
+        hitsAll = Physics.CapsuleCastAll(point1, point2, radius, direction, direction.magnitude, layerMask);
+
+        List<RaycastHit> hits = new List<RaycastHit>();
+        foreach(RaycastHit hit in hitsAll) {
+            if(hit.transform.gameObject != gameObject)
+                hits.Add(hit);
+        }
         Vector3 normal = direction.normalized;
-        if(hits.Length > 0) {
+        if(hits.Count > 0) {
             foreach(RaycastHit hit in hits) {
                 float xx = direction.normalized.x + (Mathf.Abs(direction.normalized.x)>Mathf.Abs(hit.normal.x) ? hit.normal.x : -direction.normalized.x);
                 float yy = direction.normalized.y + (Mathf.Abs(direction.normalized.y)>Mathf.Abs(hit.normal.y) ? hit.normal.y : -direction.normalized.y);
@@ -68,7 +74,7 @@ public class Movement : MonoBehaviour {
         (Vector3 point1, Vector3 point2, float radius) = colliderBounds.RaycastComponent;
         return Physics.CapsuleCastAll(point1, point2, radius, dir, distance, layerMask);
     }
-    private void Pulldown() {
+    protected void Pulldown() {
         (Vector3 point1, Vector3 point2, float radius) = colliderBounds.RaycastComponent;
         RaycastHit hit;
         bool isGround = Physics.CapsuleCast(point1, point2, radius, Vector3.down, out hit, distanceFromBottom+pullingDistance, blockLayer);
@@ -84,7 +90,7 @@ public class Movement : MonoBehaviour {
         if(useGravity)
             transform.Translate(0, fallingSpeed * Time.deltaTime, 0);
     }
-    void Update() {
+    protected virtual void Update() {
         Pulldown();
     }
     void OnDrawGizmos() {
