@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class QPlyerSkill : Skill
 {
-	public QPlayerSkillType type;
-
 	// type = 투사체
 	public float speed;
 
@@ -68,15 +66,23 @@ public class QPlyerSkill : Skill
 		return false;
 	}
 }
-public enum QPlayerSkillType 
-{
-	projectile, area, buff
+public enum OptionType {
+	none,
+	active,
+	buff,
+	debuff
 }
 public enum QPlayerBuffType
 {
-	healing, boost_speed, boost_stamina, shield
+	none,		// 없음
+	healing,	// 힐
+	shield,		// 쉴드
+	boost		// 공격력 상승
 }
 public enum QPlayerDebuffType
 {
-	lasting_damage, slow
+	none,		// 없음
+	damage,		// 데미지 (지속)
+	slow,		// 슬로우
+	inability	// 기절
 }

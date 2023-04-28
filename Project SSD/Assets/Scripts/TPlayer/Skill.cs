@@ -24,6 +24,7 @@ public class SkillInfo
 	public GameObject effect;
 	public Sprite skillImage;
 	public string skillText;
+	public string name;
 }
 [Serializable]
 public class SkillArea

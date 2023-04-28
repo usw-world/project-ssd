@@ -100,18 +100,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   info:
-    effect: {fileID: 7052915477074928549, guid: f59c0b6cd85a1b54e9f921a76c1894d0,
-      type: 3}
+    effect: {fileID: 0}
     skillImage: {fileID: 0}
     skillText: 
   area:
-    distance: 5
-    range: 2
+    distance: 1
+    range: 1
   property:
     coolTime: 0
     skillAP: 1
     nowCoolTime: 100
-    ready: 1
+    ready: 0
     quickUse: 0
   type: 0
   speed: 0
@@ -146,6 +145,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 357898122}
+  - component: {fileID: 1143111146}
   m_Layer: 0
   m_Name: QPlayerCameraPos
   m_TagString: Untagged
@@ -160,14 +160,52 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 357898121}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 20.33, z: -15.81}
+  m_LocalRotation: {x: 0.38268343, y: -0, z: -0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: 20, z: -20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2136718358471914663}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+--- !u!114 &1143111146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 357898121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ExcludedPropertiesInInspector:
+  - m_Script
+  m_LockStageInInspector: 
+  m_StreamingVersion: 20170927
+  m_Priority: 10
+  m_StandbyUpdate: 2
+  m_LookAt: {fileID: 2136718358471914663}
+  m_Follow: {fileID: 357898122}
+  m_Lens:
+    FieldOfView: 40
+    OrthographicSize: 10
+    NearClipPlane: 0.1
+    FarClipPlane: 5000
+    Dutch: 0
+    ModeOverride: 0
+    LensShift: {x: 0, y: 0}
+    GateFit: 2
+    m_SensorSize: {x: 1, y: 1}
+  m_Transitions:
+    m_BlendHint: 0
+    m_InheritPosition: 0
+    m_OnCameraLive:
+      m_PersistentCalls:
+        m_Calls: []
+  m_LegacyBlendHint: 0
+  m_ComponentOwner: {fileID: 0}
 --- !u!1 &990334917
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,9 +215,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 990334919}
-  - component: {fileID: 990334920}
+  - component: {fileID: 856052367}
   m_Layer: 0
-  m_Name: FireBall_3
+  m_Name: summor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -200,7 +238,7 @@ Transform:
   m_Father: {fileID: 1539545108}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &990334920
+--- !u!114 &856052367
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -209,47 +247,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 990334917}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95ad2f710dc28e141a3d13554c319eaf, type: 3}
+  m_Script: {fileID: 11500000, guid: 5edba3878bc0ee647b41b950c2a476e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   info:
-    effect: {fileID: 7052915477074928549, guid: 6a58759967b09334ab808e620a8c9e9f,
+    effect: {fileID: 8879756263098929072, guid: fe517be71bb97c743b1aaad2d4aea1ed,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
   area:
     distance: 7
-    range: 4
+    range: 1
   property:
     coolTime: 0
     skillAP: 1
     nowCoolTime: 100
     ready: 1
     quickUse: 0
-  type: 0
-  speed: 0
-  isMultiple: 0
-  multipleCount: 0
-  multipleInterval: 0
-  isPenetration: 0
-  penetrationCount: 0
-  isContinuation: 0
-  continuationTime: 0
-  isDebuff: 0
-  debuffType: 0
-  debuffTime: 0
-  debuffAmount: 0
-  isChain: 0
-  chainCount: 0
-  chainInterval: 0
-  isCasting: 0
-  castingEffect: {fileID: 0}
-  castingTime: 0
-  isBuff: 0
-  buffType: 0
-  buffTime: 0
-  buffAmount: 0
-  usingSp: 0
+  summonSkillEffect: {fileID: 0}
+  summonTime: 0
 --- !u!1 &1040615814
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,9 +275,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1040615816}
-  - component: {fileID: 1040615817}
+  - component: {fileID: 2081595232}
   m_Layer: 0
-  m_Name: FireBall_4
+  m_Name: single point explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -282,7 +298,7 @@ Transform:
   m_Father: {fileID: 1539545108}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1040615817
+--- !u!114 &2081595232
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -291,47 +307,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 1040615814}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95ad2f710dc28e141a3d13554c319eaf, type: 3}
+  m_Script: {fileID: 11500000, guid: ca2bd36bb88c2b1458d68b90eb61f574, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   info:
-    effect: {fileID: 7052915477074928549, guid: 0683b6485a369ae49ad2809bf41d2934,
+    effect: {fileID: 7914343134612545691, guid: 15db96d5853af92449b3b0370147a634,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
   area:
     distance: 8
-    range: 5
+    range: 6
   property:
     coolTime: 0
     skillAP: 1
     nowCoolTime: 100
     ready: 1
     quickUse: 0
-  type: 0
-  speed: 0
-  isMultiple: 0
-  multipleCount: 0
-  multipleInterval: 0
-  isPenetration: 0
-  penetrationCount: 0
-  isContinuation: 0
-  continuationTime: 0
-  isDebuff: 0
-  debuffType: 0
-  debuffTime: 0
-  debuffAmount: 0
-  isChain: 0
-  chainCount: 0
-  chainInterval: 0
-  isCasting: 0
-  castingEffect: {fileID: 0}
-  castingTime: 0
-  isBuff: 0
-  buffType: 0
-  buffTime: 0
-  buffAmount: 0
-  usingSp: 0
+  castingSkillEffect: {fileID: 6731655942466549401, guid: 620e1dd78d57d4c40adce9ff541b25d5,
+    type: 3}
+  castingTime: 2
 --- !u!1 &1063546360
 GameObject:
   m_ObjectHideFlags: 0
@@ -2733,8 +2728,8 @@ MonoBehaviour:
   skills:
   - {fileID: 159024194}
   - {fileID: 1063546363}
-  - {fileID: 990334920}
-  - {fileID: 1040615817}
+  - {fileID: 856052367}
+  - {fileID: 2081595232}
 --- !u!114 &2136718357887273198
 MonoBehaviour:
   m_ObjectHideFlags: 0
