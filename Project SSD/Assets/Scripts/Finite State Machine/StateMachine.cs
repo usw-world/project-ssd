@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class StateMachine : MonoBehaviour {
     public State currentState { get; private set; }
-    State nextState;
+    protected State nextState;
 
     [HideInInspector] public bool isMuted = false;
 
-    bool hasBeenChanged = false;
+    protected bool hasBeenChanged = false;
 
-    private void Start() {
+    protected virtual void Start() {
         if(currentState == null) {
             Debug.LogError($"StateMachine on '{gameObject.name}' has not any 'currentState'. Please set initial 'currentState' with SetInitialState(State state).");
         }
@@ -17,7 +17,7 @@ public class StateMachine : MonoBehaviour {
         if(currentState == null) {
             currentState = state;
         } else {
-            Debug.LogError($"StateMachine on '{gameObject.name}' already has initial 'currentState'.");
+            Debug.LogError($"StateMachine on '{gameObject.name}' already has initial 'currentState' as {currentState}.");
         }
     }
     public void ChangeState(State nextState, bool intoSelf=true) {
@@ -33,17 +33,17 @@ public class StateMachine : MonoBehaviour {
             hasBeenChanged = true;
         }
     }
-    private void LateUpdate() => hasBeenChanged = false;
+    protected virtual void LateUpdate() => hasBeenChanged = false;
     public bool Compare(State target) {
         return currentState == target;
     }
     public bool Compare(string tag) {
         return currentState.stateTag == tag;
     }
-    private void Update() {
+    protected virtual void Update() {
         currentState?.onStay?.Invoke();
     }
-    private void FixedUpdate() {
+    protected virtual void FixedUpdate() {
         currentState?.onStayFixed?.Invoke();
     }
 }
