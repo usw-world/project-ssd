@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2834331384921636667}
   - component: {fileID: 2834331384921636665}
   - component: {fileID: 2063875357}
-  - component: {fileID: 2063875359}
   m_Layer: 0
   m_Name: Network Manager
   m_TagString: Untagged
@@ -91,23 +90,8 @@ MonoBehaviour:
   - {fileID: 6410919741541939096, guid: 0eb800c82e837d74598e54dd92ec4a2f, type: 3}
   - {fileID: 2136718358471616647, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
   timeInterpolationGui: 0
-  isHost: 0
-  TPlayerObject: {fileID: 6410919741541939096, guid: 0eb800c82e837d74598e54dd92ec4a2f,
+  tPlayerObject: {fileID: 6410919741541939096, guid: 0eb800c82e837d74598e54dd92ec4a2f,
     type: 3}
-  QPlayerObject: {fileID: 2136718358471616647, guid: d8bf16506c20a4c72bf06419ea2bd1ef,
+  qPlayerObject: {fileID: 2136718358471616647, guid: d8bf16506c20a4c72bf06419ea2bd1ef,
     type: 3}
-  Player: {fileID: 0}
---- !u!114 &2063875359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2834331384921636666}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6442dc8070ceb41f094e44de0bf87274, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offsetX: 0
-  offsetY: 0
+  player: {fileID: 0}

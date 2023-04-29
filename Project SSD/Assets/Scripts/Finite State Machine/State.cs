@@ -6,9 +6,10 @@ using UnityEngine;
 public class State {
     public delegate void ChangeEvent();
     public delegate void ChangeEventWithState(State state = null);
-    [SerializeField] string stateName;
+    public string stateName { get; protected set; }
     public string stateTag { get; private set; } = null;
 
+    public State() {}
     public State(string stateName) {
         this.stateName = stateName;
     }

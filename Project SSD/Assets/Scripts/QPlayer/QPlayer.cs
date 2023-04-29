@@ -33,6 +33,8 @@ public class QPlayer : NetworkBehaviour
         float moveSpeed = 0.5f;
 
         // public Text testText;
+
+        [SerializeField] private GameObject qPlayerCamera;
     #endregion
 
     #region state
@@ -64,8 +66,7 @@ public class QPlayer : NetworkBehaviour
     private void stateInitialize(){
 
     }
-
-    // Start is called before the first frame update
+    
     void Start()
     {
         TPlayer = GameObject.FindGameObjectWithTag("TPlayer");
@@ -85,9 +86,18 @@ public class QPlayer : NetworkBehaviour
         movePos = TPtransform.position;
         movePos.x -= 2;
         movePos.y += 1;
+
+        InitializeCamera();
     }
 
-    // Update is called once per frame
+    private void InitializeCamera() {
+        if(isLocalPlayer
+		&& PlayerCamera.instance == null) {
+            GameObject camera = Instantiate(qPlayerCamera);
+			camera.GetComponent<PlayerCamera>().SetTarget(this.transform);
+        }
+    }
+    
     void Update()
     {
         SetSkillTargetPos();

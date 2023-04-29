@@ -19,11 +19,11 @@ public class UIManager : MonoBehaviour
 
 	private UIManager() { }
     private void Awake() {
-		if(instance == null) {
+		if(instance == null)
 			instance = this;
-		} else {
+		else
 			Destroy(this.gameObject);
-		}
+        DontDestroyOnLoad(gameObject);
 	}
 	private void Update()
 	{

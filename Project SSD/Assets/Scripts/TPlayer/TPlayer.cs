@@ -12,29 +12,30 @@ using Mirror;
 [RequireComponent(typeof(TPlayerInput))]
 [RequireComponent(typeof(StateMachine))]
 [RequireComponent(typeof(Movement))]
-public class TPlayer : MonoBehaviour , IDamageable
+public class TPlayer : NetworkBehaviour, IDamageable
 {
-	#region Init
 	static public TPlayer instance { get; private set; }
     
 	public PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;
 	[SerializeField] private TPlayerSkillManager skill;
 	[SerializeField] private TPlayerTrackEffect trackEffect;
-	
+
+	[SerializeField] private GameObject tPlayerCamera;
 
 	Coroutine attackCoroutine;
 	Coroutine dodgeCoroutine;
 	Coroutine rushCoroutine;
 	Coroutine WalkCoroutine;
-	Vector3 lookVecter;
-	Vector3 targetPos;
-	string nowAnimationTrigger = "";
+	Vector3 lookVector;
+	/// <summary>기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다./summary>
+	Vector3 extraMovingPoint;
+	string currentAnimationTrigger = "";
 	float idleTime = 0;
-	float rotSpeed = 30f;
+	float rotateSpeed = 30f;
 	float idleActionTime = 5f;
-	bool isImnune = false;
-	bool isSuperArmour = false;
+	bool isImmune = false;
+	bool isSuperArmor = false;
 	bool isCanAttack = false;
 	bool isWalk = false;
 	bool isRush = false;
@@ -46,17 +47,19 @@ public class TPlayer : MonoBehaviour , IDamageable
 	private Movement movement;
     private Animator ani;
     private StateMachine stateMachine;
-	#endregion
+	#endregion Component
 
-	#region State
-	private State idleState_1 = new State("Idle_1");
-    private State idleState_2 = new State("Idle_2");
-    private State idleState_3 = new State("Idle_3");
+	#region States
+	Dictionary<string, State> statesMap = new Dictionary<string, State>();
+
+	private State idleState1 = new State("Idle1", "Idle");
+    private State idleState2 = new State("Idle2", "Idle");
+    private State idleState3 = new State("Idle3", "Idle");
     private State moveState = new State("Move");
-    private State attackState_1 = new State("Attack_1");
-    private State attackState_2 = new State("Attack_2");
-    private State attackState_3 = new State("Attack_3");
-    private State attackState_4 = new State("Attack_4");
+    private State attackState1 = new State("Attack1", "Basic Attack");
+    private State attackState2 = new State("Attack2", "Basic Attack");
+    private State attackState3 = new State("Attack3", "Basic Attack");
+    private State attackState4 = new State("Attack4", "Basic Attack");
     private State dodgeAttackState = new State("Dodge Attack");
     private State downAttackState = new State("Down Attack");
     private State dodgeState = new State("Dodge");
@@ -65,25 +68,21 @@ public class TPlayer : MonoBehaviour , IDamageable
 
     private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
-	#endregion
+	#endregion States
 
-	#endregion
-
-	#region temp
-
+	#region UI
 	public Slider sliderHP;
 	public Slider sliderSP;
-
-	#endregion
+	#endregion UI
 
 	private void Awake()
     {
-        if(instance == null) {
+        if(instance == null)
             instance = this;
-        } else {
-            Debug.LogWarning("There already is TPlayer on this scene.");
+        else
             Destroy(this.gameObject);
-        }
+        DontDestroyOnLoad(gameObject);
+
         ani = GetComponent<Animator>();
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
@@ -91,68 +90,95 @@ public class TPlayer : MonoBehaviour , IDamageable
     }
     private void Start()
     {
+		InitializeStates();
         InitializeStateOnActive();
         InitializeStateOnStay();
         InitializeStateOnInactive();
-        stateMachine.SetIntialState(idleState_1);
-        attackStateGroup.Add(attackState_1);
-        attackStateGroup.Add(attackState_2);
-        attackStateGroup.Add(attackState_3);
-        attackStateGroup.Add(attackState_4);
-        idleStateGroup.Add(idleState_1);
-        idleStateGroup.Add(idleState_2);
-        idleStateGroup.Add(idleState_3);
+
+        stateMachine.SetIntialState(idleState1);
+        attackStateGroup.Add(attackState1);
+        attackStateGroup.Add(attackState2);
+        attackStateGroup.Add(attackState3);
+        attackStateGroup.Add(attackState4);
+        idleStateGroup.Add(idleState1);
+        idleStateGroup.Add(idleState2);
+        idleStateGroup.Add(idleState3);
 		
 		sliderHP.maxValue = status.maxHp;
 		sliderSP.maxValue = status.maxSp;
+
+		InitializeCamera();
 	}
+
+    private void InitializeCamera() {
+        if(isLocalPlayer &&
+		PlayerCamera.instance == null) {
+            GameObject camera = Instantiate(tPlayerCamera);
+			camera.GetComponent<PlayerCamera>().SetTarget(this.transform);
+        }
+    }
 	private void Update()
 	{
 		sliderHP.value = status.hp;
 		sliderSP.value = status.sp;
 	}
 
+	private void InitializeStates() {
+		statesMap.Add(idleState1.stateName, idleState1);
+		statesMap.Add(idleState2.stateName, idleState2);
+		statesMap.Add(idleState3.stateName, idleState3);
+		statesMap.Add(moveState.stateName, moveState);
+		statesMap.Add(attackState1.stateName, attackState1);
+		statesMap.Add(attackState2.stateName, attackState2);
+		statesMap.Add(attackState3.stateName, attackState3);
+		statesMap.Add(attackState4.stateName, attackState4);
+		statesMap.Add(dodgeAttackState.stateName, dodgeAttackState);
+		statesMap.Add(downAttackState.stateName, downAttackState);
+		statesMap.Add(dodgeState.stateName, dodgeState);
+		statesMap.Add(downState.stateName, downState);
+		statesMap.Add(damageState.stateName, damageState);
+	}
 	private void InitializeStateOnActive()
     {
-        idleState_1.onActive = (State prev) => {
+        idleState1.onActive = (State prev) => {
 			ChangeAnimation("Idle1");
 			idleTime = 0;
 		};
-        idleState_2.onActive = (State prev) => { ChangeAnimation("Idle2"); };
-        idleState_3.onActive = (State prev) => { ChangeAnimation("Idle3"); };
+        idleState2.onActive = (State prev) => { ChangeAnimation("Idle2"); };
+        idleState3.onActive = (State prev) => { ChangeAnimation("Idle3"); };
         moveState.onActive = (State prev) => {
 			ChangeAnimation("Move");
 			SwordUse(false);
 			trackEffect.moveSmoke.Enable();
 		};
-        attackState_1.onActive = (State prev) => {
+        attackState1.onActive = (State prev) => {
 			ChangeAnimation("Attack1");
 			SwordUse(true);
 		};
-        attackState_2.onActive = (State prev) => { ChangeAnimation("Attack2"); };
-        attackState_3.onActive = (State prev) => { ChangeAnimation("Attack3"); };
-        attackState_4.onActive = (State prev) => { ChangeAnimation("Attack4"); };
+        attackState2.onActive = (State prev) => { ChangeAnimation("Attack2"); };
+        attackState3.onActive = (State prev) => { ChangeAnimation("Attack3"); };
+        attackState4.onActive = (State prev) => { ChangeAnimation("Attack4"); };
 		dodgeAttackState.onActive = (State prev) => {
 			ChangeAnimation("DodgeAttack");
 			SwordUse(true);
-			targetPos = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
+			extraMovingPoint = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
 			trackEffect.dodgeMaehwa.Enable();
 		};
 		downAttackState.onActive = (State prev) => {
 			ChangeAnimation("DownAttack");
 			SwordUse(true);
-			targetPos = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
+			extraMovingPoint = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
 			trackEffect.dodgeMaehwa.Enable();
 		};
 		dodgeState.onActive = (State prev) => {
 			ChangeAnimation("Dodge");
-			isImnune = true;
+			isImmune = true;
 			dodgeCoroutine = StartCoroutine(DodgeCoroutine());
 			trackEffect.dodgeMaehwa.Enable();
 		};
         downState.onActive = (State prev) => {
 			ChangeAnimation("Down");
-			isSuperArmour = true;
+			isSuperArmor = true;
 		};
         damageState.onActive = (State prev) => {
 			ChangeAnimation("Damage");
@@ -161,20 +187,20 @@ public class TPlayer : MonoBehaviour , IDamageable
     }
 	private void InitializeStateOnStay()
     {
-        idleState_1.onStay = () => {
+        idleState1.onStay = () => {
 			idleTime += Time.deltaTime;
 			if (idleTime >= idleActionTime)
 			{
 				idleTime = 0;
 				idleActionIdx = Random.Range(1, idleStateGroup.Count);
-				stateMachine.ChangeState(idleStateGroup[idleActionIdx], false);
+				ChangeState(idleStateGroup[idleActionIdx], false);
 			}
 			status.Update();
 		};
-        idleState_2.onStay = () => {
+        idleState2.onStay = () => {
 			status.Update();
 		};
-        idleState_3.onStay = () => {
+        idleState3.onStay = () => {
 			status.Update();
 		};
         moveState.onStay = () => {
@@ -195,10 +221,10 @@ public class TPlayer : MonoBehaviour , IDamageable
 			status.Update();
 			movement.MoveToward(Vector3.forward * ((isWalk) ? status.speed / 2 : status.speed) * Time.deltaTime);
 		};
-        attackState_1.onStay = () => {  };
-        attackState_2.onStay = () => {  };
-        attackState_3.onStay = () => {  };
-        attackState_4.onStay = () => {  };
+        attackState1.onStay = () => {  };
+        attackState2.onStay = () => {  };
+        attackState3.onStay = () => {  };
+        attackState4.onStay = () => {  };
 		dodgeAttackState.onStay = () => { MoveToTargetPos(); };
 		downAttackState.onStay = () => { MoveToTargetPos(); };
 		dodgeState.onStay = () => { };
@@ -209,43 +235,43 @@ public class TPlayer : MonoBehaviour , IDamageable
     }
 	private void InitializeStateOnInactive()
     {
-        idleState_1.onInactive  = (State next) => {  };
-        idleState_2.onInactive = (State next) => {  };
-        idleState_3.onInactive = (State next) => {  };
+        idleState1.onInactive  = (State next) => {  };
+        idleState2.onInactive = (State next) => {  };
+        idleState3.onInactive = (State next) => {  };
         moveState.onInactive = (State next) => {
 			trackEffect.moveSmoke.Disable();
 		};
-        attackState_1.onInactive = (State next) => { 
+        attackState1.onInactive = (State next) => { 
 			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
 		};
-        attackState_2.onInactive = (State next) => { 
+        attackState2.onInactive = (State next) => { 
 			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
 		};
-        attackState_3.onInactive = (State next) => { 
+        attackState3.onInactive = (State next) => { 
 			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
 		};
-        attackState_4.onInactive = (State next) => { 
+        attackState4.onInactive = (State next) => { 
 			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
 		};
 		dodgeAttackState.onInactive = (State next) => {  };
 		downAttackState.onInactive = (State next) => {  };
         dodgeState.onInactive = (State next) => {
-			isImnune = false;
+			isImmune = false;
 			if (dodgeCoroutine != null) StopCoroutine(dodgeCoroutine);
 			trackEffect.dodgeMaehwa.Disable();
 		};
-        downState.onInactive = (State next) => { isSuperArmour = false; };
+        downState.onInactive = (State next) => { isSuperArmor = false; };
         damageState.onInactive = (State next) => {  };
     }
    
     public void InputMove(Vector3 moveVecterInput)
     {
-        lookVecter = moveVecterInput;
+        lookVector = moveVecterInput;
 
-        if (stateMachine.currentState == attackState_1 ||
-            stateMachine.currentState == attackState_2 ||
-            stateMachine.currentState == attackState_3 ||
-            stateMachine.currentState == attackState_4 ||
+        if (stateMachine.currentState == attackState1 ||
+            stateMachine.currentState == attackState2 ||
+            stateMachine.currentState == attackState3 ||
+            stateMachine.currentState == attackState4 ||
             stateMachine.currentState == dodgeAttackState ||
             stateMachine.currentState == dodgeState ||
             stateMachine.currentState == downState ||
@@ -253,12 +279,12 @@ public class TPlayer : MonoBehaviour , IDamageable
         {
             return;
         }
-        if (stateMachine.currentState == idleState_2 || 
-            stateMachine.currentState == idleState_3 )
+        if (stateMachine.currentState == idleState2 || 
+            stateMachine.currentState == idleState3 )
         {
-            if (lookVecter == Vector3.zero)
+            if (lookVector == Vector3.zero)
             {
-                stateMachine.ChangeState(idleStateGroup[idleActionIdx], false);
+                ChangeState(idleStateGroup[idleActionIdx], false);
             }
             else
             {
@@ -274,14 +300,14 @@ public class TPlayer : MonoBehaviour , IDamageable
     {
         isCanAttack = true;
         attackCount = 0;
-        if (lookVecter == Vector3.zero)
-            stateMachine.ChangeState(idleState_1, false);
+        if (lookVector == Vector3.zero)
+            ChangeState(idleState1, false);
         else
-            stateMachine.ChangeState(moveState, false);
+            ChangeState(moveState, false);
     }
 	public void OnDamage(GameObject origin, float amount)
 	{
-		if (isImnune) return;    // 무적이면 실행 않함
+		if (isImmune) return;    // 무적이면 실행 않함
 
 		status.hp -= amount;
 		if (origin != null)
@@ -290,7 +316,7 @@ public class TPlayer : MonoBehaviour , IDamageable
 		}
 
 		if (stateMachine.currentState == downState) return;
-		if (isSuperArmour) return;
+		if (isSuperArmor) return;
 
 		if (stateMachine.currentState == damageState)
 		{
@@ -299,12 +325,12 @@ public class TPlayer : MonoBehaviour , IDamageable
 		}
 		else
 		{
-			stateMachine.ChangeState(damageState, false);
+			ChangeState(damageState, false);
 		}
 	}
 	public void OnDown()
 	{ 
-		stateMachine.ChangeState(downState, false); 
+		ChangeState(downState, false); 
 	}
     public void OnSlide()
     {
@@ -325,8 +351,8 @@ public class TPlayer : MonoBehaviour , IDamageable
 		if (stateMachine.currentState == damageState ||
             stateMachine.currentState == downState ||
 			stateMachine.currentState == dodgeState ) return;
-		if (lookVecter != Vector3.zero) rotate(10f); 
-		stateMachine.ChangeState(dodgeState, false);
+		if (lookVector != Vector3.zero) rotate(10f); 
+		ChangeState(dodgeState, false);
 		skill.dodge.Use();
 	}
     public void OnAttack()
@@ -353,10 +379,10 @@ public class TPlayer : MonoBehaviour , IDamageable
 
         isCanAttack = false;
 
-        if (lookVecter != Vector3.zero) rotate(10f);
+        if (lookVector != Vector3.zero) rotate(10f);
 
-		targetPos = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
-		stateMachine.ChangeState(attackStateGroup[attackCount], false);
+		extraMovingPoint = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
+		ChangeState(attackStateGroup[attackCount], false);
     }
 	public void OnMoveSpeedConvert()
 	{
@@ -381,21 +407,22 @@ public class TPlayer : MonoBehaviour , IDamageable
 	{
 		isCanAttack = true; 
 	}
-	public void ChackAttackZone()
+	public void CheckAttackZone()
 	{
 		attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
 		skill.nomalAttacks[attackCount].Use();
 		attackCount++;
 		attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
-		if (attackCoroutine != null) StopCoroutine(attackCoroutine);
+		if (attackCoroutine != null)
+			StopCoroutine(attackCoroutine);
 		attackCoroutine = StartCoroutine(AttackCoroutine());
 	}
-	public void ChackDodgeAttackZone()
+	public void CheckDodgeAttackZone()
 	{
 		skill.dodgeAttack.Use();
 		trackEffect.dodgeMaehwa.Disable();
 	}
-	public void ChackDownAttackZone()
+	public void CheckDownAttackZone()
 	{
 		skill.downAttack.Use();
 		trackEffect.dodgeMaehwa.Disable();
@@ -407,8 +434,8 @@ public class TPlayer : MonoBehaviour , IDamageable
 
 	void rotate(float rotSppedPoint = 1f)
 	{
-		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
-		Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * rotSppedPoint * Time.deltaTime);
+		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVector;
+		Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotateSpeed * rotSppedPoint * Time.deltaTime);
 		transform.rotation = Quaternion.LookRotation(look);
 		transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 	}
@@ -419,46 +446,63 @@ public class TPlayer : MonoBehaviour , IDamageable
 	}
 	void MoveToTargetPos()
 	{
-		targetPos.y = transform.position.y;
-		Vector3 dir = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * 10f) - transform.position;
+		extraMovingPoint.y = transform.position.y;
+		Vector3 dir = Vector3.Lerp(transform.position, extraMovingPoint, Time.deltaTime * 10f) - transform.position;
 		movement.MoveToward(dir, Space.World);
 	}
 	void OnDodgeAttack()
     {
 		if (!skill.dodgeAttack.CanUse()) return;
-		if (lookVecter != Vector3.zero)
+		if (lookVector != Vector3.zero)
 		{
-			Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
-			Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 7f);
+			Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVector;
+			Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotateSpeed * Time.deltaTime * 7f);
 			transform.rotation = Quaternion.LookRotation(look);
 			transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 		}
-        stateMachine.ChangeState(dodgeAttackState, false);
+        ChangeState(dodgeAttackState, false);
         isCanAttack = false;
     }
 	void OnDownAttack()
 	{
 		if (!skill.downAttack.CanUse()) return;
-		if (lookVecter != Vector3.zero)
+		if (lookVector != Vector3.zero)
 		{
-			Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVecter;
-			Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotSpeed * Time.deltaTime * 7f);
+			Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVector;
+			Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotateSpeed * Time.deltaTime * 7f);
 			transform.rotation = Quaternion.LookRotation(look);
 			transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 		}
-		stateMachine.ChangeState(downAttackState, false);
+		ChangeState(downAttackState, false);
 		isCanAttack = false;
 	}
 	void ChangeAnimation(string trigger)
     {
-		if (nowAnimationTrigger != "") 
-			ani.ResetTrigger(nowAnimationTrigger);
-        nowAnimationTrigger = trigger;
-        ani.SetTrigger(nowAnimationTrigger);
+		if (currentAnimationTrigger != "") 
+			ani.ResetTrigger(currentAnimationTrigger);
+        currentAnimationTrigger = trigger;
+        ani.SetTrigger(currentAnimationTrigger);
     }
 	void SwordUse(bool use) 
 	{
 		sword.Set(use); 
+	}
+
+	private void ChangeState(State state) {
+		SynchromizeState(state.stateName, true);
+	}
+	private void ChangeState(State state, bool intoSelf) {
+		SynchromizeState(state.stateName, intoSelf);
+	}
+	[ClientRpc]
+	private void SynchromizeState(string stateName, bool intoSelf) {
+		try {
+			State nextState = statesMap[stateName];
+			if(nextState != null)
+				stateMachine.ChangeState(nextState, intoSelf);
+		} catch(KeyNotFoundException e) {
+			Debug.LogError(e);
+		}
 	}
 
 	IEnumerator SmoothConvert(bool fade)
@@ -533,16 +577,14 @@ public class TPlayer : MonoBehaviour , IDamageable
 	{
 		float offset = 0;
 		Vector3 targetPoint = Vector3.forward;
-
 		while (offset < 1)
 		{
 			offset += Time.deltaTime * 6f;
-			targetPos.y = transform.position.y;
-			Vector3 dir = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * 10f) - transform.position;
+			extraMovingPoint.y = transform.position.y;
+			Vector3 dir = Vector3.Lerp(transform.position, extraMovingPoint, Time.deltaTime * 10f) - transform.position;
 			movement.MoveToward(dir, Space.World);
 			yield return null;
 		}
-		attackCoroutine = null;
 	}
 }
 [Serializable]

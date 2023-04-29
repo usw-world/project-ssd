@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2464842a257fcf45b273f63904c2543, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  radius: 2.5
 --- !u!1 &8836918850882435785
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,7 +154,7 @@ ParticleSystem:
       m_RotationOrder: 4
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
-  scalingMode: 1
+  scalingMode: 0
   randomSeed: 0
   InitialModule:
     serializedVersion: 3

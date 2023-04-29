@@ -1,51 +1,40 @@
 using UnityEngine;
+using Cinemachine;
 
-public class QPlayerCamera : PlayerCamera
-{
-    private float hidingDistance = 1f;
-    private float minTransparency = -1f, maxTransparency = 0f;
+public class QPlayerCamera : PlayerCamera {
+    
+    [HideInInspector] public CinemachineTransposer transposer;
+    [HideInInspector] public CinemachineHardLookAt hardLookAt;
+
+    private float currentDistance = 0;
+    public float maxCameraDistance = 15f;
+    public float minCameraDistance = 10f;
 
     private bool isInHidingDistance = false;
     
-    private void Update()
-    {
-        FadeInOut();
+    protected override void Awake() {
+        base.Awake();
+        currentDistance = minCameraDistance;
+        transposer = virtualCamera.GetCinemachineComponent<CinemachineTransposer>();
+        hardLookAt = virtualCamera.GetCinemachineComponent<CinemachineHardLookAt>();
+        if(transposer==null || hardLookAt==null)
+            Debug.LogWarning("Q Player Camera's body is must be 'Transposer' and aim is must be 'Hard Look At'.");
     }
 
-    private void ChangeTransparency(float transparency)
-    {
-        Renderer[] renderers = TPlayer.instance.GetComponentsInChildren<Renderer>();
-        foreach (Renderer childRenderer in renderers)
-        {
-            childRenderer.material.SetFloat("_Tweak_transparency", CheckOverTransparency(transparency));
-            childRenderer.material.SetColor("_BaseColor", new Color(1f, 1f, 1f, CheckOverTransparency(transparency) + 1f));
-        }
+    public override void SetTarget(Transform target) {
+        virtualCamera.Follow = target;
+    }
+    public override void ZoomIn() {
+        print(currentDistance);
+        currentDistance += -1f * zoomInOutSensitivity;
+        currentDistance = Mathf.Clamp(currentDistance, minCameraDistance, maxCameraDistance);
+        transposer.m_FollowOffset = new Vector3(0, currentDistance, -currentDistance);
     }
 
-    private float CheckOverTransparency(float transparency)
-    {
-        if (transparency < minTransparency + 0.5)
-            transparency = minTransparency;
-        else if (transparency > maxTransparency)
-            transparency = maxTransparency;
-
-        return transparency;
+    public override void ZoomOut() {
+        print(currentDistance);
+        currentDistance += 1f * zoomInOutSensitivity;
+        currentDistance = Mathf.Clamp(currentDistance, minCameraDistance, maxCameraDistance);
+        transposer.m_FollowOffset = new Vector3(0, currentDistance, -currentDistance);
     }
-
-    private void FadeInOut()
-    {
-        float cameraAndPlayerDistance = Vector3.Distance(TPlayer.instance.transform.position + new Vector3(0, 1), Camera.main.transform.position);
-        
-        if (cameraAndPlayerDistance < hidingDistance)
-        {
-            isInHidingDistance = true;
-            ChangeTransparency(cameraAndPlayerDistance - hidingDistance);
-        }
-        else if (cameraAndPlayerDistance > hidingDistance && isInHidingDistance)
-        {
-            isInHidingDistance = false;
-            ChangeTransparency(0f);
-        }
-    }
-
 }

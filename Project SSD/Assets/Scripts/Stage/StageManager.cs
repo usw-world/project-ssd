@@ -6,6 +6,7 @@ public class StageManager : MonoBehaviour {
     static public StageManager instance;
 
     [SerializeField] private GameObject tPlayerCamera;
+    [SerializeField] private GameObject qPlayerCamera;
 
     Transform spawnPoint;
 
@@ -18,15 +19,12 @@ public class StageManager : MonoBehaviour {
     private void Start() {
         if(SSDNetworkManager.instance.isHost) {
             var message = new C2SMessage.CreateTPlayerPrefabMessage(spawnPoint);
+            print("Send message (Create T Player)");
             Mirror.NetworkClient.Send(message);
         } else {
             var message = new C2SMessage.CreateQPlayerPrefabMessage();
+            print("Send message (Create Q Player)");
             Mirror.NetworkClient.Send(message);
         }
-    }
-
-    public void AttachCamera(Transform tPlayer) {
-        GameObject tCamera = Instantiate(tPlayerCamera);
-        tCamera.transform.SetParent(tPlayer);
     }
 }

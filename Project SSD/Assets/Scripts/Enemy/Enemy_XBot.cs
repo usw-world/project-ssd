@@ -127,7 +127,7 @@ class Enemy_XBot : MovableEnemy {
             enemyStateMachine.ChangeState(chaseState, true);
         }
     }
-    protected override void OnLostTarget(Vector3 lastTargetPoint) {
+    protected override void OnLostTarget() {
         enemyStateMachine.ChangeState(idleState);
     }
     private void TryJumpAttack() {

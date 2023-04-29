@@ -23,17 +23,17 @@ public class TPlayerSkill : Skill
 	{
 		status = TPlayer.instance.status;
 
-		if (ChackSP() && ChackCoolTime())  
+		if (CheckSP() && CheckCoolTime())  
 			return true;
 		return false;
 	}
-	bool ChackSP() 
+	bool CheckSP() 
 	{
 		if (status.sp >= usingSP)
 			return true;
 		return false;
 	}
-	bool ChackCoolTime() 
+	bool CheckCoolTime() 
 	{
 		if (property.nowCoolTime >= property.coolTime)
 			return true; ;

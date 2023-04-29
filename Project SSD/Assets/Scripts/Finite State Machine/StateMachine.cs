@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class StateMachine : MonoBehaviour {
-    public State currentState { get; private set; }
+    public State currentState { get; protected set; }
     protected State nextState;
 
     [HideInInspector] public bool isMuted = false;
@@ -20,7 +20,7 @@ public class StateMachine : MonoBehaviour {
             Debug.LogError($"StateMachine on '{gameObject.name}' already has initial 'currentState' as {currentState}.");
         }
     }
-    public void ChangeState(State nextState, bool intoSelf=true) {
+    public virtual void ChangeState(State nextState, bool intoSelf=true) {
         if (hasBeenChanged || isMuted) return;
         if(!intoSelf && nextState==currentState) return;
         if(currentState == null) {

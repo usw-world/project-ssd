@@ -67,6 +67,7 @@ namespace Mirror
             // both always need to be on the same send interval.
             // force the setting to '0' in OnValidate to make it obvious that we
             // actually use NetworkServer.sendInterval.
+            
             syncInterval = 0;
 
             // obsolete clientAuthority compatibility:

@@ -44,13 +44,12 @@ public abstract class MovableEnemy : Enemy {
         ChaseTarget(targetPoint);
     }
     private void LostTargetEvent() {
-        targetPoint = target.transform.position;
-        OnLostTarget(targetPoint);
+        OnLostTarget();
     }
     /// <summary>
     /// This method is called when target point is updated.<br/>
     /// <paramref name="point"/> : The point where target is located.
     /// </summary>
     protected abstract void ChaseTarget(Vector3 point);
-    protected abstract void OnLostTarget(Vector3 lastTargetPoint);
+    protected abstract void OnLostTarget();
 }

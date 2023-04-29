@@ -48,6 +48,7 @@ MonoBehaviour:
     effect: {fileID: 0}
     skillImage: {fileID: 0}
     skillText: 
+    name: 
   area:
     distance: 1
     range: 1
@@ -5276,6 +5277,7 @@ MonoBehaviour:
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
+    name: 
   area:
     distance: 1
     range: 1
@@ -10163,6 +10165,7 @@ MonoBehaviour:
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
+    name: 
   area:
     distance: 1
     range: 1
@@ -10363,6 +10366,7 @@ MonoBehaviour:
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
+    name: 
   area:
     distance: 1
     range: 1
@@ -10727,6 +10731,7 @@ MonoBehaviour:
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
+    name: 
   area:
     distance: 1
     range: 1
@@ -10876,6 +10881,7 @@ MonoBehaviour:
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
+    name: 
   area:
     distance: 1
     range: 1
@@ -10935,6 +10941,7 @@ MonoBehaviour:
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
+    name: 
   area:
     distance: 1
     range: 1
@@ -17333,7 +17340,6 @@ GameObject:
   - component: {fileID: 1275966365}
   - component: {fileID: 1275966366}
   - component: {fileID: 1580547243}
-  - component: {fileID: 281975511437223430}
   - component: {fileID: 690902255018422438}
   - component: {fileID: 1275966362}
   - component: {fileID: 1275966364}
@@ -17341,6 +17347,7 @@ GameObject:
   - component: {fileID: 4699335426286350918}
   - component: {fileID: -9035221150136576729}
   - component: {fileID: 3159772802916435366}
+  - component: {fileID: 575347874802459017}
   m_Layer: 7
   m_Name: TPlayer
   m_TagString: TPlayer
@@ -17474,20 +17481,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player Map
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &281975511437223430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6410919741541939096}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 055ee4a42a951294fa64695cdb45204d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isMuted: 0
-  isMuted: 0
 --- !u!114 &690902255018422438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17518,6 +17511,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9722e9897b0e0745a8dc05d7bbdd0d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0.1
   status:
     speed: 3
     maxHp: 100
@@ -17543,6 +17539,8 @@ MonoBehaviour:
   trackEffect:
     dodgeMaehwa: {fileID: 471938830}
     moveSmoke: {fileID: 710440731}
+  tPlayerCamera: {fileID: 3033226870010222224, guid: 2e9172096aa2e804e88ac5eff8475619,
+    type: 3}
   sliderHP: {fileID: 1795437157}
   sliderSP: {fileID: 1645096578}
 --- !u!114 &1275966364
@@ -17603,7 +17601,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncDirection: 0
   syncMode: 0
-  syncInterval: 0
+  syncInterval: 0.01
   target: {fileID: 7972339259538638219}
   clientAuthority: 0
   syncPosition: 1
@@ -17613,7 +17611,7 @@ MonoBehaviour:
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
   onlySyncOnChange: 1
-  onlySyncOnChangeCorrectionMultiplier: 2
+  onlySyncOnChangeCorrectionMultiplier: 0
   rotationSensitivity: 0.01
   compressRotation: 0
   positionPrecision: 0.01
@@ -17653,6 +17651,19 @@ MonoBehaviour:
   collisionColor: {r: 1, g: 0, b: 0, a: 1}
   groundCollisionColor: {r: 0, g: 1, b: 0, a: 1}
   angleLimitDrawScale: 0.05
+--- !u!114 &575347874802459017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6410919741541939096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fd27feed64870d4a8cbbc6b10b3409d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isMuted: 0
 --- !u!1 &6414968695017539592
 GameObject:
   m_ObjectHideFlags: 0

@@ -26,7 +26,6 @@ public partial class SSDNetworkManager : NetworkManager {
             instance = this;
         else
             Destroy(this.gameObject);
-        print(offlineScene);
     }
 
     public override void OnStartServer() {
