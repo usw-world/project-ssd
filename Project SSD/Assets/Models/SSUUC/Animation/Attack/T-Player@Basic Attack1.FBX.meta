@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 92c9756524e899248974facec284518d
+guid: 018ce46eeecfeae4abb8016f2c6841ca
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
@@ -701,7 +701,7 @@ ModelImporter:
     second: Box001
   - first:
       74: 7400000
-    second: 2Hand-Sword-Attack3
+    second: T-Player@Basic Attack1
   - first:
       95: 9500000
     second: //RootNode
@@ -750,7 +750,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: 2Hand-Sword-Attack3
+      name: T-Player@Basic Attack1
       takeName: Take 001
       internalID: 7400000
       firstFrame: 0

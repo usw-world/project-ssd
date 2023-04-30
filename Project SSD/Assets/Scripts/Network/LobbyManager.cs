@@ -19,7 +19,6 @@ public class LobbyManager : MonoBehaviour {
     [SerializeField] private Text guestNameText;
 
     [SerializeField] private InputField addressField;
-    [SerializeField] private InputField portField;
 
     [SerializeField] private Button startButton;
     #endregion UIs
@@ -35,11 +34,7 @@ public class LobbyManager : MonoBehaviour {
         SSDNetworkManager.instance.HostSession();
     }
     public void OnClickJoinButton() {
-        if(string.IsNullOrWhiteSpace(portField.text)) {
-            SSDNetworkManager.instance.JoinSession(addressField.text);
-        } else {
-            SSDNetworkManager.instance.JoinSession($"{addressField.text}:{portField.text}");
-        }
+        SSDNetworkManager.instance.JoinSession(addressField.text);
     }
     public void OnClickCloseRoomButton() {
         SSDNetworkManager.instance.CloseSession();

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 92c9756524e899248974facec284518d
+guid: 06e24acb759a2ac4c965d56b0101f8ba
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
@@ -320,6 +320,12 @@ ModelImporter:
     second: Box001
   - first:
       1: 100210
+    second: Spear
+  - first:
+      1: 100212
+    second: 2Hand-Sword
+  - first:
+      1: 100214
     second: Exporter
   - first:
       4: 400000
@@ -638,6 +644,12 @@ ModelImporter:
     second: Box001
   - first:
       4: 400210
+    second: Spear
+  - first:
+      4: 400212
+    second: 2Hand-Sword
+  - first:
+      4: 400214
     second: Exporter
   - first:
       23: 2300000
@@ -658,6 +670,12 @@ ModelImporter:
       23: 2300010
     second: Box001
   - first:
+      23: 2300012
+    second: Spear
+  - first:
+      23: 2300014
+    second: 2Hand-Sword
+  - first:
       33: 3300000
     second: Mesh_Soldier_A
   - first:
@@ -675,6 +693,12 @@ ModelImporter:
   - first:
       33: 3300010
     second: Box001
+  - first:
+      33: 3300012
+    second: Spear
+  - first:
+      33: 3300014
+    second: 2Hand-Sword
   - first:
       43: 4300000
     second: Mesh_Soldier_A
@@ -700,8 +724,14 @@ ModelImporter:
       43: 4300014
     second: Box001
   - first:
+      43: 4300016
+    second: Spear
+  - first:
+      43: 4300018
+    second: 2Hand-Sword
+  - first:
       74: 7400000
-    second: 2Hand-Sword-Attack3
+    second: T-Player@Basic Attack4
   - first:
       95: 9500000
     second: //RootNode
@@ -735,7 +765,7 @@ ModelImporter:
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar
-      to improve retargeting quality.\n\t'B_Spine1' has translation animation that
+      to improve retargeting quality.\n\t'B_Spine' has translation animation that
       will be discarded.\n\t'B_Spine2' has translation animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
@@ -750,11 +780,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: 2Hand-Sword-Attack3
+      name: T-Player@Basic Attack4
       takeName: Take 001
       internalID: 7400000
       firstFrame: 0
-      lastFrame: 30
+      lastFrame: 23
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -774,14 +804,14 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.4160748
+      - time: 0.4703143
         functionName: CheckAttackZone
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.5413774
+      - time: 0.5664459
         functionName: BeCanNextAttack
         data: 
         objectReferenceParameter: {instanceID: 0}

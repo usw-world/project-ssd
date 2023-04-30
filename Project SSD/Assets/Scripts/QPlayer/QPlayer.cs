@@ -13,34 +13,39 @@ using UnityEngine.Rendering.Universal;
 public class QPlayer : NetworkBehaviour
 {
     public static QPlayer instance { get; private set; }
-    #region veriable
     public PlayerStatus status;
-        float speed = 10.0f;
-        Vector2 mousePos;
-        Vector3 movePos;
-        public float stamina = 0.0f;
-        public GameObject TPlayer;
-        private Transform TPtransform;
-        Vector3 min, max;
-        float timer;
-        public float distance;
-        public bool moveTest;
-        Animator anim;
-        Rigidbody rb;
-        Movement movement;
-        StateMachine stateMachine;
-        Vector3 temp = Vector3.zero;
-        float moveSpeed = 0.5f;
+    float speed = 10.0f;
+    Vector3 movingDestination;
+    bool isAttached = true;
+    
+    #region States
+    Dictionary<string, State> statesMap = new Dictionary<string, State>();
 
-        // public Text testText;
+    State attachedState = new State("Attached");
+    State separatedState = new State("Separated");
+    State returnState = new State("Return");
+    State moveState = new State("Move");
+    #endregion States
 
-        [SerializeField] private GameObject qPlayerCamera;
-    #endregion
+    #region Stamina
+    [SerializeField] private float stamina;
+    [SerializeField] private float maxStamina = 10f;
+    #endregion Stamina
 
-    #region state
-        State duel = new State("QP_duel");
-        State solo = new State("QP_solo");
-    #endregion
+    #region Animation
+    Animator animator;
+    const string IDLE_ANIMATION_PARAMETER = "Idle";
+    const string FLY_ANIMATION_PARAMETER = "Fly";
+    #endregion Animation
+
+    public GameObject tPlayerGobj;
+    public float distance;
+    NavigateableMovement movement;
+    StateMachine stateMachine;
+    Vector3 temp = Vector3.zero;
+    [SerializeField] private float moveSpeed = 0.5f;
+
+    [SerializeField] private GameObject qPlayerCamera;
 
     public DecalProjector skillDistanceArea;
     public DecalProjector skillRangeArea;
@@ -53,41 +58,94 @@ public class QPlayer : NetworkBehaviour
     {
         if (instance == null)
             instance = this;
-        else Destroy(gameObject); 
-        anim = GetComponent<Animator>();
-        rb = GetComponent<Rigidbody>();
-        movement = GetComponent<Movement>();
+        else
+            Destroy(gameObject); 
+        animator = GetComponent<Animator>();
+        movement = GetComponent<NavigateableMovement>(); 
         stateMachine = GetComponent<StateMachine>();
         //Cursor.lockState = CursorLockMode.Locked;
 
-
-        stateMachine.SetIntialState(duel);
-    }
-    private void stateInitialize(){
-
+        stateMachine.SetIntialState(attachedState);
     }
     
-    void Start()
-    {
-        TPlayer = GameObject.FindGameObjectWithTag("TPlayer");
-        TPtransform = TPlayer.GetComponent<Transform>();
-        duel.onStay = () => {
-            Vector3 targetPos = TPtransform.position;
-            float returnSpeed = 10.0f * Time.deltaTime;
-            targetPos.y += 2;
-            targetPos.x -= 1;
-            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref temp, returnSpeed);
-        };
+    void Start() {
+        tPlayerGobj = TPlayer.instance?.gameObject ?? GameObject.FindGameObjectWithTag("TPlayer");
+        stamina = maxStamina;
 
-        distance = 10.0f;
-        timer = 0.0f;
-        moveTest = true;
-        stamina = 10.0f;
-        movePos = TPtransform.position;
-        movePos.x -= 2;
-        movePos.y += 1;
-
+        InitializedState();
         InitializeCamera();
+    }
+
+    private void InitializedState() {
+        #region Register States
+        statesMap.Add(attachedState.stateName, attachedState);
+        statesMap.Add(separatedState.stateName, separatedState);
+        statesMap.Add(returnState.stateName, returnState);
+        statesMap.Add(moveState.stateName, moveState);
+        #endregion Register States
+
+        #region Attached State
+        attachedState.onActive += (State prevState) => {
+            movement.Stop();
+            movement.enabled = false;
+            animator.SetBool(FLY_ANIMATION_PARAMETER, true);
+        };
+        attachedState.onStay += () => {};
+        attachedState.onInactive += (State nextState) => {
+            animator.SetBool(FLY_ANIMATION_PARAMETER, false);
+        };
+        #endregion Attached State
+        
+        #region Return State
+        returnState.onActive += (State prevState) => {
+            movement.Stop();
+            movement.enabled = false;
+            animator.SetBool(FLY_ANIMATION_PARAMETER, true);
+        };
+        returnState.onInactive += (State nextState) => {
+            animator.SetBool(FLY_ANIMATION_PARAMETER, false);
+        };
+        #endregion Return State
+
+        #region Separated State
+        separatedState.onActive += (State prevState) => {
+            movement.enabled = true;
+            animator.SetBool(IDLE_ANIMATION_PARAMETER, true);
+        };
+        separatedState.onStay += () => {
+            if(!movement.isArrive)
+                ChangeState(moveState);
+        };
+        separatedState.onInactive += (State nextState) => {
+            animator.SetBool(IDLE_ANIMATION_PARAMETER, false);
+        };
+        #endregion Separated State
+
+        #region Move State
+        moveState.onActive += (State prevState) => {
+            transform.LookAt(movingDestination);
+            movement.enabled = true;
+            movement.MoveToPoint(movingDestination, moveSpeed);
+            animator.SetBool(FLY_ANIMATION_PARAMETER, true);
+        };
+        moveState.onStay += () => {
+            if(movement.isArrive)
+                ChangeState(separatedState);
+        };
+        moveState.onInactive += (State nextState) => {
+            movement.Stop();
+            animator.SetBool(FLY_ANIMATION_PARAMETER, false);
+        };
+        #endregion Move State
+    }
+    private IEnumerator ReturnCoroutine() {
+        float offset = 0;
+        while(offset < 1) {
+            offset += Time.deltaTime;
+            transform.position = Vector3.Lerp(transform.position, tPlayerGobj.transform.position, offset);
+            yield return null;
+        }
+        ChangeState(attachedState);
     }
 
     private void InitializeCamera() {
@@ -98,66 +156,44 @@ public class QPlayer : NetworkBehaviour
         }
     }
     
-    void Update()
-    {
+    void Update() {
         SetSkillTargetPos();
-        if (!isLocalPlayer)
-            return;
-
-        #region move
-        // 움직이는 부분
-        // testText.text = stamina+"";
-        distance = Vector3.Distance(transform.position, TPtransform.position);
-
-        if(stateMachine.currentState == solo){
-
-            transform.position = Vector3.SmoothDamp(transform.position, movePos, ref temp, moveSpeed);
-            stamina -= distance * Time.deltaTime * 0.1f;
-            if(stamina<0){
-                stateMachine.ChangeState(duel);
-            }
-        } else if(stateMachine.currentState == duel){
-            if(stamina<10.0f){
-                stamina += Time.deltaTime * 5;
-            }
-        }
-        else{
-            Debug.Log("error");
-        }
-        #endregion
-
+        distance = Vector3.Distance(transform.position, tPlayerGobj.transform.position);
     }
 
     public void QPreturn(){
-        stateMachine.ChangeState(duel);
-        
-    }
-    public void posUpdate(Vector2 mousePos){
-        this.mousePos = mousePos;
+        ChangeState(attachedState);
     }
     
-    public void RB_click(){
-		if (isLookSkillTarget)
-		{
-            SkillAreaDisable();
-            return;
-        }
-        
-        RaycastHit hit;
-
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit)) {
-            movePos = hit.point;
-            stateMachine.ChangeState(solo, false) ;
-            Debug.Log($"{hit.transform.position.ToString()} point : {hit.point}");
-            movePos.y = 2.0f;
-            // Debug.Log("QPLayer Move");
-            // Do something with the object that was hit by the raycast.
-        }
-    }
-
     public void LB_click(){
         UseSkill();
     }
+    public void RB_click(){
+		if (isLookSkillTarget) {
+            SkillAreaDisable();
+            return;
+        }
+        RaycastHit hit;
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit)) {
+            movingDestination = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+            ChangeState(moveState, true);
+            Debug.Log($"{hit.transform.position} point : {hit.point}");
+        }
+    }
+    
+	private void ChangeState(State state, bool intoSelf=true) {
+		SynchromizeState(state.stateName, intoSelf);
+	}
+	[ClientRpc]
+	private void SynchromizeState(string stateName, bool intoSelf) {
+		try {
+			State nextState = statesMap[stateName];
+			if(nextState != null)
+				stateMachine.ChangeState(nextState, intoSelf);
+		} catch(KeyNotFoundException e) {
+			Debug.LogError(e);
+		}
+	}
 
     public void OnSkill(int idx) 
     {

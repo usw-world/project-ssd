@@ -1009,6 +1009,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5647570981728181148, guid: f270e6e5bf2a2924a945647ac9f19424,
+        type: 3}
+      propertyPath: maxCameraDistance
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5647570981728181148, guid: f270e6e5bf2a2924a945647ac9f19424,
+        type: 3}
+      propertyPath: minCameraDistance
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5647570981728181148, guid: f270e6e5bf2a2924a945647ac9f19424,
+        type: 3}
+      propertyPath: zoomInOutSensitivity
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 6535494031961247193, guid: f270e6e5bf2a2924a945647ac9f19424,
         type: 3}
       propertyPath: m_Name

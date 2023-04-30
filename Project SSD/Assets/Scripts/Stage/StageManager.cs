@@ -17,14 +17,24 @@ public class StageManager : MonoBehaviour {
             Destroy(this.gameObject);
     }
     private void Start() {
-        if(SSDNetworkManager.instance.isHost) {
-            var message = new C2SMessage.CreateTPlayerPrefabMessage(spawnPoint);
-            print("Send message (Create T Player)");
-            Mirror.NetworkClient.Send(message);
+        if(DebuggingNetworkManager.instance != null) {
+            DebuggingNetworkManager.instance.onStartHost += () => {
+                if(DebuggingNetworkManager.instance.testTarget == DebuggingNetworkManager.TestTarget.TPlayer) {
+                    var message = new C2SMessage.CreateTPlayerPrefabMessage(spawnPoint);
+                    Mirror.NetworkClient.Send(message);
+                } else {
+                    var message = new C2SMessage.CreateQPlayerPrefabMessage();
+                    Mirror.NetworkClient.Send(message);
+                }
+            };
         } else {
-            var message = new C2SMessage.CreateQPlayerPrefabMessage();
-            print("Send message (Create Q Player)");
-            Mirror.NetworkClient.Send(message);
+            if(SSDNetworkManager.instance.isHost) {
+                var message = new C2SMessage.CreateTPlayerPrefabMessage(spawnPoint);
+                Mirror.NetworkClient.Send(message);
+            } else {
+                var message = new C2SMessage.CreateQPlayerPrefabMessage();
+                Mirror.NetworkClient.Send(message);
+            }
         }
     }
 }

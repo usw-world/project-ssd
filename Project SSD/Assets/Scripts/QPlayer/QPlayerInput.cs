@@ -17,7 +17,6 @@ public class QPlayerInput : MonoBehaviour
 	void OnSkill03() => player.OnSkill(2);
 	void OnSkill04() => player.OnSkill(3);
 	void OnComeBack() => player.QPreturn();
-	void OnMouseMove(InputValue valus) => player.posUpdate(valus.Get<Vector2>());
 	void OnRB_click() => player.RB_click();
 	void OnLB_click() => player.LB_click();
 

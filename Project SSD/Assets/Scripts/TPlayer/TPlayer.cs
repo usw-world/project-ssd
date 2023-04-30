@@ -487,11 +487,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		sword.Set(use); 
 	}
-
-	private void ChangeState(State state) {
-		SynchromizeState(state.stateName, true);
-	}
-	private void ChangeState(State state, bool intoSelf) {
+	
+	private void ChangeState(State state, bool intoSelf=true) {
 		SynchromizeState(state.stateName, intoSelf);
 	}
 	[ClientRpc]

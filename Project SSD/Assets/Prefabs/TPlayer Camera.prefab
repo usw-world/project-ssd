@@ -266,7 +266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d8c1f392336adf44ac1d2f0e2da48a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zoomInOutSensitivity: 1
+  zoomInOutSensitivity: 0.7
   virtualCamera: {fileID: 0}
   framingTransposer: {fileID: 0}
   maxCameraDistance: 5

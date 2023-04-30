@@ -692,10 +692,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2063875357, guid: aa11705bff95d44da87050b1a3dad015, type: 3}
-      propertyPath: sendRate
-      value: 60
-      objectReference: {fileID: 0}
     - target: {fileID: 2834331384921636666, guid: aa11705bff95d44da87050b1a3dad015,
         type: 3}
       propertyPath: m_Name

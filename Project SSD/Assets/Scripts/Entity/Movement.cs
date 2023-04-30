@@ -23,9 +23,8 @@ public class Movement : MonoBehaviour {
         }
     }
     private CapsuleCollider ownCollider;
-    [System.NonSerialized] public int blockLayer = 1 << 6;
+    [System.NonSerialized] public int blockLayer = 1<<6;
     public float pullingCoef = .2f;
-    // [System.NonSerialized] public bool isPullingdown = true;
     #endregion Collider Information
 
     protected virtual void Awake() {

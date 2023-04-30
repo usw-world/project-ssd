@@ -2,15 +2,8 @@ using UnityEngine;
 using Cinemachine;
 
 public class TPlayerCamera : PlayerCamera {
-    
-    [HideInInspector] public CinemachineFramingTransposer framingTransposer;
-
     private float hidingDistance = 1f;
     private float minTransparency = -1f, maxTransparency = 0f;
-
-    private float currentDistance;
-    public float maxCameraDistance;
-    public float minCameraDistance;
 
     private bool isInHidingDistance = false;
     
@@ -57,17 +50,5 @@ public class TPlayerCamera : PlayerCamera {
 
     public override void SetTarget(Transform target) {
         virtualCamera.Follow = target;
-        virtualCamera.LookAt = target;
-    }
-    public override void ZoomIn() {
-        currentDistance += -1f * zoomInOutSensitivity;
-        currentDistance = Mathf.Clamp(currentDistance, minCameraDistance, maxCameraDistance);
-        framingTransposer.m_CameraDistance = currentDistance;
-    }
-
-    public override void ZoomOut() {
-        currentDistance += 1f * zoomInOutSensitivity;
-        currentDistance = Mathf.Clamp(currentDistance, minCameraDistance, maxCameraDistance);
-        framingTransposer.m_CameraDistance = currentDistance;
     }
 }

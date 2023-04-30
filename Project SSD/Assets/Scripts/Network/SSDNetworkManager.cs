@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 using Mirror;
 using C2SMessage;
@@ -74,11 +76,10 @@ public partial class SSDNetworkManager : NetworkManager {
         });
     }
     public override void OnClientConnect() { // both host and guest.
+
         base.OnClientConnect();
         InitilizeHandler();
         NetworkClient.OnDisconnectedEvent += OnCloseRoom;
-        
-        var lobbyManager = LobbyManager.instance;
 
         /* temporary >> */
         string playerName = isHost ? "host" : "guest";
