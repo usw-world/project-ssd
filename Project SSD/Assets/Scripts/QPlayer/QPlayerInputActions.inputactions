@@ -1,5 +1,5 @@
 {
-    "name": "QPlyerInputActions",
+    "name": "QPlayerInputActions",
     "maps": [
         {
             "name": "Player Map",
@@ -54,6 +54,33 @@
                     "name": "Skill04",
                     "type": "Button",
                     "id": "d80a17c2-62a3-4a0e-b2f9-7a0d541737f9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Skill05",
+                    "type": "Button",
+                    "id": "e1ee5caa-ae17-4467-ad18-203da26660cd",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Skill06",
+                    "type": "Button",
+                    "id": "e5460709-6544-4eb3-923e-476724e18199",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Skill07",
+                    "type": "Button",
+                    "id": "f6dd7545-df0d-4ec2-81f2-7b24c2a430b1",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -204,6 +231,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "LB_click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ca54c2ac-6394-4af4-b342-68913d6a82b6",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill05",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "44a40a14-756b-4116-b3b9-09e4860f6eb4",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill06",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c0932750-388b-40e9-8896-1a91e35f2460",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill07",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

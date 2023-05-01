@@ -9,7 +9,14 @@ public class TPlayerInput : MonoBehaviour
 {
     TPlayer player;
 
-	private void Awake() => player = GetComponent<TPlayer>();
+	private void Awake() {
+		player = GetComponent<TPlayer>();
+	}
+	private void Start() {
+		if(TPlayer.instance.isLocalPlayer)
+			GetComponent<PlayerInput>().enabled = true;
+	}
+		
 	private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))   player.OnDamage(null, 10);    // 임시

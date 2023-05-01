@@ -13,15 +13,19 @@ public partial class DebuggingNetworkManager : NetworkManager {
     public GameObject tPlayerObject;
     public GameObject qPlayerObject;
 
+    public GameObject player;
+
     public System.Action onStartHost;
 
     public enum TestTarget { TPlayer, QPlayer }
     public TestTarget testTarget = TestTarget.TPlayer;
     
     public override void Awake() {
-        base.Awake();
-        if(SSDNetworkManager.instance != null)
+        if(SSDNetworkManager.instance != null) {
             Destroy(this.gameObject);
+            return;
+        }
+        base.Awake();
         
         if(DebuggingNetworkManager.instance == null)
             instance = this;
@@ -59,10 +63,12 @@ public partial class DebuggingNetworkManager : NetworkManager {
         #endregion Client Handler Initialize
     }
     private void OnCreateTPlayerPrefab(NetworkConnectionToClient conn,  CreateTPlayerPrefabMessage message) {
-        NetworkServer.AddPlayerForConnection(conn, Instantiate(tPlayerObject));
+        player = Instantiate(tPlayerObject);
+        NetworkServer.AddPlayerForConnection(conn, player);
     }
     private void OnCreateQPlayerPrefab(NetworkConnectionToClient conn,  CreateQPlayerPrefabMessage message) {
-        NetworkServer.AddPlayerForConnection(conn,  Instantiate(qPlayerObject));
+        player = Instantiate(qPlayerObject);
+        NetworkServer.AddPlayerForConnection(conn, player);
     }
     #endregion Message Handlers
 }

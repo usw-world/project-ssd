@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 133424474}
   - component: {fileID: 133424475}
   m_Layer: 0
-  m_Name: SkillDistanceArea
+  m_Name: Skill Distance Decal Projector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -387,7 +387,7 @@ GameObject:
   - component: {fileID: 1915510281}
   - component: {fileID: 1915510282}
   m_Layer: 0
-  m_Name: SkillRangeArea
+  m_Name: Skill Target Area Decal Projector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2643,13 +2643,13 @@ MonoBehaviour:
   moveSpeed: 5
   qPlayerCamera: {fileID: 6535494031961247193, guid: f270e6e5bf2a2924a945647ac9f19424,
     type: 3}
-  skillDistanceArea: {fileID: 133424475}
-  skillRangeArea: {fileID: 1915510282}
   skills:
   - {fileID: 159024194}
   - {fileID: 1063546363}
   - {fileID: 856052367}
   - {fileID: 2081595232}
+  skillDistanceDecal: {fileID: 133424475}
+  skillTargetAreaDecal: {fileID: 1915510282}
 --- !u!114 &2136718357887273198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2669,7 +2669,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2136718358471616647}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
@@ -2737,7 +2737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
+  syncDirection: 1
   syncMode: 0
   syncInterval: 0
   target: {fileID: 2136718358471914663}

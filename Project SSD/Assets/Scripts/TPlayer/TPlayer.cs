@@ -75,6 +75,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	public Slider sliderSP;
 	#endregion UI
 
+    public override void OnStartLocalPlayer() {
+        base.OnStartLocalPlayer();
+    }
+
 	private void Awake()
     {
         if(instance == null)
@@ -86,7 +90,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
         ani = GetComponent<Animator>();
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
-        Cursor.lockState = CursorLockMode.Locked;
+		if(isLocalPlayer)
+        	Cursor.lockState = CursorLockMode.Locked;
     }
     private void Start()
     {
@@ -489,10 +494,11 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	
 	private void ChangeState(State state, bool intoSelf=true) {
-		SynchromizeState(state.stateName, intoSelf);
+		if(isLocalPlayer)
+			SynchronizeState(state.stateName, intoSelf);
 	}
 	[ClientRpc]
-	private void SynchromizeState(string stateName, bool intoSelf) {
+	private void SynchronizeState(string stateName, bool intoSelf) {
 		try {
 			State nextState = statesMap[stateName];
 			if(nextState != null)

@@ -125,6 +125,7 @@ Library: lib_burst_generated
 --compilation-defines=MIRROR_71_0_OR_NEWER
 --compilation-defines=MIRROR_73_OR_NEWER
 --compilation-defines=UNITY_PIPELINE_URP
+--compilation-defines=UNITY_POST_PROCESSING_STACK_V2
 --compilation-defines=PACKAGE_PHYSICS
 --compilation-defines=PACKAGE_PHYSICS2D
 --compilation-defines=PACKAGE_TILEMAP
@@ -143,6 +144,7 @@ Library: lib_burst_generated
 --compilation-defines=ENABLE_BURST_1_0_0_OR_NEWER
 --compilation-defines=USING_ANIMATION_MODULE
 --compilation-defines=USING_PHYSICS2D_MODULE
+--compilation-defines=UNIVERSAL_1_0_0_OR_NEWER
 --compilation-defines=PACKAGE_INPUT_SYSTEM_EXISTS
 --compilation-defines=PACKAGE_INPUT_SYSTEM_1_2_0_OR_NEWER_EXISTS
 --compilation-defines=MODULE_AI_EXISTS
@@ -150,6 +152,7 @@ Library: lib_burst_generated
 --compilation-defines=MODULE_PHYSICS_EXISTS
 --compilation-defines=MODULE_PHYSICS_2D_EXISTS
 --compilation-defines=MODULE_PARTICLE_SYSTEM_EXISTS
+--compilation-defines=CINEMACHINE_POST_PROCESSING_V2
 --compilation-defines=CINEMACHINE_TIMELINE
 --compilation-defines=CINEMACHINE_PHYSICS_2D
 --compilation-defines=CINEMACHINE_PHYSICS
@@ -164,53 +167,54 @@ Library: lib_burst_generated
 --compilation-defines=SRPCORE_IS_INSTALLED_FOR_UTS
 --linker-options=PdbAltPath="Project SSD_Data/Plugins/x86_64"
 --generate-link-xml=Temp\burst.link.xml
---output=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Plugins\x86_64\lib_burst_generated
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Core.Runtime.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Telemetry.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.InputSystem.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Examples.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.VisualScripting.State.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Universal.Runtime.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.VisualScripting.Flow.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.VisualScripting.Core.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Environments.Internal.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.TextMeshPro.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Burst.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipeline.Universal.ShaderLibrary.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Cinemachine.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Environments.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Transports.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Telepathy.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.Poly2Tri.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Internal.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Components.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Timeline.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Mathematics.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Scheduler.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\kcp2k.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Device.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Analytics.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\SimpleWebTransport.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.KdTree.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Toonshader.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Threading.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Configuration.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Networking.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Authenticators.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Registration.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.Csg.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.Stl.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\MultiplexTransport.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Core.ShaderLibrary.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\MiddlewareTransport.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Universal.Shaders.dll
---assembly-folder=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\
+--output=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Plugins\x86_64\lib_burst_generated
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Core.Runtime.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Telemetry.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.InputSystem.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Examples.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.VisualScripting.State.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Universal.Runtime.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Postprocessing.Runtime.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.VisualScripting.Flow.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.VisualScripting.Core.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Environments.Internal.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.TextMeshPro.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Burst.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipeline.Universal.ShaderLibrary.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Cinemachine.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Environments.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Transports.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Telepathy.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.Poly2Tri.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Internal.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Components.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Timeline.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Mathematics.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Scheduler.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\kcp2k.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Device.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Analytics.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\SimpleWebTransport.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.KdTree.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Toonshader.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Threading.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Configuration.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Networking.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Authenticators.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Registration.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.Csg.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.Stl.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\MultiplexTransport.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Core.ShaderLibrary.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\MiddlewareTransport.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Universal.Shaders.dll
+--assembly-folder=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\
 --pdb-search-paths=Temp/ManagedSymbols/
 --method=Unity.Burst.Intrinsics.X86, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::DoGetCSRTrampoline()--89425a97f3f500fa810ad03f0c382542
 --method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.ReorderJob`1[[UnityEngine.Rendering.Universal.LightMinMaxZ, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.ReorderJob`1[[UnityEngine.Rendering.Universal.LightMinMaxZ, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--e943843acfb78f5f2f3716a6553740d9
@@ -351,6 +355,7 @@ Library: lib_burst_generated
 --compilation-defines=MIRROR_71_0_OR_NEWER
 --compilation-defines=MIRROR_73_OR_NEWER
 --compilation-defines=UNITY_PIPELINE_URP
+--compilation-defines=UNITY_POST_PROCESSING_STACK_V2
 --compilation-defines=PACKAGE_PHYSICS
 --compilation-defines=PACKAGE_PHYSICS2D
 --compilation-defines=PACKAGE_TILEMAP
@@ -369,6 +374,7 @@ Library: lib_burst_generated
 --compilation-defines=ENABLE_BURST_1_0_0_OR_NEWER
 --compilation-defines=USING_ANIMATION_MODULE
 --compilation-defines=USING_PHYSICS2D_MODULE
+--compilation-defines=UNIVERSAL_1_0_0_OR_NEWER
 --compilation-defines=PACKAGE_INPUT_SYSTEM_EXISTS
 --compilation-defines=PACKAGE_INPUT_SYSTEM_1_2_0_OR_NEWER_EXISTS
 --compilation-defines=MODULE_AI_EXISTS
@@ -376,6 +382,7 @@ Library: lib_burst_generated
 --compilation-defines=MODULE_PHYSICS_EXISTS
 --compilation-defines=MODULE_PHYSICS_2D_EXISTS
 --compilation-defines=MODULE_PARTICLE_SYSTEM_EXISTS
+--compilation-defines=CINEMACHINE_POST_PROCESSING_V2
 --compilation-defines=CINEMACHINE_TIMELINE
 --compilation-defines=CINEMACHINE_PHYSICS_2D
 --compilation-defines=CINEMACHINE_PHYSICS
@@ -390,61 +397,62 @@ Library: lib_burst_generated
 --compilation-defines=SRPCORE_IS_INSTALLED_FOR_UTS
 --linker-options=PdbAltPath="Project SSD_Data/Plugins/x86_64"
 --generate-link-xml=Temp\burst.link.xml
---output=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Plugins\x86_64\lib_burst_generated
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Core.Runtime.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Telemetry.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.InputSystem.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Examples.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.VisualScripting.State.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Universal.Runtime.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.VisualScripting.Flow.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.VisualScripting.Core.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Environments.Internal.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.TextMeshPro.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Burst.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipeline.Universal.ShaderLibrary.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Cinemachine.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Environments.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Transports.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Telepathy.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.Poly2Tri.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Internal.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Components.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Timeline.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Mathematics.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Scheduler.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\kcp2k.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Device.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Analytics.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\SimpleWebTransport.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.KdTree.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Toonshader.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Threading.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Configuration.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Networking.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Authenticators.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Registration.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.Csg.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.Stl.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\MultiplexTransport.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Core.ShaderLibrary.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\MiddlewareTransport.dll
---root-assembly=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Universal.Shaders.dll
---assembly-folder=D:\Side\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\
+--output=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Plugins\x86_64\lib_burst_generated
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\UnityEngine.UI.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Core.Runtime.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Assembly-CSharp.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Telemetry.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.InputSystem.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Examples.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.VisualScripting.State.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Universal.Runtime.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Postprocessing.Runtime.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.VisualScripting.Flow.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.VisualScripting.Core.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Environments.Internal.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.TextMeshPro.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Burst.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipeline.Universal.ShaderLibrary.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Cinemachine.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Environments.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Transports.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Telepathy.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.Poly2Tri.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Internal.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Components.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Timeline.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Mathematics.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Scheduler.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\kcp2k.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Device.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Analytics.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\SimpleWebTransport.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.KdTree.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Toonshader.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Threading.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Configuration.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Networking.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Mirror.Authenticators.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.Services.Core.Registration.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.Csg.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.ProBuilder.Stl.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\MultiplexTransport.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Core.ShaderLibrary.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\MiddlewareTransport.dll
+--root-assembly=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\Unity.RenderPipelines.Universal.Shaders.dll
+--assembly-folder=C:\Users\pjun2\Desktop\workspace\unity\project-ssd\Project SSD\Temp\StagingArea\Data\Managed\
 --pdb-search-paths=Temp/ManagedSymbols/
---method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.SliceCullingJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.SliceCullingJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--1998da082e6413092f0e7bcd5a0e9331
---method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.ZBinningJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.ZBinningJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--77fc393cb521ac129b1392d4eb94d29a
---method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.ReorderJob`1[[UnityEngine.Rendering.VisibleLight, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.ReorderJob`1[[UnityEngine.Rendering.VisibleLight, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--b04c75a68edf1d166f6547f2ea0e8928
---method=Unity.Burst.Intrinsics.X86, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::DoGetCSRTrampoline()--89425a97f3f500fa810ad03f0c382542
 --method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.ReorderJob`1[[UnityEngine.Rendering.Universal.LightMinMaxZ, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.ReorderJob`1[[UnityEngine.Rendering.Universal.LightMinMaxZ, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--e943843acfb78f5f2f3716a6553740d9
 --method=Unity.Burst.BurstCompiler+BurstCompilerHelper, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::IsBurstEnabled()--8c2be93e18276203cbd918daa2748a10
 --method=Unity.Burst.Intrinsics.X86, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::DoSetCSRTrampoline(System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--da352d92cabf024fc9986011d52a4537
+--method=Unity.Burst.Intrinsics.X86, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::DoGetCSRTrampoline()--89425a97f3f500fa810ad03f0c382542
+--method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.SliceCullingJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.SliceCullingJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--1998da082e6413092f0e7bcd5a0e9331
+--method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.ZBinningJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.ZBinningJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--77fc393cb521ac129b1392d4eb94d29a
+--method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.ReorderJob`1[[UnityEngine.Rendering.VisibleLight, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.ReorderJob`1[[UnityEngine.Rendering.VisibleLight, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--b04c75a68edf1d166f6547f2ea0e8928
 --method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.MinMaxZJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.MinMaxZJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--d23a07cb3c3f217121d5bf94e76674f0
 --method=Unity.Jobs.IJobExtensions+JobStruct`1[[UnityEngine.Rendering.Universal.RadixSortJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.RadixSortJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--26c6d10914da2fc98755b3533c59141e
 --method=Unity.Jobs.IJobForExtensions+ForJobStruct`1[[UnityEngine.Rendering.Universal.SliceCombineJob, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]], UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::Execute(UnityEngine.Rendering.Universal.SliceCombineJob&, Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|System.IntPtr, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089|Unity.Jobs.LowLevel.Unsafe.JobRanges&, UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null|System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089)--e046a1595d0148509657ed4dbcb52a86

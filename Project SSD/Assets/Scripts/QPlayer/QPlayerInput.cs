@@ -9,15 +9,23 @@ public class QPlayerInput : MonoBehaviour
 {
     QPlayer player;
 
-	private void Awake() => player = GetComponent<QPlayer>();
+	private void Awake() {
+		player = GetComponent<QPlayer>();
+	}
+	private void Start() {
+		if(QPlayer.instance.isLocalPlayer)
+			GetComponent<PlayerInput>().enabled = true;
+	}
 	void OnCameraZoomIn() => PlayerCamera.instance.ZoomIn();
 	void OnCameraZoomOut() => PlayerCamera.instance.ZoomOut();
 	void OnSkill01() => player.OnSkill(0);
 	void OnSkill02() => player.OnSkill(1);
 	void OnSkill03() => player.OnSkill(2);
 	void OnSkill04() => player.OnSkill(3);
-	void OnComeBack() => player.QPreturn();
-	void OnRB_click() => player.RB_click();
-	void OnLB_click() => player.LB_click();
-
+	void OnSkill05() => player.OnSkill(4);
+	void OnSkill06() => player.OnSkill(5);
+	void OnSkill07() => player.OnSkill(6);
+	void OnComeBack() => player.ReturnToTPlayer();
+	void OnRB_click() => player.MouseRightClick();
+	void OnLB_click() => player.MouseLeftClick();
 }

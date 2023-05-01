@@ -267,7 +267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zoomInOutSensitivity: 0.7
-  virtualCamera: {fileID: 0}
-  framingTransposer: {fileID: 0}
   maxCameraDistance: 5
   minCameraDistance: 2
+  virtualCamera: {fileID: 0}
+  framingTransposer: {fileID: 0}
