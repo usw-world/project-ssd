@@ -1217,11 +1217,7 @@ PrefabInstance:
     - target: {fileID: 5166133502167492907, guid: ac6c898579b8e2e4484d1c354e346fe4,
         type: 3}
       propertyPath: m_IsActive
-<<<<<<< Updated upstream
       value: 1
-=======
-      value: 0
->>>>>>> Stashed changes
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac6c898579b8e2e4484d1c354e346fe4, type: 3}

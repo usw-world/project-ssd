@@ -244,7 +244,7 @@ public class QPlayer : NetworkBehaviour
         ||                               // or
         (  isAiming                      // if | currently player is aiming with skill
         && aimingSkillIndex == index)) { // and| pressed skill is same to currently aiming skill
-            CmdUseAmingSkill(aimingSkillIndex, GetAimingPoint());
+            CmdUseAmingSkill(index, GetAimingPoint());
         } else {
             aimingSkillIndex = index;
             EnableAim();

@@ -2681,7 +2681,7 @@ MonoBehaviour:
   qPlayerCamera: {fileID: 6535494031961247193, guid: f270e6e5bf2a2924a945647ac9f19424,
     type: 3}
   skills:
-  - {fileID: 0}
+  - {fileID: 815916524}
   - {fileID: 1063546363}
   - {fileID: 856052367}
   - {fileID: 2081595232}
