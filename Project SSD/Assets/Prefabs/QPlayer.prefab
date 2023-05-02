@@ -64,7 +64,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 159024193}
-  - component: {fileID: 159024194}
+  - component: {fileID: 815916524}
   m_Layer: 0
   m_Name: FireBall_1
   m_TagString: Untagged
@@ -87,7 +87,7 @@ Transform:
   m_Father: {fileID: 1539545108}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &159024194
+--- !u!114 &815916524
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 159024191}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95ad2f710dc28e141a3d13554c319eaf, type: 3}
+  m_Script: {fileID: 11500000, guid: f6cd62be8a9433c4d8196b3e7f79eae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   info:
@@ -105,37 +105,80 @@ MonoBehaviour:
     skillText: 
     name: 
   area:
-    distance: 1
-    range: 1
+    distance: 12
+    range: 33
   property:
     coolTime: 0
     skillAP: 1
     nowCoolTime: 100
     ready: 0
     quickUse: 0
-  speed: 0
-  isMultiple: 0
-  multipleCount: 0
-  multipleInterval: 0
-  isPenetration: 0
-  penetrationCount: 0
-  isContinuation: 0
-  continuationTime: 0
-  isDebuff: 0
-  debuffType: 0
-  debuffTime: 0
-  debuffAmount: 0
-  isChain: 0
-  chainCount: 0
-  chainInterval: 0
-  isCasting: 0
-  castingEffect: {fileID: 0}
-  castingTime: 0
-  isBuff: 0
-  buffType: 0
-  buffTime: 0
-  buffAmount: 0
-  usingSp: 0
+  options:
+  - name: "\uD070 \uACF5\uACA9"
+    type: 1
+    activefType: 1
+    buffType: 0
+    debuffType: 0
+    image: {fileID: 21300000, guid: 0196868fb326a824bb5f8b1039a7abea, type: 3}
+  - name: 
+    type: 0
+    activefType: 0
+    buffType: 0
+    debuffType: 0
+    image: {fileID: 0}
+  - name: 
+    type: 0
+    activefType: 0
+    buffType: 0
+    debuffType: 0
+    image: {fileID: 0}
+  - name: 
+    type: 0
+    activefType: 0
+    buffType: 0
+    debuffType: 0
+    image: {fileID: 0}
+  - name: 
+    type: 0
+    activefType: 0
+    buffType: 0
+    debuffType: 0
+    image: {fileID: 0}
+  - name: 
+    type: 0
+    activefType: 0
+    buffType: 0
+    debuffType: 0
+    image: {fileID: 0}
+  - name: 
+    type: 0
+    activefType: 0
+    buffType: 0
+    debuffType: 0
+    image: {fileID: 0}
+  - name: 
+    type: 0
+    activefType: 0
+    buffType: 0
+    debuffType: 0
+    image: {fileID: 0}
+  optionsVal:
+  - val_1: 2
+    val_2: -1
+  - val_1: -1
+    val_2: -1
+  - val_1: -1
+    val_2: -1
+  - val_1: -1
+    val_2: -1
+  - val_1: -1
+    val_2: -1
+  - val_1: -1
+    val_2: -1
+  - val_1: -1
+    val_2: -1
+  - val_1: -1
+    val_2: -1
 --- !u!1 &990334917
 GameObject:
   m_ObjectHideFlags: 0
@@ -2500,7 +2543,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2136718358471914663
 Transform:
   m_ObjectHideFlags: 0
@@ -2627,6 +2670,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0.1
+  tPlayerGobj: {fileID: 0}
   status:
     speed: 3
     maxHp: 100
@@ -2636,15 +2680,13 @@ MonoBehaviour:
     ap: 10
     hpRecovery: 1
     spRecovery: 1
+  movingSpeed: 10
   stamina: 0
   maxStamina: 10
-  tPlayerGobj: {fileID: 0}
-  distance: 0
-  moveSpeed: 5
   qPlayerCamera: {fileID: 6535494031961247193, guid: f270e6e5bf2a2924a945647ac9f19424,
     type: 3}
   skills:
-  - {fileID: 159024194}
+  - {fileID: 0}
   - {fileID: 1063546363}
   - {fileID: 856052367}
   - {fileID: 2081595232}

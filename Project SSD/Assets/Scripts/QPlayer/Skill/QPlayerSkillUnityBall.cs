@@ -2,63 +2,62 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using SSDSkill;
 
 
 public class QPlayerSkillUnityBall : Skill
 {
-	public SkillOption[] options = new SkillOption[8];
-	public SkillOptionVal[] optionsVal = new SkillOptionVal[8];
+	public SkillOptionInformation[] options = new SkillOptionInformation[8];
 
-	private void Start()
-	{
-		for (int i = 0; i < 8; i++)
-		{
-			switch (options[i].type)
-			{
-				case OptionType.active:
-					switch (options[i].activefType)
-					{
-						case QPlayerActiveType.big:
-							options[i] = new SkillOptionBig(options[i], optionsVal[i].val_1);
-							break;
-					}
-					break;
-				case OptionType.buff:
-					switch (options[i].buffType)
-					{
-						case QPlayerBuffType.healing:
-							options[i] = new SkillOptionHealing(options[i], optionsVal[i].val_1, optionsVal[i].val_2);
-							break;
-						case QPlayerBuffType.shield:
-							options[i] = new SkillOptionShield(options[i], optionsVal[i].val_1, optionsVal[i].val_2);
-							break;
-						case QPlayerBuffType.boost:
-							options[i] = new SkillOptionAPBoost(options[i], optionsVal[i].val_1, optionsVal[i].val_2);
-							break;
-					}
-					break;
-				case OptionType.debuff:
-					switch (options[i].debuffType)
-					{
-						case QPlayerDebuffType.damage:
-							break;
-						case QPlayerDebuffType.slow:
-							break;
-						case QPlayerDebuffType.inability:
-							break;
-					}
-					break;
-			}
-		}
-		for (int i = 0; i < options.Length; i++)
-		{
-			options[i]?.GetOnActive()?.Invoke();
+	public float speed;
+	public float option01_increasingSkillPower;
+	public float option02_increasingSpeed;
+	public float option03_buffTime;
+	public float option03_healingAmount;
+	public float option04_debuffTime;
+	public float option04_damageAmount;
+
+	float DamegeAmout {
+		get {
+			float amount = QPlayer.instance.GetAP();
+			amount *= property.skillAP / 100f;
+			amount *= 1f + ((options[0].active) ? option01_increasingSkillPower / 100f : 0);
+			return amount;
 		}
 	}
-	public override void Use()
+	float LastSpped{
+		get	{
+			float lastSpped = speed;
+			lastSpped *= 1f + ((options[1].active) ? option02_increasingSpeed / 100f : 0);
+			return lastSpped;
+		}
+	}
+	Vector3 LastSize{
+		get	{
+			float size = 1f;
+			return Vector3.one * size;
+		}
+	}
+
+	public override void Use(Vector3 target)
 	{
-		
+		Vector3 sponPos = QPlayer.instance.transform.position;
+		sponPos.y = target.y;
+		GameObject obj = Instantiate(info.effect, sponPos, Quaternion.Euler(0,0,0));
+
+		obj.transform.LookAt(target);
+		obj.transform.localScale = LastSize;
+
+		UnityBall temp = obj.GetComponent<UnityBall>();
+		temp.OnActive(DamegeAmout, LastSpped);
+
+		if (options[2].active)
+		{
+			// TPlayer 회복 시키는 함수
+		}
+		if (options[3].active)
+		{
+			temp.AddDebuff(); // 매게변수로 투사체이 디버프를 추가함
+		}
 	}
 	public override bool CanUse()
 	{
@@ -66,97 +65,10 @@ public class QPlayerSkillUnityBall : Skill
 	}
 }
 
-namespace SSDSkill
+[Serializable] public class SkillOptionInformation
 {
-	[Serializable]public class SkillOptionVal {
-		public float val_1, val_2;
-		public SkillOptionVal() {
-			val_1 = -1f;
-			val_2 = -1f;
-		}
-	}
-	[Serializable]public class SkillOption
-	{
-		public string name;
-		public OptionType type;
-		public QPlayerActiveType activefType;
-		public QPlayerBuffType buffType;
-		public QPlayerDebuffType debuffType;
-		public Action onActive;
-		virtual public Action GetOnActive() { return null; }
-	}
-	[Serializable]public class SkillOptionBig : SkillOption {
-		float amount;
-		public SkillOptionBig(SkillOption origin, float amount) {
-			name = origin.name;
-			type = origin.type;
-			activefType = origin.activefType;
-			buffType = origin.buffType;
-			debuffType = origin.debuffType;
-			this.amount = amount;
-		}
-		public override Action GetOnActive(){
-			onActive = () => {
-				Debug.Log("특성 : " + name + " - 효과 : 크기를 " + amount * 100f + "% 크개함");
-			};
-			return onActive;
-		}
-	}
-	[Serializable]public class SkillOptionAPBoost : SkillOption{
-		float time, amount;
-		public SkillOptionAPBoost(SkillOption origin, float time, float amount) {
-			name = origin.name;
-			type = origin.type;
-			activefType = origin.activefType;
-			buffType = origin.buffType;
-			debuffType = origin.debuffType;
-			this.time = time;
-			this.amount = amount;
-		}
-		public override Action GetOnActive()
-		{
-			onActive = () => {
-				Debug.Log("특성 : " + name + " - 효과 : " + time + "초 동안 공격력 " + amount * 100f + "% 상승");
-			};
-			return onActive;
-		}
-	}
-	[Serializable]public class SkillOptionShield : SkillOption{
-		float time, amount;
-		public SkillOptionShield(SkillOption origin, float time, float amount)	{
-			name = origin.name;
-			type = origin.type;
-			activefType = origin.activefType;
-			buffType = origin.buffType;
-			debuffType = origin.debuffType;
-			this.time = time;
-			this.amount = amount;
-		}
-		public override Action GetOnActive()
-		{
-			onActive = () => {
-				Debug.Log("특성 : " + name + " - 효과 : " + time + "초 동안 쉴드 " + amount * 100f + "% 생김");
-			};
-			return onActive;
-		}
-	}
-	[Serializable]public class SkillOptionHealing : SkillOption{
-		float time, amount;
-		public SkillOptionHealing(SkillOption origin, float time, float amount)	{
-			name = origin.name;
-			type = origin.type;
-			activefType = origin.activefType;
-			buffType = origin.buffType;
-			debuffType = origin.debuffType;
-			this.time = time;
-			this.amount = amount;
-		}
-		public override Action GetOnActive()
-		{
-			onActive = () => {
-				Debug.Log("특성 : " + name + " - 효과 : " + time + "초 동안 " + amount * 100f + "% 회복");
-			};
-			return onActive;
-		}
-	}
+	public string name;
+	public string info;
+	public Sprite image;
+	public bool active;
 }

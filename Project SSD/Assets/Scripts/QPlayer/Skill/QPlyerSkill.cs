@@ -66,12 +66,6 @@ public class QPlyerSkill : Skill
 		return false;
 	}
 }
-public enum OptionType {
-	none,
-	active,
-	buff,
-	debuff
-}
 public enum QPlayerActiveType
 {
 	none,       // 없음

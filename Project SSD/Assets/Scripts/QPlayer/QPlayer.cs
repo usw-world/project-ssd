@@ -184,7 +184,6 @@ public class QPlayer : NetworkBehaviour
         SeparatedUpdate();
     }
     public void SeparatedUpdate() {
-        float distance = Vector3.Distance(transform.position, tPlayerGobj.transform.position);
 
     }
     public void DecreaseStamina() {
