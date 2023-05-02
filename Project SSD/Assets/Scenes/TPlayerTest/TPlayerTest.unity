@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.17410308, g: 0.21771519, b: 0.2999072, a: 1}
+  m_IndirectSpecularColor: {r: 0.17409799, g: 0.21770814, b: 0.29989916, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6210,6 +6210,10 @@ PrefabInstance:
       value: UnityBall
       objectReference: {fileID: 0}
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: speed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: aimType
       value: 0
       objectReference: {fileID: 0}
@@ -6220,6 +6224,11 @@ PrefabInstance:
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: info.effect
       value: 
+      objectReference: {fileID: 2032450023845943245, guid: 5724183b7f2bfe14ab7f01e3ec1ce8db,
+        type: 3}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: area.distance
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: option_1.info
@@ -6240,7 +6249,18 @@ PrefabInstance:
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: info.skillImage
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 21300000, guid: f9161c6c9e06dc445ada3ee16d991f90,
+        type: 3}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option06_effect
+      value: 
+      objectReference: {fileID: 5353631418847978442, guid: e8968dc41ca70b640b5a91a8fa54e31b,
+        type: 3}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option07_effect
+      value: 
+      objectReference: {fileID: 5208415891999506307, guid: 9316b71799d9a2d42bc34870a2948e4e,
+        type: 3}
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: option_1.amount
       value: 0
@@ -6250,24 +6270,60 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option02_buffTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: option03_buffTime
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: property.coolTime
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option03_debuffTime
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: option04_debuffTime
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option03_damageAmount
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: option04_damageAmount
       value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option02_healingAmount
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: option03_healingAmount
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option07_increasingSize
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option01_increasingSpeed
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: option02_increasingSpeed
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option05_increasingSpeed
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option06_childDamegeAmout
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: options.Array.data[0].info
@@ -6303,6 +6359,44 @@ PrefabInstance:
       value: "\uD558\uB298\uC758 \uC9D5\uBC8C"
       objectReference: {fileID: 0}
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: options.Array.data[4].info
+      value: "\uC720\uB2C8\uD2F0\uBCFC\uC774 \uC0AC\uB77C\uC9C8\uB5BC \uC2DC\uACF5\uC758
+        \uD2C8\uC774 \uBC1C\uC0DD\uD558\uACE0 \uD130\uC9C0\uBA74\uC11C \uB370\uBBF8\uC9C0\uB97C
+        \uC900\uB2E4"
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: options.Array.data[4].name
+      value: "\uC2DC\uACF5\uC758 \uD2C8"
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: options.Array.data[5].info
+      value: "\uC720\uB3C4\uAE30\uB2A5\uC774 \uCD94\uAC00\uB418\uACE0 \uAD6C\uCCB4\uC758
+        \uC18D\uB3C4\uAC00 \uBE68\uB77C\uC9C4\uB2E4"
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: options.Array.data[5].name
+      value: LooaAt
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: options.Array.data[6].info
+      value: "\uC801\uC5D0\uAC8C \uBA85\uC911\uC2DC \uC720\uB2C8\uD2F0 \uBCFC\uC744
+        8\uAC1C \uC0DD\uC131\uD558\uB294 \uC720\uB2C8\uD2F0 \uD5C8\uBE0C \uBCFC\uC744
+        \uBC1C\uC0AC\uD55C\uB2E4"
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: options.Array.data[6].name
+      value: "\uC720\uB2C8\uD2F0 \uD5C8\uBE0C \uBCFC"
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: options.Array.data[7].info
+      value: "\uAC70\uB300\uD55C \uC720\uB2C8\uD2F0 \uBCF4\uC624\uC624\uC624\uC62C\uC744
+        \uB0A0\uB9B0\uB2E4. \uD22C\uC0AC\uCCB4 \uC18D\uB3C4\uAC00 50% \uAC10\uC18C\uD55C\uB2E4"
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: options.Array.data[7].name
+      value: "\uC720\uB2C8\uD2F0\uBCF4\uC624\uC624\uC624\uC62C"
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: options.Array.data[0].image
       value: 
       objectReference: {fileID: 21300000, guid: 0196868fb326a824bb5f8b1039a7abea,
@@ -6323,8 +6417,40 @@ PrefabInstance:
       objectReference: {fileID: 21300000, guid: dae33700bd23f76409a80bf78fdb8a42,
         type: 3}
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: options.Array.data[4].image
+      value: 
+      objectReference: {fileID: 21300000, guid: 70632ddfe8e71b04b8f90ef7e29a9e98,
+        type: 3}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: options.Array.data[5].image
+      value: 
+      objectReference: {fileID: 21300000, guid: 9c0d6ec706e01ce448aea81584af092b,
+        type: 3}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: options.Array.data[6].image
+      value: 
+      objectReference: {fileID: 21300000, guid: 9c0d6ec706e01ce448aea81584af092b,
+        type: 3}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: options.Array.data[7].image
+      value: 
+      objectReference: {fileID: 21300000, guid: 3a0c527d7f890d64a9b56b086e6e766a,
+        type: 3}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option00_increasingSkillPower
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: option01_increasingSkillPower
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option07_increasingSkillPower
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
+      propertyPath: option04_explosionDamageAmount
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 815916524, guid: d8bf16506c20a4c72bf06419ea2bd1ef, type: 3}
       propertyPath: optionsVal.Array.data[0].val_1
@@ -47430,7 +47556,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh38698
+  m_Name: pb_Mesh38264
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
