@@ -72,6 +72,11 @@ public enum OptionType {
 	buff,
 	debuff
 }
+public enum QPlayerActiveType
+{
+	none,       // 없음
+	big
+}
 public enum QPlayerBuffType
 {
 	none,		// 없음
