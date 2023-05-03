@@ -29,13 +29,7 @@ public class QPlayerSkillUnityBall : Skill
 			amount *= 1f + property.skillAP / 100f;
 			amount *= 1f + ((options[0].active) ? option00_increasingSkillPower / 100f : 0);
 			amount *= 1f + ((options[7].active) ? option07_increasingSkillPower / 100f : 0);
-			return amount;
-		}
-	}
-	float ChildDamegeAmout{
-		get	{
-			float amount = DamegeAmout;
-			amount *= option06_childDamegeAmout / 100f;
+			amount *= ((options[6].active) ? option06_childDamegeAmout / 100f : 0);
 			return amount;
 		}
 	}
@@ -89,8 +83,20 @@ public class QPlayerSkillUnityBall : Skill
 
 		if (options[2].active)
 		{
-			// TPlayer 회복 시키는 함수
-			// TPlayer.addBuff(new Buff(buffType, option02_buffTime, option02_healingAmount));
+			Attachment attachment = new Attachment(option02_buffTime, 1f, options[2].image);
+			attachment.onAction = () => {
+				print("TPlayer 회복 시작");
+			};
+			attachment.onStay = () => {
+				print("TPlayer HP +" + (DamegeAmout / option02_buffTime / 1f));
+				TPlayer.instance.status.hp += DamegeAmout / option02_buffTime / 1f;
+				if (TPlayer.instance.status.hp > TPlayer.instance.status.maxHp){
+					TPlayer.instance.status.hp = TPlayer.instance.status.maxHp;
+				}
+			};
+			attachment.onInactive = () => {
+				print("TPlayer 회복 종료");
+			};
 		}
 		if (options[3].active)
 		{
@@ -105,95 +111,7 @@ public class QPlayerSkillUnityBall : Skill
 			temp.OnActiveGuided(); // 매게변수로 투사체이 디버프를 추가함
 		}
 	}
-	void CreateUnityBall(Vector3 target) {
-		Vector3 sponPos = QPlayer.instance.transform.position;
-		sponPos.y = target.y;
-		GameObject obj = Instantiate(info.effect, sponPos, Quaternion.Euler(0, 0, 0));
-
-		obj.transform.LookAt(target);
-		obj.transform.localScale = LastSize;
-
-		UnityBall temp = obj.GetComponent<UnityBall>();
-		temp.OnActive(DamegeAmout, LastSpped);
-
-		if (options[2].active)
-		{
-			// TPlayer 회복 시키는 함수
-			// TPlayer.addBuff(new Buff(buffType, option02_buffTime, option02_healingAmount));
-		}
-		if (options[3].active)
-		{
-			temp.AddDebuff(); // 매게변수로 투사체이 디버프를 추가함
-		}
-		if (options[4].active)
-		{
-			temp.AddLastExplosion(LastExplosionDamegeAmout); // 매게변수로 투사체이 디버프를 추가함
-		}
-		if (options[5].active)
-		{
-			temp.OnActiveGuided(); // 매게변수로 투사체이 디버프를 추가함
-		}
-	}
-	void CreateUnityHubBall(Vector3 target)
-	{
-		Vector3 sponPos = QPlayer.instance.transform.position;
-		sponPos.y = target.y;
-		GameObject obj = Instantiate(info.effect, sponPos, Quaternion.Euler(0, 0, 0));
-
-		obj.transform.LookAt(target);
-		obj.transform.localScale = LastSize;
-
-		UnityBall temp = obj.GetComponent<UnityHubBall>();
-		temp.OnActive(ChildDamegeAmout, LastSpped);
-
-		if (options[2].active)
-		{
-			// TPlayer 회복 시키는 함수
-			// TPlayer.addBuff(new Buff(buffType, option02_buffTime, option02_healingAmount));
-		}
-		if (options[3].active)
-		{
-			temp.AddDebuff(); // 매게변수로 투사체이 디버프를 추가함
-		}
-		if (options[4].active)
-		{
-			temp.AddLastExplosion(LastExplosionDamegeAmout); // 매게변수로 투사체이 디버프를 추가함
-		}
-		if (options[5].active)
-		{
-			temp.OnActiveGuided(); // 매게변수로 투사체이 디버프를 추가함
-		}
-	}
-	void CreateUnityBaaaall(Vector3 target)
-	{
-		Vector3 sponPos = QPlayer.instance.transform.position;
-		sponPos.y = target.y;
-		GameObject obj = Instantiate(info.effect, sponPos, Quaternion.Euler(0, 0, 0));
-
-		obj.transform.LookAt(target);
-		obj.transform.localScale = LastSize;
-
-		UnityBall temp = obj.GetComponent<UnityBaaaall>();
-		temp.OnActive(DamegeAmout, LastSpped);
-
-		if (options[2].active)
-		{
-			// TPlayer 회복 시키는 함수
-			// TPlayer.addBuff(new Buff(buffType, option02_buffTime, option02_healingAmount));
-		}
-		if (options[3].active)
-		{
-			temp.AddDebuff(); // 매게변수로 투사체이 디버프를 추가함
-		}
-		if (options[4].active)
-		{
-			temp.AddLastExplosion(LastExplosionDamegeAmout); // 매게변수로 투사체이 디버프를 추가함
-		}
-		if (options[5].active)
-		{
-			temp.OnActiveGuided(); // 매게변수로 투사체이 디버프를 추가함
-		}
-	}
+	
 	public override bool CanUse()
 	{
 		return true;

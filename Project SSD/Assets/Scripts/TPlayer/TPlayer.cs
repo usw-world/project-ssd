@@ -23,6 +23,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 
 	[SerializeField] private GameObject tPlayerCamera;
 
+	AttachmentManager attachmentManager = new AttachmentManager();
 	Coroutine attackCoroutine;
 	Coroutine dodgeCoroutine;
 	Coroutine rushCoroutine;
@@ -435,6 +436,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	public float GetAP()
 	{
 		return status.ap;
+	}
+	public void AddAttachment(Attachment attachment) {
+		attachmentManager.AddAttachment(attachment);
 	}
 
 	void rotate(float rotSppedPoint = 1f)
