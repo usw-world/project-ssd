@@ -20,7 +20,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     protected Action lostTargetEvent;
 
     protected virtual void Awake() {
-        EnemyManager.instance.Add(this.gameObject);
         enemyStateMachine = GetComponent<StateMachine>();
         enemyAnimator = enemyAnimator==null ? GetComponent<Animator>() : enemyAnimator;
         target = FindObjectOfType<TPlayer>()?.gameObject;
