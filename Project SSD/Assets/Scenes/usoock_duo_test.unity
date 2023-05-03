@@ -330,6 +330,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21b4e86d4d1498245b1cb7a921b50818, type: 3}
+--- !u!114 &182479809 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8716094362318642817, guid: 21b4e86d4d1498245b1cb7a921b50818,
+    type: 3}
+  m_PrefabInstance: {fileID: 182479808}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2ac6af9221db7349a243279dab10aba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &490187037
 GameObject:
   m_ObjectHideFlags: 0
@@ -881,6 +893,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 21b4e86d4d1498245b1cb7a921b50818, type: 3}
+--- !u!114 &1177883182 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8716094362318642817, guid: 21b4e86d4d1498245b1cb7a921b50818,
+    type: 3}
+  m_PrefabInstance: {fileID: 1177883181}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2ac6af9221db7349a243279dab10aba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1618207863
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1180,6 +1204,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 2477873385958449961, guid: 376dd3fae0755024ea6892e073d0115e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2477873385958449963, guid: 376dd3fae0755024ea6892e073d0115e,
+        type: 3}
+      propertyPath: enemiesSyncInterval
+      value: 0.016666668
+      objectReference: {fileID: 0}
+    - target: {fileID: 2477873385958449963, guid: 376dd3fae0755024ea6892e073d0115e,
+        type: 3}
+      propertyPath: enemiesInScene.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2477873385958449963, guid: 376dd3fae0755024ea6892e073d0115e,
+        type: 3}
+      propertyPath: enemiesInScene.Array.data[0]
+      value: 
+      objectReference: {fileID: 1177883182}
+    - target: {fileID: 2477873385958449963, guid: 376dd3fae0755024ea6892e073d0115e,
+        type: 3}
+      propertyPath: enemiesInScene.Array.data[1]
+      value: 
+      objectReference: {fileID: 182479809}
     - target: {fileID: 2652129812850680960, guid: 376dd3fae0755024ea6892e073d0115e,
         type: 3}
       propertyPath: sceneId
@@ -1198,11 +1247,6 @@ PrefabInstance:
         type: 3}
       propertyPath: testTarget
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5067108883536876213, guid: ac6c898579b8e2e4484d1c354e346fe4,
-        type: 3}
-      propertyPath: spawnPrefabs.Array.size
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5166133502167492906, guid: ac6c898579b8e2e4484d1c354e346fe4,
         type: 3}
@@ -1263,11 +1307,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Debugging Network Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 5166133502167492907, guid: ac6c898579b8e2e4484d1c354e346fe4,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ac6c898579b8e2e4484d1c354e346fe4, type: 3}

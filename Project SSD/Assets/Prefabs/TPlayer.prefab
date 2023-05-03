@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aimType: 0
   info:
     effect: {fileID: 0}
     skillImage: {fileID: 0}
@@ -5186,7 +5187,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.513, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -4.2899933, y: 0}
   m_SizeDelta: {x: -0.4525, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5272,6 +5273,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aimType: 0
   info:
     effect: {fileID: 8713321098745448525, guid: e13c73c7e5199f448b25d20d7b787c00,
       type: 3}
@@ -10160,6 +10162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aimType: 0
   info:
     effect: {fileID: 5438365792731064238, guid: 0fb8fc54f9695f84d90ebd41cf3a9a87,
       type: 3}
@@ -10361,6 +10364,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aimType: 0
   info:
     effect: {fileID: 6368493697596475761, guid: 03480b20210d8ad44a310a08a1f57528,
       type: 3}
@@ -10550,7 +10554,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.513, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -4.2899933, y: 0}
   m_SizeDelta: {x: -0.4525, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10726,6 +10730,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aimType: 0
   info:
     effect: {fileID: 5438365792731064238, guid: 0fb8fc54f9695f84d90ebd41cf3a9a87,
       type: 3}
@@ -10876,6 +10881,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aimType: 0
   info:
     effect: {fileID: 4991478755197702839, guid: f15db9247ada0b548994e31206d0e01b,
       type: 3}
@@ -10936,6 +10942,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aimType: 0
   info:
     effect: {fileID: 2011303836619860078, guid: e1ce5302969721348984076d343df1bb,
       type: 3}
@@ -17354,7 +17361,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7972339259538638219
 Transform:
   m_ObjectHideFlags: 0

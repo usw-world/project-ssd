@@ -17,5 +17,8 @@ public partial class SSDNetworkManager : NetworkManager {
         player = Instantiate(qPlayerObject);
         NetworkServer.AddPlayerForConnection(conn, player);
     }
+    private void OnSyncEnemy(SyncEnemyMessage message) {
+        EnemyManager.instance?.SyncEnemy(message.index, message.position, message.rotation);
+    }
     #endregion Message Handlers
 }

@@ -59,6 +59,7 @@ public partial class DebuggingNetworkManager : NetworkManager {
         #endregion Server Handler Initialize
 
         #region Client Handler Initialize
+        NetworkClient.RegisterHandler<S2CMessage.SyncEnemyMessage>(OnSyncEnemy);
         /*  */
         #endregion Client Handler Initialize
     }
@@ -69,6 +70,9 @@ public partial class DebuggingNetworkManager : NetworkManager {
     private void OnCreateQPlayerPrefab(NetworkConnectionToClient conn,  CreateQPlayerPrefabMessage message) {
         player = Instantiate(qPlayerObject);
         NetworkServer.AddPlayerForConnection(conn, player);
+    }
+    private void OnSyncEnemy(SyncEnemyMessage message) {
+        EnemyManager.instance?.SyncEnemy(message.index, message.position, message.rotation);
     }
     #endregion Message Handlers
 }

@@ -59,9 +59,6 @@ class Enemy_XBot : MovableEnemy {
     protected override void Update() {
         if(currentJumpAttackCooltime > 0)
             currentJumpAttackCooltime -= Time.deltaTime;
-            
-        if(Input.GetKeyDown(KeyCode.Alpha9))
-            EnemyManager.instance.Add(this.gameObject);
     }
     #endregion Unity Events
 

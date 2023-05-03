@@ -4,13 +4,14 @@ using UnityEngine;
 
 using Mirror;
 
-public class EnemyManager : NetworkBehaviour {
+public class EnemyManager : MonoBehaviour {
     static public EnemyManager instance;
 
     [SerializeField] private float enemiesSyncInterval = .2f;
     private float elapsedTime = 0;
+    private bool isHost = false;
 
-    private List<Enemy> enemiesInScene;
+    [SerializeField] private List<Enemy> enemiesInScene;
 
     Queue<Enemy> registerQueue;
     
@@ -19,28 +20,35 @@ public class EnemyManager : NetworkBehaviour {
             instance = this;
         else
             Destroy(this.gameObject);
-
-        enemiesInScene = new List<Enemy>();
     }
     private void Start() {
+        if(DebuggingNetworkManager.instance == null)
+            this.isHost = SSDNetworkManager.instance.isHost;
+        else
+            this.isHost = DebuggingNetworkManager.instance.isHost;
     }
     private void Update() {
-        elapsedTime += Time.deltaTime;
-        if(enemiesSyncInterval >= elapsedTime) {
-            elapsedTime -= enemiesSyncInterval;
+        if(isHost) {
+            elapsedTime += Time.deltaTime;
+            if(elapsedTime >= enemiesSyncInterval) {
+                elapsedTime -= enemiesSyncInterval;
+                for(int i=0; i<enemiesInScene.Count; i++) {
+                    GameObject enemy = enemiesInScene[i].gameObject;
+                    Position pos = new Position(enemy.transform.position.x, enemy.transform.position.y, enemy.transform.position.z);
+                    Rotation rot = new Rotation(enemy.transform.rotation.x, enemy.transform.rotation.y, enemy.transform.rotation.z, enemy.transform.rotation.w);
+                    NetworkServer.SendToAll(new S2CMessage.SyncEnemyMessage(i, pos, rot));
+                    print("send");
+                }
+            }
         }
     }
-    [Command]
-    public void Add(GameObject gobj) {
-        Add(gobj.GetComponent<Enemy>());
-        print(enemiesInScene.Count);
+    public void SyncEnemy(int index, Position position, Rotation rotation) {
+        if(!isHost) {
+            Enemy target = enemiesInScene[index];
+            target.transform.position = new Vector3(position.x, position.y, position.z);
+            target.transform.rotation = new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
+            print(new Vector3(position.x, position.y, position.z));
+            print(new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
+        }
     }
-    public void Add(Enemy enemy) {
-        enemiesInScene.Add(enemy);
-    }
-}
-public struct Position {
-    float x;
-    float y;
-    float z;
 }
