@@ -55,11 +55,15 @@ public class QPlayerSkillUnityBall : Skill
 			return Vector3.one * size;
 		}
 	}
-
+	private void Start() {
+		options[2].active = true;
+		//options[5].active = true;
+		//options[6].active = true;
+	}
 	public override void Use(Vector3 target)
 	{
 		Vector3 sponPos = QPlayer.instance.transform.position;
-		sponPos.y = target.y;
+		sponPos.y = target.y + 1;
 
 		GameObject obj = null;
 		UnityBall temp = null;
@@ -77,7 +81,7 @@ public class QPlayerSkillUnityBall : Skill
 			temp = obj.GetComponent<UnityBall>();
 		}
 
-		obj.transform.LookAt(target);
+		obj.transform.LookAt(target + Vector3.up);
 		obj.transform.localScale = LastSize;
 		temp.OnActive(DamegeAmout, LastSpped);
 
@@ -88,7 +92,7 @@ public class QPlayerSkillUnityBall : Skill
 				print("TPlayer 회복 시작");
 			};
 			attachment.onStay = () => {
-				print("TPlayer HP +" + (DamegeAmout / option02_buffTime / 1f));
+				print("TPlayer HP +" + (DamegeAmout / option02_buffTime * 100f / 1f));
 				TPlayer.instance.status.hp += DamegeAmout / option02_buffTime / 1f;
 				if (TPlayer.instance.status.hp > TPlayer.instance.status.maxHp){
 					TPlayer.instance.status.hp = TPlayer.instance.status.maxHp;
@@ -97,6 +101,7 @@ public class QPlayerSkillUnityBall : Skill
 			attachment.onInactive = () => {
 				print("TPlayer 회복 종료");
 			};
+			TPlayer.instance.AddAttachment(attachment);
 		}
 		if (options[3].active)
 		{

@@ -9,7 +9,7 @@ public class AttachmentManager : MonoBehaviour
 	public void AddAttachment(Attachment attachment) {
 
 		attachments.Add(attachment);
-
+		print("33 attachment : " + attachment);
 		attachment.coroutine = StartCoroutine(Run(attachment));
 	}
 	public void Clear() {
@@ -19,7 +19,9 @@ public class AttachmentManager : MonoBehaviour
 		attachments.Clear();
 	}
 	IEnumerator Run(Attachment attachment) {
+		print("44");
 		attachment.onAction?.Invoke();
+		print("55");
 		for (float i = attachment.time; i > 0; i -= attachment.interval)
 		{
 			attachment.onStay?.Invoke();

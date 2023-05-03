@@ -23,7 +23,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 
 	[SerializeField] private GameObject tPlayerCamera;
 
-	AttachmentManager attachmentManager = new AttachmentManager();
+	AttachmentManager attachmentManager;
 	Coroutine attackCoroutine;
 	Coroutine dodgeCoroutine;
 	Coroutine rushCoroutine;
@@ -87,7 +87,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
         else
             Destroy(this.gameObject);
         DontDestroyOnLoad(gameObject);
-
+		attachmentManager = GetComponent<AttachmentManager>();
         ani = GetComponent<Animator>();
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
@@ -438,6 +438,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		return status.ap;
 	}
 	public void AddAttachment(Attachment attachment) {
+		print("22");
 		attachmentManager.AddAttachment(attachment);
 	}
 

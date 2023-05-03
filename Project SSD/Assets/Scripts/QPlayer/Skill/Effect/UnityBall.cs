@@ -24,11 +24,12 @@ public class UnityBall : MonoBehaviour
 		{
 			if (targets.Count > 0)
 			{
-				if (targets[0] == null)
+				if (targets[0] != null)
 				{
 					if (targets[0].gameObject.layer == 8)
 					{
-						Vector3 look = Vector3.Slerp(transform.forward, targets[0].position, 10f * Time.deltaTime);
+						Vector3 look = Vector3.Slerp(transform.forward, targets[0].position - transform.position, 7f * Time.deltaTime);
+						look.y = 0;
 						transform.rotation = Quaternion.LookRotation(look);
 					}
 					else
@@ -85,6 +86,7 @@ public class UnityBall : MonoBehaviour
 			{
 				if (!targets.Contains(other.transform))
 				{
+					print("추가");
 					targets.Add(other.transform);
 				}
 			}

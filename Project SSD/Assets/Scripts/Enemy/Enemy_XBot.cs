@@ -193,6 +193,7 @@ class Enemy_XBot : MovableEnemy {
         base.OnDamage(origin, amount);
     }
     protected override void OnDie() {
+        base.OnDie();
         enemyStateMachine.ChangeState(dieState);
         enemyStateMachine.isMuted = true;
     }

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5208415891999506306}
   - component: {fileID: 5208415891999506317}
   m_Layer: 0
-  m_Name: UnityHubBaaaall
+  m_Name: UnityBaaaall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

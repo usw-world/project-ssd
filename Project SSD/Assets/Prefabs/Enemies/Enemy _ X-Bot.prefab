@@ -567,6 +567,7 @@ MonoBehaviour:
   detectRange: 20
   detectInterval: 0.25
   enemyAnimator: {fileID: 1887190217891866951}
+  hp: 15000
   moveSpeed: 4.5
   arriveDistance: 1
   jumpAttackParticle: {fileID: 5318896249418389938, guid: f9ae0e542ac701c47b3d049a1db63a53,

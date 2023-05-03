@@ -9,7 +9,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     protected StateMachine enemyStateMachine;
     [SerializeField] protected Animator enemyAnimator;
 
-    protected float hp;
+    [SerializeField] protected float hp;
     protected bool isDead;
 
     protected bool targetInRange;
@@ -20,6 +20,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     protected Action lostTargetEvent;
 
     protected virtual void Awake() {
+        EnemyManager.instance.Add(this.gameObject);
         enemyStateMachine = GetComponent<StateMachine>();
         enemyAnimator = enemyAnimator==null ? GetComponent<Animator>() : enemyAnimator;
         target = FindObjectOfType<TPlayer>()?.gameObject;
@@ -59,5 +60,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     }
     protected virtual void OnDie() {
         isDead = true;
+        gameObject.layer = 9;
     }
 }

@@ -101,6 +101,7 @@ public partial class SSDNetworkManager : NetworkManager {
             NetworkServer.RegisterHandler<C2SMessage.CreateTPlayerPrefabMessage>(OnCreateTPlayerPrefab);
             NetworkServer.RegisterHandler<C2SMessage.CreateQPlayerPrefabMessage>(OnCreateQPlayerPrefab);
             NetworkServer.RegisterHandler<C2SMessage.JoinRoomMessage>(OnJoinRoom);
+            // NetworkServer.connection
         }
         #endregion Server Handler Initialize
 

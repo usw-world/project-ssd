@@ -21,7 +21,7 @@ public class QPlayerSkillUnityBallEditor : Editor
 	}
 	public override void OnInspectorGUI()
 	{
-		//base.OnInspectorGUI(); return;
+		// base.OnInspectorGUI(); return;
 		//serializedObject.Update();
 		EditorGUILayout.HelpBox("QPlayer의 스킬 Unity Ball을 설정합니다.", MessageType.None);
 
