@@ -23,19 +23,19 @@ public class QPlayerSkillUnityBall : Skill
 	public float option07_increasingSize;
 	public float option07_increasingSkillPower;
 
-	float DamegeAmout {
+	float DamageAmout {
 		get {
 			float amount = QPlayer.instance.GetAP(); // 여기서 버프 계산 해서 가져오면댐
-			amount *= 1f + property.skillAP / 100f;
-			amount *= 1f + ((options[0].active) ? option00_increasingSkillPower / 100f : 0);
-			amount *= 1f + ((options[7].active) ? option07_increasingSkillPower / 100f : 0);
-			amount *= ((options[6].active) ? option06_childDamegeAmout / 100f : 0);
+			amount *= property.skillAP / 100f;															
+			amount *= 1f + ((options[0].active) ? option00_increasingSkillPower / 100f : 0);			
+			amount *= 1f + ((options[7].active) ? option07_increasingSkillPower / 100f : 0);			
+			amount *= ((options[6].active) ? option06_childDamegeAmout / 100f : 1f);
 			return amount;
 		}
 	}
 	float LastExplosionDamegeAmout{
 		get	{
-			float amount = DamegeAmout;
+			float amount = DamageAmout;
 			amount *= 1f + option04_explosionDamageAmount / 100f;
 			return amount;
 		}
@@ -54,11 +54,6 @@ public class QPlayerSkillUnityBall : Skill
 			size *= 1f + ((options[7].active) ? option07_increasingSize / 100f : 0);
 			return Vector3.one * size;
 		}
-	}
-	private void Start() {
-		options[2].active = true;
-		//options[5].active = true;
-		//options[6].active = true;
 	}
 	public override void Use(Vector3 target)
 	{
@@ -83,29 +78,28 @@ public class QPlayerSkillUnityBall : Skill
 
 		obj.transform.LookAt(target + Vector3.up);
 		obj.transform.localScale = LastSize;
-		temp.OnActive(DamegeAmout, LastSpped);
+		temp.OnActive(DamageAmout, LastSpped);
 
 		if (options[2].active)
 		{
 			Attachment attachment = new Attachment(option02_buffTime, 1f, options[2].image);
-			attachment.onAction = () => {
-				print("TPlayer 회복 시작");
-			};
-			attachment.onStay = () => {
-				print("TPlayer HP +" + (DamegeAmout / option02_buffTime * 100f / 1f));
-				TPlayer.instance.status.hp += DamegeAmout / option02_buffTime / 1f;
+			attachment.onStay = (gameObject) => {
+				TPlayer.instance.status.hp += DamageAmout * option02_healingAmount / 100f / 1f;
+
 				if (TPlayer.instance.status.hp > TPlayer.instance.status.maxHp){
 					TPlayer.instance.status.hp = TPlayer.instance.status.maxHp;
 				}
-			};
-			attachment.onInactive = () => {
-				print("TPlayer 회복 종료");
 			};
 			TPlayer.instance.AddAttachment(attachment);
 		}
 		if (options[3].active)
 		{
-			temp.AddDebuff(); // 매게변수로 투사체이 디버프를 추가함
+			Attachment attachment = new Attachment(option03_debuffTime, 1f, options[3].image);
+			attachment.onStay = (gameObject) => {
+				Enemy temp = gameObject.GetComponent<Enemy>();
+				
+			};
+			temp.AddDebuff(attachment); // 매게변수로 투사체이 디버프를 추가함
 		}
 		if (options[4].active)
 		{

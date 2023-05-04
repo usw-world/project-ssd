@@ -22,10 +22,10 @@ public class DestroyableObject: MonoBehaviour, IDamageable {
         }
     }
     /* temporary >> */
-    void OnTriggerEnter(Collider other) {
+    //void OnTriggerEnter(Collider other) {
         //if(other.tag == "Player") {
         //    OnDamage(other.gameObject, 5);
         //}
-    }
+    //}
     /* << temporary */
 }

@@ -15,7 +15,11 @@ public class UnityBaaaall : UnityBall
 		{
 			IDamageable temp = collision.gameObject.GetComponent<IDamageable>();
 			temp.OnDamage(gameObject, damage);
-			// 디버프 넘겨주기
+			for (int i = 0; i < attachments.Count; i++)
+			{
+				IAttachable attachable = collision.gameObject.GetComponent<IAttachable>();
+				attachable.AddAttachment(attachments[i]);
+			}
 		}
 	}
 }

@@ -40,7 +40,16 @@ public class QPlayerSkillUnityBallEditor : Editor
 		fixOption = EditorGUILayout.Toggle("특성 설정", fixOption);
 		EditorGUILayout.Space();
 
-		if(fixOption)
+		data.options[0].active = EditorGUILayout.Toggle("특성 1 활성화", data.options[0].active);
+		data.options[1].active = EditorGUILayout.Toggle("특성 2 활성화", data.options[1].active);
+		data.options[2].active = EditorGUILayout.Toggle("특성 3 활성화", data.options[2].active);
+		data.options[3].active = EditorGUILayout.Toggle("특성 4 활성화", data.options[3].active);
+		data.options[4].active = EditorGUILayout.Toggle("특성 5 활성화", data.options[4].active);
+		data.options[5].active = EditorGUILayout.Toggle("특성 6 활성화", data.options[5].active);
+		data.options[6].active = EditorGUILayout.Toggle("특성 7 활성화", data.options[6].active);
+		data.options[7].active = EditorGUILayout.Toggle("특성 8 활성화", data.options[7].active);
+
+		if (fixOption)
 		{
 			option = (eSkillOption)EditorGUILayout.EnumPopup("특성", option);
 			int idx = (int)option;

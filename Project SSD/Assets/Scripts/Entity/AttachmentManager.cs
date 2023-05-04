@@ -9,7 +9,6 @@ public class AttachmentManager : MonoBehaviour
 	public void AddAttachment(Attachment attachment) {
 
 		attachments.Add(attachment);
-		print("33 attachment : " + attachment);
 		attachment.coroutine = StartCoroutine(Run(attachment));
 	}
 	public void Clear() {
@@ -19,15 +18,13 @@ public class AttachmentManager : MonoBehaviour
 		attachments.Clear();
 	}
 	IEnumerator Run(Attachment attachment) {
-		print("44");
-		attachment.onAction?.Invoke();
-		print("55");
+		attachment.onAction?.Invoke(gameObject);
 		for (float i = attachment.time; i > 0; i -= attachment.interval)
 		{
-			attachment.onStay?.Invoke();
+			attachment.onStay?.Invoke(gameObject);
 			yield return new WaitForSeconds(attachment.interval);
 		}
-		attachment.onInactive?.Invoke();
+		attachment.onInactive?.Invoke(gameObject);
 	}
 }
 public class Attachment
@@ -36,12 +33,19 @@ public class Attachment
 	public float interval;
 	public Coroutine coroutine;
 	public Sprite image;
-	public Action onAction;
-	public Action onStay;
-	public Action onInactive;
+	public Action<GameObject> onAction;
+	public Action<GameObject> onStay;
+	public Action<GameObject> onInactive;
 	public Attachment(float time, float interval, Sprite image) {
 		this.time = time;
 		this.interval = interval;
 		this.image = image;
 	}
+}
+public enum EAttachmentType
+{
+	damage, slow, inability,
+	healing,    // 힐
+	shield,     // 쉴드
+	boost       // 공격력 상승
 }

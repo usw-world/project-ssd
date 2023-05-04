@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class UnityBall : MonoBehaviour
 {
+	[SerializeField]protected GameObject lastExplosionPrefab;
 	protected List<Transform> targets = new List<Transform>();
-	protected GameObject lastExplosionPrefab;
+	protected List<Attachment> attachments = new List<Attachment>();
 	protected float runTime = 2f;
 	protected float damage;
 	protected float speed;
+	protected float guidedPerformance = 7f;
 	protected float lastExplosionDamage;
 	protected bool lastExplosion = false;
 	protected bool guided = false;
@@ -28,9 +30,10 @@ public class UnityBall : MonoBehaviour
 				{
 					if (targets[0].gameObject.layer == 8)
 					{
-						Vector3 look = Vector3.Slerp(transform.forward, targets[0].position - transform.position, 7f * Time.deltaTime);
+						Vector3 look = Vector3.Slerp(transform.forward, targets[0].position - transform.position, guidedPerformance * Time.deltaTime);
 						look.y = 0;
 						transform.rotation = Quaternion.LookRotation(look);
+						guidedPerformance += Time.deltaTime * 30f;
 					}
 					else
 					{
@@ -46,10 +49,10 @@ public class UnityBall : MonoBehaviour
 		transform.Translate(Vector3.forward * Time.deltaTime * speed);
 	}
 	public void Hide() {
-		gameObject.SetActive(false);
+		gameObject?.SetActive(false);
 	}
-	public virtual void AddDebuff() {
-		// 매개변수로 디버프를 받아 목록에 추가한다 
+	public virtual void AddDebuff(Attachment attachment) {
+		attachments.Add(attachment);
 	}
 	public virtual void AddLastExplosion(float explosionDamage) {
 		lastExplosion = true;
@@ -63,18 +66,23 @@ public class UnityBall : MonoBehaviour
 		if (lastExplosion)
 		{
 			GameObject temp = Instantiate(lastExplosionPrefab, transform.position, Quaternion.Euler(0, 0, 0));
-			temp.GetComponent<UnityBallLastExplosion>().OnActive(lastExplosionDamage);
 			temp.transform.localScale = transform.localScale;
+			temp.GetComponent<UnityBallLastExplosion>().OnActive(lastExplosionDamage);
 		}
 		// 초기화 해줘야함 변수
 	}
 	protected virtual void OnCollisionEnter(Collision collision)
 	{
+		print(collision.gameObject.name + " OnCollisionEnter ");
 		if (collision.gameObject.layer == 8)
 		{
-			IDamageable temp = collision.gameObject.GetComponent<IDamageable>();
-			temp.OnDamage(gameObject, damage);
-			// 디버프 넘겨주기
+			IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
+			damageable.OnDamage(gameObject, damage);
+			for (int i = 0; i < attachments.Count; i++)
+			{
+				IAttachable attachable = collision.gameObject.GetComponent<IAttachable>();
+				attachable.AddAttachment(attachments[i]);
+			}
 			gameObject.SetActive(false);
 		}
 	}
@@ -86,7 +94,6 @@ public class UnityBall : MonoBehaviour
 			{
 				if (!targets.Contains(other.transform))
 				{
-					print("추가");
 					targets.Add(other.transform);
 				}
 			}

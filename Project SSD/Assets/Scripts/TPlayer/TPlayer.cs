@@ -12,7 +12,7 @@ using Mirror;
 [RequireComponent(typeof(TPlayerInput))]
 [RequireComponent(typeof(StateMachine))]
 [RequireComponent(typeof(Movement))]
-public class TPlayer : NetworkBehaviour, IDamageable
+public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 {
 	static public TPlayer instance { get; private set; }
     
@@ -438,7 +438,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		return status.ap;
 	}
 	public void AddAttachment(Attachment attachment) {
-		print("22");
 		attachmentManager.AddAttachment(attachment);
 	}
 

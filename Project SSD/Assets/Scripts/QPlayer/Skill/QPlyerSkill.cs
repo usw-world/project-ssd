@@ -21,7 +21,6 @@ public class QPlyerSkill : Skill
 
 	// 디버프
 	public bool isDebuff;                   // 디버프
-	public QPlayerDebuffType debuffType;    // 디버프 타입
 	public float debuffTime;                // 디버프 시간
 	public float debuffAmount;              // 디버프 량
 
@@ -38,7 +37,6 @@ public class QPlyerSkill : Skill
 
 	// 버프
 	public bool isBuff;					// 버프
-	public QPlayerBuffType buffType;	// 버프 타입
 	public float buffTime;				// 버프 시간
 	public float buffAmount;            // 버프 량
 
@@ -65,23 +63,4 @@ public class QPlyerSkill : Skill
 		}
 		return false;
 	}
-}
-public enum QPlayerActiveType
-{
-	none,       // 없음
-	big
-}
-public enum QPlayerBuffType
-{
-	none,		// 없음
-	healing,	// 힐
-	shield,		// 쉴드
-	boost		// 공격력 상승
-}
-public enum QPlayerDebuffType
-{
-	none,		// 없음
-	damage,		// 데미지 (지속)
-	slow,		// 슬로우
-	inability	// 기절
 }

@@ -143,13 +143,13 @@ MonoBehaviour:
     info: "\uC720\uB3C4\uAE30\uB2A5\uC774 \uCD94\uAC00\uB418\uACE0 \uAD6C\uCCB4\uC758
       \uC18D\uB3C4\uAC00 \uBE68\uB77C\uC9C4\uB2E4"
     image: {fileID: 21300000, guid: 9c0d6ec706e01ce448aea81584af092b, type: 3}
-    active: 0
+    active: 1
   - name: "\uC720\uB2C8\uD2F0 \uD5C8\uBE0C \uBCFC"
     info: "\uC801\uC5D0\uAC8C \uBA85\uC911\uC2DC \uC720\uB2C8\uD2F0 \uBCFC\uC744
       8\uAC1C \uC0DD\uC131\uD558\uB294 \uC720\uB2C8\uD2F0 \uD5C8\uBE0C \uBCFC\uC744
       \uBC1C\uC0AC\uD55C\uB2E4"
     image: {fileID: 21300000, guid: 9c0d6ec706e01ce448aea81584af092b, type: 3}
-    active: 0
+    active: 1
   - name: "\uC720\uB2C8\uD2F0\uBCF4\uC624\uC624\uC624\uC62C"
     info: "\uAC70\uB300\uD55C \uC720\uB2C8\uD2F0 \uBCF4\uC624\uC624\uC624\uC62C\uC744
       \uB0A0\uB9B0\uB2E4. \uD22C\uC0AC\uCCB4 \uC18D\uB3C4\uAC00 50% \uAC10\uC18C\uD55C\uB2E4"
@@ -365,7 +365,6 @@ MonoBehaviour:
   isContinuation: 0
   continuationTime: 0
   isDebuff: 0
-  debuffType: 0
   debuffTime: 0
   debuffAmount: 0
   isChain: 0
@@ -375,7 +374,6 @@ MonoBehaviour:
   castingEffect: {fileID: 0}
   castingTime: 0
   isBuff: 0
-  buffType: 0
   buffTime: 0
   buffAmount: 0
   usingSp: 0
@@ -2532,6 +2530,7 @@ GameObject:
   - component: {fileID: 431256683581693578}
   - component: {fileID: 5754693221944652162}
   - component: {fileID: 8994530382369457408}
+  - component: {fileID: 4192418563440914155}
   m_Layer: 7
   m_Name: QPlayer
   m_TagString: Player
@@ -2804,6 +2803,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMuted: 0
+--- !u!114 &4192418563440914155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2136718358471616647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b319716858f83d6489bd5c0ddc439d0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2136718358471616649
 GameObject:
   m_ObjectHideFlags: 0

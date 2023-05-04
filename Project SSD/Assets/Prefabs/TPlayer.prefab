@@ -17355,6 +17355,7 @@ GameObject:
   - component: {fileID: -9035221150136576729}
   - component: {fileID: 3159772802916435366}
   - component: {fileID: 575347874802459017}
+  - component: {fileID: 1378400513}
   m_Layer: 7
   m_Name: TPlayer
   m_TagString: TPlayer
@@ -17671,6 +17672,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isMuted: 0
+--- !u!114 &1378400513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6410919741541939096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b319716858f83d6489bd5c0ddc439d0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6414968695017539592
 GameObject:
   m_ObjectHideFlags: 0
