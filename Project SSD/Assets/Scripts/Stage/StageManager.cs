@@ -17,9 +17,10 @@ public class StageManager : MonoBehaviour {
             Destroy(this.gameObject);
     }
     private void Start() {
-        if(DebuggingNetworkManager.instance != null) {
-            DebuggingNetworkManager.instance.onStartHost += () => {
-                if(DebuggingNetworkManager.instance.testTarget == DebuggingNetworkManager.TestTarget.TPlayer) {
+        if(SSDNetworkManager.instance is DebuggingNetworkManager) {
+            DebuggingNetworkManager nManager = (DebuggingNetworkManager)SSDNetworkManager.instance;
+            nManager.onStartHost += () => {
+                if(nManager.testTarget == DebuggingNetworkManager.TestTarget.TPlayer) {
                     var message = new C2SMessage.CreateTPlayerPrefabMessage(spawnPoint);
                     Mirror.NetworkClient.Send(message);
                 } else {

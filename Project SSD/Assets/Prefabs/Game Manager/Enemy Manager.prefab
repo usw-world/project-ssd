@@ -44,4 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ab38c9fd814ff54d9d1b2a23cdbb562, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemiesSyncInterval: 0
+  enemiesSyncInterval: 0.016666668
+  enemiesInScene:
+  - {fileID: 0}
+  - {fileID: 0}

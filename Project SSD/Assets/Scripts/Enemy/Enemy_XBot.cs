@@ -5,7 +5,7 @@ class Enemy_XBot : MovableEnemy {
     #region States
     private State idleState = new State("Idle");
     private State chaseState = new State("Chase");
-    private State basicState {
+    private State BasicState {
         get {
             if(targetInRange)
                 return chaseState;
@@ -38,9 +38,6 @@ class Enemy_XBot : MovableEnemy {
     protected override void Awake() {
         base.Awake();
 
-        InitializeState();
-        enemyStateMachine.SetIntialState(idleState);
-
         jumpAttackParticlePooler = new ObjectPooler(
             jumpAttackParticle,
             (GameObject go) => {
@@ -56,9 +53,16 @@ class Enemy_XBot : MovableEnemy {
             }
         );
     }
+    protected override void Start() {
+        base.Start();
+        InitializeState();
+        enemyStateMachine.SetIntialState(idleState);
+    }
     protected override void Update() {
         if(currentJumpAttackCooltime > 0)
             currentJumpAttackCooltime -= Time.deltaTime;
+        if(Input.GetKeyDown(KeyCode.Return) && SSDNetworkManager.instance.isHost)
+            Mirror.NetworkClient.Send(new C2SMessage.ChangeStateMessage(networkId, jumpAttackState.stateName));
     }
     #endregion Unity Events
 
@@ -78,7 +82,7 @@ class Enemy_XBot : MovableEnemy {
         };
         chaseState.onStay += () => {
             if(IsArrive) {
-                enemyStateMachine.ChangeState(idleState);
+                SendChangeState(idleState);
             }
         };
         chaseState.onInactive += (State prevState) => {
@@ -114,6 +118,11 @@ class Enemy_XBot : MovableEnemy {
                 StopCoroutine(assaultCoroutine);
             assaultEffect.SetActive(false);
         };
+        enemyStatesMap.Add(idleState.stateName, idleState);
+        enemyStatesMap.Add(chaseState.stateName, chaseState);
+        enemyStatesMap.Add(assaultState.stateName, assaultState);
+        enemyStatesMap.Add(jumpAttackState.stateName, jumpAttackState);
+        enemyStatesMap.Add(dieState.stateName, dieState);
     }
     protected override void ChaseTarget(Vector3 point) {
         targetPosition = point;
@@ -124,11 +133,11 @@ class Enemy_XBot : MovableEnemy {
         if((  enemyStateMachine.Compare(idleState)
            || enemyStateMachine.Compare(chaseState))
         && !IsArrive) {
-            enemyStateMachine.ChangeState(chaseState, true);
+            SendChangeState(chaseState, true);
         }
     }
     protected override void OnLostTarget() {
-        enemyStateMachine.ChangeState(idleState);
+        SendChangeState(idleState);
     }
     private void TryJumpAttack() {
         if(DistanceToTarget > 3f
@@ -136,7 +145,7 @@ class Enemy_XBot : MovableEnemy {
         && !enemyStateMachine.Compare(jumpAttackState)
         && !enemyStateMachine.Compare(assaultState)
         && currentJumpAttackCooltime <= 0) {
-            enemyStateMachine.ChangeState(jumpAttackState);
+            SendChangeState(jumpAttackState);
         }
     }
     private IEnumerator JumpAttackCoroutine() {
@@ -155,7 +164,7 @@ class Enemy_XBot : MovableEnemy {
         if(DistanceToTarget < 5f
         && !enemyStateMachine.Compare(jumpAttackState)
         && !enemyStateMachine.Compare(assaultState)) {
-            enemyStateMachine.ChangeState(assaultState, false);
+            SendChangeState(assaultState, false);
         }
     }
     private IEnumerator AssaultCoroutine() {
@@ -170,12 +179,12 @@ class Enemy_XBot : MovableEnemy {
             enemyMovement.MoveToward(dir * 10f * Time.deltaTime, Space.World, 5<<6);
             yield return null;
         }
-        enemyStateMachine.ChangeState(idleState);
+        SendChangeState(idleState);
     }
 
     #region Animation Events
     public void AnimationEvent_OnEndJumpAttack() {
-        enemyStateMachine.ChangeState(basicState);
+        SendChangeState(BasicState);
     }
     public void AnimationEvent_OnJumpAttackAction() {
         /* temporary >> */
@@ -194,7 +203,7 @@ class Enemy_XBot : MovableEnemy {
     }
     protected override void OnDie() {
         base.OnDie();
-        enemyStateMachine.ChangeState(dieState);
+        SendChangeState(dieState);
         enemyStateMachine.isMuted = true;
     }
 }

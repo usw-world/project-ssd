@@ -12,7 +12,7 @@ using S2CMessage;
 public partial class SSDNetworkManager : NetworkManager {
     public static SSDNetworkManager instance;
     
-    public bool isHost { get; private set; } = false;
+    public bool isHost { get; protected set; } = false;
 
     public (NetworkConnectionToClient connection, string userName) hostUser;
     public (NetworkConnectionToClient connection, string userName) guestUser;
@@ -76,7 +76,6 @@ public partial class SSDNetworkManager : NetworkManager {
         });
     }
     public override void OnClientConnect() { // both host and guest.
-
         base.OnClientConnect();
         InitilizeHandler();
         NetworkClient.OnDisconnectedEvent += OnCloseRoom;
@@ -95,31 +94,32 @@ public partial class SSDNetworkManager : NetworkManager {
         LoadScene("usoock_duo_test");
     }
     #region Message Handlers
-    private void InitilizeHandler() {
+    protected void InitilizeHandler() {
         #region Server Handler Initialize
         if(isHost) {
             NetworkServer.RegisterHandler<C2SMessage.CreateTPlayerPrefabMessage>(OnCreateTPlayerPrefab);
             NetworkServer.RegisterHandler<C2SMessage.CreateQPlayerPrefabMessage>(OnCreateQPlayerPrefab);
             NetworkServer.RegisterHandler<C2SMessage.JoinRoomMessage>(OnJoinRoom);
+            NetworkServer.RegisterHandler<C2SMessage.ChangeStateMessage>(OnChangeState);
         }
         #endregion Server Handler Initialize
 
         #region Client Handler Initialize
-        NetworkClient.RegisterHandler<S2CMessage.ShareUserInformations>(OnShareUserInformations);
+        NetworkClient.RegisterHandler<S2CMessage.ShareUserInformationsMessage>(OnShareUserInformations);
         NetworkClient.RegisterHandler<S2CMessage.SyncEnemyMessage>(OnSyncEnemy);
+        NetworkClient.RegisterHandler<S2CMessage.SyncEnemyStateMessage>(OnSyncEnemyState);
         #endregion Client Handler Initialize
     }
-    private void OnJoinRoom(NetworkConnectionToClient conn, JoinRoomMessage message) {
+    protected void OnJoinRoom(NetworkConnectionToClient conn, JoinRoomMessage message) {
         if(message.isHost) {
             hostUser = (conn, message.userName);
         } else {
             guestUser = (conn, message.userName);
-            
-            S2CMessage.ShareUserInformations userInformations = new S2CMessage.ShareUserInformations(hostUser.userName, guestUser.userName);
-            NetworkServer.SendToAll(userInformations);
+            S2CMessage.ShareUserInformationsMessage infoMessage = new S2CMessage.ShareUserInformationsMessage(hostUser.userName, guestUser.userName);
+            NetworkServer.SendToAll(infoMessage);
         }
     }
-    private void OnShareUserInformations(ShareUserInformations message) {
+    protected void OnShareUserInformations(ShareUserInformationsMessage message) {
         LobbyManager.instance.hostName = message.hostName;
         LobbyManager.instance.guestName = message.guestName;
         LobbyManager.instance.RefreshRoom();

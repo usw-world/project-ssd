@@ -9,7 +9,7 @@ public class QPlayerSummon : SkillEffect
 	[SerializeField] float runTime;
 	List<Transform> targets = new List<Transform>();
 	float attackTime = 1f;
-	SkillProperty property;
+	// SkillProperty property;
 	private void Start()
 	{
 		StartCoroutine(Hide());

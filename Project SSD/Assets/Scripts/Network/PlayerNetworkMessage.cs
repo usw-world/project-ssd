@@ -22,25 +22,43 @@ namespace C2SMessage {
             this.userName = userName;
         }
     }
+
+    public struct ChangeStateMessage : NetworkMessage {
+        public int networkId;
+        public string stateName;
+        public ChangeStateMessage(int networkId, string stateName) {
+            this.networkId = networkId;
+            this.stateName = stateName;
+        }
+    }
 }
 namespace S2CMessage {
-    public struct ShareUserInformations : NetworkMessage {
+    public struct ShareUserInformationsMessage : NetworkMessage {
         public string hostName;
         public string guestName;
-        public ShareUserInformations(string hostName, string guestName) {
+        public ShareUserInformationsMessage(string hostName, string guestName) {
             this.hostName = hostName;
             this.guestName = guestName;
         }
     }
 
     public struct SyncEnemyMessage : NetworkMessage {
-        public int index;
+        public int networkId;
         public Position position;
         public Rotation rotation;
-        public SyncEnemyMessage(int index, Position position, Rotation rotation) {
-            this.index = index;
+        public SyncEnemyMessage(int networkId, Position position, Rotation rotation) {
+            this.networkId = networkId;
             this.position = position;
             this.rotation = rotation;
+        }
+    }
+
+    public struct SyncEnemyStateMessage : NetworkMessage {
+        public int networkId;
+        public string stateName;
+        public SyncEnemyStateMessage(int networkId, string stateName) {
+            this.networkId = networkId;
+            this.stateName = stateName;
         }
     }
 }

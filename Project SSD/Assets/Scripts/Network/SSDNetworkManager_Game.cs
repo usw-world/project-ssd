@@ -9,16 +9,22 @@ using S2CMessage;
 
 public partial class SSDNetworkManager : NetworkManager {
     #region Message Handlers
-    private void OnCreateTPlayerPrefab(NetworkConnectionToClient conn,  CreateTPlayerPrefabMessage message) {
+    private void OnCreateTPlayerPrefab(NetworkConnectionToClient conn, CreateTPlayerPrefabMessage message) {
         player = Instantiate(tPlayerObject);
         NetworkServer.AddPlayerForConnection(conn, player);
     }
-    private void OnCreateQPlayerPrefab(NetworkConnectionToClient conn,  CreateQPlayerPrefabMessage message) {
+    private void OnCreateQPlayerPrefab(NetworkConnectionToClient conn, CreateQPlayerPrefabMessage message) {
         player = Instantiate(qPlayerObject);
         NetworkServer.AddPlayerForConnection(conn, player);
     }
     private void OnSyncEnemy(SyncEnemyMessage message) {
-        EnemyManager.instance?.SyncEnemy(message.index, message.position, message.rotation);
+        EnemyManager.instance?.SyncEnemy(message.networkId, message.position, message.rotation);
+    }
+    private void OnChangeState(NetworkConnectionToClient conn, ChangeStateMessage message) {
+        NetworkServer.SendToAll(new S2CMessage.SyncEnemyStateMessage(message.networkId, message.stateName));
+    }
+    private void OnSyncEnemyState(SyncEnemyStateMessage message) {
+        EnemyManager.instance.ChangeEnemyState(message.networkId, message.stateName);
     }
     #endregion Message Handlers
 }

@@ -26,6 +26,13 @@ public class EnemyManager : MonoBehaviour {
             this.isHost = SSDNetworkManager.instance.isHost;
         else
             this.isHost = DebuggingNetworkManager.instance.isHost;
+
+        NumberToEnemies();
+    }
+    private void NumberToEnemies() {
+        for(int i=0; i<enemiesInScene.Count; i++) {
+            enemiesInScene[i].networkId = i;
+        }
     }
     private void Update() {
         if(isHost) {
@@ -37,7 +44,6 @@ public class EnemyManager : MonoBehaviour {
                     Position pos = new Position(enemy.transform.position.x, enemy.transform.position.y, enemy.transform.position.z);
                     Rotation rot = new Rotation(enemy.transform.rotation.x, enemy.transform.rotation.y, enemy.transform.rotation.z, enemy.transform.rotation.w);
                     NetworkServer.SendToAll(new S2CMessage.SyncEnemyMessage(i, pos, rot));
-                    print("send");
                 }
             }
         }
@@ -47,8 +53,9 @@ public class EnemyManager : MonoBehaviour {
             Enemy target = enemiesInScene[index];
             target.transform.position = new Vector3(position.x, position.y, position.z);
             target.transform.rotation = new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
-            print(new Vector3(position.x, position.y, position.z));
-            print(new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
         }
+    }
+    public void ChangeEnemyState(int networkId, string stateName) {
+        enemiesInScene[networkId].ChangeState(stateName);
     }
 }
