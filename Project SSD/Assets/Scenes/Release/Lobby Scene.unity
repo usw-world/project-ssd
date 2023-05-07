@@ -527,7 +527,6 @@ MonoBehaviour:
   hostNameText: {fileID: 1508771205}
   guestNameText: {fileID: 322123390}
   addressField: {fileID: 1365011551}
-  portField: {fileID: 1086863165}
   startButton: {fileID: 1957540380}
 --- !u!1 &322123388
 GameObject:
@@ -694,7 +693,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2063875357, guid: aa11705bff95d44da87050b1a3dad015, type: 3}
       propertyPath: sendRate
-      value: 60
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 2834331384921636665, guid: aa11705bff95d44da87050b1a3dad015,
         type: 3}

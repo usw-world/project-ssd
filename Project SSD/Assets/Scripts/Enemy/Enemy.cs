@@ -46,12 +46,6 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     public void Initialize() {
         StartCoroutine(UpdateTargetCoroutine());
     }
-    public virtual void OnDamage(GameObject origin, float amount) {
-        hp -= amount;
-        if(hp <= 0) {
-            OnDie();
-        }
-    }
     private IEnumerator UpdateTargetCoroutine() {
         while(!isDead) {
             Collider[] inners = Physics.OverlapSphere(transform.position, detectRange, 1<<7);
@@ -85,5 +79,15 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         } else {
             Debug.LogWarning("Wrong state is called.");
         }
+    }
+    public virtual void OnDamage(Damage damage) {
+        hp -= damage.amount;
+        if(hp <= 0) {
+            OnDie();
+        }
+    }
+    private void SendDamageMessage() {
+        var message = new S2CMessage.DamageMessage();
+        NetworkClient.Send(message);
     }
 }

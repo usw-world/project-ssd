@@ -227,10 +227,10 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 			status.Update();
 			movement.MoveToward(Vector3.forward * ((isWalk) ? status.speed / 2 : status.speed) * Time.deltaTime);
 		};
-        attackState1.onStay = () => {  };
-        attackState2.onStay = () => {  };
-        attackState3.onStay = () => {  };
-        attackState4.onStay = () => {  };
+        attackState1.onStay = () => {};
+        attackState2.onStay = () => {};
+        attackState3.onStay = () => {};
+        attackState4.onStay = () => {};
 		dodgeAttackState.onStay = () => { MoveToTargetPos(); };
 		downAttackState.onStay = () => { MoveToTargetPos(); };
 		dodgeState.onStay = () => { };
@@ -318,7 +318,7 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		status.hp -= amount;
 		if (origin != null)
 		{
-			LookTatger(origin.transform);
+			LookTarget(origin.transform);
 		}
 
 		if (stateMachine.currentState == downState) return;
@@ -332,6 +332,19 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		else
 		{
 			ChangeState(damageState, false);
+		}
+	}
+	public void OnDamage(Damage damage) {
+		if(isImmune/*
+		&& stateMachine.currentState == dieState */)
+			return;
+
+		status.hp -= damage.amount;
+		if(damage.origin != null)
+			LookTarget(damage.origin.transform);
+
+		if(stateMachine.currentState != downState) {
+
 		}
 	}
 	public void OnDown()
@@ -448,7 +461,7 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		transform.rotation = Quaternion.LookRotation(look);
 		transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 	}
-	void LookTatger(Transform target) 
+	void LookTarget(Transform target) 
 	{
 		transform.LookAt(target);
 		transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);

@@ -25,10 +25,10 @@ public class QPlayerSkillEffect : SkillEffect
 	{
 		if (other.gameObject.layer == 8)
 		{
-			print("명중");
+			print("This message was called in 'QPlayerSkillEffect' that will be expected to removed.");
 			IDamageable target = other.GetComponent<IDamageable>();
 			float amount = property.skillAP * qPlayer.GetAP();
-			target?.OnDamage(gameObject, amount);
+			// target?.OnDamage(gameObject, amount);
 		}
 	}
 }

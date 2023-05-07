@@ -8,18 +8,30 @@ public class DestroyableObject: MonoBehaviour, IDamageable {
     public void Awake() {
         childrenRigidbodies = GetComponentsInChildren<Rigidbody>();
     }
-    public void OnDamage(GameObject origin, float amount) {
+    // public void OnDamage(GameObject origin, float amount) {
 		
+    //     if(!isDestroyed) {
+    //         Vector3 originPos = origin.transform.position;
+    //         foreach(Rigidbody rb in childrenRigidbodies) {
+    //             rb.isKinematic = false;
+    //             rb.AddForce((rb.transform.position - originPos) * amount, ForceMode.VelocityChange);
+    //             isDestroyed = true;
+    //         }
+	// 		gameObject.layer = 1;
+	// 		GetComponent<Collider>().enabled = false;
+    //     }
+    // }
+    public void OnDamage(Damage damage) {
         if(!isDestroyed) {
-            Vector3 originPos = origin.transform.position;
+            isDestroyed = true;
             foreach(Rigidbody rb in childrenRigidbodies) {
                 rb.isKinematic = false;
-                rb.AddForce((rb.transform.position - originPos) * amount, ForceMode.VelocityChange);
-                isDestroyed = true;
+                rb.AddForce(damage.forceVector, ForceMode.VelocityChange);
             }
-			gameObject.layer = 1;
+			gameObject.layer = 1<<9;
 			GetComponent<Collider>().enabled = false;
         }
+
     }
     /* temporary >> */
     //void OnTriggerEnter(Collider other) {

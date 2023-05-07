@@ -28,7 +28,7 @@ public class UnityHubBall : UnityBall
 			}
 			GameObject obj = Instantiate(unityballOrigin, transform.position, Quaternion.Euler(0, y, 0));
 			UnityBall temp = obj.GetComponent<UnityBall>();
-			temp.OnActive(damage, speed);
+			temp.OnActive(damageAmount, speed);
 			if (guided)
 			{
 				temp.OnActiveGuided();

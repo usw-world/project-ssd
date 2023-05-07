@@ -26,8 +26,16 @@ public class EnemyManager : MonoBehaviour {
             this.isHost = SSDNetworkManager.instance.isHost;
         else
             this.isHost = DebuggingNetworkManager.instance.isHost;
-
+        
+        CollectEnemies();
         NumberToEnemies();
+    }
+    private void CollectEnemies() {
+        List<Enemy> enemies = new List<Enemy>(transform.GetComponentsInChildren<Enemy>());
+        enemies.Sort((Enemy a, Enemy b) => {
+            return a.transform.GetSiblingIndex() - b.transform.GetSiblingIndex();
+        });
+        enemiesInScene = enemies;
     }
     private void NumberToEnemies() {
         for(int i=0; i<enemiesInScene.Count; i++) {

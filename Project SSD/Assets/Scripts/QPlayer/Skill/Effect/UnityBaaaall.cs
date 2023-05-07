@@ -13,10 +13,16 @@ public class UnityBaaaall : UnityBall
 	{
 		if (collision.gameObject.layer == 8)
 		{
-			IDamageable temp = collision.gameObject.GetComponent<IDamageable>();
-			temp.OnDamage(gameObject, damage);
-			for (int i = 0; i < attachments.Count; i++)
-			{
+			IDamageable target = collision.gameObject.GetComponent<IDamageable>();
+			Damage damage = new Damage(
+				this.gameObject,
+				damageAmount,
+				.6f,
+				(collision.transform.position - transform.position).normalized * 1.1f,
+				Damage.DamageType.Normal
+			);
+			target.OnDamage(damage);
+			for (int i = 0; i < attachments.Count; i++) {
 				IAttachable attachable = collision.gameObject.GetComponent<IAttachable>();
 				attachable.AddAttachment(attachments[i]);
 			}

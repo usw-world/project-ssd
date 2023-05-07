@@ -45,6 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemiesSyncInterval: 0.016666668
-  enemiesInScene:
-  - {fileID: 0}
-  - {fileID: 0}
+  enemiesInScene: []

@@ -22,7 +22,14 @@ public class Projectile : MonoBehaviour
 		{
 			Instantiate(hitEffect, transform.position, Quaternion.Euler(0, 0, 0));
 			gameObject.SetActive(false);
-			collision.gameObject.GetComponent<IDamageable>()?.OnDamage(gameObject, amount);
+			Damage damage = new Damage(
+				this.gameObject,
+				this.amount,
+				.2f,
+				Vector3.zero,
+				Damage.DamageType.Normal
+			);
+			collision.gameObject.GetComponent<IDamageable>()?.OnDamage(damage);
 		}
 	}
 }

@@ -61,6 +61,11 @@ namespace S2CMessage {
             this.stateName = stateName;
         }
     }
+
+    public struct DamageMessage : NetworkMessage {
+        string networkId;
+        Damage damage;
+    }
 }
 public struct Position {
     public float x;

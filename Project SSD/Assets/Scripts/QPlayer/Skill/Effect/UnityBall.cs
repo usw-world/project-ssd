@@ -8,7 +8,7 @@ public class UnityBall : MonoBehaviour
 	protected List<Transform> targets = new List<Transform>();
 	protected List<Attachment> attachments = new List<Attachment>();
 	protected float runTime = 2f;
-	protected float damage;
+	protected float damageAmount;
 	protected float speed;
 	protected float guidedPerformance = 7f;
 	protected float lastExplosionDamage;
@@ -17,7 +17,7 @@ public class UnityBall : MonoBehaviour
 	public virtual void OnActive(float damage, float speed)
 	{
 		Invoke("Hide", runTime);
-		this.damage = damage;
+		this.damageAmount = damage;
 		this.speed = speed;
 	}
 	private void Update()
@@ -73,11 +73,18 @@ public class UnityBall : MonoBehaviour
 	}
 	protected virtual void OnCollisionEnter(Collision collision)
 	{
-		print(collision.gameObject.name + " OnCollisionEnter ");
+		print("Unity Ball hit the " + collision.gameObject.name);
 		if (collision.gameObject.layer == 8)
 		{
-			IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-			damageable.OnDamage(gameObject, damage);
+			IDamageable target = collision.gameObject.GetComponent<IDamageable>();
+			Damage damage = new Damage(
+				gameObject,
+				damageAmount,
+				.4f,
+				(collision.transform.position - transform.position).normalized * 1.5f,
+				Damage.DamageType.Normal
+			);
+			target.OnDamage(damage);
 			for (int i = 0; i < attachments.Count; i++)
 			{
 				IAttachable attachable = collision.gameObject.GetComponent<IAttachable>();

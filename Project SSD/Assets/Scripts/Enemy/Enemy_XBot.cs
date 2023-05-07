@@ -198,8 +198,8 @@ class Enemy_XBot : MovableEnemy {
     }
     #endregion Animation Events
 
-    public override void OnDamage(GameObject origin, float amount) {
-        base.OnDamage(origin, amount);
+    public override void OnDamage(Damage damage) {
+        base.OnDamage(damage);
     }
     protected override void OnDie() {
         base.OnDie();

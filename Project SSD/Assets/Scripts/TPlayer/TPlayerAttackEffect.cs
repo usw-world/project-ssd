@@ -56,7 +56,14 @@ public class TPlayerAttackEffect : SkillEffect
 
 				if (target != null)
 				{
-					target.OnDamage(gameObject, amount);
+					Damage damage = new Damage(
+						this.gameObject,
+						amount,
+						.3f,
+						(hit[i].transform.position - transform.position).normalized * .5f,
+						Damage.DamageType.Normal
+					);
+					target.OnDamage(damage);
 
 					GameObject temp = Instantiate(hitEffect, hit[i].transform);
 					temp.transform.position += Vector3.up;
