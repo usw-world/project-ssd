@@ -13,4 +13,6 @@ public class QPlayerCamera : PlayerCamera {
     public override void SetTarget(Transform target) {
         virtualCamera.Follow = target;
     }
+
+
 }
