@@ -10,19 +10,23 @@ public class UnityBall : MonoBehaviour
 	protected float runTime = 2f;
 	protected float damageAmount;
 	protected float speed;
-	protected float guidedPerformance = 7f;
+	protected float homingPerformance = .1f;
 	protected float lastExplosionDamage;
 	protected bool lastExplosion = false;
-	protected bool guided = false;
+	protected bool isHoming = false;
+	[SerializeField] protected CollisionEventHandler homingArea;
 	public virtual void OnActive(float damage, float speed)
 	{
 		Invoke("Hide", runTime);
 		this.damageAmount = damage;
 		this.speed = speed;
+
+		homingArea.onTriggerEnter += OnDetectHomingTarget;
+		homingArea.onTriggerExit += OnDetectHomingTarget;
 	}
 	private void Update()
 	{
-		if (guided)
+		if (isHoming)
 		{
 			if (targets.Count > 0)
 			{
@@ -30,10 +34,10 @@ public class UnityBall : MonoBehaviour
 				{
 					if (targets[0].gameObject.layer == 8)
 					{
-						Vector3 look = Vector3.Slerp(transform.forward, targets[0].position - transform.position, guidedPerformance * Time.deltaTime);
+						Vector3 look = Vector3.Slerp(transform.forward, targets[0].position - transform.position, homingPerformance * Time.deltaTime);
 						look.y = 0;
 						transform.rotation = Quaternion.LookRotation(look);
-						guidedPerformance += Time.deltaTime * 30f;
+						homingPerformance += Time.deltaTime * 30f;
 					}
 					else
 					{
@@ -59,7 +63,7 @@ public class UnityBall : MonoBehaviour
 		lastExplosionDamage = explosionDamage;
 	}
 	public virtual void OnActiveGuided() {
-		guided = true;
+		isHoming = true;
 	}
 	protected virtual void OnDisable()
 	{
@@ -71,31 +75,30 @@ public class UnityBall : MonoBehaviour
 		}
 		// 초기화 해줘야함 변수
 	}
-	protected virtual void OnCollisionEnter(Collision collision)
+	protected virtual void OnTriggerEnter(Collider other)
 	{
-		print("Unity Ball hit the " + collision.gameObject.name);
-		if (collision.gameObject.layer == 8)
+		print("Unity Ball hit the " + other.gameObject.name);
+		if (other.gameObject.layer == 8)
 		{
-			IDamageable target = collision.gameObject.GetComponent<IDamageable>();
+			IDamageable target = other.gameObject.GetComponent<IDamageable>();
 			Damage damage = new Damage(
 				gameObject,
 				damageAmount,
-				.4f,
-				(collision.transform.position - transform.position).normalized * 1.5f,
+				.5f,
+				(other.transform.position - transform.position).normalized * 10f,
 				Damage.DamageType.Normal
 			);
 			target.OnDamage(damage);
 			for (int i = 0; i < attachments.Count; i++)
 			{
-				IAttachable attachable = collision.gameObject.GetComponent<IAttachable>();
+				IAttachable attachable = other.gameObject.GetComponent<IAttachable>();
 				attachable.AddAttachment(attachments[i]);
 			}
 			gameObject.SetActive(false);
 		}
 	}
-	protected void OnTriggerEnter(Collider other)
-	{
-		if (guided)
+	protected void OnDetectHomingTarget(Collider other) {
+		if (isHoming)
 		{
 			if (other.gameObject.layer == 8)
 			{
@@ -106,9 +109,8 @@ public class UnityBall : MonoBehaviour
 			}
 		}
 	}
-	protected void OnTriggerExit(Collider other)
-	{
-		if (guided)
+	protected void OnLostHomingTarget(Collider other) {
+		if (isHoming)
 		{
 			if (other.gameObject.layer == 8)
 			{

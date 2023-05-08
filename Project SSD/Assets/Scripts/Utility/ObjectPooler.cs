@@ -15,7 +15,7 @@ public class ObjectPooler {
     public Action<GameObject> onInPool;
     public Action<GameObject> onOutPool;
     
-    public ObjectPooler(GameObject poolingObject, Action<GameObject> onInPool, Action<GameObject> onOutPool, int count=10, int restoreCount=5, Transform parent=null) {
+    public ObjectPooler(GameObject poolingObject, Action<GameObject> onInPool=null, Action<GameObject> onOutPool=null, Transform parent=null, int count=10, int restoreCount=5) {
         this.poolingObject = poolingObject;
         this.parent = parent;
         this.onInPool = onInPool;

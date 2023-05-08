@@ -29,7 +29,7 @@ public class UnityHubBall : UnityBall
 			GameObject obj = Instantiate(unityballOrigin, transform.position, Quaternion.Euler(0, y, 0));
 			UnityBall temp = obj.GetComponent<UnityBall>();
 			temp.OnActive(damageAmount, speed);
-			if (guided)
+			if (isHoming)
 			{
 				temp.OnActiveGuided();
 			}

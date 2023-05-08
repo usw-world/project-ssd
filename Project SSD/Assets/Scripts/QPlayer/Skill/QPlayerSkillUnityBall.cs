@@ -18,7 +18,7 @@ public class QPlayerSkillUnityBall : Skill
 	public float option04_explosionDamageAmount;
 	public float option05_increasingSpeed;
 	public GameObject option06_effect;
-	public float option06_childDamegeAmout;
+	public float option06_childDamegeAmount;
 	public GameObject option07_effect;
 	public float option07_increasingSize;
 	public float option07_increasingSkillPower;
@@ -26,32 +26,32 @@ public class QPlayerSkillUnityBall : Skill
 	float DamageAmout {
 		get {
 			float amount = QPlayer.instance.GetAP(); // 여기서 버프 계산 해서 가져오면댐
-			amount *= property.skillAP / 100f;															
-			amount *= 1f + ((options[0].active) ? option00_increasingSkillPower / 100f : 0);			
-			amount *= 1f + ((options[7].active) ? option07_increasingSkillPower / 100f : 0);			
-			amount *= ((options[6].active) ? option06_childDamegeAmout / 100f : 1f);
+			amount *= property.skillAP * 0.01f;															
+			amount *= 1f + ((options[0].active) ? option00_increasingSkillPower * 0.01f : 0);			
+			amount *= 1f + ((options[7].active) ? option07_increasingSkillPower * 0.01f : 0);			
+			amount *= ((options[6].active) ? option06_childDamegeAmount * 0.01f : 1f);
 			return amount;
 		}
 	}
 	float LastExplosionDamegeAmout{
 		get	{
 			float amount = DamageAmout;
-			amount *= 1f + option04_explosionDamageAmount / 100f;
+			amount *= 1f + option04_explosionDamageAmount * 0.01f;
 			return amount;
 		}
 	}
 	float LastSpped{
 		get	{
 			float lastSpped = speed;
-			lastSpped *= 1f + ((options[1].active) ? option01_increasingSpeed / 100f : 0);
-			lastSpped *= 1f + ((options[5].active) ? option05_increasingSpeed / 100f : 0);
+			lastSpped *= 1f + ((options[1].active) ? option01_increasingSpeed * 0.01f : 0);
+			lastSpped *= 1f + ((options[5].active) ? option05_increasingSpeed * 0.01f : 0);
 			return lastSpped;
 		}
 	}
 	Vector3 LastSize{
 		get	{
 			float size = 1f;
-			size *= 1f + ((options[7].active) ? option07_increasingSize / 100f : 0);
+			size *= 1f + ((options[7].active) ? option07_increasingSize * 0.01f : 0);
 			return Vector3.one * size;
 		}
 	}
@@ -84,7 +84,7 @@ public class QPlayerSkillUnityBall : Skill
 		{
 			Attachment attachment = new Attachment(option02_buffTime, 1f, options[2].image);
 			attachment.onStay = (gameObject) => {
-				TPlayer.instance.status.hp += DamageAmout * option02_healingAmount / 100f / 1f;
+				TPlayer.instance.status.hp += DamageAmout * option02_healingAmount * 0.01f / 1f;
 
 				if (TPlayer.instance.status.hp > TPlayer.instance.status.maxHp){
 					TPlayer.instance.status.hp = TPlayer.instance.status.maxHp;

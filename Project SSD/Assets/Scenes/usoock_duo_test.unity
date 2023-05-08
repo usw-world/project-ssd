@@ -268,6 +268,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2477873385388590290}
     m_Modifications:
+    - target: {fileID: 965079969, guid: 21b4e86d4d1498245b1cb7a921b50818, type: 3}
+      propertyPath: m_Drag
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 965079969, guid: 21b4e86d4d1498245b1cb7a921b50818, type: 3}
+      propertyPath: m_Mass
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 965079969, guid: 21b4e86d4d1498245b1cb7a921b50818, type: 3}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
     - target: {fileID: 1653327185496528104, guid: 21b4e86d4d1498245b1cb7a921b50818,
         type: 3}
       propertyPath: m_Name
@@ -1203,11 +1215,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 2477873385958449963, guid: 376dd3fae0755024ea6892e073d0115e,
-        type: 3}
-      propertyPath: enemiesSyncInterval
-      value: 0.008333334
       objectReference: {fileID: 0}
     - target: {fileID: 2477873385958449963, guid: 376dd3fae0755024ea6892e073d0115e,
         type: 3}

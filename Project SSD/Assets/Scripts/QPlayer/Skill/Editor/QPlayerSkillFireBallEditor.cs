@@ -93,9 +93,9 @@ public class QPlayerSkillUnityBallEditor : Editor
 					break;
 				case eSkillOption.option_7:
 					data.option06_effect = (GameObject)EditorGUILayout.ObjectField("투사체", data.option06_effect, typeof(GameObject), true);
-					data.option06_childDamegeAmout = EditorGUILayout.FloatField("유니티볼 피해량(%)", data.option06_childDamegeAmout);
+					data.option06_childDamegeAmount = EditorGUILayout.FloatField("유니티볼 피해량(%)", data.option06_childDamegeAmount);
 					if (data.option06_effect == null) Error("투사체'를 설정하십시오");
-					if (data.option06_childDamegeAmout <= 0) Error("'유니티볼 피해량'을 설정하십시오");
+					if (data.option06_childDamegeAmount <= 0) Error("'유니티볼 피해량'을 설정하십시오");
 					break;
 				case eSkillOption.option_8:
 					data.option07_effect = (GameObject)EditorGUILayout.ObjectField("투사체", data.option07_effect, typeof(GameObject), true);

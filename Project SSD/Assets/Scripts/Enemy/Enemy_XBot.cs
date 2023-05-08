@@ -15,6 +15,7 @@ class Enemy_XBot : MovableEnemy {
     }
     private State assaultState = new State("Assault");
     private State jumpAttackState = new State("Jump Attack");
+    private State hitState = new State("Hit");
     private State dieState = new State("Die");
     #endregion States
 
@@ -34,6 +35,10 @@ class Enemy_XBot : MovableEnemy {
     [SerializeField] private GameObject assaultEffect;
     #endregion Assault Attack
 
+    #region Hit
+    private Coroutine hitCoroutine;
+    #endregion Hit
+
     #region Unity Events
     protected override void Awake() {
         base.Awake();
@@ -50,7 +55,7 @@ class Enemy_XBot : MovableEnemy {
                 }
                 StartCoroutine(OutPoolParticle());
                 go.SetActive(true);
-            }
+            }, transform, 2, 1
         );
     }
     protected override void Start() {
@@ -87,25 +92,7 @@ class Enemy_XBot : MovableEnemy {
         };
         chaseState.onInactive += (State prevState) => {
             enemyAnimator.SetBool("Chase", false);
-        };
-        jumpAttackState.onActive += (State prevState) => {
             enemyMovement.Stop();
-            transform.LookAt(new Vector3(targetPosition.x, transform.position.y, targetPosition.z));
-            enemyAnimator.SetBool("Jump Attack", true);
-            currentJumpAttackCooltime = JUMP_ATTACK_COOLTIME;
-            jumpAttackCoroutine = StartCoroutine(JumpAttackCoroutine());
-        };
-        jumpAttackState.onInactive += (State prevState) => {
-            enemyAnimator.SetBool("Jump Attack", false);
-            StopCoroutine(jumpAttackCoroutine);
-        };
-        dieState.onActive += (State prevState) => {
-            // enemyAnimator.SetBool("Die", true);
-            enemyAnimator.enabled = false;
-        };
-        dieState.onInactive += (State prevState) => {
-            // enemyAnimator.SetBool("Die", false);
-            enemyAnimator.enabled = true;
         };
         assaultState.onActive += (State prevState) => {
             enemyMovement.Stop();
@@ -118,13 +105,40 @@ class Enemy_XBot : MovableEnemy {
                 StopCoroutine(assaultCoroutine);
             assaultEffect.SetActive(false);
         };
+        jumpAttackState.onActive += (State prevState) => {
+            enemyMovement.Stop();
+            transform.LookAt(new Vector3(targetPosition.x, transform.position.y, targetPosition.z));
+            enemyAnimator.SetBool("Jump Attack", true);
+            currentJumpAttackCooltime = JUMP_ATTACK_COOLTIME;
+            jumpAttackCoroutine = StartCoroutine(JumpAttackCoroutine());
+        };
+        jumpAttackState.onInactive += (State prevState) => {
+            enemyAnimator.SetBool("Jump Attack", false);
+            StopCoroutine(jumpAttackCoroutine);
+        };
+        hitState.onActive += (State prevState) => {
+            enemyAnimator.SetBool("Hit", true);
+        };
+        hitState.onInactive += (State nextState) => {
+            enemyAnimator.SetBool("Hit", false);
+        };
+        dieState.onActive += (State prevState) => {
+            enemyAnimator.enabled = false;
+        };
+        dieState.onInactive += (State prevState) => {
+            enemyAnimator.enabled = true;
+        };
         enemyStatesMap.Add(idleState.stateName, idleState);
         enemyStatesMap.Add(chaseState.stateName, chaseState);
         enemyStatesMap.Add(assaultState.stateName, assaultState);
         enemyStatesMap.Add(jumpAttackState.stateName, jumpAttackState);
+        enemyStatesMap.Add(hitState.stateName, hitState);
         enemyStatesMap.Add(dieState.stateName, dieState);
     }
     protected override void ChaseTarget(Vector3 point) {
+        if(enemyStateMachine.Compare(hitState))
+            return;
+
         targetPosition = point;
 
         TryAssault();
@@ -144,6 +158,7 @@ class Enemy_XBot : MovableEnemy {
         && DistanceToTarget < 8f
         && !enemyStateMachine.Compare(jumpAttackState)
         && !enemyStateMachine.Compare(assaultState)
+        && !enemyStateMachine.Compare(hitState)
         && currentJumpAttackCooltime <= 0) {
             SendChangeState(jumpAttackState);
         }
@@ -163,7 +178,8 @@ class Enemy_XBot : MovableEnemy {
     private void TryAssault() {
         if(DistanceToTarget < 5f
         && !enemyStateMachine.Compare(jumpAttackState)
-        && !enemyStateMachine.Compare(assaultState)) {
+        && !enemyStateMachine.Compare(assaultState)
+        && !enemyStateMachine.Compare(hitState)) {
             SendChangeState(assaultState, false);
         }
     }
@@ -200,6 +216,25 @@ class Enemy_XBot : MovableEnemy {
 
     public override void OnDamage(Damage damage) {
         base.OnDamage(damage);
+        if(!isDead) {
+            if(hitCoroutine != null)
+                StopCoroutine(hitCoroutine);
+            hitCoroutine = StartCoroutine(HitCoroutine(damage));
+        }
+    }
+    private IEnumerator HitCoroutine(Damage damage) {
+        float offset = 0;
+        float pushedOffset = 0;
+        Vector3 pushedDestination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
+        SendChangeState(hitState);
+        while(offset < damage.hittingDuration) {
+
+            enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World);
+            pushedOffset += Time.deltaTime * 2;
+            offset += Time.deltaTime;
+            yield return null;
+        }
+        SendChangeState(BasicState);
     }
     protected override void OnDie() {
         base.OnDie();
