@@ -20,7 +20,9 @@ abstract public class Skill : MonoBehaviour
 	public abstract bool CanUse();
 }
 public enum AimType {
-	Arrow, Area
+	None, // 기본값
+	Arrow, // 구현 안됨
+	Area // 아직 못씀
 }
 [Serializable]
 public class SkillInfo

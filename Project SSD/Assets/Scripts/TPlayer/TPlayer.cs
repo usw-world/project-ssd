@@ -453,7 +453,15 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 	public void AddAttachment(Attachment attachment) {
 		attachmentManager.AddAttachment(attachment);
 	}
-
+	public void ChangeHp(float amount)
+	{
+		status.hp += amount;
+		if (status.hp > status.maxHp)
+		{
+			status.hp = status.maxHp;
+		}
+		// UI 조작
+	}
 	void rotate(float rotSppedPoint = 1f)
 	{
 		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVector;

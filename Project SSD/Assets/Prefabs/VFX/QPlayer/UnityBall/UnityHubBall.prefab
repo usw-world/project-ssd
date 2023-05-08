@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5353631418847978452
 Transform:
   m_ObjectHideFlags: 0
@@ -111,11 +111,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d83eece576002864994f1e5ab6dfab4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  homingArea: {fileID: 8386691693811819026}
   lastExplosionPrefab: {fileID: 7052915477074928549, guid: f59c0b6cd85a1b54e9f921a76c1894d0,
     type: 3}
-  homingArea: {fileID: 8386691693811819026}
-  unityballOrigin: {fileID: 2032450023845943245, guid: 5724183b7f2bfe14ab7f01e3ec1ce8db,
-    type: 3}
+  poolerKey: unityHubBall
+  subUnityBallPoolerKey: unityBall
 --- !u!1 &8303189062663395904
 GameObject:
   m_ObjectHideFlags: 0

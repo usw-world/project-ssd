@@ -8,6 +8,15 @@ public class QPlayerSkillUnityBall : Skill
 {
 	public SkillOptionInformation[] options = new SkillOptionInformation[8];
 
+	private const string unityBallPoolerKey = "unityBall";
+	private const string unityHubBallPoolerKey = "unityHubBall";
+	private const string unityBaaaallPoolerKey = "unityBaaaall";
+	private const string unityBallLastExplosionPoolerKey = "unityBallLastExplosion";
+
+	SkillOptionInformation ww = new SkillOptionInformation() {
+		active = false, name = "temp"
+	};
+
 	public float speed;
 	public float option00_increasingSkillPower;
 	public float option01_increasingSpeed;
@@ -16,6 +25,7 @@ public class QPlayerSkillUnityBall : Skill
 	public float option03_debuffTime;
 	public float option03_damageAmount;
 	public float option04_explosionDamageAmount;
+	public GameObject option04_effect;
 	public float option05_increasingSpeed;
 	public GameObject option06_effect;
 	public float option06_childDamegeAmount;
@@ -55,6 +65,17 @@ public class QPlayerSkillUnityBall : Skill
 			return Vector3.one * size;
 		}
 	}
+	private void Start()
+	{
+		info.effect.GetComponent<UnityBall>().lastExplosionPoolerKey = unityBallLastExplosionPoolerKey;
+		option06_effect.GetComponent<UnityBall>().lastExplosionPoolerKey = unityBallLastExplosionPoolerKey;
+		option06_effect.GetComponent<UnityHubBall>().subUnityBallPoolerKey = unityBallPoolerKey;
+		option07_effect.GetComponent<UnityBall>().lastExplosionPoolerKey = unityBallLastExplosionPoolerKey;
+		PoolerManager.instance.InsertPooler(unityBallPoolerKey, info.effect);
+		PoolerManager.instance.InsertPooler(unityHubBallPoolerKey, option06_effect);
+		PoolerManager.instance.InsertPooler(unityBaaaallPoolerKey, option07_effect);
+		PoolerManager.instance.InsertPooler(unityBallLastExplosionPoolerKey, option04_effect);
+	}
 	public override void Use(Vector3 target)
 	{
 		Vector3 sponPos = QPlayer.instance.transform.position;
@@ -64,18 +85,19 @@ public class QPlayerSkillUnityBall : Skill
 		UnityBall temp = null;
 
 		if (options[6].active){
-			obj = Instantiate(option06_effect, sponPos, Quaternion.Euler(0, 0, 0));
+			obj = PoolerManager.instance.OutPool(unityHubBallPoolerKey);
 			temp = obj.GetComponent<UnityHubBall>();
 		}
 		else if (options[7].active){
-			obj = Instantiate(option07_effect, sponPos, Quaternion.Euler(0, 0, 0));
+			obj = PoolerManager.instance.OutPool(unityBaaaallPoolerKey);
 			temp = obj.GetComponent<UnityBaaaall>();
 		}
 		else{
-			obj = Instantiate(info.effect, sponPos, Quaternion.Euler(0, 0, 0));
+
+			obj = PoolerManager.instance.OutPool(unityBallPoolerKey);
 			temp = obj.GetComponent<UnityBall>();
 		}
-
+		obj.transform.position = sponPos;
 		obj.transform.LookAt(target + Vector3.up);
 		obj.transform.localScale = LastSize;
 		temp.OnActive(DamageAmout, LastSpped);
@@ -84,11 +106,7 @@ public class QPlayerSkillUnityBall : Skill
 		{
 			Attachment attachment = new Attachment(option02_buffTime, 1f, options[2].image);
 			attachment.onStay = (gameObject) => {
-				TPlayer.instance.status.hp += DamageAmout * option02_healingAmount * 0.01f / 1f;
-
-				if (TPlayer.instance.status.hp > TPlayer.instance.status.maxHp){
-					TPlayer.instance.status.hp = TPlayer.instance.status.maxHp;
-				}
+				TPlayer.instance.ChangeHp(DamageAmout * option02_healingAmount * 0.01f / 1f);
 			};
 			TPlayer.instance.AddAttachment(attachment);
 		}
@@ -97,7 +115,7 @@ public class QPlayerSkillUnityBall : Skill
 			Attachment attachment = new Attachment(option03_debuffTime, 1f, options[3].image);
 			attachment.onStay = (gameObject) => {
 				Enemy temp = gameObject.GetComponent<Enemy>();
-				
+				// 미완성
 			};
 			temp.AddDebuff(attachment); // 매게변수로 투사체이 디버프를 추가함
 		}
@@ -110,7 +128,6 @@ public class QPlayerSkillUnityBall : Skill
 			temp.OnActiveGuided(); // 매게변수로 투사체이 디버프를 추가함
 		}
 	}
-	
 	public override bool CanUse()
 	{
 		return true;

@@ -4,11 +4,7 @@ using UnityEngine;
 
 public class UnityHubBall : UnityBall
 {
-	[SerializeField] GameObject unityballOrigin;
-	private void Update()
-	{
-		transform.Translate(Vector3.forward * Time.deltaTime * speed);
-	}
+	public string subUnityBallPoolerKey;
 	protected override void OnDisable()
 	{
 		base.OnDisable();
@@ -26,7 +22,9 @@ public class UnityHubBall : UnityBall
 				case 6: y = 270; break;
 				case 7: y = 315; break;
 			}
-			GameObject obj = Instantiate(unityballOrigin, transform.position, Quaternion.Euler(0, y, 0));
+			GameObject obj = PoolerManager.instance.OutPool(subUnityBallPoolerKey);
+			obj.transform.position = transform.position;
+			obj.transform.eulerAngles = new Vector3(0, y, 0);
 			UnityBall temp = obj.GetComponent<UnityBall>();
 			temp.OnActive(damageAmount, speed);
 			if (isHoming)

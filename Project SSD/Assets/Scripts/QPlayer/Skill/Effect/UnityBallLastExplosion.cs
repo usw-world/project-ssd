@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnityBallLastExplosion : MonoBehaviour
+public class UnityBallLastExplosion : SkillEffect
 {
 	public void OnActive(float damageAmount) {
 		Collider[] hit = null;
@@ -19,9 +19,11 @@ public class UnityBallLastExplosion : MonoBehaviour
 			);
 			target?.OnDamage(damage);
 		}
-		Invoke("Hide", 1f);
+		StartCoroutine(Hide());
 	}
-	void Hide() {
-		gameObject.SetActive(false);
+	protected IEnumerator Hide()
+	{
+		yield return new WaitForSeconds(1f);
+		PoolerManager.instance.InPool(poolerKey, gameObject);
 	}
 }

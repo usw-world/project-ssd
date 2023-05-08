@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 5208415891999506319}
   - component: {fileID: 5208415891999506304}
   - component: {fileID: 5208415891999506305}
-  - component: {fileID: 5208415891999506306}
   - component: {fileID: 5208415891999506317}
   m_Layer: 0
   m_Name: UnityBaaaall
@@ -20,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5208415891999506318
 Transform:
   m_ObjectHideFlags: 0
@@ -94,23 +93,10 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5208415891999506307}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &5208415891999506306
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5208415891999506307}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &5208415891999506317
 MonoBehaviour:
@@ -124,5 +110,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ddbff04500f8f648b7471d6a90e84b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lastExplosionPrefab: {fileID: 7052915477074928549, guid: f59c0b6cd85a1b54e9f921a76c1894d0,
-    type: 3}
+  poolerKey: unityBaaaall
+  homingArea: {fileID: 0}
+  lastExplosionPoolerKey: unityBallLastExplosion

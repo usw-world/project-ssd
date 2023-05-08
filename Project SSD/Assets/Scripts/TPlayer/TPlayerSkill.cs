@@ -15,8 +15,6 @@ public class TPlayerSkill : Skill
 		if (info.effect != null)
 		{
 			GameObject temp = Instantiate(info.effect);
-			SkillEffect skillEffect = temp.GetComponent<SkillEffect>();
-			skillEffect.OnActive(property);
 		}
 	}
 	public override bool CanUse()

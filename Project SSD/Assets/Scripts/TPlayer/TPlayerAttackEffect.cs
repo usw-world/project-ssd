@@ -21,10 +21,8 @@ public class TPlayerAttackEffect : SkillEffect
 		gameObject.SetActive(false);
 		targets.Clear();
 	}
-	public override void OnActive(SkillProperty property)
+	public void OnActive(SkillProperty property)
 	{
-		this.property = property;
-
 		transform.parent = tPlayer.transform;
 		transform.localPosition = localPos;
 		transform.localEulerAngles = localRot;
@@ -34,7 +32,6 @@ public class TPlayerAttackEffect : SkillEffect
 
 		Vector3 position = Vector3.zero;
 		Collider[] hit = null;
-		GameObject testobj = null;
 
 		switch (mode)
 		{
@@ -68,28 +65,8 @@ public class TPlayerAttackEffect : SkillEffect
 					GameObject temp = Instantiate(hitEffect, hit[i].transform);
 					temp.transform.position += Vector3.up;
 					temp.transform.parent = null;
-					SkillEffect skillEffect = temp.GetComponent<SkillEffect>();
-					skillEffect.OnActive(property);
 				}
 				
-			}
-		}
-
-		if (testing)
-		{
-			switch (mode)
-			{
-				case Mode.Nomal:
-					testobj = Instantiate(test, position, tPlayer.transform.rotation);
-					testobj.transform.localScale = damageZoneSize;
-					break;
-				case Mode.Dodge:
-					testobj = Instantiate(test, position, tPlayer.transform.rotation);
-					testobj.transform.localScale = damageZoneSize;
-					testobj.transform.parent = tPlayer.transform;
-					testobj.transform.localPosition = localPos;
-					testobj.transform.parent = null;
-					break;
 			}
 		}
 	}

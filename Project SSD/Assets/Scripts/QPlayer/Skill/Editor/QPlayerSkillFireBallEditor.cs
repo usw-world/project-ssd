@@ -21,7 +21,7 @@ public class QPlayerSkillUnityBallEditor : Editor
 	}
 	public override void OnInspectorGUI()
 	{
-		// base.OnInspectorGUI(); return;
+		//base.OnInspectorGUI(); return;
 		//serializedObject.Update();
 		EditorGUILayout.HelpBox("QPlayer의 스킬 Unity Ball을 설정합니다.", MessageType.None);
 
@@ -84,6 +84,7 @@ public class QPlayerSkillUnityBallEditor : Editor
 					if (data.option03_damageAmount <= 0) Error("'총 데미지량(%)'을 설정하십시오");
 					break;
 				case eSkillOption.option_5:
+					data.option04_effect = (GameObject)EditorGUILayout.ObjectField("투사체", data.option04_effect, typeof(GameObject), true);
 					data.option04_explosionDamageAmount = EditorGUILayout.FloatField("폭발 총 데미지량(%)", data.option04_explosionDamageAmount);
 					if (data.option04_explosionDamageAmount <= 0) Error("'폭발 총 데미지량'을 설정하십시오");
 					break;

@@ -138,7 +138,7 @@ MonoBehaviour:
       \uD2C8\uC774 \uBC1C\uC0DD\uD558\uACE0 \uD130\uC9C0\uBA74\uC11C \uB370\uBBF8\uC9C0\uB97C
       \uC900\uB2E4"
     image: {fileID: 21300000, guid: 70632ddfe8e71b04b8f90ef7e29a9e98, type: 3}
-    active: 0
+    active: 1
   - name: LooaAt
     info: "\uC720\uB3C4\uAE30\uB2A5\uC774 \uCD94\uAC00\uB418\uACE0 \uAD6C\uCCB4\uC758
       \uC18D\uB3C4\uAC00 \uBE68\uB77C\uC9C4\uB2E4"
@@ -149,7 +149,7 @@ MonoBehaviour:
       8\uAC1C \uC0DD\uC131\uD558\uB294 \uC720\uB2C8\uD2F0 \uD5C8\uBE0C \uBCFC\uC744
       \uBC1C\uC0AC\uD55C\uB2E4"
     image: {fileID: 21300000, guid: 9c0d6ec706e01ce448aea81584af092b, type: 3}
-    active: 1
+    active: 0
   - name: "\uC720\uB2C8\uD2F0\uBCF4\uC624\uC624\uC624\uC62C"
     info: "\uAC70\uB300\uD55C \uC720\uB2C8\uD2F0 \uBCF4\uC624\uC624\uC624\uC62C\uC744
       \uB0A0\uB9B0\uB2E4. \uD22C\uC0AC\uCCB4 \uC18D\uB3C4\uAC00 50% \uAC10\uC18C\uD55C\uB2E4"
@@ -163,10 +163,12 @@ MonoBehaviour:
   option03_debuffTime: 10
   option03_damageAmount: 200
   option04_explosionDamageAmount: 150
+  option04_effect: {fileID: 7052915477074928549, guid: f59c0b6cd85a1b54e9f921a76c1894d0,
+    type: 3}
   option05_increasingSpeed: 50
   option06_effect: {fileID: 5353631418847978442, guid: e8968dc41ca70b640b5a91a8fa54e31b,
     type: 3}
-  option06_childDamegeAmout: 40
+  option06_childDamegeAmount: 0
   option07_effect: {fileID: 5208415891999506307, guid: 9316b71799d9a2d42bc34870a2948e4e,
     type: 3}
   option07_increasingSize: 300
@@ -180,7 +182,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 990334919}
-  - component: {fileID: 856052367}
   m_Layer: 0
   m_Name: summor
   m_TagString: Untagged
@@ -203,36 +204,6 @@ Transform:
   m_Father: {fileID: 1539545108}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &856052367
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 990334917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5edba3878bc0ee647b41b950c2a476e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  aimType: 0
-  info:
-    effect: {fileID: 8879756263098929072, guid: fe517be71bb97c743b1aaad2d4aea1ed,
-      type: 3}
-    skillImage: {fileID: 0}
-    skillText: 
-    name: 
-  area:
-    distance: 7
-    range: 1
-  property:
-    coolTime: 0
-    skillAP: 1
-    nowCoolTime: 100
-    ready: 1
-    quickUse: 0
-  summonSkillEffect: {fileID: 0}
-  summonTime: 0
 --- !u!1 &1040615814
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,7 +213,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1040615816}
-  - component: {fileID: 2081595232}
   m_Layer: 0
   m_Name: single point explosion
   m_TagString: Untagged
@@ -265,37 +235,6 @@ Transform:
   m_Father: {fileID: 1539545108}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2081595232
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1040615814}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca2bd36bb88c2b1458d68b90eb61f574, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  aimType: 0
-  info:
-    effect: {fileID: 7914343134612545691, guid: 15db96d5853af92449b3b0370147a634,
-      type: 3}
-    skillImage: {fileID: 0}
-    skillText: 
-    name: 
-  area:
-    distance: 8
-    range: 6
-  property:
-    coolTime: 0
-    skillAP: 1
-    nowCoolTime: 100
-    ready: 1
-    quickUse: 0
-  castingSkillEffect: {fileID: 6731655942466549401, guid: 620e1dd78d57d4c40adce9ff541b25d5,
-    type: 3}
-  castingTime: 2
 --- !u!1 &1063546360
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,7 +244,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1063546362}
-  - component: {fileID: 1063546363}
   m_Layer: 0
   m_Name: FireBall_2
   m_TagString: Untagged
@@ -328,55 +266,6 @@ Transform:
   m_Father: {fileID: 1539545108}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1063546363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1063546360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95ad2f710dc28e141a3d13554c319eaf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  aimType: 0
-  info:
-    effect: {fileID: 7052915477074928549, guid: ebc7358d07c4fa3498b7618b1a88830d,
-      type: 3}
-    skillImage: {fileID: 0}
-    skillText: 
-    name: 
-  area:
-    distance: 6
-    range: 3
-  property:
-    coolTime: 0
-    skillAP: 1
-    nowCoolTime: 100
-    ready: 1
-    quickUse: 0
-  speed: 0
-  isMultiple: 0
-  multipleCount: 0
-  multipleInterval: 0
-  isPenetration: 0
-  penetrationCount: 0
-  isContinuation: 0
-  continuationTime: 0
-  isDebuff: 0
-  debuffTime: 0
-  debuffAmount: 0
-  isChain: 0
-  chainCount: 0
-  chainInterval: 0
-  isCasting: 0
-  castingEffect: {fileID: 0}
-  castingTime: 0
-  isBuff: 0
-  buffTime: 0
-  buffAmount: 0
-  usingSp: 0
 --- !u!1 &1539545107
 GameObject:
   m_ObjectHideFlags: 0
@@ -2681,9 +2570,9 @@ MonoBehaviour:
     type: 3}
   skills:
   - {fileID: 815916524}
-  - {fileID: 1063546363}
-  - {fileID: 856052367}
-  - {fileID: 2081595232}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   skillDistanceDecal: {fileID: 133424475}
   skillTargetAreaDecal: {fileID: 1915510282}
 --- !u!114 &2136718357887273198

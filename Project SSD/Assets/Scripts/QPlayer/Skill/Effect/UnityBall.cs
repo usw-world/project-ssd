@@ -2,29 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnityBall : MonoBehaviour
+public class UnityBall : SkillEffect
 {
-	[SerializeField]protected GameObject lastExplosionPrefab;
-	protected List<Transform> targets = new List<Transform>();
+	[SerializeField] protected CollisionEventHandler homingArea;
 	protected List<Attachment> attachments = new List<Attachment>();
+	protected List<Transform> targets = new List<Transform>();
 	protected float runTime = 2f;
 	protected float damageAmount;
 	protected float speed;
 	protected float homingPerformance = .1f;
 	protected float lastExplosionDamage;
-	protected bool lastExplosion = false;
+	protected bool isLastExplosion = false;
 	protected bool isHoming = false;
-	[SerializeField] protected CollisionEventHandler homingArea;
+	protected Coroutine hideCoroutine = null;
+	public string lastExplosionPoolerKey;
 	public virtual void OnActive(float damage, float speed)
 	{
-		Invoke("Hide", runTime);
+		hideCoroutine = StartCoroutine(Hide());
 		this.damageAmount = damage;
 		this.speed = speed;
-
-		homingArea.onTriggerEnter += OnDetectHomingTarget;
-		homingArea.onTriggerExit += OnDetectHomingTarget;
 	}
-	private void Update()
+	protected void Start()
+	{
+		if (homingArea != null)
+		{
+			homingArea.onTriggerEnter += OnDetectHomingTarget;
+			homingArea.onTriggerExit += OnDetectHomingTarget;
+		}
+	}
+	protected void Update()
 	{
 		if (isHoming)
 		{
@@ -52,32 +58,41 @@ public class UnityBall : MonoBehaviour
 		}
 		transform.Translate(Vector3.forward * Time.deltaTime * speed);
 	}
-	public void Hide() {
+	protected IEnumerator Hide() {
+		yield return new WaitForSeconds(runTime);
 		gameObject?.SetActive(false);
 	}
 	public virtual void AddDebuff(Attachment attachment) {
 		attachments.Add(attachment);
 	}
 	public virtual void AddLastExplosion(float explosionDamage) {
-		lastExplosion = true;
+		isLastExplosion = true;
 		lastExplosionDamage = explosionDamage;
 	}
-	public virtual void OnActiveGuided() {
+	public virtual void OnActiveGuided(){
 		isHoming = true;
 	}
 	protected virtual void OnDisable()
 	{
-		if (lastExplosion)
+		if (isLastExplosion)
 		{
-			GameObject temp = Instantiate(lastExplosionPrefab, transform.position, Quaternion.Euler(0, 0, 0));
-			temp.transform.localScale = transform.localScale;
-			temp.GetComponent<UnityBallLastExplosion>().OnActive(lastExplosionDamage);
+			GameObject obj = PoolerManager.instance.OutPool(lastExplosionPoolerKey);
+			obj.transform.position = transform.position;
+			obj.transform.localScale = transform.localScale;
+			obj.GetComponent<UnityBallLastExplosion>().OnActive(lastExplosionDamage);
 		}
-		// 초기화 해줘야함 변수
+		if (hideCoroutine != null) StopCoroutine(hideCoroutine);
+		hideCoroutine = null;
+		isLastExplosion = false;
+		isHoming = false;
+		homingPerformance = .1f;
+		attachments.Clear();
+		targets.Clear();
+		PoolerManager.instance.InPool(poolerKey, gameObject);
 	}
 	protected virtual void OnTriggerEnter(Collider other)
 	{
-		print("Unity Ball hit the " + other.gameObject.name);
+		//print("Unity Ball hit the " + other.gameObject.name);
 		if (other.gameObject.layer == 8)
 		{
 			IDamageable target = other.gameObject.GetComponent<IDamageable>();
