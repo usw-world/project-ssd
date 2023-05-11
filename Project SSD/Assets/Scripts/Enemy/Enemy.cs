@@ -43,9 +43,10 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         Initialize();
     }
     protected virtual void Update() {}
-    public void Initialize() {
+    private void Initialize() {
         StartCoroutine(UpdateTargetCoroutine());
     }
+    
     private IEnumerator UpdateTargetCoroutine() {
         while(!isDead) {
             Collider[] inners = Physics.OverlapSphere(transform.position, detectRange, 1<<7);
@@ -81,13 +82,17 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         }
     }
     public virtual void OnDamage(Damage damage) {
+        print("OnDamage was called.");
+        if(SSDNetworkManager.instance.isHost) {
+            var message = new S2CMessage.DamageMessage(this.networkId, damage);
+            NetworkServer.SendToAll(message);
+            print("Sended damage message.");
+        }
+    }
+    public virtual void TakeDamage(Damage damage) {
         hp -= damage.amount;
         if(hp <= 0) {
             OnDie();
         }
-    }
-    private void SendDamageMessage() {
-        var message = new S2CMessage.DamageMessage();
-        NetworkClient.Send(message);
     }
 }

@@ -91,8 +91,6 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
         ani = GetComponent<Animator>();
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
-		if(isLocalPlayer)
-        	Cursor.lockState = CursorLockMode.Locked;
     }
     private void Start()
 	{
@@ -115,6 +113,8 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		sliderSP.maxValue = status.maxSp;
 
 		InitializeCamera();
+		if(isLocalPlayer)
+        	Cursor.lockState = CursorLockMode.Locked;
 	}
 
     private void InitializeCamera() {
@@ -211,7 +211,7 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 			status.Update();
 		};
         moveState.onStay = () => {
-			rotate();
+			Rotate();
 			if (isRush)
 			{
 				if (status.sp > 0)
@@ -371,7 +371,7 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		if (stateMachine.currentState == damageState ||
             stateMachine.currentState == downState ||
 			stateMachine.currentState == dodgeState ) return;
-		if (lookVector != Vector3.zero) rotate(10f); 
+		if (lookVector != Vector3.zero) Rotate(10f); 
 		ChangeState(dodgeState, false);
 		skill.dodge.Use();
 	}
@@ -399,7 +399,7 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 
         isCanAttack = false;
 
-        if (lookVector != Vector3.zero) rotate(10f);
+        if (lookVector != Vector3.zero) Rotate(10f);
 
 		extraMovingPoint = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
 		ChangeState(attackStateGroup[attackCount], false);
@@ -534,7 +534,7 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		}
 		// UI 조작
 	}
-	void rotate(float rotSppedPoint = 1f)
+	void Rotate(float rotSppedPoint = 1f)
 	{
 		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVector;
 		Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotateSpeed * rotSppedPoint * Time.deltaTime);
@@ -682,7 +682,7 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 			offset += Time.deltaTime * 6f;
 			extraMovingPoint.y = transform.position.y;
 			Vector3 dir = Vector3.Lerp(transform.position, extraMovingPoint, Time.deltaTime * 10f) - transform.position;
-			movement.MoveToward(dir, Space.World);
+			movement.MoveToward(dir, Space.World, 5<<6);
 			yield return null;
 		}
 	}

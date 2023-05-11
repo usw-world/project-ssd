@@ -21,6 +21,9 @@ public class TPlayerAttackEffect : MonoBehaviour
 		gameObject.SetActive(false);
 		targets.Clear();
 	}
+	private void Start() {
+		OnActive(new SkillProperty());
+	}
 	public void OnActive(SkillProperty property)
 	{
 		transform.parent = tPlayer.transform;

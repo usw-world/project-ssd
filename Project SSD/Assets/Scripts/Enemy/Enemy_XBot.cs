@@ -208,14 +208,20 @@ class Enemy_XBot : MovableEnemy {
         /* << temporary */
     }
     public void AnimationEvent_OnEndCrouch() {
-        enemyAnimator.SetBool("Assault Crouch", false);
-        assaultEffect.SetActive(true);
-        assaultCoroutine = StartCoroutine(AssaultCoroutine());
+        if(enemyStateMachine.Compare(assaultState)) {
+            
+            enemyAnimator.SetBool("Assault Crouch", false);
+            assaultEffect.SetActive(true);
+            assaultCoroutine = StartCoroutine(AssaultCoroutine());
+        }
     }
     #endregion Animation Events
 
     public override void OnDamage(Damage damage) {
         base.OnDamage(damage);
+    }
+    public override void TakeDamage(Damage damage) {
+        base.TakeDamage(damage);
         if(!isDead) {
             if(hitCoroutine != null)
                 StopCoroutine(hitCoroutine);

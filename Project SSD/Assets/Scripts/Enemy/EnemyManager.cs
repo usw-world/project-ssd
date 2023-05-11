@@ -12,8 +12,6 @@ public class EnemyManager : MonoBehaviour {
     private bool isHost = false;
 
     [SerializeField] private List<Enemy> enemiesInScene;
-
-    Queue<Enemy> registerQueue;
     
     private void Awake() {
         if(instance == null)
@@ -29,6 +27,7 @@ public class EnemyManager : MonoBehaviour {
         
         CollectEnemies();
         NumberToEnemies();
+        RegisterMessageHandlers();
     }
     private void CollectEnemies() {
         List<Enemy> enemies = new List<Enemy>(transform.GetComponentsInChildren<Enemy>());
@@ -41,6 +40,9 @@ public class EnemyManager : MonoBehaviour {
         for(int i=0; i<enemiesInScene.Count; i++) {
             enemiesInScene[i].networkId = i;
         }
+    }
+    private void RegisterMessageHandlers() {
+        NetworkClient.RegisterHandler<S2CMessage.DamageMessage>(OnDamageMessage);
     }
     private void Update() {
         if(isHost) {
@@ -65,5 +67,9 @@ public class EnemyManager : MonoBehaviour {
     }
     public void ChangeEnemyState(int networkId, string stateName) {
         enemiesInScene[networkId].ChangeState(stateName);
+    }
+    private void OnDamageMessage(S2CMessage.DamageMessage message) {
+        int targetIndex = message.networkId;
+        enemiesInScene[targetIndex].TakeDamage(message.damage);
     }
 }

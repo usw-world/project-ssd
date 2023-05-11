@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnityBall : MonoBehaviour, IPoolerableObject
+public class UnityBall : SkillEffect, IPoolable
 {
 	[SerializeField] protected CollisionEventHandler homingArea;
 	protected List<Attachment> attachments = new List<Attachment>();
@@ -15,8 +15,16 @@ public class UnityBall : MonoBehaviour, IPoolerableObject
 	protected bool isLastExplosion = false;
 	protected bool isHoming = false;
 	protected Coroutine hideCoroutine = null;
-	protected string lastExplosionKey;
-	public virtual void OnActive(float damage, float speed)
+	public string lastExplosionPoolerKey;
+
+	private string poolingKey;
+
+    public string Key {
+		get => poolingKey;
+		set => poolingKey = value;
+	}
+
+    public virtual void OnActive(float damage, float speed)
 	{
 		hideCoroutine = StartCoroutine(Hide());
 		this.damageAmount = damage;

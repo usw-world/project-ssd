@@ -2570,9 +2570,6 @@ MonoBehaviour:
     type: 3}
   skills:
   - {fileID: 815916524}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   skillDistanceDecal: {fileID: 133424475}
   skillTargetAreaDecal: {fileID: 1915510282}
 --- !u!114 &2136718357887273198

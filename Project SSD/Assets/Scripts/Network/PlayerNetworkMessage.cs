@@ -63,8 +63,12 @@ namespace S2CMessage {
     }
 
     public struct DamageMessage : NetworkMessage {
-        string networkId;
-        Damage damage;
+        public int networkId;
+        public Damage damage;
+        public DamageMessage(int networkId, Damage damage) {
+            this.networkId = networkId;
+            this.damage = damage;
+        }
     }
 }
 public struct Position {
