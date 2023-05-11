@@ -8,14 +8,10 @@ public class QPlayerSkillUnityBall : Skill
 {
 	public SkillOptionInformation[] options = new SkillOptionInformation[8];
 
-	private const string unityBallPoolerKey = "unityBall";
-	private const string unityHubBallPoolerKey = "unityHubBall";
-	private const string unityBaaaallPoolerKey = "unityBaaaall";
-	private const string unityBallLastExplosionPoolerKey = "unityBallLastExplosion";
-
-	SkillOptionInformation ww = new SkillOptionInformation() {
-		active = false, name = "temp"
-	};
+	string infoEffectKey;
+	string option04_effectKey;
+	string option06_effectKey;
+	string option07_effectKey;
 
 	public float speed;
 	public float option00_increasingSkillPower;
@@ -67,14 +63,19 @@ public class QPlayerSkillUnityBall : Skill
 	}
 	private void Start()
 	{
-		info.effect.GetComponent<UnityBall>().lastExplosionPoolerKey = unityBallLastExplosionPoolerKey;
-		option06_effect.GetComponent<UnityBall>().lastExplosionPoolerKey = unityBallLastExplosionPoolerKey;
-		option06_effect.GetComponent<UnityHubBall>().subUnityBallPoolerKey = unityBallPoolerKey;
-		option07_effect.GetComponent<UnityBall>().lastExplosionPoolerKey = unityBallLastExplosionPoolerKey;
-		PoolerManager.instance.InsertPooler(unityBallPoolerKey, info.effect);
-		PoolerManager.instance.InsertPooler(unityHubBallPoolerKey, option06_effect);
-		PoolerManager.instance.InsertPooler(unityBaaaallPoolerKey, option07_effect);
-		PoolerManager.instance.InsertPooler(unityBallLastExplosionPoolerKey, option04_effect);
+		infoEffectKey = info.effect.GetComponent<IPoolerableObject>().GetKey();
+
+		option04_effectKey = option04_effect.GetComponent<IPoolerableObject>().GetKey();
+
+		option06_effectKey = option06_effect.GetComponent<IPoolerableObject>().GetKey();
+		option06_effect.GetComponent<UnityHubBall>().SetSubObjectKey(infoEffectKey);
+
+		option07_effectKey = option07_effect.GetComponent<IPoolerableObject>().GetKey();
+
+		PoolerManager.instance.InsertPooler(infoEffectKey, info.effect, false);
+		PoolerManager.instance.InsertPooler(option04_effectKey, option04_effect, false);
+		PoolerManager.instance.InsertPooler(option06_effectKey, option06_effect, false);
+		PoolerManager.instance.InsertPooler(option07_effectKey, option07_effect, false);
 	}
 	public override void Use(Vector3 target)
 	{
@@ -85,16 +86,16 @@ public class QPlayerSkillUnityBall : Skill
 		UnityBall temp = null;
 
 		if (options[6].active){
-			obj = PoolerManager.instance.OutPool(unityHubBallPoolerKey);
+			obj = PoolerManager.instance.OutPool(option06_effectKey);
 			temp = obj.GetComponent<UnityHubBall>();
 		}
 		else if (options[7].active){
-			obj = PoolerManager.instance.OutPool(unityBaaaallPoolerKey);
+			obj = PoolerManager.instance.OutPool(option07_effectKey);
 			temp = obj.GetComponent<UnityBaaaall>();
 		}
 		else{
 
-			obj = PoolerManager.instance.OutPool(unityBallPoolerKey);
+			obj = PoolerManager.instance.OutPool(infoEffectKey);
 			temp = obj.GetComponent<UnityBall>();
 		}
 		obj.transform.position = sponPos;
@@ -121,7 +122,7 @@ public class QPlayerSkillUnityBall : Skill
 		}
 		if (options[4].active)
 		{
-			temp.AddLastExplosion(LastExplosionDamegeAmout); // 매게변수로 투사체이 디버프를 추가함
+			temp.AddLastExplosion(option04_effectKey, LastExplosionDamegeAmout); // 매게변수로 투사체이 디버프를 추가함
 		}
 		if (options[5].active)
 		{

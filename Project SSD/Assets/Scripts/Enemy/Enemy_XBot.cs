@@ -204,7 +204,7 @@ class Enemy_XBot : MovableEnemy {
     }
     public void AnimationEvent_OnJumpAttackAction() {
         /* temporary >> */
-        jumpAttackParticlePooler.OutPool(jumpAttackParticlePoint.position, Quaternion.identity, null);
+        jumpAttackParticlePooler.OutPool(jumpAttackParticlePoint.position, Quaternion.identity);
         /* << temporary */
     }
     public void AnimationEvent_OnEndCrouch() {

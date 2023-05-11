@@ -30,4 +30,6 @@ public class TPlayerInput : MonoBehaviour
 	void OnConvertWalkRun() => player.OnMoveSpeedConvert();
 	void OnStartRush() => player.OnRunToRush();
 	void OnEndRush() => player.OnRushToRun();
+	void OnStartCharging() => player.OnChargingStart();
+	void OnEndCharging() => player.OnChargingEnd();
 }

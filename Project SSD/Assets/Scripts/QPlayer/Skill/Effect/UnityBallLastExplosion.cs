@@ -2,8 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnityBallLastExplosion : SkillEffect
+public class UnityBallLastExplosion : MonoBehaviour, IPoolerableObject
 {
+	public string GetKey()
+	{
+		return GetType().ToString();
+	}
+
 	public void OnActive(float damageAmount) {
 		Collider[] hit = null;
 		hit = Physics.OverlapSphere(transform.position, transform.localScale.x, 1 << 8);
@@ -24,6 +29,6 @@ public class UnityBallLastExplosion : SkillEffect
 	protected IEnumerator Hide()
 	{
 		yield return new WaitForSeconds(1f);
-		PoolerManager.instance.InPool(poolerKey, gameObject);
+		PoolerManager.instance.InPool(GetKey(), gameObject);
 	}
 }

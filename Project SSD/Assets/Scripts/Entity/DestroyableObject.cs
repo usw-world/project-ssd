@@ -28,7 +28,7 @@ public class DestroyableObject: MonoBehaviour, IDamageable {
                 rb.isKinematic = false;
                 rb.AddForce(damage.forceVector, ForceMode.VelocityChange);
             }
-			gameObject.layer = 1<<9;
+			gameObject.layer = 9;
 			GetComponent<Collider>().enabled = false;
         }
 

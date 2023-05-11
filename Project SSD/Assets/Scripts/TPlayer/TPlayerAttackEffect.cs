@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TPlayerAttackEffect : SkillEffect
+public class TPlayerAttackEffect : MonoBehaviour
 {
 	public GameObject test;
 	public bool testing = false;

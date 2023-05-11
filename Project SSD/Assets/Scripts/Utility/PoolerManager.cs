@@ -8,52 +8,55 @@ public class PoolerManager : MonoBehaviour
 
     private Dictionary<string, ObjectPooler> poolers = new Dictionary<string, ObjectPooler>();
 
+	private List<string> destroyedKeys = new List<string>();
     private void Awake()
 	{
         if (instance == null)
             instance = this;
         else Destroy(gameObject);
     }
-    public void InsertPooler(string key, GameObject prefab) {
+    public void InsertPooler(string key, GameObject prefab, bool destroy) {
         if (!poolers.ContainsKey(key))
         {
             poolers.Add(key, new ObjectPooler(prefab));
-            print($"{key}풀러 등록 성공!");
-        }
-        else
-        {
-            print($"{key}는 이미 저장되어 있습니다");
+			if (destroy)
+			{
+				destroyedKeys.Add(key);
+			}
         }
     }
     public void InPool(string key, GameObject target)
     {
 		if (poolers.ContainsKey(key))
 		{
-            target.SetActive(false);
             ObjectPooler temp = poolers[key];
             temp.InPool(target);
-            print($"{key} InPool 성공!");
         }
-		else
-		{
-            print($"{key}는 저장되어있지 않습니다");
-		}
     }
     public GameObject OutPool(string key)
     {
+		print(key + " - OutPool");
         if (poolers.ContainsKey(key))
         {
             ObjectPooler temp = poolers[key];
             GameObject obj = temp.OutPool();
             obj.SetActive(true);
-            obj.GetComponent<SkillEffect>().poolerKey = key;
-            print($"{key} OutPool 성공!");
             return obj;
         }
-        else
-        {
-            print($"{key}는 저장되어있지 않습니다");
-            return null;
-        }
+		return null;
     }
+	public void DestroyPooler()
+	{
+		for (int i = 0; i < destroyedKeys.Count; i++)
+		{
+			ObjectPooler pooler = poolers[destroyedKeys[i]];
+			List<GameObject> temp = pooler.GetAllItem();
+			for (int j = 0; j < temp.Count; )
+			{
+				Destroy(temp[j]);
+			}
+			poolers.Remove(destroyedKeys[i]);
+		}
+		destroyedKeys.Clear();
+	}
 }

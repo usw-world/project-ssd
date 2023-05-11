@@ -34,6 +34,7 @@ public class LobbyManager : MonoBehaviour {
         SSDNetworkManager.instance.HostSession();
     }
     public void OnClickJoinButton() {
+		print("OnClickJoinButton");
         SSDNetworkManager.instance.JoinSession(addressField.text);
     }
     public void OnClickCloseRoomButton() {

@@ -5,9 +5,9 @@ using UnityEngine;
 public class UnityHubBall : UnityBall
 {
 	public string subUnityBallPoolerKey;
+
 	protected override void OnDisable()
 	{
-		base.OnDisable();
 		for (int i = 0; i < 8; i++)
 		{
 			float y = 0;
@@ -27,10 +27,16 @@ public class UnityHubBall : UnityBall
 			obj.transform.eulerAngles = new Vector3(0, y, 0);
 			UnityBall temp = obj.GetComponent<UnityBall>();
 			temp.OnActive(damageAmount, speed);
+			print("isHoming : " + isHoming);
 			if (isHoming)
 			{
 				temp.OnActiveGuided();
 			}
 		}
+		base.OnDisable();
+	}
+	public void SetSubObjectKey(string subUnityBallPoolerKey)
+	{
+		this.subUnityBallPoolerKey = subUnityBallPoolerKey;
 	}
 }

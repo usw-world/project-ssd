@@ -20,7 +20,7 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 	[SerializeField] private WeaponTransform sword;
 	[SerializeField] private TPlayerSkillManager skill;
 	[SerializeField] private TPlayerTrackEffect trackEffect;
-
+	
 	[SerializeField] private GameObject tPlayerCamera;
 
 	AttachmentManager attachmentManager;
@@ -95,7 +95,8 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
         	Cursor.lockState = CursorLockMode.Locked;
     }
     private void Start()
-    {
+	{
+		print(GetType());
 		InitializeStates();
         InitializeStateOnActive();
         InitializeStateOnStay();
@@ -421,6 +422,77 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		isRush = false;
 		if (rushCoroutine != null) StopCoroutine(rushCoroutine);
 		rushCoroutine = StartCoroutine(SmoothConvertRush(false));
+	}
+	int chargingLevel = 0;
+	float chargingTime = 0;
+	float chargingMaxTime_01 = 0.5f;
+	float chargingMaxTime_02 = 0.75f;
+	float chargingMaxTime_03 = 1f;
+	State chargingStart = new State("chargingStart");
+	State chargingStay = new State("chargingStay");
+	public void OnChargingStart()
+	{
+		chargingStart.onActive = (per) => {
+			ChangeAnimation("Charging");
+			print("chargingStart 됨");
+		};
+
+		chargingStay.onActive = (per) => {
+			print("chargingStay 됨");
+			chargingLevel = 0;
+			chargingTime = 0;
+		};
+
+		chargingStay.onStay = () => {
+			if (chargingLevel < 3)
+			{
+				chargingTime += Time.deltaTime;
+				switch (chargingLevel)
+				{
+					case 0:
+						if (chargingTime >= chargingMaxTime_01)
+						{
+							chargingLevel++;
+							chargingTime = 0;
+						}
+						break;
+					case 1:
+						if (chargingTime >= chargingMaxTime_02)
+						{
+							chargingLevel++;
+							chargingTime = 0;
+						}
+						break;
+					case 2:
+						if (chargingTime >= chargingMaxTime_03)
+						{
+							chargingLevel++;
+							chargingTime = 0;
+						}
+						break;
+				}
+			}
+		};
+
+		if (stateMachine.currentState == chargingStart)
+		{
+			stateMachine.ChangeState(chargingStay);
+		}
+		else
+		{
+			stateMachine.ChangeState(chargingStart);
+		}
+	}
+	public void OnChargingEnd()
+	{
+		switch (chargingLevel)
+		{
+			case 0: print("0"); break;
+			case 1: print("1"); break;
+			case 2: print("2"); break;
+			case 3: print("3"); break;
+		}
+		ResetState();
 	}
 	public void BeCanNextAttack()
 	{

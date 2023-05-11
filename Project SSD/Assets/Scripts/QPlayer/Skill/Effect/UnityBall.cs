@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnityBall : SkillEffect
+public class UnityBall : MonoBehaviour, IPoolerableObject
 {
 	[SerializeField] protected CollisionEventHandler homingArea;
 	protected List<Attachment> attachments = new List<Attachment>();
@@ -15,7 +15,7 @@ public class UnityBall : SkillEffect
 	protected bool isLastExplosion = false;
 	protected bool isHoming = false;
 	protected Coroutine hideCoroutine = null;
-	public string lastExplosionPoolerKey;
+	protected string lastExplosionKey;
 	public virtual void OnActive(float damage, float speed)
 	{
 		hideCoroutine = StartCoroutine(Hide());
@@ -60,12 +60,13 @@ public class UnityBall : SkillEffect
 	}
 	protected IEnumerator Hide() {
 		yield return new WaitForSeconds(runTime);
-		gameObject?.SetActive(false);
+		PoolerManager.instance.InPool(GetKey(), gameObject);
 	}
 	public virtual void AddDebuff(Attachment attachment) {
 		attachments.Add(attachment);
 	}
-	public virtual void AddLastExplosion(float explosionDamage) {
+	public virtual void AddLastExplosion(string lastExplosionKey, float explosionDamage) {
+		this.lastExplosionKey = lastExplosionKey;
 		isLastExplosion = true;
 		lastExplosionDamage = explosionDamage;
 	}
@@ -76,7 +77,7 @@ public class UnityBall : SkillEffect
 	{
 		if (isLastExplosion)
 		{
-			GameObject obj = PoolerManager.instance.OutPool(lastExplosionPoolerKey);
+			GameObject obj = PoolerManager.instance.OutPool(lastExplosionKey);
 			obj.transform.position = transform.position;
 			obj.transform.localScale = transform.localScale;
 			obj.GetComponent<UnityBallLastExplosion>().OnActive(lastExplosionDamage);
@@ -88,7 +89,6 @@ public class UnityBall : SkillEffect
 		homingPerformance = .1f;
 		attachments.Clear();
 		targets.Clear();
-		PoolerManager.instance.InPool(poolerKey, gameObject);
 	}
 	protected virtual void OnTriggerEnter(Collider other)
 	{
@@ -109,7 +109,7 @@ public class UnityBall : SkillEffect
 				IAttachable attachable = other.gameObject.GetComponent<IAttachable>();
 				attachable.AddAttachment(attachments[i]);
 			}
-			gameObject.SetActive(false);
+			PoolerManager.instance.InPool(GetKey(), gameObject);
 		}
 	}
 	protected void OnDetectHomingTarget(Collider other) {
@@ -132,5 +132,9 @@ public class UnityBall : SkillEffect
 				targets.Remove(other.transform);
 			}
 		}
+	}
+	public string GetKey()
+	{
+		return GetType().ToString();
 	}
 }
