@@ -27,12 +27,18 @@ public class ObjectPooler {
         queue.Enqueue(target);
     }
     public GameObject OutPool(Transform parent=null) {
+        if(queue.Count <= 0) {
+            Store(restoreCount);
+        }
         GameObject go = queue.Dequeue();
         go.transform.SetParent(parent);
         onOutPool?.Invoke(go);
         return go;
     }
     public GameObject OutPool(Vector3 point, Quaternion rotation, Transform parent=null) {
+        if(queue.Count <= 0) {
+            Store(restoreCount);
+        }
         GameObject go = queue.Dequeue();
         go.transform.SetParent(parent);
         go.transform.position = point;
@@ -50,4 +56,8 @@ public class ObjectPooler {
 }
 class NotMatchWithPrefabException : Exception {
     public string message = "Inpooling GameObject is not matched to prefab GameObject.";
+}
+
+public interface IPoolable {
+    string Key { get; set; }
 }
