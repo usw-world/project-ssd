@@ -35,7 +35,6 @@ public class PoolerManager : MonoBehaviour
     }
     public GameObject OutPool(string key)
     {
-		print(key + " - OutPool");
         if (poolers.ContainsKey(key))
         {
             ObjectPooler temp = poolers[key];

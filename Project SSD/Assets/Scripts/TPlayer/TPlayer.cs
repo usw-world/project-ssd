@@ -12,7 +12,7 @@ using Mirror;
 [RequireComponent(typeof(TPlayerInput))]
 [RequireComponent(typeof(StateMachine))]
 [RequireComponent(typeof(Movement))]
-public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
+public class TPlayer : NetworkBehaviour, IDamageable
 {
 	static public TPlayer instance { get; private set; }
     
@@ -20,29 +20,31 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 	[SerializeField] private WeaponTransform sword;
 	[SerializeField] private TPlayerSkillManager skill;
 	[SerializeField] private TPlayerTrackEffect trackEffect;
-	
 	[SerializeField] private GameObject tPlayerCamera;
 
-	AttachmentManager attachmentManager;
-	Coroutine attackCoroutine;
-	Coroutine dodgeCoroutine;
-	Coroutine rushCoroutine;
-	Coroutine WalkCoroutine;
-	Vector3 lookVector;
+	private AttachmentManager attachmentManager;
+	private Coroutine attackCoroutine;
+	private Coroutine dodgeCoroutine;
+	private Coroutine rushCoroutine;
+	private Coroutine WalkCoroutine;
+	private Vector3 lookVector;
 	/// <summary>기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다./summary>
-	Vector3 extraMovingPoint;
-	string currentAnimationTrigger = "";
-	float idleTime = 0;
-	float rotateSpeed = 30f;
-	float idleActionTime = 5f;
-	bool isImmune = false;
-	bool isSuperArmor = false;
-	bool isCanAttack = false;
-	bool isWalk = false;
-	bool isRush = false;
-	int attackCount = 0;
-	int idleActionIdx = 0;
-	int hitCount = 0;
+	private Vector3 extraMovingPoint;
+	private string currentAnimationTrigger = "";
+	private float idleTime = 0;
+	private float rotateSpeed = 30f;
+	private float idleActionTime = 5f;
+	private int chargingLevel = 0;
+	private float chargingTime = 0;
+	private float[] chargingMaxTime = { 0.5f, 0.1f, 2f };
+	private bool isImmune = false;
+	private bool isSuperArmor = false;
+	private bool isCanAttack = false;
+	private bool isWalk = false;
+	private bool isRush = false;
+	private int attackCount = 0;
+	private int idleActionIdx = 0;
+	private int hitCount = 0;
 
 	#region Component
 	private Movement movement;
@@ -51,7 +53,7 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 	#endregion Component
 
 	#region States
-	Dictionary<string, State> statesMap = new Dictionary<string, State>();
+	private Dictionary<string, State> statesMap = new Dictionary<string, State>();
 
 	private State idleState1 = new State("Idle1", "Idle");
     private State idleState2 = new State("Idle2", "Idle");
@@ -66,8 +68,10 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
     private State dodgeState = new State("Dodge");
     private State downState = new State("Down");
     private State damageState = new State("Damage");
+	private State chargingStart = new State("chargingStart");
+	private State chargingStay = new State("chargingStay");
 
-    private List<State> attackStateGroup = new List<State>();
+	private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
 	#endregion States
 
@@ -76,10 +80,10 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 	public Slider sliderSP;
 	#endregion UI
 
-    public override void OnStartLocalPlayer() {
+	#region Initialize
+	public override void OnStartLocalPlayer() {
         base.OnStartLocalPlayer();
     }
-
 	private void Awake()
     {
         if(instance == null)
@@ -116,7 +120,6 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		if(isLocalPlayer)
         	Cursor.lockState = CursorLockMode.Locked;
 	}
-
     private void InitializeCamera() {
         if(isLocalPlayer &&
 		PlayerCamera.instance == null) {
@@ -124,12 +127,6 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 			camera.GetComponent<PlayerCamera>().SetTarget(this.transform);
         }
     }
-	private void Update()
-	{
-		sliderHP.value = status.hp;
-		sliderSP.value = status.sp;
-	}
-
 	private void InitializeStates() {
 		statesMap.Add(idleState1.stateName, idleState1);
 		statesMap.Add(idleState2.stateName, idleState2);
@@ -144,6 +141,8 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		statesMap.Add(dodgeState.stateName, dodgeState);
 		statesMap.Add(downState.stateName, downState);
 		statesMap.Add(damageState.stateName, damageState);
+		statesMap.Add(chargingStart.stateName, chargingStart);
+		statesMap.Add(chargingStay.stateName, chargingStay);
 	}
 	private void InitializeStateOnActive()
     {
@@ -191,7 +190,14 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 			ChangeAnimation("Damage");
 			hitCount = 0;
 		};
-    }
+		chargingStart.onActive = (State prev) => {
+			ChangeAnimation("Charging");
+		};
+		chargingStay.onActive = (State prev) => {
+			chargingLevel = 0;
+			chargingTime = 0;
+		};
+	}
 	private void InitializeStateOnStay()
     {
         idleState1.onStay = () => {
@@ -239,7 +245,19 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
         damageState.onStay = () => {
 			if (hitCount >= 3) OnDown(); 
 		};
-    }
+		chargingStart.onStay = () => { };
+		chargingStay.onStay = () => {
+			if (chargingLevel < chargingMaxTime.Length)
+			{
+				chargingTime += Time.deltaTime;
+				if (chargingTime >= chargingMaxTime[chargingLevel])
+				{
+					chargingLevel++;
+					chargingTime = 0;
+				}
+			}
+		};
+	}
 	private void InitializeStateOnInactive()
     {
         idleState1.onInactive  = (State next) => {  };
@@ -269,9 +287,19 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		};
         downState.onInactive = (State next) => { isSuperArmor = false; };
         damageState.onInactive = (State next) => {  };
-    }
-   
-    public void InputMove(Vector3 moveVecterInput)
+		chargingStart.onInactive = (State next) => { };
+		chargingStay.onInactive = (State next) => { };
+	}
+	#endregion Initialize
+
+	private void Update()
+	{
+		sliderHP.value = status.hp;
+		sliderSP.value = status.sp;
+	}
+
+	#region Input Event
+	public void InputMove(Vector3 moveVecterInput)
     {
         lookVector = moveVecterInput;
 
@@ -423,57 +451,9 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		if (rushCoroutine != null) StopCoroutine(rushCoroutine);
 		rushCoroutine = StartCoroutine(SmoothConvertRush(false));
 	}
-	int chargingLevel = 0;
-	float chargingTime = 0;
-	float chargingMaxTime_01 = 0.5f;
-	float chargingMaxTime_02 = 0.75f;
-	float chargingMaxTime_03 = 1f;
-	State chargingStart = new State("chargingStart");
-	State chargingStay = new State("chargingStay");
 	public void OnChargingStart()
 	{
-		chargingStart.onActive = (per) => {
-			ChangeAnimation("Charging");
-			print("chargingStart 됨");
-		};
-
-		chargingStay.onActive = (per) => {
-			print("chargingStay 됨");
-			chargingLevel = 0;
-			chargingTime = 0;
-		};
-
-		chargingStay.onStay = () => {
-			if (chargingLevel < 3)
-			{
-				chargingTime += Time.deltaTime;
-				switch (chargingLevel)
-				{
-					case 0:
-						if (chargingTime >= chargingMaxTime_01)
-						{
-							chargingLevel++;
-							chargingTime = 0;
-						}
-						break;
-					case 1:
-						if (chargingTime >= chargingMaxTime_02)
-						{
-							chargingLevel++;
-							chargingTime = 0;
-						}
-						break;
-					case 2:
-						if (chargingTime >= chargingMaxTime_03)
-						{
-							chargingLevel++;
-							chargingTime = 0;
-						}
-						break;
-				}
-			}
-		};
-
+		
 		if (stateMachine.currentState == chargingStart)
 		{
 			stateMachine.ChangeState(chargingStay);
@@ -494,6 +474,9 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		}
 		ResetState();
 	}
+	#endregion Input Event
+
+	#region Animation Event
 	public void BeCanNextAttack()
 	{
 		isCanAttack = true; 
@@ -518,6 +501,8 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		skill.downAttack.Use();
 		trackEffect.dodgeMaehwa.Disable();
 	}
+	#endregion Animation Event
+
 	public float GetAP()
 	{
 		return status.ap;
@@ -534,25 +519,27 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		}
 		// UI 조작
 	}
-	void Rotate(float rotSppedPoint = 1f)
+
+
+	private void Rotate(float rotSppedPoint = 1f)
 	{
 		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVector;
 		Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotateSpeed * rotSppedPoint * Time.deltaTime);
 		transform.rotation = Quaternion.LookRotation(look);
 		transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 	}
-	void LookTarget(Transform target) 
+	private void LookTarget(Transform target) 
 	{
 		transform.LookAt(target);
 		transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 	}
-	void MoveToTargetPos()
+	private void MoveToTargetPos()
 	{
 		extraMovingPoint.y = transform.position.y;
 		Vector3 dir = Vector3.Lerp(transform.position, extraMovingPoint, Time.deltaTime * 10f) - transform.position;
 		movement.MoveToward(dir, Space.World);
 	}
-	void OnDodgeAttack()
+	private void OnDodgeAttack()
     {
 		if (!skill.dodgeAttack.CanUse()) return;
 		if (lookVector != Vector3.zero)
@@ -565,7 +552,7 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
         ChangeState(dodgeAttackState, false);
         isCanAttack = false;
     }
-	void OnDownAttack()
+	private void OnDownAttack()
 	{
 		if (!skill.downAttack.CanUse()) return;
 		if (lookVector != Vector3.zero)
@@ -578,18 +565,17 @@ public class TPlayer : NetworkBehaviour, IDamageable, IAttachable
 		ChangeState(downAttackState, false);
 		isCanAttack = false;
 	}
-	void ChangeAnimation(string trigger)
+	private void ChangeAnimation(string trigger)
     {
 		if (currentAnimationTrigger != "") 
 			ani.ResetTrigger(currentAnimationTrigger);
         currentAnimationTrigger = trigger;
         ani.SetTrigger(currentAnimationTrigger);
     }
-	void SwordUse(bool use) 
+	private void SwordUse(bool use) 
 	{
 		sword.Set(use); 
 	}
-	
 	private void ChangeState(State state, bool intoSelf=true) {
 		if(isLocalPlayer)
 			SynchronizeState(state.stateName, intoSelf);
@@ -709,7 +695,7 @@ public class PlayerStatus
 class WeaponTransform
 {
 	public Transform weapon; // 무기
-	public Transform unUse;  // 무기 사용 안할때 위치
+	public Transform unUse;  // 무기 사용 안할 때 위치
 	public Transform use;    // 무기 사용 위치
 	public void Set(bool useing)
 	{

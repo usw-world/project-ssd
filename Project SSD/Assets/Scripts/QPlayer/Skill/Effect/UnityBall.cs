@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnityBall : SkillEffect, IPoolable
+public class UnityBall : MonoBehaviour, IPoolerableObject
 {
 	[SerializeField] protected CollisionEventHandler homingArea;
 	protected List<Attachment> attachments = new List<Attachment>();
@@ -15,14 +15,7 @@ public class UnityBall : SkillEffect, IPoolable
 	protected bool isLastExplosion = false;
 	protected bool isHoming = false;
 	protected Coroutine hideCoroutine = null;
-	public string lastExplosionPoolerKey;
-
-	private string poolingKey;
-
-    public string Key {
-		get => poolingKey;
-		set => poolingKey = value;
-	}
+	public string lastExplosionKey;
 
     public virtual void OnActive(float damage, float speed)
 	{
@@ -114,8 +107,8 @@ public class UnityBall : SkillEffect, IPoolable
 			target.OnDamage(damage);
 			for (int i = 0; i < attachments.Count; i++)
 			{
-				IAttachable attachable = other.gameObject.GetComponent<IAttachable>();
-				attachable.AddAttachment(attachments[i]);
+				Enemy enemy = other.gameObject.GetComponent<Enemy>();
+				enemy.AddAttachment(attachments[i]);
 			}
 			PoolerManager.instance.InPool(GetKey(), gameObject);
 		}

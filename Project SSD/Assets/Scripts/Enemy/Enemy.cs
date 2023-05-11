@@ -14,6 +14,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     protected StateMachine enemyStateMachine;
     protected Dictionary<string, State> enemyStatesMap = new Dictionary<string, State>();
     [SerializeField] protected Animator enemyAnimator;
+    protected AttachmentManager attachmentManager; // 버프/디버프 메니저
 
     [SerializeField] protected float hp;
     protected bool isDead;
@@ -31,6 +32,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         enemyStateMachine = GetComponent<StateMachine>();
         enemyAnimator = enemyAnimator==null ? GetComponent<Animator>() : enemyAnimator;
         target = FindObjectOfType<TPlayer>()?.gameObject;
+        attachmentManager = GetComponent<AttachmentManager>(); // 버프/디버프 메니저
     }
     protected virtual void Start() {
         /* temporary : Initialize function must be called on instantiated by other object. 
@@ -94,5 +96,9 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         if(hp <= 0) {
             OnDie();
         }
+    }
+    public virtual void AddAttachment(Attachment attachment) {
+        // 버프/디버프 추가하는 함수!
+        attachmentManager.AddAttachment(attachment);
     }
 }

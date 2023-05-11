@@ -24,28 +24,9 @@ public class UnityBaaaall : UnityBall
 			target.OnDamage(damage);
 			for (int i = 0; i < attachments.Count; i++)
 			{
-				IAttachable attachable = other.gameObject.GetComponent<IAttachable>();
-				attachable.AddAttachment(attachments[i]);
+				Enemy enemy = other.gameObject.GetComponent<Enemy>();
+				enemy.AddAttachment(attachments[i]);
 			}
 		}
 	}
-	// protected override void OnCollisionEnter(Collision collision)
-	// {
-	// 	if (collision.gameObject.layer == 8)
-	// 	{
-	// 		IDamageable target = collision.gameObject.GetComponent<IDamageable>();
-	// 		Damage damage = new Damage(
-	// 			this.gameObject,
-	// 			damageAmount,
-	// 			.6f,
-	// 			(collision.transform.position - transform.position).normalized * 1.1f,
-	// 			Damage.DamageType.Normal
-	// 		);
-	// 		target.OnDamage(damage);
-	// 		for (int i = 0; i < attachments.Count; i++) {
-	// 			IAttachable attachable = collision.gameObject.GetComponent<IAttachable>();
-	// 			attachable.AddAttachment(attachments[i]);
-	// 		}
-	// 	}
-	// }
 }

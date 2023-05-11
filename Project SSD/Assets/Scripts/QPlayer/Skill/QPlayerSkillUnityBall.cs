@@ -63,16 +63,16 @@ public class QPlayerSkillUnityBall : Skill
 	}
 	private void Start()
 	{
-		info.effect.GetComponent<UnityBall>().lastExplosionPoolerKey = unityBallLastExplosionPoolerKey;
-		option06_effect.GetComponent<UnityBall>().lastExplosionPoolerKey = unityBallLastExplosionPoolerKey;
-		option06_effect.GetComponent<UnityHubBall>().subUnityBallPoolerKey = unityBallPoolerKey;
-		option07_effect.GetComponent<UnityBall>().lastExplosionPoolerKey = unityBallLastExplosionPoolerKey;
-		PoolerManager.instance.InsertPooler(unityBallPoolerKey, info.effect);
-		PoolerManager.instance.InsertPooler(unityHubBallPoolerKey, option06_effect);
-		PoolerManager.instance.InsertPooler(unityBaaaallPoolerKey, option07_effect);
-		PoolerManager.instance.InsertPooler(unityBallLastExplosionPoolerKey, option04_effect);
+		infoEffectKey = info.effect.GetComponent<IPoolerableObject>().GetKey();
+		option04_effectKey = option04_effect.GetComponent<IPoolerableObject>().GetKey();
+		option06_effectKey = option06_effect.GetComponent<IPoolerableObject>().GetKey();
+		option06_effect.GetComponent<UnityHubBall>().SetSubObjectKey(infoEffectKey);
+		option07_effectKey = option07_effect.GetComponent<IPoolerableObject>().GetKey();
 
-		PoolerManager.instance.InsertPooler(unityBallLastExplosionPoolerKey, option04_effect);
+		PoolerManager.instance.InsertPooler(infoEffectKey, info.effect, false);
+		PoolerManager.instance.InsertPooler(option04_effectKey, option04_effect, false);
+		PoolerManager.instance.InsertPooler(option06_effectKey, option06_effect, false);
+		PoolerManager.instance.InsertPooler(option07_effectKey, option07_effect, false);
 	}
 	public override void Use(Vector3 target)
 	{

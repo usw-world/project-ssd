@@ -27,7 +27,6 @@ public class UnityHubBall : UnityBall
 			obj.transform.eulerAngles = new Vector3(0, y, 0);
 			UnityBall temp = obj.GetComponent<UnityBall>();
 			temp.OnActive(damageAmount, speed);
-			print("isHoming : " + isHoming);
 			if (isHoming)
 			{
 				temp.OnActiveGuided();

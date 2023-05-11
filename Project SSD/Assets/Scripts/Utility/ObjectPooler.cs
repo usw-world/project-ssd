@@ -70,7 +70,3 @@ public class ObjectPooler {
 class NotMatchWithPrefabException : Exception {
     public string message = "Inpooling GameObject is not matched to prefab GameObject.";
 }
-
-public interface IPoolable {
-    string Key { get; set; }
-}
