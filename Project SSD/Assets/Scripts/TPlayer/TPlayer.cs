@@ -15,13 +15,16 @@ using Mirror;
 public class TPlayer : NetworkBehaviour, IDamageable
 {
 	static public TPlayer instance { get; private set; }
-    
+
+	#region Show Parameters
 	public PlayerStatus status;
 	[SerializeField] private WeaponTransform sword;
 	[SerializeField] private TPlayerSkillManager skill;
 	[SerializeField] private TPlayerTrackEffect trackEffect;
 	[SerializeField] private GameObject tPlayerCamera;
+	#endregion Show Parameters
 
+	#region Hide Parameters
 	private AttachmentManager attachmentManager;
 	private Coroutine attackCoroutine;
 	private Coroutine dodgeCoroutine;
@@ -36,7 +39,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private float idleActionTime = 5f;
 	private int chargingLevel = 0;
 	private float chargingTime = 0;
-	private float[] chargingMaxTime = { 0.5f, 0.1f, 2f };
+	private float[] chargingMaxTime = { 0.3f, 1.5f, 3f };
 	private bool isImmune = false;
 	private bool isSuperArmor = false;
 	private bool isCanAttack = false;
@@ -45,6 +48,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private int attackCount = 0;
 	private int idleActionIdx = 0;
 	private int hitCount = 0;
+	#endregion Hide Parameters
 
 	#region Component
 	private Movement movement;
@@ -70,7 +74,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
     private State damageState = new State("Damage");
 	private State chargingStart = new State("chargingStart");
 	private State chargingStay = new State("chargingStay");
-
+	private State charging_3Combo = new State("charging_3Combo");
+	
 	private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
 	#endregion States
@@ -78,6 +83,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	#region UI
 	public Slider sliderHP;
 	public Slider sliderSP;
+	public Slider sliderCharging;
+	public Image imgCharging;
+	public Image imgChargingBackground;
+	private Color red = new Color(1f, 0f, 0f);
+	private Color orange = new Color(1f, 0.65f, 0f);
+	private Color yellow = new Color(1f, 1f, 0f);
+	private Color darkYellow = new Color(0.8f, 0.8f, 0f);
 	#endregion UI
 
 	#region Initialize
@@ -143,6 +155,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		statesMap.Add(damageState.stateName, damageState);
 		statesMap.Add(chargingStart.stateName, chargingStart);
 		statesMap.Add(chargingStay.stateName, chargingStay);
+		statesMap.Add(charging_3Combo.stateName, charging_3Combo);
 	}
 	private void InitializeStateOnActive()
     {
@@ -192,10 +205,18 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		};
 		chargingStart.onActive = (State prev) => {
 			ChangeAnimation("Charging");
-		};
-		chargingStay.onActive = (State prev) => {
 			chargingLevel = 0;
 			chargingTime = 0;
+			SwordUse(true);
+		};
+		chargingStay.onActive = (State prev) => {
+			sliderCharging.gameObject.SetActive(true);
+			sliderCharging.value = 0;
+			sliderCharging.maxValue = chargingMaxTime[0];
+			SetChargingSliderColor();
+		};
+		charging_3Combo.onActive = (State prev) => {
+			ChangeAnimation("3Combo");
 		};
 	}
 	private void InitializeStateOnStay()
@@ -241,12 +262,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		dodgeAttackState.onStay = () => { MoveToTargetPos(); };
 		downAttackState.onStay = () => { MoveToTargetPos(); };
 		dodgeState.onStay = () => { };
-        downState.onStay = () => { };
+        downState.onStay = () => { status.Update(); };
         damageState.onStay = () => {
 			if (hitCount >= 3) OnDown(); 
 		};
-		chargingStart.onStay = () => { };
+		chargingStart.onStay = () => { status.Update(); };
 		chargingStay.onStay = () => {
+			status.Update(); status.Update(); status.Update();
 			if (chargingLevel < chargingMaxTime.Length)
 			{
 				chargingTime += Time.deltaTime;
@@ -254,7 +276,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 				{
 					chargingLevel++;
 					chargingTime = 0;
+					sliderCharging.maxValue = chargingMaxTime[chargingLevel];
+					SetChargingSliderColor();
 				}
+				sliderCharging.value = chargingTime;
 			}
 		};
 	}
@@ -288,15 +313,11 @@ public class TPlayer : NetworkBehaviour, IDamageable
         downState.onInactive = (State next) => { isSuperArmor = false; };
         damageState.onInactive = (State next) => {  };
 		chargingStart.onInactive = (State next) => { };
-		chargingStay.onInactive = (State next) => { };
+		chargingStay.onInactive = (State next) => {
+			sliderCharging.gameObject.SetActive(false);
+		};
 	}
 	#endregion Initialize
-
-	private void Update()
-	{
-		sliderHP.value = status.hp;
-		sliderSP.value = status.sp;
-	}
 
 	#region Input Event
 	public void InputMove(Vector3 moveVecterInput)
@@ -310,7 +331,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
             stateMachine.currentState == dodgeAttackState ||
             stateMachine.currentState == dodgeState ||
             stateMachine.currentState == downState ||
-            stateMachine.currentState == damageState)
+            stateMachine.currentState == damageState ||
+			stateMachine.currentState == chargingStart ||
+			stateMachine.currentState == chargingStay ||
+			stateMachine.currentState == charging_3Combo)
         {
             return;
         }
@@ -398,7 +422,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 
 		if (stateMachine.currentState == damageState ||
             stateMachine.currentState == downState ||
-			stateMachine.currentState == dodgeState ) return;
+			stateMachine.currentState == dodgeState ||
+			stateMachine.currentState == charging_3Combo) return;
 		if (lookVector != Vector3.zero) Rotate(10f); 
 		ChangeState(dodgeState, false);
 		skill.dodge.Use();
@@ -423,9 +448,12 @@ public class TPlayer : NetworkBehaviour, IDamageable
             stateMachine.currentState == dodgeState ||
             stateMachine.currentState == dodgeAttackState ||
             stateMachine.currentState == downState ||
-			isCanAttack == false) return;
+			stateMachine.currentState == chargingStart || 
+			stateMachine.currentState == chargingStay || 
+			isCanAttack == false ||
+			stateMachine.currentState == charging_3Combo) return;
 
-        isCanAttack = false;
+		isCanAttack = false;
 
         if (lookVector != Vector3.zero) Rotate(10f);
 
@@ -453,7 +481,17 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	public void OnChargingStart()
 	{
-		
+		// dodgeAttackState downAttackState dodgeState downState damageState charging_3Combo
+		if (stateMachine.currentState == dodgeAttackState ||
+			stateMachine.currentState == downAttackState ||
+			stateMachine.currentState == downAttackState ||
+			stateMachine.currentState == downAttackState ||
+			stateMachine.currentState == damageState ||
+			stateMachine.currentState == charging_3Combo
+			)
+		{
+			return;
+		}
 		if (stateMachine.currentState == chargingStart)
 		{
 			stateMachine.ChangeState(chargingStay);
@@ -465,14 +503,15 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	public void OnChargingEnd()
 	{
+		if (stateMachine.currentState != chargingStay) return; 
 		switch (chargingLevel)
 		{
-			case 0: print("0"); break;
-			case 1: print("1"); break;
-			case 2: print("2"); break;
-			case 3: print("3"); break;
+			case 0: ResetState(); break;
+			case 1: stateMachine.ChangeState(charging_3Combo); break;
+			case 2: print("2"); ResetState(); break;
+			case 3: print("3"); ResetState(); break;
 		}
-		ResetState();
+		
 	}
 	#endregion Input Event
 
@@ -491,6 +530,14 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			StopCoroutine(attackCoroutine);
 		attackCoroutine = StartCoroutine(AttackCoroutine());
 	}
+	public void ComboAttackZone(int idx) 
+	{
+		skill.nomalAttacks[idx].Use();
+		extraMovingPoint = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
+		if (attackCoroutine != null)
+			StopCoroutine(attackCoroutine);
+		attackCoroutine = StartCoroutine(AttackCoroutine());
+	}
 	public void CheckDodgeAttackZone()
 	{
 		skill.dodgeAttack.Use();
@@ -502,6 +549,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		trackEffect.dodgeMaehwa.Disable();
 	}
 	#endregion Animation Event
+
+	private void Update()
+	{
+		sliderHP.value = status.hp;
+		sliderSP.value = status.sp;
+	}
+
 
 	public float GetAP()
 	{
@@ -590,7 +644,23 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			Debug.LogError(e);
 		}
 	}
-
+	private void SetChargingSliderColor() {
+		switch (chargingLevel)
+		{
+			case 0:
+				imgCharging.color = yellow;
+				imgChargingBackground.color = darkYellow; 
+				break;
+			case 1:
+				imgCharging.color = orange;
+				imgChargingBackground.color = yellow;
+				break;
+			case 2:
+				imgCharging.color = red;
+				imgChargingBackground.color = orange;
+				break;
+		}
+	}
 	IEnumerator SmoothConvert(bool fade)
 	{
 		float target = (fade) ? 0 : 0.5f;
@@ -712,6 +782,9 @@ class TPlayerSkillManager
 	public Skill dodge;
 	public Skill dodgeAttack;
 	public Skill downAttack;
+	public Skill charging_01;
+	public Skill charging_02;
+	public Skill charging_03;
 }
 [Serializable]
 class TPlayerTrackEffect
