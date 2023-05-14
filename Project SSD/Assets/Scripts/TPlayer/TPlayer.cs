@@ -732,12 +732,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	IEnumerator AttackCoroutine()
 	{
 		float offset = 0;
-		Vector3 targetPoint = Vector3.forward;
+		Vector3 targetPoint = transform.position + transform.forward;
 		while (offset < 1)
 		{
 			offset += Time.deltaTime * 6f;
-			extraMovingPoint.y = transform.position.y;
-			Vector3 dir = Vector3.Lerp(transform.position, extraMovingPoint, Time.deltaTime * 10f) - transform.position;
+			targetPoint.y = transform.position.y;
+			Vector3 dir = Vector3.Lerp(transform.position, targetPoint, Time.deltaTime * 10f) - transform.position;
+			dir.y = 0;
 			movement.MoveToward(dir, Space.World, 5<<6);
 			yield return null;
 		}

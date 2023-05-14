@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using Mirror;
 
@@ -16,8 +17,13 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     [SerializeField] protected Animator enemyAnimator;
     protected AttachmentManager attachmentManager; // 버프/디버프 메니저
 
+    #region Status
+    [SerializeField] protected float maxHp;
     [SerializeField] protected float hp;
     protected bool isDead;
+
+    [SerializeField] private Slider hpSlider;
+    #endregion Status
 
     protected bool targetInRange;
 
@@ -35,11 +41,12 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         attachmentManager = GetComponent<AttachmentManager>(); // 버프/디버프 메니저
     }
     protected virtual void Start() {
-        /* temporary : Initialize function must be called on instantiated by other object. 
-                       reason : Pooling Issue >> */
-        /* << temporary */
         if(SSDNetworkManager.instance.isHost)
             onHost = true;
+
+        hp = maxHp;
+        // RefreshStatusUI();
+        RefreshHPSlider();
     }
     protected virtual void OnEnable() {
         Initialize();
@@ -93,6 +100,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     }
     public virtual void TakeDamage(Damage damage) {
         hp -= damage.amount;
+        RefreshHPSlider();
         if(hp <= 0) {
             OnDie();
         }
@@ -101,4 +109,13 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         // 버프/디버프 추가하는 함수!
         attachmentManager.AddAttachment(attachment);
     }
+
+    #region Status UI Controll
+    // protected virtual void RefreshStatusUI() {
+    //     SetHPSlider(hp / maxHp);
+    // }
+    protected virtual void RefreshHPSlider() {
+        hpSlider.value = hp / maxHp;
+    }
+    #endregion Status UI Controll
 }

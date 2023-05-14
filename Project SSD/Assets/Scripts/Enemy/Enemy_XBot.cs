@@ -22,12 +22,11 @@ class Enemy_XBot : MovableEnemy {
     private Vector3 targetPosition;
 
     #region Jump Attack
-    private const float JUMP_ATTACK_COOLTIME = 5f;
+    private const float JUMP_ATTACK_COOLTIME = 7f;
     private float currentJumpAttackCooltime = 0f;
     private Coroutine jumpAttackCoroutine;
-    [SerializeField] private GameObject jumpAttackParticle;
+    [SerializeField] private Effect_XBotJumpAttack jumpAttackEffect;
     [SerializeField] private Transform jumpAttackParticlePoint;
-    private ObjectPooler jumpAttackParticlePooler;
     #endregion Jump Attack
 
     #region Assault Attack
@@ -42,26 +41,13 @@ class Enemy_XBot : MovableEnemy {
     #region Unity Events
     protected override void Awake() {
         base.Awake();
-
-        jumpAttackParticlePooler = new ObjectPooler(
-            jumpAttackParticle,
-            (GameObject go) => {
-                go.SetActive(false);
-            },
-            (GameObject go) => {
-                IEnumerator OutPoolParticle() {
-                    yield return new WaitForSeconds(3f);
-                    jumpAttackParticlePooler.InPool(go);
-                }
-                StartCoroutine(OutPoolParticle());
-                go.SetActive(true);
-            }, transform, 2, 1
-        );
+        
     }
     protected override void Start() {
         base.Start();
-        InitializeState();
         enemyStateMachine.SetIntialState(idleState);
+        InitializeState();
+        InitializePoolers();
     }
     protected override void Update() {
         if(currentJumpAttackCooltime > 0)
@@ -71,7 +57,9 @@ class Enemy_XBot : MovableEnemy {
     }
     #endregion Unity Events
 
-
+    private void InitializePoolers() {
+        PoolerManager.instance.InsertPooler(this.jumpAttackEffect.GetKey(), this.jumpAttackEffect.gameObject, true);
+    }
     private void InitializeState() {
         idleState.onActive += (State prevState) => {
             enemyAnimator.SetBool("Idle", true);
@@ -204,7 +192,7 @@ class Enemy_XBot : MovableEnemy {
     }
     public void AnimationEvent_OnJumpAttackAction() {
         /* temporary >> */
-        jumpAttackParticlePooler.OutPool(jumpAttackParticlePoint.position, Quaternion.identity);
+        PoolerManager.instance.OutPool(jumpAttackEffect.GetKey());
         /* << temporary */
     }
     public void AnimationEvent_OnEndCrouch() {
