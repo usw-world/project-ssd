@@ -63,11 +63,11 @@ public class QPlayerSkillUnityBall : Skill
 	}
 	private void Start()
 	{
-		infoEffectKey = info.effect.GetComponent<IPoolerableObject>().GetKey();
-		option04_effectKey = option04_effect.GetComponent<IPoolerableObject>().GetKey();
-		option06_effectKey = option06_effect.GetComponent<IPoolerableObject>().GetKey();
+		infoEffectKey = info.effect.GetComponent<IPooleableObject>().GetKey();
+		option04_effectKey = option04_effect.GetComponent<IPooleableObject>().GetKey();
+		option06_effectKey = option06_effect.GetComponent<IPooleableObject>().GetKey();
 		option06_effect.GetComponent<UnityHubBall>().SetSubObjectKey(infoEffectKey);
-		option07_effectKey = option07_effect.GetComponent<IPoolerableObject>().GetKey();
+		option07_effectKey = option07_effect.GetComponent<IPooleableObject>().GetKey();
 
 		PoolerManager.instance.InsertPooler(infoEffectKey, info.effect, false);
 		PoolerManager.instance.InsertPooler(option04_effectKey, option04_effect, false);

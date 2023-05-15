@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider))]
 public class CollisionEventHandler : MonoBehaviour {
-    public bool isActive = true;
+    public bool isActive { get; set; }
 
     public UnityEngine.Events.UnityAction<Collider> onTriggerEnter;
     public UnityEngine.Events.UnityAction<Collider> onTriggerStay;

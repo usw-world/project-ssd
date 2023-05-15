@@ -15,10 +15,22 @@ public class PoolerManager : MonoBehaviour
             instance = this;
         else Destroy(gameObject);
     }
-    public void InsertPooler(string key, GameObject prefab, bool destroy) {
+    public void InsertPooler(string key, GameObject prefab, bool destroy, int count=10, int restoreCount=5) {
         if (!poolers.ContainsKey(key))
         {
-            poolers.Add(key, new ObjectPooler(prefab));
+            ObjectPooler pooler = new ObjectPooler(
+                prefab,
+                (GameObject instance) => {
+                    instance.SetActive(false);
+                },
+                (GameObject instance) => {
+                    instance.SetActive(true);
+                },
+                this.transform,
+                count,
+                restoreCount
+            );
+            poolers.Add(key, pooler);
 			if (destroy)
 			{
 				destroyedKeys.Add(key);
@@ -29,32 +41,32 @@ public class PoolerManager : MonoBehaviour
     {
 		if (poolers.ContainsKey(key))
 		{
-            ObjectPooler temp = poolers[key];
-            temp.InPool(target);
+            ObjectPooler pooler = poolers[key];
+            pooler.InPool(target);
         }
     }
     public GameObject OutPool(string key)
     {
         if (poolers.ContainsKey(key))
         {
-            ObjectPooler temp = poolers[key];
-            GameObject obj = temp.OutPool();
-            obj.SetActive(true);
+            ObjectPooler pooler = poolers[key];
+            GameObject obj = pooler.OutPool();
             return obj;
         }
+        Debug.LogWarning("OutPool method was called with unvaild key.");
 		return null;
     }
 	public void DestroyPooler()
 	{
 		for (int i = 0; i < destroyedKeys.Count; i++)
 		{
-			ObjectPooler pooler = poolers[destroyedKeys[i]];
-			List<GameObject> temp = pooler.GetAllItem();
-			for (int j = 0; j < temp.Count; )
+            ObjectPooler pooler = this.poolers[destroyedKeys[i]];
+			List<GameObject> allPoolers = pooler.GetAllItem();
+			for (int j = 0; j < allPoolers.Count; )
 			{
-				Destroy(temp[j]);
+				Destroy(allPoolers[j]);
 			}
-			poolers.Remove(destroyedKeys[i]);
+			this.poolers.Remove(destroyedKeys[i]);
 		}
 		destroyedKeys.Clear();
 	}

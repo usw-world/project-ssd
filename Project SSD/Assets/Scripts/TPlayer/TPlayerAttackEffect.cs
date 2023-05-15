@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TPlayerAttackEffect : MonoBehaviour, IPoolerableObject
+public class TPlayerAttackEffect : MonoBehaviour, IPooleableObject
 {
 	[SerializeField] private Mode mode;
 	[SerializeField] private ETPlayerAttackEffect attackType;
@@ -12,7 +12,7 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolerableObject
 	private string hitEffectKey;
 	private void Awake()
 	{
-		hitEffectKey = hitEffect.GetComponent<IPoolerableObject>().GetKey();
+		hitEffectKey = hitEffect.GetComponent<IPooleableObject>().GetKey();
 		PoolerManager.instance.InsertPooler(hitEffectKey, hitEffect, false);
 	}
 	public void OnActive(float damageAmount)

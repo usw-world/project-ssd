@@ -576,7 +576,7 @@ MonoBehaviour:
   arriveDistance: 1
   jumpAttackEffect: {fileID: -6796222250703497385, guid: f9ae0e542ac701c47b3d049a1db63a53,
     type: 3}
-  jumpAttackParticlePoint: {fileID: 2009496627}
+  jumpAttackEffectPoint: {fileID: 2009496627}
   assaultEffect: {fileID: 6856524181999705358}
 --- !u!114 &604356618008030352
 MonoBehaviour:
@@ -3349,8 +3349,8 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8523652063898833854}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.060859617, y: -0.0000000047990896, z: -0.0000002849511, w: 0.99814636}
+  m_LocalPosition: {x: 0, y: 0, z: -0.1792154}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3360,7 +3360,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.00000023841858}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &9192673947459593967

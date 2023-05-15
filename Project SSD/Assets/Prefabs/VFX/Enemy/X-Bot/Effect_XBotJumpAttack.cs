@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Effect_XBotJumpAttack : MonoBehaviour, IPoolerableObject {
+public class Effect_XBotJumpAttack : MonoBehaviour, IPooleableObject {
     [SerializeField] private float radius = 2.5f;
 	[SerializeField] private float amount = 10f;
 

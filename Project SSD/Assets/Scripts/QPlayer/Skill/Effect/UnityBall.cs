@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnityBall : MonoBehaviour, IPoolerableObject
+public class UnityBall : MonoBehaviour, IPooleableObject
 {
 	[SerializeField] protected CollisionEventHandler homingArea;
 	protected List<Attachment> attachments = new List<Attachment>();

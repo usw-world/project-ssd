@@ -26,7 +26,7 @@ class Enemy_XBot : MovableEnemy {
     private float currentJumpAttackCooltime = 0f;
     private Coroutine jumpAttackCoroutine;
     [SerializeField] private Effect_XBotJumpAttack jumpAttackEffect;
-    [SerializeField] private Transform jumpAttackParticlePoint;
+    [SerializeField] private Transform jumpAttackEffectPoint;
     #endregion Jump Attack
 
     #region Assault Attack
@@ -192,12 +192,12 @@ class Enemy_XBot : MovableEnemy {
     }
     public void AnimationEvent_OnJumpAttackAction() {
         /* temporary >> */
-        PoolerManager.instance.OutPool(jumpAttackEffect.GetKey());
+        GameObject effect = PoolerManager.instance.OutPool(this.jumpAttackEffect.GetKey());
+        effect.transform.position = jumpAttackEffectPoint.position;
         /* << temporary */
     }
     public void AnimationEvent_OnEndCrouch() {
         if(enemyStateMachine.Compare(assaultState)) {
-            
             enemyAnimator.SetBool("Assault Crouch", false);
             assaultEffect.SetActive(true);
             assaultCoroutine = StartCoroutine(AssaultCoroutine());

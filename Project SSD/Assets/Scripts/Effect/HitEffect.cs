@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitEffect : MonoBehaviour, IPoolerableObject
+public class HitEffect : MonoBehaviour, IPooleableObject
 {
 	[SerializeField] private EHitEffectType type;
 
