@@ -9,8 +9,11 @@ public class TPlayerSkill : Skill
 	private PlayerStatus status;
 	void Start()
 	{
-		effectKey = info.effect?.GetComponent<IPoolerableObject>().GetKey();
-		PoolerManager.instance.InsertPooler(effectKey, info.effect, false);
+		if (info.effect != null)
+		{
+			effectKey = info.effect?.GetComponent<IPooleableObject>().GetKey();
+			PoolerManager.instance.InsertPooler(effectKey, info.effect, false);
+		}
 	}
 	public override void Use()
 	{

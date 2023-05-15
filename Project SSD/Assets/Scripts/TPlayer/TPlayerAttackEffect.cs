@@ -57,6 +57,7 @@ public class TPlayerAttackEffect : MonoBehaviour, IPooleableObject
 					target.OnDamage(damage);
 
 					GameObject hitEffect = PoolerManager.instance.OutPool(hitEffectKey);
+					hitEffect.transform.position = hit[i].transform.position;
 					hitEffect.transform.position += Vector3.up;
 					hitEffect.transform.parent = null;
 					StartCoroutine(HideHitEffect(hitEffect));
@@ -76,7 +77,7 @@ public class TPlayerAttackEffect : MonoBehaviour, IPooleableObject
 	}
 	private IEnumerator HideHitEffect(GameObject hitEffect)
 	{
-		yield return new WaitForSeconds(3f);
+		yield return new WaitForSeconds(2f);
 		PoolerManager.instance.InPool(hitEffectKey, hitEffect);
 	}
 }
