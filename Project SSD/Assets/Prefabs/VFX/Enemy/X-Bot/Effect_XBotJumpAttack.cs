@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Effect_XBotJumpAttack : MonoBehaviour, IPoolerableObject {
     [SerializeField] private float radius = 2.5f;
+	[SerializeField] private float amount = 10f;
 
-    public string GetKey() {
+	public string GetKey() {
         return this.GetType().ToString();
     }
 
@@ -13,7 +14,14 @@ public class Effect_XBotJumpAttack : MonoBehaviour, IPoolerableObject {
         StartCoroutine(DisapearCoroutine());
         Collider[] inners = Physics.OverlapSphere(transform.position, radius, 1<<7);
         foreach(Collider inner in inners) {
-            inner.GetComponent<TPlayer>()?.OnDamage(gameObject, 25f);
+			Damage damage = new Damage(
+				gameObject, 
+				amount, 
+				0,
+				Vector3.zero, 
+				Damage.DamageType.Normal
+			);
+            inner.GetComponent<IDamageable>()?.OnDamage(damage);
         }
     }
     private IEnumerator DisapearCoroutine() {

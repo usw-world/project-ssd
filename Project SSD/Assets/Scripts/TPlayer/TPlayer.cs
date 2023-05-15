@@ -50,6 +50,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private int hitCount = 0;
 	#endregion Hide Parameters
 
+	public float DamageAmount{
+		get
+		{
+			return 10f;
+		}
+	}
+
 	#region Component
 	private Movement movement;
     private Animator ani;
@@ -364,14 +371,15 @@ public class TPlayer : NetworkBehaviour, IDamageable
         else
             ChangeState(moveState, false);
     }
-	public void OnDamage(GameObject origin, float amount)
-	{
-		if (isImmune) return;    // 무적이면 실행 않함
+	public void OnDamage(Damage damage) {
+		if (isImmune) return;    // 무적이면 실행 안함
 
-		status.hp -= amount;
-		if (origin != null)
+		status.hp -= damage.amount;
+
+		if (damage.origin != null)
 		{
-			LookTarget(origin.transform);
+			LookTarget(damage.origin.transform);
+			transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 		}
 
 		if (stateMachine.currentState == downState) return;
@@ -385,19 +393,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		else
 		{
 			ChangeState(damageState, false);
-		}
-	}
-	public void OnDamage(Damage damage) {
-		if(isImmune/*
-		&& stateMachine.currentState == dieState */)
-			return;
-
-		status.hp -= damage.amount;
-		if(damage.origin != null)
-			LookTarget(damage.origin.transform);
-
-		if(stateMachine.currentState != downState) {
-
 		}
 	}
 	public void OnDown()

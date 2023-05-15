@@ -108,7 +108,7 @@ public class UnityBall : MonoBehaviour, IPoolerableObject
 			for (int i = 0; i < attachments.Count; i++)
 			{
 				Enemy enemy = other.gameObject.GetComponent<Enemy>();
-				enemy.AddAttachment(attachments[i]);
+				enemy?.AddAttachment(attachments[i]);
 			}
 			PoolerManager.instance.InPool(GetKey(), gameObject);
 		}

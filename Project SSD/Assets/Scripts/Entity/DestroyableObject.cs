@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
 
-public class DestroyableObject: MonoBehaviour, IDamageable {
+public class DestroyableObject: MonoBehaviour, IDamageable
+{
     bool isDestroyed = false;
     Rigidbody[] childrenRigidbodies;
 

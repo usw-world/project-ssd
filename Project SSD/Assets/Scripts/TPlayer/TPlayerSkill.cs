@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class TPlayerSkill : Skill
 {
-	[SerializeField] float usingSP = 0f;
-
-	PlayerStatus status;
+	[SerializeField] private float usingSP = 0f;
+	private string effectKey;
+	private PlayerStatus status;
+	void Start()
+	{
+		effectKey = info.effect?.GetComponent<IPoolerableObject>().GetKey();
+		PoolerManager.instance.InsertPooler(effectKey, info.effect, false);
+	}
 	public override void Use()
 	{
 		property.nowCoolTime = 0;
@@ -14,7 +19,9 @@ public class TPlayerSkill : Skill
 
 		if (info.effect != null)
 		{
-			GameObject temp = Instantiate(info.effect);
+			GameObject effect = PoolerManager.instance.OutPool(effectKey);
+			float damageAmount = TPlayer.instance.DamageAmount * property.skillAP;
+			effect.GetComponent<TPlayerAttackEffect>().OnActive(damageAmount);
 		}
 	}
 	public override bool CanUse()

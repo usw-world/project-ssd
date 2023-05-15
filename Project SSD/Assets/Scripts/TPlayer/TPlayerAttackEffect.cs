@@ -2,36 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TPlayerAttackEffect : MonoBehaviour
+public class TPlayerAttackEffect : MonoBehaviour, IPoolerableObject
 {
-	public GameObject test;
-	public bool testing = false;
-	[SerializeField] Mode mode;
-	[SerializeField] GameObject hitEffect;
-	[SerializeField] Vector3 damageZoneSize;
-    [SerializeField] Vector3 localPos;
-    [SerializeField] Vector3 localRot;
-    [SerializeField] float runTime = 0.5f;
-	[SerializeField] TPlayer tPlayer;
-    List<IDamageable> targets = new List<IDamageable>();
-
-	void Awake() => tPlayer = TPlayer.instance;
-	void HideGameobject()
+	[SerializeField] private Mode mode;
+	[SerializeField] private ETPlayerAttackEffect attackType;
+	[SerializeField] private GameObject hitEffect;
+	[SerializeField] private Vector3 damageZoneSize;
+    [SerializeField] private Vector3 localPos;
+	private string hitEffectKey;
+	private void Awake()
 	{
-		gameObject.SetActive(false);
-		targets.Clear();
+		hitEffectKey = hitEffect.GetComponent<IPoolerableObject>().GetKey();
+		PoolerManager.instance.InsertPooler(hitEffectKey, hitEffect, false);
 	}
-	private void Start() {
-		OnActive(new SkillProperty());
-	}
-	public void OnActive(SkillProperty property)
+	public void OnActive(float damageAmount)
 	{
+		TPlayer tPlayer = TPlayer.instance;
 		transform.parent = tPlayer.transform;
 		transform.localPosition = localPos;
-		transform.localEulerAngles = localRot;
 		transform.parent = null;
+		transform.rotation = tPlayer.transform.rotation;
 
-		Invoke("HideGameobject", runTime);
+		StartCoroutine(Hide());
 
 		Vector3 position = Vector3.zero;
 		Collider[] hit = null;
@@ -52,27 +44,49 @@ public class TPlayerAttackEffect : MonoBehaviour
 			for (int i = 0; i < hit.Length; i++)
 			{
 				IDamageable target = hit[i].GetComponent<IDamageable>();
-				float amount = property.skillAP * tPlayer.GetAP();
 
 				if (target != null)
 				{
 					Damage damage = new Damage(
 						this.gameObject,
-						amount,
+						damageAmount,
 						.3f,
 						(hit[i].transform.position - transform.position).normalized * .5f,
 						Damage.DamageType.Normal
 					);
 					target.OnDamage(damage);
 
-					GameObject temp = Instantiate(hitEffect, hit[i].transform);
-					temp.transform.position += Vector3.up;
-					temp.transform.parent = null;
+					GameObject hitEffect = PoolerManager.instance.OutPool(hitEffectKey);
+					hitEffect.transform.position += Vector3.up;
+					hitEffect.transform.parent = null;
+					StartCoroutine(HideHitEffect(hitEffect));
 				}
 				
 			}
 		}
 	}
+	public string GetKey()
+	{
+		return GetType() + attackType.ToString();
+	}
+	private IEnumerator Hide()
+	{
+		yield return new WaitForSeconds(3f);
+		PoolerManager.instance.InPool(GetKey(), gameObject);
+	}
+	private IEnumerator HideHitEffect(GameObject hitEffect)
+	{
+		yield return new WaitForSeconds(3f);
+		PoolerManager.instance.InPool(hitEffectKey, hitEffect);
+	}
+}
+enum ETPlayerAttackEffect
+{
+	normal_1,
+	normal_2,
+	normal_3,
+	normal_4,
+	dodge
 }
 enum Mode
 {

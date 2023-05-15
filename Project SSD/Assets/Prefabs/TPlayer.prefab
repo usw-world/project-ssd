@@ -5275,7 +5275,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 8713321098745448525, guid: e13c73c7e5199f448b25d20d7b787c00,
+    effect: {fileID: 8219817416219295659, guid: e13c73c7e5199f448b25d20d7b787c00,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 

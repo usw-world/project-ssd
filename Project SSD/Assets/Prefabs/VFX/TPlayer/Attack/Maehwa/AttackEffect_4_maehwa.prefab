@@ -920,7 +920,7 @@ ParticleSystem:
     rateOverDistance:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 39.03
+      scalar: 0
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -9756,7 +9756,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4991478755197702834
 Transform:
   m_ObjectHideFlags: 0
@@ -9787,16 +9787,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c205cd3b16d2b194687586fc5bfc0621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  test: {fileID: 0}
-  testing: 0
   mode: 0
+  attackType: 3
   hitEffect: {fileID: 2722884100149935785, guid: 4ab924e499315454fb2a3bea29e94d06,
     type: 3}
   damageZoneSize: {x: 1, y: 1, z: 2.5}
   localPos: {x: 0, y: 1, z: 1}
-  localRot: {x: 0, y: 0, z: 0}
-  runTime: 5
-  tPlayer: {fileID: 0}
 --- !u!1 &4991478755349416401
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,9 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Effect_XBotAssault : MonoBehaviour {
-    private void OnTriggerEnter(Collider other) {
+	[SerializeField] private float amount = 10f;
+
+	private void OnTriggerEnter(Collider other) {
         if(other.gameObject.layer == 7) {
-            other.GetComponent<TPlayer>()?.OnDamage(gameObject, 12f);
+			Vector3 force = (other.transform.position - transform.position).normalized * 3f;
+			Damage damage = new Damage(
+				gameObject,
+				amount,
+				0,
+				force,
+				Damage.DamageType.Normal
+			); 
+			other.GetComponent<IDamageable>()?.OnDamage(damage);
         }
     }
 }

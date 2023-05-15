@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitEffect : MonoBehaviour
+public class HitEffect : MonoBehaviour, IPoolerableObject
 {
-	[SerializeField] float runTime = 5f;
-	private void OnEnable()
+	[SerializeField] private EHitEffectType type;
+
+	public string GetKey()
 	{
-		Invoke("Hide", runTime);
+		return GetType() + type.ToString();
 	}
-	void Hide() 
-	{
-		gameObject.SetActive(false); 
-	}
+}
+enum EHitEffectType
+{
+	TPlayer_normal_1
 }
