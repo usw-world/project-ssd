@@ -27,9 +27,9 @@ public class TPlayerSkill : Skill
 			effect.GetComponent<TPlayerAttackEffect>().OnActive(damageAmount);
 		}
 	}
-	public override void Run()
+	public override string GetAnimationTigger()
 	{
-		
+		return "";
 	}
 	public override bool CanUse()
 	{

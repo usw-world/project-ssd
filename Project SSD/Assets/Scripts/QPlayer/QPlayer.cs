@@ -19,6 +19,7 @@ public class QPlayer : NetworkBehaviour
     #region Q-Player Status
     public PlayerStatus status;
     bool isAttached = true;
+    bool canAttack = true;
     #endregion Q-Player Status
 
     #region Movement
@@ -35,9 +36,9 @@ public class QPlayer : NetworkBehaviour
     State separatedState = new State("Separated");
     State returnState = new State("Return");
     State moveState = new State("Move");
-    State attackState = new State("Attack");
-    State pervState;
-    //State oneHandCastingState = new State("1H Casting");
+    State unityBallState = new State("Unity Ball");
+    State prevState;
+    string currentAnimationTrigger = "";
     #endregion State Machine
 
     #region Stamina
@@ -57,7 +58,8 @@ public class QPlayer : NetworkBehaviour
 
     #region Skill
     public List<Skill> skills;
-    private Skill useingSkill;
+    private Skill usingSkill;
+    private Vector3 targetPoint;
 
     private int aimingSkillIndex = -1;
     private Skill AimingSkill {
@@ -112,13 +114,14 @@ public class QPlayer : NetworkBehaviour
         statesMap.Add(separatedState.stateName, separatedState);
         statesMap.Add(returnState.stateName, returnState);
         statesMap.Add(moveState.stateName, moveState);
-        statesMap.Add(attackState.stateName, attackState);
+        statesMap.Add(unityBallState.stateName, unityBallState);
         //statesMap.Add(oneHandCastingState.stateName, oneHandCastingState);
         #endregion Register States
 
         #region Attached State
         attachedState.onActive += (State prevState) => {
             movement.Stop();
+            canAttack = true;
             movement.enabled = false;
             ChangeAnimation(FLY_ANIMATION_PARAMETER);
         };
@@ -138,38 +141,45 @@ public class QPlayer : NetworkBehaviour
         #region Separated State
         separatedState.onActive += (State prevState) => {
             movement.enabled = true;
+            canAttack = true;
             ChangeAnimation(IDLE_ANIMATION_PARAMETER);
         };
         separatedState.onStay += () => {
             if(!movement.isArrive)
-                ChangeState(moveState);
+                ChangeState(moveState, false);
         };
         separatedState.onInactive += (State nextState) => { };
         #endregion Separated State
 
         #region Move State
         moveState.onActive += (State prevState) => {
-            transform.LookAt(movingDestination);
             movement.enabled = true;
-            movement.MoveToPoint(movingDestination, movingSpeed);
+            canAttack = true;
             ChangeAnimation(FLY_ANIMATION_PARAMETER);
         };
         moveState.onStay += () => {
             if(movement.isArrive)
-                ChangeState(separatedState);
+                ChangeState(separatedState, false);
         };
         moveState.onInactive += (State nextState) => {
             movement.Stop();
         };
         #endregion Move State
 
-        //#region OneHandCasting State
-        //attachedState.onActive = (State prevState) => {
-        //    animator.SetTrigger(OneHandCasting_ANIMATION_PARAMETER);
-        //};
-        //attachedState.onStay = () => { };
-        //attachedState.onInactive = (State nextState) => { };
-        //#endregion OneHandCasting State
+        #region UnityBall State
+        unityBallState.onActive = (State prevState) =>
+		{
+            transform.LookAt(targetPoint);
+            Vector3 qPlayerRot = transform.eulerAngles;
+            qPlayerRot.x = 0;
+            qPlayerRot.z = 0;
+            transform.eulerAngles = qPlayerRot;
+            canAttack = false;
+            animator.SetTrigger(usingSkill.GetAnimationTigger());
+        };
+        unityBallState.onStay = () => { };
+        unityBallState.onInactive = (State nextState) => { canAttack = true; };
+        #endregion UnityBall State
     }
     private IEnumerator ReturnCoroutine() {
         float offset = 0;
@@ -178,7 +188,7 @@ public class QPlayer : NetworkBehaviour
             transform.position = Vector3.Lerp(transform.position, tPlayerGobj.transform.position, offset);
             yield return null;
         }
-        ChangeState(attachedState);
+        ChangeState(attachedState, false);
     }
 
     private void InitializeCamera() {
@@ -200,7 +210,7 @@ public class QPlayer : NetworkBehaviour
 
     }
     public void ReturnToTPlayer(){
-        ChangeState(returnState);
+        ChangeState(returnState, false);
     }
     public void MouseLeftClick(){
         if(isAiming) {
@@ -215,16 +225,18 @@ public class QPlayer : NetworkBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 150f, 1<<6)) {
             movingDestination = new Vector3(hit.point.x, transform.position.y, hit.point.z);
-            ChangeState(moveState, true);
+            movement.MoveToPoint(movingDestination, movingSpeed);
+            transform.LookAt(movingDestination);
+            ChangeState(moveState, false);
         }
     }
     public void OnRunSkill() 
     {
-        useingSkill.Run();
+        usingSkill.Use(targetPoint);
     }
     public void ResetState() 
     {
-        ChangeState(pervState);
+        ChangeState(separatedState, false);
     }
 
     #region Change State With Network
@@ -248,7 +260,6 @@ public class QPlayer : NetworkBehaviour
 	}
     #endregion Change State With Network
 
-    string currentAnimationTrigger = "";
     public void ChangeAnimation(string trigger)
     {
         if (currentAnimationTrigger != "")
@@ -262,6 +273,7 @@ public class QPlayer : NetworkBehaviour
             Debug.LogWarning("Skill index want to use is out of range.");
             return;
         }
+        if (!canAttack) return;
 
         Skill selectedSkill = skills[index]; // 사용하고자 하는 스킬 가져오기
         if (!selectedSkill.CanUse())
@@ -348,24 +360,17 @@ public class QPlayer : NetworkBehaviour
         }
         return Vector3.zero;
     }
-    /* may be removed. >>
-    void UseAmingSkill() {
-        if (!isAiming) return;
-        aimingSkill.Use(skillTargetPos); // [조준스킬] [조준 후] 사용
-        aimingSkill = null;
-        DisableAreaView();
-    }
-    */
     [Command]
     private void CmdUseAmingSkill(int skillIndex, Vector3 targetPoint) {
         UseAmingSkill(skillIndex, targetPoint);
     }
     [ClientRpc]
     private void UseAmingSkill(int skillIndex, Vector3 targetPoint) {
-        pervState = stateMachine.currentState;
-        ChangeState(attackState);
-        useingSkill = skills[skillIndex];
-        useingSkill.Use(targetPoint);
+        prevState = stateMachine.currentState;
+        canAttack = false;
+        usingSkill = skills[skillIndex];
+        this.targetPoint = targetPoint;
+        stateMachine.ChangeState(unityBallState);
         DisableAim();
     }
 }

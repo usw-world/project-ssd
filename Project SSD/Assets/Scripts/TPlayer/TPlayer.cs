@@ -81,7 +81,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
     private State damageState = new State("Damage");
 	private State chargingStart = new State("chargingStart");
 	private State chargingStay = new State("chargingStay");
-	private State charging_3Combo = new State("charging_3Combo");
+	private State chargingAttack1 = new State("chargingAttack1");
+	private State chargingAttack2 = new State("chargingAttack2");
 	
 	private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
@@ -161,7 +162,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		statesMap.Add(damageState.stateName, damageState);
 		statesMap.Add(chargingStart.stateName, chargingStart);
 		statesMap.Add(chargingStay.stateName, chargingStay);
-		statesMap.Add(charging_3Combo.stateName, charging_3Combo);
+		statesMap.Add(chargingAttack1.stateName, chargingAttack1);
+		statesMap.Add(chargingAttack2.stateName, chargingAttack2);
 	}
 	private void InitializeStateOnActive()
     {
@@ -221,8 +223,11 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			sliderCharging.maxValue = chargingMaxTime[0];
 			SetChargingSliderColor();
 		};
-		charging_3Combo.onActive = (State prev) => {
-			ChangeAnimation("3Combo");
+		chargingAttack1.onActive = (State prev) => {
+			ChangeAnimation("Charging Attack 01");
+		};
+		chargingAttack2.onActive = (State prev) => {
+			ChangeAnimation("Charging Attack 02");
 		};
 	}
 	private void InitializeStateOnStay()
@@ -340,7 +345,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
             stateMachine.currentState == damageState ||
 			stateMachine.currentState == chargingStart ||
 			stateMachine.currentState == chargingStay ||
-			stateMachine.currentState == charging_3Combo)
+			stateMachine.currentState == chargingAttack1 ||
+			stateMachine.currentState == chargingAttack2)
         {
             return;
         }
@@ -417,7 +423,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		if (stateMachine.currentState == damageState ||
             stateMachine.currentState == downState ||
 			stateMachine.currentState == dodgeState ||
-			stateMachine.currentState == charging_3Combo) return;
+			stateMachine.currentState == chargingAttack1 ||
+			stateMachine.currentState == chargingAttack2) return;
 		if (lookVector != Vector3.zero) Rotate(10f); 
 		ChangeState(dodgeState, false);
 		skill.dodge.Use();
@@ -445,7 +452,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			stateMachine.currentState == chargingStart || 
 			stateMachine.currentState == chargingStay || 
 			isCanAttack == false ||
-			stateMachine.currentState == charging_3Combo) return;
+			stateMachine.currentState == chargingAttack1 ||
+			stateMachine.currentState == chargingAttack2) return;
 
 		isCanAttack = false;
 
@@ -481,8 +489,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			stateMachine.currentState == downAttackState ||
 			stateMachine.currentState == downAttackState ||
 			stateMachine.currentState == damageState ||
-			stateMachine.currentState == charging_3Combo
-			)
+			stateMachine.currentState == chargingAttack1 ||
+			stateMachine.currentState == chargingAttack2 )
 		{
 			return;
 		}
@@ -501,8 +509,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		switch (chargingLevel)
 		{
 			case 0: ResetState(); break;
-			case 1: ChangeState(charging_3Combo); break;
-			case 2: print("2"); ResetState(); break;
+			case 1: ChangeState(chargingAttack1); break;
+			case 2: ChangeState(chargingAttack2); break;
 			case 3: print("3"); ResetState(); break;
 		}
 		

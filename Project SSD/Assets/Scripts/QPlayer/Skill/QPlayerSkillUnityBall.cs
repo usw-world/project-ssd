@@ -29,8 +29,6 @@ public class QPlayerSkillUnityBall : Skill
 	public float option07_increasingSize;
 	public float option07_increasingSkillPower;
 
-	Vector3 target;
-
 	float DamageAmout {
 		get {
 			float amount = QPlayer.instance.GetAP(); // 여기서 버프 계산 해서 가져오면댐
@@ -76,24 +74,8 @@ public class QPlayerSkillUnityBall : Skill
 		PoolerManager.instance.InsertPooler(option06_effectKey, option06_effect, false);
 		PoolerManager.instance.InsertPooler(option07_effectKey, option07_effect, false);
 	}
+	
 	public override void Use(Vector3 target)
-	{
-		this.target = target;
-		QPlayer.instance.transform.LookAt(target);
-		Vector3 qPlayerRot = QPlayer.instance.transform.eulerAngles;
-		qPlayerRot.x = 0;
-		qPlayerRot.z = 0;
-		QPlayer.instance.transform.eulerAngles = qPlayerRot;
-		if (options[7].active)
-		{
-			QPlayer.instance.ChangeAnimation("2H Casting");
-		}
-		else 
-		{
-			QPlayer.instance.ChangeAnimation("1H Casting");
-		}
-	}
-	public override void Run()
 	{
 		Vector3 sponPos = QPlayer.instance.transform.position;
 		sponPos.y = target.y + 1;
@@ -127,7 +109,7 @@ public class QPlayerSkillUnityBall : Skill
 			attachment.onStay = (gameObject) => {
 				TPlayer.instance.ChangeHp(DamageAmout * option02_healingAmount * 0.01f / 1f);
 			};
-			TPlayer.instance.AddAttachment(attachment);
+			TPlayer.instance.AddAttachment(attachment); // 매게변수도 TPlayer에게 버프를 추가함
 		}
 		if (options[3].active)
 		{
@@ -137,16 +119,22 @@ public class QPlayerSkillUnityBall : Skill
 				Damage damage = new Damage(null, DamageAmout * option03_damageAmount * 0.01f, 0, Vector3.zero, Damage.DamageType.Normal);
 				enemy.OnDamage(damage);
 			};
-			temp.AddDebuff(attachment);
+			temp.AddDebuff(attachment); // 매게변수도 투사체에 디버프를 추가함
 		}
 		if (options[4].active)
 		{
-			temp.AddLastExplosion(option04_effectKey, LastExplosionDamegeAmout); // 매게변수로 투사체이 디버프를 추가함
+			temp.AddLastExplosion(option04_effectKey, LastExplosionDamegeAmout); // 마지막 폭발 데미지 전달
 		}
 		if (options[5].active)
 		{
-			temp.OnActiveGuided(); // 매게변수로 투사체이 디버프를 추가함
+			temp.OnActiveGuided(); // 유도기능 활성화
 		}
+	}
+	public override string GetAnimationTigger()
+	{
+		if (options[7].active)
+			return "2H Casting";
+		return "1H Casting";
 	}
 	public override bool CanUse()
 	{

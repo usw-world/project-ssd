@@ -9,7 +9,7 @@ public class ObjectPooler {
     [SerializeField] private GameObject poolingObject;
     private Transform parent = null;
     private int count;
-    private int restoreCount;
+    private int restoreCount = 5;
     private Queue<GameObject> queue = new Queue<GameObject>();
 
     public Action<GameObject> onInPool;
