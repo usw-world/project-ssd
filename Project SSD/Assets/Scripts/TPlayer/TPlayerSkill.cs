@@ -11,7 +11,7 @@ public class TPlayerSkill : Skill
 	{
 		if (info.effect != null)
 		{
-			effectKey = info.effect?.GetComponent<IPooleableObject>().GetKey();
+			effectKey = info.effect?.GetComponent<IPoolableObject>().GetKey();
 			PoolerManager.instance.InsertPooler(effectKey, info.effect, false);
 		}
 	}

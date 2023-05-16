@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnityBallLastExplosion : MonoBehaviour, IPooleableObject
+public class UnityBallLastExplosion : MonoBehaviour, IPoolableObject
 {
 	public string GetKey()
 	{
