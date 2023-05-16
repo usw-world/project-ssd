@@ -117,7 +117,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
     }
     private void Start()
 	{
-		print(GetType());
 		InitializeStates();
         InitializeStateOnActive();
         InitializeStateOnStay();
@@ -489,11 +488,11 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		}
 		if (stateMachine.currentState == chargingStart)
 		{
-			stateMachine.ChangeState(chargingStay);
+			ChangeState(chargingStay);
 		}
 		else
 		{
-			stateMachine.ChangeState(chargingStart);
+			ChangeState(chargingStart);
 		}
 	}
 	public void OnChargingEnd()
@@ -502,7 +501,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		switch (chargingLevel)
 		{
 			case 0: ResetState(); break;
-			case 1: stateMachine.ChangeState(charging_3Combo); break;
+			case 1: ChangeState(charging_3Combo); break;
 			case 2: print("2"); ResetState(); break;
 			case 3: print("3"); ResetState(); break;
 		}
@@ -549,12 +548,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		sliderHP.value = status.hp;
 		sliderSP.value = status.sp;
-	}
-
-
-	public float GetAP()
-	{
-		return status.ap;
 	}
 	public void AddAttachment(Attachment attachment) {
 		attachmentManager.AddAttachment(attachment);

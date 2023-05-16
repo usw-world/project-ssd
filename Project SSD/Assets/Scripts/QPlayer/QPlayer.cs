@@ -35,6 +35,9 @@ public class QPlayer : NetworkBehaviour
     State separatedState = new State("Separated");
     State returnState = new State("Return");
     State moveState = new State("Move");
+    State attackState = new State("Attack");
+    State pervState;
+    //State oneHandCastingState = new State("1H Casting");
     #endregion State Machine
 
     #region Stamina
@@ -46,6 +49,7 @@ public class QPlayer : NetworkBehaviour
     Animator animator;
     const string IDLE_ANIMATION_PARAMETER = "Idle";
     const string FLY_ANIMATION_PARAMETER = "Fly";
+    const string OneHandCasting_ANIMATION_PARAMETER = "1H Casting";
     #endregion Animation
 
 
@@ -53,6 +57,7 @@ public class QPlayer : NetworkBehaviour
 
     #region Skill
     public List<Skill> skills;
+    private Skill useingSkill;
 
     private int aimingSkillIndex = -1;
     private Skill AimingSkill {
@@ -82,7 +87,9 @@ public class QPlayer : NetworkBehaviour
         else
             Destroy(gameObject); 
         DontDestroyOnLoad(gameObject);
-        
+
+        if (!isLocalPlayer)
+
         animator = GetComponent<Animator>();
         movement = GetComponent<NavigateableMovement>(); 
         stateMachine = GetComponent<StateMachine>();
@@ -105,43 +112,39 @@ public class QPlayer : NetworkBehaviour
         statesMap.Add(separatedState.stateName, separatedState);
         statesMap.Add(returnState.stateName, returnState);
         statesMap.Add(moveState.stateName, moveState);
+        statesMap.Add(attackState.stateName, attackState);
+        //statesMap.Add(oneHandCastingState.stateName, oneHandCastingState);
         #endregion Register States
 
         #region Attached State
         attachedState.onActive += (State prevState) => {
             movement.Stop();
             movement.enabled = false;
-            animator.SetBool(FLY_ANIMATION_PARAMETER, true);
+            ChangeAnimation(FLY_ANIMATION_PARAMETER);
         };
         attachedState.onStay += () => {};
-        attachedState.onInactive += (State nextState) => {
-            animator.SetBool(FLY_ANIMATION_PARAMETER, false);
-        };
+        attachedState.onInactive += (State nextState) => { };
         #endregion Attached State
         
         #region Return State
         returnState.onActive += (State prevState) => {
             movement.Stop();
             movement.enabled = false;
-            animator.SetBool(FLY_ANIMATION_PARAMETER, true);
+            ChangeAnimation(FLY_ANIMATION_PARAMETER);
         };
-        returnState.onInactive += (State nextState) => {
-            animator.SetBool(FLY_ANIMATION_PARAMETER, false);
-        };
+        returnState.onInactive += (State nextState) => { };
         #endregion Return State
 
         #region Separated State
         separatedState.onActive += (State prevState) => {
             movement.enabled = true;
-            animator.SetBool(IDLE_ANIMATION_PARAMETER, true);
+            ChangeAnimation(IDLE_ANIMATION_PARAMETER);
         };
         separatedState.onStay += () => {
             if(!movement.isArrive)
                 ChangeState(moveState);
         };
-        separatedState.onInactive += (State nextState) => {
-            animator.SetBool(IDLE_ANIMATION_PARAMETER, false);
-        };
+        separatedState.onInactive += (State nextState) => { };
         #endregion Separated State
 
         #region Move State
@@ -149,7 +152,7 @@ public class QPlayer : NetworkBehaviour
             transform.LookAt(movingDestination);
             movement.enabled = true;
             movement.MoveToPoint(movingDestination, movingSpeed);
-            animator.SetBool(FLY_ANIMATION_PARAMETER, true);
+            ChangeAnimation(FLY_ANIMATION_PARAMETER);
         };
         moveState.onStay += () => {
             if(movement.isArrive)
@@ -157,9 +160,16 @@ public class QPlayer : NetworkBehaviour
         };
         moveState.onInactive += (State nextState) => {
             movement.Stop();
-            animator.SetBool(FLY_ANIMATION_PARAMETER, false);
         };
         #endregion Move State
+
+        //#region OneHandCasting State
+        //attachedState.onActive = (State prevState) => {
+        //    animator.SetTrigger(OneHandCasting_ANIMATION_PARAMETER);
+        //};
+        //attachedState.onStay = () => { };
+        //attachedState.onInactive = (State nextState) => { };
+        //#endregion OneHandCasting State
     }
     private IEnumerator ReturnCoroutine() {
         float offset = 0;
@@ -208,7 +218,15 @@ public class QPlayer : NetworkBehaviour
             ChangeState(moveState, true);
         }
     }
-    
+    public void OnRunSkill() 
+    {
+        useingSkill.Run();
+    }
+    public void ResetState() 
+    {
+        ChangeState(pervState);
+    }
+
     #region Change State With Network
 	private void ChangeState(State state, bool intoSelf=true) {
         if(isLocalPlayer)
@@ -229,6 +247,15 @@ public class QPlayer : NetworkBehaviour
 		}
 	}
     #endregion Change State With Network
+
+    string currentAnimationTrigger = "";
+    public void ChangeAnimation(string trigger)
+    {
+        if (currentAnimationTrigger != "")
+            animator.ResetTrigger(currentAnimationTrigger);
+        currentAnimationTrigger = trigger;
+        animator.SetTrigger(currentAnimationTrigger);
+    }
 
     public void OnSkill(int index) {
         if (index > skills.Count) {
@@ -335,8 +362,10 @@ public class QPlayer : NetworkBehaviour
     }
     [ClientRpc]
     private void UseAmingSkill(int skillIndex, Vector3 targetPoint) {
-        Skill skill = skills[skillIndex];
-        skill.Use(targetPoint);
+        pervState = stateMachine.currentState;
+        ChangeState(attackState);
+        useingSkill = skills[skillIndex];
+        useingSkill.Use(targetPoint);
         DisableAim();
     }
 }

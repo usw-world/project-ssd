@@ -27,6 +27,10 @@ public class TPlayerSkill : Skill
 			effect.GetComponent<TPlayerAttackEffect>().OnActive(damageAmount);
 		}
 	}
+	public override void Run()
+	{
+		
+	}
 	public override bool CanUse()
 	{
 		status = TPlayer.instance.status;

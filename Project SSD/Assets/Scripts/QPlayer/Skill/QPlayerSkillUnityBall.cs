@@ -29,6 +29,8 @@ public class QPlayerSkillUnityBall : Skill
 	public float option07_increasingSize;
 	public float option07_increasingSkillPower;
 
+	Vector3 target;
+
 	float DamageAmout {
 		get {
 			float amount = QPlayer.instance.GetAP(); // 여기서 버프 계산 해서 가져오면댐
@@ -76,22 +78,41 @@ public class QPlayerSkillUnityBall : Skill
 	}
 	public override void Use(Vector3 target)
 	{
+		this.target = target;
+		QPlayer.instance.transform.LookAt(target);
+		Vector3 qPlayerRot = QPlayer.instance.transform.eulerAngles;
+		qPlayerRot.x = 0;
+		qPlayerRot.z = 0;
+		QPlayer.instance.transform.eulerAngles = qPlayerRot;
+		if (options[7].active)
+		{
+			QPlayer.instance.ChangeAnimation("2H Casting");
+		}
+		else 
+		{
+			QPlayer.instance.ChangeAnimation("1H Casting");
+		}
+	}
+	public override void Run()
+	{
 		Vector3 sponPos = QPlayer.instance.transform.position;
 		sponPos.y = target.y + 1;
 
 		GameObject obj = null;
 		UnityBall temp = null;
 
-		if (options[6].active){
+		if (options[6].active)
+		{
 			obj = PoolerManager.instance.OutPool(option06_effectKey);
 			temp = obj.GetComponent<UnityHubBall>();
 		}
-		else if (options[7].active){
+		else if (options[7].active)
+		{
 			obj = PoolerManager.instance.OutPool(option07_effectKey);
 			temp = obj.GetComponent<UnityBaaaall>();
 		}
-		else{
-
+		else
+		{
 			obj = PoolerManager.instance.OutPool(infoEffectKey);
 			temp = obj.GetComponent<UnityBall>();
 		}
