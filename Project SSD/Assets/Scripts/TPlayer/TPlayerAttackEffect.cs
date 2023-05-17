@@ -83,10 +83,12 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 }
 enum ETPlayerAttackEffect
 {
-	normal_1,
-	normal_2,
-	normal_3,
-	normal_4,
+	LB_to_RT,
+	LM_to_RM,
+	LT_to_RB,
+	RB_to_LT,
+	RM_to_LM,
+	RT_to_LB,
 	dodge
 }
 enum Mode

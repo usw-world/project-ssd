@@ -534,7 +534,7 @@ ModelImporter:
       name: Take 001
       takeName: Take 001
       internalID: 0
-      firstFrame: 0
+      firstFrame: 35
       lastFrame: 226
       wrapMode: 0
       orientationOffsetY: 0
@@ -555,49 +555,49 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.18490504
-        functionName: ComboAttackZone
+      - time: 0.056306176
+        functionName: CheckComboAttack_1
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.27331245
-        functionName: ComboAttackZone
+      - time: 0.16774623
+        functionName: CheckComboAttack_1
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
-      - time: 0.36780396
-        functionName: ComboAttackZone
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.4746794
-        functionName: ComboAttackZone
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.58483016
-        functionName: ComboAttackZone
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.7207701
-        functionName: ComboAttackZone
+      - time: 0.2814316
+        functionName: CheckComboAttack_1
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 2
         messageOptions: 0
-      - time: 0.9520153
+      - time: 0.39598462
+        functionName: CheckComboAttack_1
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 3
+        messageOptions: 0
+      - time: 0.5330067
+        functionName: CheckComboAttack_1
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 4
+        messageOptions: 0
+      - time: 0.6862212
+        functionName: CheckComboAttack_1
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 5
+        messageOptions: 0
+      - time: 0.85796535
         functionName: ResetState
         data: 
         objectReferenceParameter: {instanceID: 0}

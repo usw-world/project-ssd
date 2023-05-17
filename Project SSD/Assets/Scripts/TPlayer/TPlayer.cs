@@ -39,7 +39,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private float idleActionTime = 5f;
 	private int chargingLevel = 0;
 	private float chargingTime = 0;
-	private float[] chargingMaxTime = { 0.3f, 1.5f, 3f };
+	private float[] chargingMaxTime = { 0.3f, 0.5f, 1f };
 	private bool isImmune = false;
 	private bool isSuperArmor = false;
 	private bool isCanAttack = false;
@@ -81,8 +81,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
     private State damageState = new State("Damage");
 	private State chargingStart = new State("chargingStart");
 	private State chargingStay = new State("chargingStay");
-	private State chargingAttack1 = new State("chargingAttack1");
-	private State chargingAttack2 = new State("chargingAttack2");
+	private State chargingDrawSwordAttack = new State("chargingDrawSwordAttack");
+	private State chargingDrawSwordAttack_7time = new State("chargingDrawSwordAttack_7time");
+	private State comboAttack_1 = new State("comboAttack_1");
 	
 	private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
@@ -162,8 +163,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		statesMap.Add(damageState.stateName, damageState);
 		statesMap.Add(chargingStart.stateName, chargingStart);
 		statesMap.Add(chargingStay.stateName, chargingStay);
-		statesMap.Add(chargingAttack1.stateName, chargingAttack1);
-		statesMap.Add(chargingAttack2.stateName, chargingAttack2);
+		statesMap.Add(chargingDrawSwordAttack_7time.stateName, chargingDrawSwordAttack_7time);
+		statesMap.Add(comboAttack_1.stateName, comboAttack_1);
+		statesMap.Add(chargingDrawSwordAttack.stateName, chargingDrawSwordAttack);
 	}
 	private void InitializeStateOnActive()
     {
@@ -222,12 +224,15 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			sliderCharging.value = 0;
 			sliderCharging.maxValue = chargingMaxTime[0];
 			SetChargingSliderColor();
+		}; // chargingDrawSwordAttack
+		chargingDrawSwordAttack.onActive = (State prev) => {
+			ChangeAnimation("DrawSwordAttack");
 		};
-		chargingAttack1.onActive = (State prev) => {
-			ChangeAnimation("Charging Attack 01");
+		chargingDrawSwordAttack_7time.onActive = (State prev) => {
+			ChangeAnimation("Draw Sword Attack 7time");
 		};
-		chargingAttack2.onActive = (State prev) => {
-			ChangeAnimation("Charging Attack 02");
+		comboAttack_1.onActive = (State prev) => {
+			ChangeAnimation("Combo Attack 01");
 		};
 	}
 	private void InitializeStateOnStay()
@@ -287,7 +292,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 				{
 					chargingLevel++;
 					chargingTime = 0;
-					sliderCharging.maxValue = chargingMaxTime[chargingLevel];
+					if (chargingLevel < chargingMaxTime.Length)
+						sliderCharging.maxValue = chargingMaxTime[chargingLevel];
 					SetChargingSliderColor();
 				}
 				sliderCharging.value = chargingTime;
@@ -345,8 +351,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
             stateMachine.currentState == damageState ||
 			stateMachine.currentState == chargingStart ||
 			stateMachine.currentState == chargingStay ||
-			stateMachine.currentState == chargingAttack1 ||
-			stateMachine.currentState == chargingAttack2)
+			stateMachine.currentState == chargingDrawSwordAttack_7time ||
+			stateMachine.currentState == comboAttack_1)
         {
             return;
         }
@@ -423,8 +429,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		if (stateMachine.currentState == damageState ||
             stateMachine.currentState == downState ||
 			stateMachine.currentState == dodgeState ||
-			stateMachine.currentState == chargingAttack1 ||
-			stateMachine.currentState == chargingAttack2) return;
+			stateMachine.currentState == chargingDrawSwordAttack_7time ||
+			stateMachine.currentState == comboAttack_1) return;
 		if (lookVector != Vector3.zero) Rotate(10f); 
 		ChangeState(dodgeState, false);
 		skill.dodge.Use();
@@ -452,8 +458,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			stateMachine.currentState == chargingStart || 
 			stateMachine.currentState == chargingStay || 
 			isCanAttack == false ||
-			stateMachine.currentState == chargingAttack1 ||
-			stateMachine.currentState == chargingAttack2) return;
+			stateMachine.currentState == chargingDrawSwordAttack_7time ||
+			stateMachine.currentState == comboAttack_1) return;
 
 		isCanAttack = false;
 
@@ -483,38 +489,33 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	public void OnChargingStart()
 	{
-		// dodgeAttackState downAttackState dodgeState downState damageState charging_3Combo
 		if (stateMachine.currentState == dodgeAttackState ||
 			stateMachine.currentState == downAttackState ||
 			stateMachine.currentState == downAttackState ||
 			stateMachine.currentState == downAttackState ||
 			stateMachine.currentState == damageState ||
-			stateMachine.currentState == chargingAttack1 ||
-			stateMachine.currentState == chargingAttack2 )
+			stateMachine.currentState == chargingDrawSwordAttack_7time ||
+			stateMachine.currentState == comboAttack_1 )
 		{
 			return;
 		}
-		if (stateMachine.currentState == chargingStart)
-		{
-			ChangeState(chargingStay);
-		}
-		else
-		{
-			ChangeState(chargingStart);
-		}
+		ChangeState(chargingStart, false);
 	}
 	public void OnChargingEnd()
 	{
-		if (stateMachine.currentState != chargingStay) return; 
-		if (stateMachine.currentState == chargingStart) ResetState(); 
+		if (stateMachine.currentState == chargingStart) { 
+			ResetState();
+			return;
+		}
+		if (stateMachine.currentState != chargingStay) return;
+		if (lookVector != Vector3.zero) Rotate(15f);
 		switch (chargingLevel)
 		{
 			case 0: ResetState(); break;
-			case 1: ChangeState(chargingAttack1); break;
-			case 2: ChangeState(chargingAttack2); break;
-			case 3: print("3"); ResetState(); break;
+			case 1: ChangeState(chargingDrawSwordAttack); break;
+			case 2: ChangeState(chargingDrawSwordAttack_7time); break;
+			case 3: ChangeState(comboAttack_1); break;
 		}
-		
 	}
 	#endregion Input Event
 
@@ -523,20 +524,24 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		isCanAttack = true; 
 	}
+	public void ChargingStart()
+	{
+		if (stateMachine.currentState == chargingStart)
+			ChangeState(chargingStay, false);
+	}
 	public void CheckAttackZone()
 	{
-		attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
+		attackCount = (attackCount >= skill.nomalAttacks.Length) ? 0 : attackCount;
 		skill.nomalAttacks[attackCount].Use();
 		attackCount++;
-		attackCount = (attackCount >= attackStateGroup.Count) ? 0 : attackCount;
+		attackCount = (attackCount >= skill.nomalAttacks.Length) ? 0 : attackCount;
 		if (attackCoroutine != null)
 			StopCoroutine(attackCoroutine);
 		attackCoroutine = StartCoroutine(AttackCoroutine());
 	}
-	public void ComboAttackZone(int idx) 
+	public void CheckDrawSwordAttack_7time(int idx) 
 	{
-		skill.nomalAttacks[idx].Use();
-		extraMovingPoint = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
+		skill.charging_DrawSwordAttack_7time[idx].Use();
 		//if (attackCoroutine != null)
 		//	StopCoroutine(attackCoroutine);
 		//attackCoroutine = StartCoroutine(AttackCoroutine());
@@ -550,6 +555,17 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		skill.downAttack.Use();
 		trackEffect.dodgeMaehwa.Disable();
+	}
+	public void ChackDrawSwordAttack()
+	{
+		skill.charging_DrawSwordAttack.Use();
+	}
+	public void CheckComboAttack_1(int idx)
+	{
+		skill.combo_1[idx].Use();
+		if (attackCoroutine != null)
+			StopCoroutine(attackCoroutine);
+		attackCoroutine = StartCoroutine(AttackCoroutine());
 	}
 	#endregion Animation Event
 
@@ -656,6 +672,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 				imgCharging.color = red;
 				imgChargingBackground.color = orange;
 				break;
+			case 3:
+				imgCharging.color = red;
+				imgChargingBackground.color = red;
+				break;
 		}
 	}
 	IEnumerator SmoothConvert(bool fade)
@@ -752,7 +772,6 @@ public class PlayerStatus
 	public float ap = 10f;      // 공격력
 	public float hpRecovery = 1f;
 	public float spRecovery = 1f;
-
 	public void Update() 
 	{
 		hp = (hp < maxHp) ? hp += Time.deltaTime * hpRecovery : maxHp;
@@ -780,9 +799,9 @@ class TPlayerSkillManager
 	public Skill dodge;
 	public Skill dodgeAttack;
 	public Skill downAttack;
-	public Skill charging_01;
-	public Skill charging_02;
-	public Skill charging_03;
+	public Skill charging_DrawSwordAttack;
+	public Skill[] charging_DrawSwordAttack_7time;
+	public Skill[] combo_1;
 }
 [Serializable]
 class TPlayerTrackEffect
