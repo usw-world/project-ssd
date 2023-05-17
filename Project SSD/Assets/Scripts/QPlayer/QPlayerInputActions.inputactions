@@ -161,7 +161,7 @@
                     "name": "",
                     "id": "f3171d95-4ec8-425a-82da-29cc54f9bc66",
                     "path": "<Keyboard>/w",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "Skill02",

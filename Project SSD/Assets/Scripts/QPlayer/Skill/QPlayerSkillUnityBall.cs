@@ -74,7 +74,6 @@ public class QPlayerSkillUnityBall : Skill
 		PoolerManager.instance.InsertPooler(option06_effectKey, option06_effect, false);
 		PoolerManager.instance.InsertPooler(option07_effectKey, option07_effect, false);
 	}
-	
 	public override void Use(Vector3 target)
 	{
 		Vector3 sponPos = QPlayer.instance.transform.position;
