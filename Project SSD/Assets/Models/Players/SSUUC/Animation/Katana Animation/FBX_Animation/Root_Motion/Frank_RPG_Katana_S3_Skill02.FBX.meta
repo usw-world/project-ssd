@@ -548,7 +548,7 @@ ModelImporter:
       name: Take 001
       takeName: Take 001
       internalID: 0
-      firstFrame: 0
+      firstFrame: 70
       lastFrame: 207
       wrapMode: 0
       orientationOffsetY: 0
@@ -569,56 +569,56 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.3891615
+      - time: 0.07831439
         functionName: ComboAttackZone
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
-      - time: 0.43485236
+      - time: 0.14308055
         functionName: ComboAttackZone
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.4752095
+      - time: 0.2071271
         functionName: ComboAttackZone
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
-      - time: 0.5066821
+      - time: 0.25384358
         functionName: ComboAttackZone
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.55195105
+      - time: 0.31670433
         functionName: ComboAttackZone
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 1
         messageOptions: 0
-      - time: 0.5898599
+      - time: 0.37298766
         functionName: ComboAttackZone
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.6277077
+      - time: 0.43452483
         functionName: ComboAttackZone
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 2
         messageOptions: 0
-      - time: 0.86067224
+      - time: 0.6912605
         functionName: ResetState
         data: 
         objectReferenceParameter: {instanceID: 0}

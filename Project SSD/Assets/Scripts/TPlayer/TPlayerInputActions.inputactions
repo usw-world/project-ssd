@@ -253,7 +253,7 @@
                     "name": "",
                     "id": "3bd3ad1d-9684-4396-b385-63177ea4921a",
                     "path": "<Mouse>/rightButton",
-                    "interactions": "Press(pressPoint=0.1)",
+                    "interactions": "Hold(duration=0.2,pressPoint=0.2)",
                     "processors": "",
                     "groups": "",
                     "action": "StartCharging",

@@ -506,6 +506,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	public void OnChargingEnd()
 	{
 		if (stateMachine.currentState != chargingStay) return; 
+		if (stateMachine.currentState == chargingStart) ResetState(); 
 		switch (chargingLevel)
 		{
 			case 0: ResetState(); break;
@@ -536,9 +537,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		skill.nomalAttacks[idx].Use();
 		extraMovingPoint = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
-		if (attackCoroutine != null)
-			StopCoroutine(attackCoroutine);
-		attackCoroutine = StartCoroutine(AttackCoroutine());
+		//if (attackCoroutine != null)
+		//	StopCoroutine(attackCoroutine);
+		//attackCoroutine = StartCoroutine(AttackCoroutine());
 	}
 	public void CheckDodgeAttackZone()
 	{
