@@ -70,9 +70,6 @@ public class QPlayer : NetworkBehaviour
                 return null;
         }
     }
-    /* will be removed. >>
-    Vector3 skillTargetPos;
-    */
 
     public DecalProjector skillDistanceDecal;
     public DecalProjector skillTargetAreaDecal;
@@ -175,7 +172,15 @@ public class QPlayer : NetworkBehaviour
             qPlayerRot.z = 0;
             transform.eulerAngles = qPlayerRot;
             canAttack = false;
-            animator.SetTrigger(usingSkill.GetAnimationTigger());
+
+            string animationParameter = "1H Casting";
+
+            var skillUnityball = usingSkill as QPlayerSkillUnityBall;
+            if(skillUnityball != null && skillUnityball.options[7].active)
+                animationParameter = "2H Casting";
+
+            // animator.SetTrigger(usingSkill.GetAnimationTigger());
+            ChangeAnimation(animationParameter);
         };
         unityBallState.onStay = () => { };
         unityBallState.onInactive = (State nextState) => { canAttack = true; };
@@ -209,15 +214,15 @@ public class QPlayer : NetworkBehaviour
     public void DecreaseStamina() {
 
     }
-    public void ReturnToTPlayer(){
+    public void ReturnToTPlayer() {
         ChangeState(returnState, false);
     }
-    public void MouseLeftClick(){
+    public void MouseLeftClick() {
         if(isAiming) {
             CmdUseAmingSkill(aimingSkillIndex, GetAimingPoint());
         }
     }
-    public void MouseRightClick(){
+    public void MouseRightClick() {
 		if (isAiming) {
             DisableAim();
             return;
@@ -322,34 +327,6 @@ public class QPlayer : NetworkBehaviour
 
             skillTargetAreaDecal.transform.position = nextProjectorPosition;
             return;
-            /* will be removed >>
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, 10000f, 1 << LayerMask.NameToLayer("Block")))
-            {
-                skillTargetPos = hit.point;
-                Vector3 temp = skillTargetPos;
-                temp.y = skillDistanceDecal.transform.position.y;
-
-                float dist = Vector3.Distance(temp, skillDistanceDecal.transform.position);
-                if (dist > aimingSkill.area.distance)
-                {
-                    temp = temp - skillDistanceDecal.transform.position;
-                    temp = temp.normalized * aimingSkill.area.distance;
-                    temp.y += 3f;
-                    skillTargetAreaDecal.transform.localPosition = temp;
-
-                    RaycastHit hit2;
-                    if (Physics.Raycast(skillTargetAreaDecal.transform.position, skillTargetAreaDecal.transform.forward, out hit2, 1 << LayerMask.NameToLayer("Block")))
-                    {
-                        skillTargetPos = hit2.point;
-                    }
-                }
-                else
-                    skillTargetAreaDecal.transform.position = temp;
-            }
-             */
         }
     }
     private Vector3 GetAimingPoint() {

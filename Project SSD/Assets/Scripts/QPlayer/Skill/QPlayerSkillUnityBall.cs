@@ -46,12 +46,12 @@ public class QPlayerSkillUnityBall : Skill
 			return amount;
 		}
 	}
-	float LastSpped{
+	float LastSpeed{
 		get	{
-			float lastSpped = speed;
-			lastSpped *= 1f + ((options[1].active) ? option01_increasingSpeed * 0.01f : 0);
-			lastSpped *= 1f + ((options[5].active) ? option05_increasingSpeed * 0.01f : 0);
-			return lastSpped;
+			float lastSpeed = speed;
+			lastSpeed *= 1f + ((options[1].active) ? option01_increasingSpeed * 0.01f : 0);
+			lastSpeed *= 1f + ((options[5].active) ? option05_increasingSpeed * 0.01f : 0);
+			return lastSpeed;
 		}
 	}
 	Vector3 LastSize{
@@ -100,7 +100,7 @@ public class QPlayerSkillUnityBall : Skill
 		obj.transform.position = sponPos;
 		obj.transform.LookAt(target + Vector3.up);
 		obj.transform.localScale = LastSize;
-		temp.OnActive(DamageAmout, LastSpped);
+		temp.OnActive(DamageAmout, LastSpeed);
 
 		if (options[2].active)
 		{

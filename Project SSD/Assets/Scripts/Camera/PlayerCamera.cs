@@ -29,6 +29,7 @@ public abstract class PlayerCamera : MonoBehaviour {
 
     public void Start() {
         virtualCamera = this.gameObject.GetComponent<CinemachineVirtualCamera>();
+        currentDistance = framingTransposer.m_CameraDistance;
     }
 
     public abstract void SetTarget(Transform target);
