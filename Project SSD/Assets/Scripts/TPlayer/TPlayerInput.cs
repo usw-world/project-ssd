@@ -7,21 +7,22 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(TPlayer))]
 public class TPlayerInput : MonoBehaviour
 {
-    TPlayer player;
+	TPlayer player;
 
 	private void Awake() {
 		player = GetComponent<TPlayer>();
 	}
 	private void Start() {
-		if(TPlayer.instance.isLocalPlayer)
+		if (TPlayer.instance.isLocalPlayer)
 			GetComponent<PlayerInput>().enabled = true;
 	}
-		
+
 	private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))   player.OnDamage(new Damage(null, 10f,0,Vector3.zero,Damage.DamageType.Normal));    // 임시
-        if (Input.GetKeyDown(KeyCode.Alpha2))   player.OnDown();      // 임시
-    }
+	{
+		if (Input.GetKeyDown(KeyCode.Alpha1)) player.OnDamage(new Damage(null, 10f, 0, Vector3.zero, Damage.DamageType.Normal));    // 임시
+		if (Input.GetKeyDown(KeyCode.Alpha2)) player.OnDown();      // 임시
+		if (Input.GetKeyDown(KeyCode.Q)) player.OnComboAttack();      // 임시
+	}
 	void OnMove(InputValue value) => player.InputMove(value.Get<Vector3>());
 	void OnDodge() => player.OnSlide();
 	void OnAttack() => player.OnAttack();

@@ -92,7 +92,7 @@
                     "id": "4e0ab667-a077-48e3-bbe0-475380ced7ab",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "initialStateCheck": false
                 },
                 {
@@ -253,7 +253,7 @@
                     "name": "",
                     "id": "3bd3ad1d-9684-4396-b385-63177ea4921a",
                     "path": "<Mouse>/rightButton",
-                    "interactions": "Hold(duration=0.2,pressPoint=0.2)",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "StartCharging",
@@ -264,7 +264,7 @@
                     "name": "",
                     "id": "0355b7ef-3bab-47ae-a209-97f2fa3422e7",
                     "path": "<Mouse>/rightButton",
-                    "interactions": "Press(pressPoint=0.1,behavior=1)",
+                    "interactions": "Press(pressPoint=1.401298E-45,behavior=1)",
                     "processors": "",
                     "groups": "",
                     "action": "EndCharging",
