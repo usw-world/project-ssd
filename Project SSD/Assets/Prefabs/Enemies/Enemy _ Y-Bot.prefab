@@ -722,7 +722,7 @@ GameObject:
   - component: {fileID: 1584605598289004249}
   - component: {fileID: 1584605598289004246}
   - component: {fileID: 3914493550782780227}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy _ Y-Bot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -827,6 +827,9 @@ MonoBehaviour:
   moveSpeed: 4.5
   arriveDistance: 3
   motionTrailEffect: {fileID: 1584605597551393234}
+  ybotBomb: {fileID: 8239668635998417904, guid: 027708a3e73bdaf44bb352c6ff6b9a5f,
+    type: 3}
+  ybotBombPoint: {fileID: 1256016375062434550}
 --- !u!114 &1584605598289004252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1017,6 +1020,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4907672278620117919}
+  - {fileID: 1256016375062434550}
   m_Father: {fileID: 1218588758966484632}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1298,7 +1302,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -840037777384891287, guid: 54729b55a1c0bfc46ac7d16a2c82ef36, type: 3}
+  - {fileID: 2100000, guid: 44ba2bd2399fd7946a8b05fb6d1cc2d7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1617,6 +1621,37 @@ Transform:
   - {fileID: 5017026051800448463}
   m_Father: {fileID: 1218588758966484632}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3741814181670551317
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1256016375062434550}
+  m_Layer: 0
+  m_Name: Transform_Bomb Pooling Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1256016375062434550
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3741814181670551317}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5733596703561331429}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3899601846344705289
 GameObject:
@@ -1959,7 +1994,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -4565884009001823619, guid: 54729b55a1c0bfc46ac7d16a2c82ef36, type: 3}
+  - {fileID: 2100000, guid: 149f870bf582a044793a2111225073c5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

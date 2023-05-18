@@ -7,13 +7,15 @@ class Enemy_YBot : MovableEnemy {
     private State chaseState = new State("Chase");
     private State BasicState {
         get {
-            if(targetInRange)
+            if(!IsArrive && targetInRange)
                 return chaseState;
             else
                 return idleState;
         }
     }
     private State rollState = new State("Roll");
+    private State shotState = new State("Shot");
+    private State castState = new State("Cast");
     private State hitState = new State("Hit");
     private State dieState = new State("Die");
     #endregion States
@@ -27,6 +29,9 @@ class Enemy_YBot : MovableEnemy {
     private const float DECIDING_INTERVAL = 2f;
     private float currentRollingDodgeCooltime = 0;
     private Coroutine rollingDodgeCoroutine;
+
+    [SerializeField] private Effect_YBotBomb ybotBomb;
+    [SerializeField] private Transform ybotBombPoint;
     #endregion Rolling Dodge
 
     #region Hit
@@ -53,7 +58,7 @@ class Enemy_YBot : MovableEnemy {
     #endregion Unity Events
 
     private void InitializePoolers() {
-        /*  */
+        PoolerManager.instance.InsertPooler(ybotBomb.GetKey(), ybotBomb.gameObject, true);
     }
     private void InitializeState() {
         idleState.onActive += (State prevState) => {
@@ -77,11 +82,26 @@ class Enemy_YBot : MovableEnemy {
             enemyAnimator.SetBool("Chase", false);
             enemyMovement.Stop();
         };
+        shotState.onActive = (State prevState) => {
+            enemyAnimator.SetBool("Shot", true);
+        };
+        shotState.onInactive = (State nextState) => {
+            enemyAnimator.SetBool("Shot", false);
+        };
+        castState.onActive = (State prevState) => {
+            enemyAnimator.SetBool("Cast", true);
+        };
+        castState.onInactive = (State nextState) => {
+            enemyAnimator.SetBool("Cast", false);
+        };
         rollState.onActive += (State prevState) => {
             enemyAnimator.SetBool("Roll", true);
             if(rollingDodgeCoroutine != null)
                 StopCoroutine(rollingDodgeCoroutine);
             rollingDodgeCoroutine = StartCoroutine(RollingDodgeCoroutine());
+
+            GameObject bomb = PoolerManager.instance.OutPool(ybotBomb.GetKey());
+            bomb.transform.position = ybotBombPoint.position;
         };
         rollState.onInactive += (State nextState) => {
             enemyAnimator.SetBool("Roll", false);
@@ -105,6 +125,8 @@ class Enemy_YBot : MovableEnemy {
         enemyStatesMap.Add(rollState.stateName, rollState);
         enemyStatesMap.Add(hitState.stateName, hitState);
         enemyStatesMap.Add(dieState.stateName, dieState);
+        enemyStatesMap.Add(shotState.stateName, shotState);
+        enemyStatesMap.Add(castState.stateName, castState);
     }
     protected override void ChaseTarget(Vector3 point) {
         if(enemyStateMachine.Compare(hitState)
@@ -159,6 +181,18 @@ class Enemy_YBot : MovableEnemy {
     public void AnimationEvent_HitEnd() {
         SendChangeState(BasicState);
     }
+    public void AnimationEvent_CastAction() {
+
+    }
+    public void AnimationEvent_CastEnd() {
+
+    }
+    public void AnimationEvent_ShotAction() {
+
+    }
+    public void AnimationEvent_ShotEnd() {
+
+    }
     #endregion Animation Events
 
     public override void OnDamage(Damage damage) {
@@ -179,7 +213,7 @@ class Enemy_YBot : MovableEnemy {
         SendChangeState(hitState);
         while(offset < damage.hittingDuration) {
             enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World);
-            pushedOffset += Time.deltaTime * 2;
+            pushedOffset += Time.deltaTime / damage.hittingDuration;
             offset += Time.deltaTime;
             yield return null;
         }
