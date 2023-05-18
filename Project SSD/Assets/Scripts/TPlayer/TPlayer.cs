@@ -136,6 +136,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		
 		sliderHP.maxValue = status.maxHp;
 		sliderSP.maxValue = status.maxSp;
+		trackEffect.dodgeMaehwa.Enable();
+		trackEffect.dodgeMaehwa.Disable();
 
 		InitializeCamera();
 		if(isLocalPlayer)
@@ -225,7 +227,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			sliderCharging.value = 0;
 			sliderCharging.maxValue = chargingMaxTime[0];
 			SetChargingSliderColor();
-		}; // chargingDrawSwordAttack
+		}; 
 		chargingDrawSwordAttack.onActive = (State prev) => {
 			ChangeAnimation("DrawSwordAttack");
 		};
