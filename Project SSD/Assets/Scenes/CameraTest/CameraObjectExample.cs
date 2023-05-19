@@ -37,6 +37,11 @@ public class CameraObjectExample : MonoBehaviour
     public void SetCameraToPlayerCamera()
     {
         virtualCamera = CameraManager.instance.playerCam;
-        CameraManager.instance.SetPlayerCamera();
+        CameraManager.instance.SwitchCamera_Easy_InOut(CameraManager.instance.playerCam, 2);
+    }
+
+    public void DestroySelf()
+    {
+        Destroy(this.gameObject);
     }
 }
