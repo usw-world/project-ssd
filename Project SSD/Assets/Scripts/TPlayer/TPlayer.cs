@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System;
 using Random = UnityEngine.Random;
 using Mirror;
+using Cinemachine;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -25,6 +26,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	[SerializeField] private GameObject tPlayerCamera;
 	[SerializeField] private GameObject cutScenesCamera;
 	[SerializeField] private GameObject tPlayerMesh;
+	[SerializeField] private CinemachineVirtualCamera[] cutSceneCamList;
 	#endregion Show Parameters
 
 	#region Hide Parameters
@@ -157,6 +159,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		PlayerCamera.instance == null) {
             GameObject camera = Instantiate(tPlayerCamera);
 			camera.GetComponent<PlayerCamera>().SetTarget(this.transform);
+			CameraManager.instance.playerCam = camera.GetComponent <CinemachineVirtualCamera>();
         }
     }
 	private void InitializeStates() {
@@ -265,23 +268,27 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			isImmune = true;
 			SwordUse(true);
 			ChangeAnimation("Draw Sword Attack Special Start");
+
 			cutScenesCamera.SetActive(true);
-			cutScenesCamera.transform.parent = cutScenesCameraPos.drawAttackSpecial[0];
-			cutScenesCamera.transform.localPosition = Vector3.zero;
-			cutScenesCamera.transform.localEulerAngles = Vector3.zero;
+			CameraManager.instance.SwitchCameara(cutSceneCamList[0]);
+		//	cutScenesCamera.transform.parent = cutScenesCameraPos.drawAttackSpecial[0];
+		//	cutScenesCamera.transform.localPosition = Vector3.zero;
+		//	cutScenesCamera.transform.localEulerAngles = Vector3.zero;
 		};
 		chargingDrawSwordAttack_specialStay.onActive = (State prev) => {
-			StartCoroutine(DrawAttackSpecialCutScene());
+            CameraManager.instance.SwitchCameara(cutSceneCamList[1]);
+            StartCoroutine(DrawAttackSpecialCutScene());
 			tPlayerMesh.SetActive(false);
-			cutScenesCamera.transform.parent = cutScenesCameraPos.drawAttackSpecial[1];
-			cutScenesCamera.transform.localPosition = Vector3.zero;
-			cutScenesCamera.transform.localEulerAngles = Vector3.zero;
+		//	cutScenesCamera.transform.parent = cutScenesCameraPos.drawAttackSpecial[1];
+		//	cutScenesCamera.transform.localPosition = Vector3.zero;
+		//	cutScenesCamera.transform.localEulerAngles = Vector3.zero;
 		};
 		chargingDrawSwordAttack_specialEnd.onActive = (State prev) => {
-			cutScenesCamera.transform.parent = cutScenesCameraPos.drawAttackSpecial[2];
-			cutScenesCamera.transform.localPosition = Vector3.zero;
-			cutScenesCamera.transform.localEulerAngles = Vector3.zero;
-			ChangeAnimation("Draw Sword Attack Special End");
+            CameraManager.instance.SwitchCameara(cutSceneCamList[2]);
+            //	cutScenesCamera.transform.parent = cutScenesCameraPos.drawAttackSpecial[2];
+            //	cutScenesCamera.transform.localPosition = Vector3.zero;
+            //	cutScenesCamera.transform.localEulerAngles = Vector3.zero;
+            ChangeAnimation("Draw Sword Attack Special End");
 		};
 	}
 	
@@ -390,7 +397,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			SwordUse(false);
 		};
 		chargingDrawSwordAttack_specialEnd.onInactive = (State next) => {
-			isImmune = false;
+			CameraManager.instance.SetPlayerCamera();
+            isImmune = false;
 			SwordUse(false);
 			cutScenesCamera.SetActive(false);
 		};
