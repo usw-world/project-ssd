@@ -9,9 +9,13 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 	[SerializeField] private GameObject hitEffect;
 	[SerializeField] private Vector3 damageZoneSize;
     [SerializeField] private Vector3 localPos;
+    [SerializeField] private bool previewAttackZone = false;
+	private GameObject previewBoxPrefab;
 	private string hitEffectKey;
+
 	private void Awake()
 	{
+		previewBoxPrefab = Resources.Load("previewBoxPrefab") as GameObject;
 		hitEffectKey = hitEffect.GetComponent<IPoolableObject>().GetKey();
 		PoolerManager.instance.InsertPooler(hitEffectKey, hitEffect, false);
 	}
@@ -38,6 +42,10 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 				position = tPlayer.transform.position - tPlayer.transform.forward - ( tPlayer.transform.forward * 2f ) + Vector3.up;
 				hit = Physics.OverlapBox(position, damageZoneSize, tPlayer.transform.rotation, 1 << 8);
 				break;
+			case Mode.NonCgargong:
+				position = tPlayer.transform.position - tPlayer.transform.forward + (tPlayer.transform.forward * 4f) + Vector3.up;
+				hit = Physics.OverlapBox(position, damageZoneSize, tPlayer.transform.rotation, 1 << 8);
+				break;
 		}
 		if (hit != null)
 		{
@@ -62,8 +70,13 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 					hitEffect.transform.parent = null;
 					StartCoroutine(HideHitEffect(hitEffect));
 				}
-				
 			}
+		}
+		if (previewAttackZone)
+		{
+			GameObject previewBox = Instantiate(previewBoxPrefab, position, tPlayer.transform.rotation);
+			previewBox.transform.localScale = damageZoneSize;
+			Destroy(previewBox, 2f);
 		}
 	}
 	public string GetKey()
@@ -85,13 +98,15 @@ enum ETPlayerAttackEffect
 {
 	LB_to_RT,
 	LM_to_RM,
+	LM_to_RM_Big,
 	LT_to_RB,
 	RB_to_LT,
 	RM_to_LM,
 	RT_to_LB,
+	NonCgargong,
 	dodge
 }
 enum Mode
 {
-	Nomal, Dodge
+	Nomal, Dodge, NonCgargong
 }

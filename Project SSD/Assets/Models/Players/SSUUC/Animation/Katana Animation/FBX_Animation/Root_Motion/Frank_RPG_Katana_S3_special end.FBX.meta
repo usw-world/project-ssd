@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 34b448d76a992894da159d2d73105ba7
+guid: 398c1626e70752248b88f25348650c5c
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
@@ -543,7 +543,7 @@ ModelImporter:
       name: Take 001
       takeName: Take 001
       internalID: 0
-      firstFrame: 74
+      firstFrame: 85
       lastFrame: 125
       wrapMode: 0
       orientationOffsetY: 0
@@ -564,14 +564,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.088992074
-        functionName: ChackDrawSwordAttack
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.43672705
+      - time: 1
         functionName: ResetState
         data: 
         objectReferenceParameter: {instanceID: 0}

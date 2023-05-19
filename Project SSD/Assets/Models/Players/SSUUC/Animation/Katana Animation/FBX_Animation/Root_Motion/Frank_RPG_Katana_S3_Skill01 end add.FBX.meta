@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 34b448d76a992894da159d2d73105ba7
+guid: 95c2988f67c3f434886b000dcc8ff56b
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
@@ -495,10 +495,10 @@ ModelImporter:
       copied configuration does not match position in animation file:\n\t'thigh_l'
       : position error = 3.733678 mm\n\t'calf_l' : position error = 1.179098 mm\n\t'thigh_r'
       : position error = 3.185538 mm\n\t'calf_r' : position error = 1.346233 mm\n\t'lowerarm_l'
-      : position error = 1.348683 mm\n\t'hand_l' : position error = 5.086540 mm\n\t'middle_02_l'
-      : position error = 1.265078 mm\n\t'ring_02_l' : position error = 1.152882 mm\n\t'lowerarm_r'
-      : position error = 1.426093 mm\n\t'hand_r' : position error = 7.035032 mm\n\t'middle_02_r'
-      : position error = 1.204156 mm\n"
+      : position error = 1.348699 mm\n\t'hand_l' : position error = 5.086589 mm\n\t'middle_02_l'
+      : position error = 1.265020 mm\n\t'ring_02_l' : position error = 1.152881 mm\n\t'lowerarm_r'
+      : position error = 1.426131 mm\n\t'hand_r' : position error = 7.035043 mm\n\t'middle_02_r'
+      : position error = 1.204111 mm\n"
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar
@@ -513,20 +513,25 @@ ModelImporter:
       has translation animation that will be discarded.\n\t'lowerarm_l' has translation
       animation that will be discarded.\n\t'hand_l' has translation animation that
       will be discarded.\n\t'thumb_03_l' has translation animation that will be discarded.\n\t'index_01_l'
-      has translation animation that will be discarded.\n\t'middle_01_l' has translation
-      animation that will be discarded.\n\t'ring_01_l' has translation animation
-      that will be discarded.\n\t'ring_02_l' has translation animation that will
-      be discarded.\n\t'ring_03_l' has translation animation that will be discarded.\n\t'pinky_01_l'
-      has translation animation that will be discarded.\n\t'upperarm_r' has translation
-      animation that will be discarded.\n\t'lowerarm_r' has translation animation
-      that will be discarded.\n\t'hand_r' has translation animation that will be
-      discarded.\n\t'middle_01_r' has translation animation that will be discarded.\n\t'ring_01_r'
-      has translation animation that will be discarded.\n\t'ring_02_r' has translation
-      animation that will be discarded.\n\t'ring_03_r' has translation animation
-      that will be discarded.\n\t'pinky_01_r' has translation animation that will
-      be discarded.\n\t'pinky_02_r' has translation animation that will be discarded.\n\t'pinky_03_r'
-      has translation animation that will be discarded.\n\t'head' has translation
-      animation that will be discarded.\n"
+      has translation animation that will be discarded.\n\t'index_02_l' has translation
+      animation that will be discarded.\n\t'index_03_l' has translation animation
+      that will be discarded.\n\t'middle_01_l' has translation animation that will
+      be discarded.\n\t'middle_02_l' has translation animation that will be discarded.\n\t'middle_03_l'
+      has translation animation that will be discarded.\n\t'ring_01_l' has translation
+      animation that will be discarded.\n\t'ring_02_l' has translation animation
+      that will be discarded.\n\t'ring_03_l' has translation animation that will
+      be discarded.\n\t'pinky_01_l' has translation animation that will be discarded.\n\t'pinky_02_l'
+      has translation animation that will be discarded.\n\t'pinky_03_l' has translation
+      animation that will be discarded.\n\t'upperarm_r' has translation animation
+      that will be discarded.\n\t'lowerarm_r' has translation animation that will
+      be discarded.\n\t'hand_r' has translation animation that will be discarded.\n\t'middle_01_r'
+      has translation animation that will be discarded.\n\t'ring_01_r' has translation
+      animation that will be discarded.\n\t'ring_02_r' has translation animation
+      that will be discarded.\n\t'ring_03_r' has translation animation that will
+      be discarded.\n\t'pinky_01_r' has translation animation that will be discarded.\n\t'pinky_02_r'
+      has translation animation that will be discarded.\n\t'pinky_03_r' has translation
+      animation that will be discarded.\n\t'head' has translation animation that
+      will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
@@ -543,8 +548,8 @@ ModelImporter:
       name: Take 001
       takeName: Take 001
       internalID: 0
-      firstFrame: 74
-      lastFrame: 125
+      firstFrame: 0
+      lastFrame: 22.52
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -564,14 +569,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.088992074
-        functionName: ChackDrawSwordAttack
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
-      - time: 0.43672705
+      - time: 0.98642534
         functionName: ResetState
         data: 
         objectReferenceParameter: {instanceID: 0}
