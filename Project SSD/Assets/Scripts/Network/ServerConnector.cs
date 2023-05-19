@@ -16,8 +16,9 @@ public class ServerConnector : MonoBehaviour
     }
 
     private SaveDataVo saveData = new SaveDataVo();
-    // string apiUrl = "https://uwu-web.azurewebsites.net"
-    private string apiUrl = "http://localhost:5034";
+
+    private string apiUrl = "https://uwu-web.azurewebsites.net";
+    // private string apiUrl = "http://localhost:5034";
 
     // 주소
 
@@ -28,23 +29,27 @@ public class ServerConnector : MonoBehaviour
 
     private void Update()
     {
+        // 회원가입 - 이미 존재하면 500 return
         if (Input.GetKeyDown(KeyCode.Q))
         {
             saveData = new SaveDataVo();
-            saveData.user_id = "Lucius";
+            saveData.user_id = "Lucius1";
             saveData.user_pw = "asdf";
             string json = JsonUtility.ToJson(saveData);
             StartCoroutine(Register(json));
         }
+        
+        // 로그인 - 접속과 동시에 세이브 데이터 받아옴
         if(Input.GetKeyDown(KeyCode.Space))
         {
             saveData = new SaveDataVo();
-            saveData.user_id = "Lucius";
+            saveData.user_id = "Lucius1";
             saveData.user_pw = "asdf";
             string json = JsonUtility.ToJson(saveData);
             StartCoroutine(Login(json));
         }
 
+        // 데이터 보내기 - 서버로 데이터 전송
         if (Input.GetKeyDown(KeyCode.W))
         {
             saveData = SaveTest.saveData;
@@ -54,7 +59,7 @@ public class ServerConnector : MonoBehaviour
             StartCoroutine(SendIngameData(json));
         }
         
-        
+        // 데이터 받아오기 - 서버에서 데이터 받아옴
         if (Input.GetKeyDown(KeyCode.E))
         {
             saveData = SaveTest.saveData;
