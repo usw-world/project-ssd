@@ -110,6 +110,8 @@ public class CameraManager : MonoBehaviour
 
     public void SetPlayerCamera()
     {
+        if (mainCam == null)
+            mainCam = playerCam;
         mainCam.m_Priority--;
         playerCam.m_Priority++;
         mainCam = playerCam;
