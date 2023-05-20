@@ -24,8 +24,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	[SerializeField] private TPlayerTrackEffect trackEffect;
 	[SerializeField] private CutScenesCameraPos cutScenesCameraPos;
 	[SerializeField] private GameObject tPlayerCamera;
-	[SerializeField] private GameObject cutScenesCamera;
 	[SerializeField] private GameObject tPlayerMesh;
+	[SerializeField] private GameObject tPlayerCanvas;
 	[SerializeField] private CinemachineVirtualCamera[] cutSceneCamList;
 	#endregion Show Parameters
 
@@ -35,6 +35,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private Coroutine dodgeCoroutine;
 	private Coroutine rushCoroutine;
 	private Coroutine WalkCoroutine;
+	private List<Transform> lateDamageTarget = new List<Transform>();
 	private Vector3 lookVector;
 	/// <summary>기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다./summary>
 	private Vector3 extraMovingPoint;
@@ -51,6 +52,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private bool isWalk = false;
 	private bool isRush = false;
 	private bool isPressingMRB;
+	private bool isCheckLateDamageTarget = false;
 	private int attackCount = 0;
 	private int idleActionIdx = 0;
 	private int hitCount = 0;
@@ -67,6 +69,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private Movement movement;
     private Animator ani;
     private StateMachine stateMachine;
+	private LateDamageCntl lateDamageCntl;
 	#endregion Component
 
 	#region States
@@ -128,6 +131,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
         ani = GetComponent<Animator>();
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
+		lateDamageCntl = GetComponent<LateDamageCntl>();
     }
     private void Start()
 	{
@@ -151,8 +155,12 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		trackEffect.dodgeMaehwa.Disable();
 
 		InitializeCamera();
-		if(isLocalPlayer)
+		if (isLocalPlayer) { 
         	Cursor.lockState = CursorLockMode.Locked;
+		}
+		else{
+			tPlayerCanvas.SetActive(false);
+		}
 	}
     private void InitializeCamera() {
         if(isLocalPlayer &&
@@ -265,33 +273,24 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			ChangeAnimation("Draw Sword Attack 2time");
 		}; // 
 		chargingDrawSwordAttack_specialStart.onActive = (State prev) => {
+			ChangeAnimation("Draw Sword Attack Special Start");
 			isImmune = true;
 			SwordUse(true);
-			ChangeAnimation("Draw Sword Attack Special Start");
-
-			cutScenesCamera.SetActive(true);
+			lateDamageTarget.Clear();
 			CameraManager.instance.SwitchCameara(cutSceneCamList[0]);
-		//	cutScenesCamera.transform.parent = cutScenesCameraPos.drawAttackSpecial[0];
-		//	cutScenesCamera.transform.localPosition = Vector3.zero;
-		//	cutScenesCamera.transform.localEulerAngles = Vector3.zero;
 		};
 		chargingDrawSwordAttack_specialStay.onActive = (State prev) => {
-            CameraManager.instance.SwitchCameara(cutSceneCamList[1]);
-            StartCoroutine(DrawAttackSpecialCutScene());
 			tPlayerMesh.SetActive(false);
-		//	cutScenesCamera.transform.parent = cutScenesCameraPos.drawAttackSpecial[1];
-		//	cutScenesCamera.transform.localPosition = Vector3.zero;
-		//	cutScenesCamera.transform.localEulerAngles = Vector3.zero;
+			isCheckLateDamageTarget = true;
+			StartCoroutine(DrawAttackSpecialCutScene());
+            CameraManager.instance.SwitchCameara(cutSceneCamList[1]);
 		};
 		chargingDrawSwordAttack_specialEnd.onActive = (State prev) => {
-            CameraManager.instance.SwitchCameara(cutSceneCamList[2]);
-            //	cutScenesCamera.transform.parent = cutScenesCameraPos.drawAttackSpecial[2];
-            //	cutScenesCamera.transform.localPosition = Vector3.zero;
-            //	cutScenesCamera.transform.localEulerAngles = Vector3.zero;
             ChangeAnimation("Draw Sword Attack Special End");
+			StartCoroutine(DrawAttackSpecialEnd());
+			CameraManager.instance.SwitchCameara(cutSceneCamList[2]);
 		};
 	}
-	
 	private void InitializeStateOnStay()
     {
         idleState1.onStay = () => {
@@ -400,10 +399,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			CameraManager.instance.SetPlayerCamera();
             isImmune = false;
 			SwordUse(false);
-			cutScenesCamera.SetActive(false);
 		};
 		chargingDrawSwordAttack_specialStay.onInactive = (State next) => {
 			tPlayerMesh.SetActive(true);
+			isCheckLateDamageTarget = false;
 		};
 	}
 	#endregion Initialize
@@ -723,6 +722,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		stateMachine.ChangeState(chargingDrawSwordAttack_specialStay);
 	}
+	public void CheckDrawAttackSpecial()
+	{
+		StartCoroutine(DrawAttackDamage());
+	}
 	#endregion Animation Event
 
 	private void Update()
@@ -742,7 +745,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		}
 		sliderHP.value = status.hp;
 	}
-
 
 	private void Rotate(float rotSppedPoint = 1f)
 	{
@@ -948,6 +950,49 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		}
 
 		imgCutSceneSwordTrail.gameObject.SetActive(false);
+	}
+	IEnumerator DrawAttackDamage()
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			Damage damage = new Damage(
+				this.gameObject,
+				DamageAmount * 0.3f,
+				.5f,
+				Vector3.zero,
+				Damage.DamageType.Normal
+			);
+			lateDamageCntl.OnDamage(lateDamageTarget, damage);
+			yield return new WaitForSeconds(0.2f);
+		}
+		yield return new WaitForSeconds(0.3f);
+		ResetState();
+	}
+	IEnumerator DrawAttackSpecialEnd()
+	{
+		ChangeAnimation("Draw Sword Attack Special End Stay");
+		yield return new WaitForSeconds(0.3f);
+		Damage damage = new Damage(
+			this.gameObject,
+			DamageAmount * 2f,
+			.5f,
+			Vector3.zero,
+			Damage.DamageType.Normal
+		);
+		lateDamageCntl.OnDamage(lateDamageTarget, damage);
+		yield return new WaitForSeconds(1f);
+		ChangeAnimation("Draw Sword Attack Special End");
+	}
+	private void OnTriggerEnter(Collider other)
+	{
+		if (isCheckLateDamageTarget)
+		{
+			IDamageable checkNull = other.GetComponent<IDamageable>();
+			if (checkNull != null)
+			{
+				lateDamageTarget.Add(other.transform);
+			}
+		}
 	}
 }
 [Serializable]

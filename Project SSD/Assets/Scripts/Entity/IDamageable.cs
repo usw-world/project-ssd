@@ -6,7 +6,6 @@ public interface IDamageable {
     // public abstract void OnDamage(GameObject origin, float amount);
 
     public abstract void OnDamage(Damage damage);
-
 }
 public struct Damage {
     public GameObject origin;
