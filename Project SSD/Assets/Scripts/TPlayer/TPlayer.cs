@@ -23,6 +23,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	[SerializeField] private TPlayerSkillManager skill;
 	[SerializeField] private TPlayerTrackEffect trackEffect;
 	[SerializeField] private CutScenesCameraPos cutScenesCameraPos;
+	[SerializeField] private Effect_MotionTrail motionTrailEffect;
+	private SkinnedMeshRenderer[] skinnedRenderers;
 	[SerializeField] private GameObject tPlayerCamera;
 	[SerializeField] private GameObject tPlayerMesh;
 	[SerializeField] private GameObject tPlayerCanvas;
@@ -132,7 +134,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
 		lateDamageCntl = GetComponent<LateDamageCntl>();
-    }
+		skinnedRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+	}
     private void Start()
 	{
 		InitializeStates();
@@ -232,6 +235,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			isImmune = true;
 			dodgeCoroutine = StartCoroutine(DodgeCoroutine());
 			trackEffect.dodgeMaehwa.Enable();
+			if (prev != idleState1 &&
+				prev != idleState2 &&
+				prev != idleState3 &&
+				prev != moveState)
+			{
+				motionTrailEffect.GenerateTrail(skinnedRenderers);
+			}
 		};
         downState.onActive = (State prev) => {
 			ChangeAnimation("Down");
@@ -953,17 +963,17 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	IEnumerator DrawAttackDamage()
 	{
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			Damage damage = new Damage(
 				this.gameObject,
-				DamageAmount * 0.3f,
+				DamageAmount * 0.15f,
 				.5f,
 				Vector3.zero,
 				Damage.DamageType.Normal
 			);
-			lateDamageCntl.OnDamage(lateDamageTarget, damage);
-			yield return new WaitForSeconds(0.2f);
+			lateDamageCntl.OnDamage(lateDamageTarget, damage, EHitEffectType.slash_1);
+			yield return new WaitForSeconds(0.1f);
 		}
 		yield return new WaitForSeconds(0.3f);
 		ResetState();
@@ -975,11 +985,11 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		Damage damage = new Damage(
 			this.gameObject,
 			DamageAmount * 2f,
-			.5f,
+			3f,
 			Vector3.zero,
 			Damage.DamageType.Normal
 		);
-		lateDamageCntl.OnDamage(lateDamageTarget, damage);
+		lateDamageCntl.OnDamage(lateDamageTarget, damage, EHitEffectType.slash_1);
 		yield return new WaitForSeconds(1f);
 		ChangeAnimation("Draw Sword Attack Special End");
 	}

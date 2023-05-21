@@ -33,11 +33,12 @@ public class Effect_MotionTrail : MonoBehaviour {
         if(effect.TryGetComponent<ParticleSystem>(out p)
         && effect.TryGetComponent<ParticleSystemRenderer>(out pr)) {
             Mesh mesh = new Mesh();
-            for(int i=0; i<renderers.Length; i++) {
-                renderers[i].BakeMesh(mesh);
-            }
-            pr.SetMeshes(new Mesh[]{ mesh });
-            p.Play();
+            for (int i = 0; i < renderers.Length; i++)
+			{
+				renderers[i].BakeMesh(mesh);
+			}
+			pr.SetMeshes(new Mesh[]{ mesh });
+			p.Play();
         }
     }
 }

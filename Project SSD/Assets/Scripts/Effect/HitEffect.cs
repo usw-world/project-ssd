@@ -8,10 +8,11 @@ public class HitEffect : MonoBehaviour, IPoolableObject
 
 	public string GetKey()
 	{
-		return GetType() + type.ToString();
+		return GetType() + type.ToString(); ;
 	}
 }
-enum EHitEffectType
+public enum EHitEffectType
 {
-	TPlayer_normal_1
+	boom_1,
+	slash_1
 }
