@@ -186,9 +186,8 @@ class Enemy_XBot : MovableEnemy {
         dir.y = 0;
 
         while(offset < 1) {
-            offset += Time.deltaTime;
-            
             enemyMovement.MoveToward(dir * 10f * Time.deltaTime, Space.World, 5<<6);
+            offset += Time.deltaTime;
             yield return null;
         }
         SendChangeState(idleState);
@@ -201,7 +200,7 @@ class Enemy_XBot : MovableEnemy {
     public void AnimationEvent_OnJumpAttackAction() {
         /* temporary >> */
         GameObject effect = PoolerManager.instance.OutPool(this.jumpAttackEffect.GetKey());
-        effect.transform.position = jumpAttackEffectPoint.position;
+        effect.GetComponent<Effect_XBotJumpAttack>()?.AttackArea(jumpAttackEffectPoint.position);
         /* << temporary */
     }
     public void AnimationEvent_OnEndCrouch() {

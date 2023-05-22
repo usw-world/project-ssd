@@ -37,6 +37,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private Coroutine dodgeCoroutine;
 	private Coroutine rushCoroutine;
 	private Coroutine WalkCoroutine;
+	private Coroutine damageCoroutine;
 	private Vector3 lookVector; // 기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다
 	private Vector3 extraMovingPoint;
 	private string currentAnimationTrigger = "";
@@ -56,7 +57,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private int chargingLevel = 0;
 	private int idleActionIdx = 0;
 	private int attackCount = 0;
-	private int hitCount = 0;
+	// private int hitCount = 0;
 	#endregion Hide Parameters
 
 	#region Component
@@ -218,7 +219,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			&& !prev.Compare(moveState)) {
 				trackEffect.motionTrailEffect.GenerateTrail(motionTrailedMeshRenderers);
 			}
-			clipPlayer.voice.dodge.Play();
+			// clipPlayer.voice.dodge.Play();
 		};
         downState.onActive = (State prev) => {
 			ChangeAnimation("Down");
@@ -226,7 +227,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		};
         damageState.onActive = (State prev) => {
 			ChangeAnimation("Damage");
-			hitCount = 0;
 		};
 		chargingStart.onActive = (State prev) => {
 			ChangeAnimation("Charging");
@@ -330,9 +330,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
         downState.onStay = () => {
 			ChangeSp(Time.deltaTime * 20f);
 		};
-        damageState.onStay = () => {
-			if (hitCount >= 3) OnDown(); 
-		};
+        damageState.onStay = () => {};
 		chargingStart.onStay = () => {
 			ChangeSp(Time.deltaTime * 20f);
 		};
@@ -376,7 +374,11 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			trackEffect.dodgeMaehwa.Disable();
 		};
         downState.onInactive = (State next) => { isSuperArmor = false; };
-        damageState.onInactive = (State next) => {  };
+        damageState.onInactive = (State next) => {
+			if(damageCoroutine != null
+			&& !next.Compare(damageState))
+				StopCoroutine(damageCoroutine);
+		};
 		chargingStart.onInactive = (State next) => { };
 		chargingStay.onInactive = (State next) => {
 			ui.sliderCharging.gameObject.SetActive(false);
@@ -452,25 +454,32 @@ public class TPlayer : NetworkBehaviour, IDamageable
             ChangeState(moveState, false);
     }
 	public void OnDamage(Damage damage) {
-		if (isImmune) return;    // 무적이면 실행 안함
+		if (isImmune) // 무적이면 실행 안함
+			return;
 
 		status.hp -= damage.amount;
 
 		if (damage.origin != null)
 			LookTarget(damage.origin.transform);
 
-		if (stateMachine.currentState == downState) return;
-		if (isSuperArmor) return;
+		if (stateMachine.Compare(downState)
+		|| isSuperArmor)
+			return;
 
-		if (stateMachine.currentState == damageState)
-		{
-			hitCount++;
-			ani.SetTrigger("Damage");
+		if(damageCoroutine != null)
+			StopCoroutine(damageCoroutine);
+		damageCoroutine = StartCoroutine(DamageCoroutine(damage));
+	}
+	private IEnumerator DamageCoroutine(Damage damage) {
+		float offset = 0f;
+        Vector3 pushedDestination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
+		ChangeState(damageState);
+		while(offset < damage.hittingDuration) {
+            movement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, offset*2) * Time.deltaTime, Space.World);
+			offset += Time.deltaTime;
+			yield return null;
 		}
-		else
-		{
-			ChangeState(damageState, false);
-		}
+		ResetState();
 	}
 	public void OnDown()
 	{

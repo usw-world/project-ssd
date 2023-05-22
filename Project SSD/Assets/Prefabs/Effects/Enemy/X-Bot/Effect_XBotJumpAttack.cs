@@ -9,17 +9,18 @@ public class Effect_XBotJumpAttack : MonoBehaviour, IPoolableObject {
 	public string GetKey() {
         return this.GetType().ToString();
     }
-
-    private void OnEnable() {
+    
+    public void AttackArea(Vector3 center) {
+        transform.position = center;
         StartCoroutine(DisapearCoroutine());
-        Collider[] inners = Physics.OverlapSphere(transform.position, radius, 1<<7);
+        Collider[] inners = Physics.OverlapSphere(transform.position, radius, ~(1<<8));
         foreach(Collider inner in inners) {
 			Damage damage = new Damage(
 				gameObject, 
 				amount, 
-				0,
+				1.5f,
 				Vector3.zero, 
-				Damage.DamageType.Normal
+				Damage.DamageType.Down
 			);
             inner.GetComponent<IDamageable>()?.OnDamage(damage);
         }

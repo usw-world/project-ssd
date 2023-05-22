@@ -4,18 +4,25 @@ using UnityEngine;
 
 public class Effect_XBotAssault : MonoBehaviour {
 	[SerializeField] private float amount = 10f;
+	[SerializeField] private float forceScalar = 35f;
+	private bool hasHit = false;
 
+	private void OnEnable() {
+		hasHit = false;
+	}
 	private void OnTriggerEnter(Collider other) {
-        if(other.gameObject.layer == 7) {
-			Vector3 force = (other.transform.position - transform.position).normalized * 3f;
+        if(!hasHit
+		&& other.gameObject.layer == 7) {
+			Vector3 force = (other.transform.position - transform.position).normalized * forceScalar;
 			Damage damage = new Damage(
 				gameObject,
 				amount,
-				0,
+				.75f,
 				force,
 				Damage.DamageType.Normal
 			); 
 			other.GetComponent<IDamageable>()?.OnDamage(damage);
+			hasHit = true;
         }
     }
 }

@@ -5,7 +5,7 @@ ModelImporter:
   internalIDToNameTable:
   - first:
       74: -203655887218126122
-    second: Y Bot@Shot
+    second: Y Bot@Shoot
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -36,7 +36,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Y Bot@Shot
+      name: Y Bot@Shoot
       takeName: mixamo.com
       internalID: 0
       firstFrame: 0
@@ -61,14 +61,14 @@ ModelImporter:
       curves: []
       events:
       - time: 0.5171429
-        functionName: AnimationEvent_ShotAction
+        functionName: AnimationEvent_ShootAction
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 1
-        functionName: AnimationEvent_ShotEnd
+        functionName: AnimationEvent_ShootEnd
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

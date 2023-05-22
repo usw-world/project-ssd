@@ -14,7 +14,7 @@ class Enemy_YBot : MovableEnemy {
         }
     }
     private State rollState = new State("Roll");
-    private State shotState = new State("Shot");
+    private State shootState = new State("Shoot");
     private State castState = new State("Cast");
     private State hitState = new State("Hit");
     private State dieState = new State("Die");
@@ -35,7 +35,8 @@ class Enemy_YBot : MovableEnemy {
     #endregion Rolling Dodge
 
     #region Shot Spell
-
+    [SerializeField] private Effect_YBotShootingSpell ybotShootingSpell;
+    [SerializeField] private Transform ybotShootingSpellPoint;
     #endregion Shot Spell
 
     #region Hit
@@ -61,6 +62,7 @@ class Enemy_YBot : MovableEnemy {
 
     private void InitializePoolers() {
         PoolerManager.instance.InsertPooler(ybotBomb.GetKey(), ybotBomb.gameObject, true);
+        PoolerManager.instance.InsertPooler(ybotShootingSpell.GetKey(), ybotShootingSpell.gameObject, true);
     }
     private void InitializeState() {
         idleState.onActive += (State prevState) => {
@@ -84,11 +86,14 @@ class Enemy_YBot : MovableEnemy {
             enemyAnimator.SetBool("Chase", false);
             enemyMovement.Stop();
         };
-        shotState.onActive = (State prevState) => {
-            enemyAnimator.SetBool("Shot", true);
+        shootState.onActive = (State prevState) => {
+            Vector3 targetPos = targetPosition;
+            targetPos.y = transform.position.y;
+            transform.LookAt(targetPos);
+            enemyAnimator.SetBool("Shoot", true);
         };
-        shotState.onInactive = (State nextState) => {
-            enemyAnimator.SetBool("Shot", false);
+        shootState.onInactive = (State nextState) => {
+            enemyAnimator.SetBool("Shoot", false);
         };
         castState.onActive = (State prevState) => {
             enemyAnimator.SetBool("Cast", true);
@@ -132,7 +137,7 @@ class Enemy_YBot : MovableEnemy {
         enemyStatesMap.Add(rollState.stateName, rollState);
         enemyStatesMap.Add(hitState.stateName, hitState);
         enemyStatesMap.Add(dieState.stateName, dieState);
-        enemyStatesMap.Add(shotState.stateName, shotState);
+        enemyStatesMap.Add(shootState.stateName, shootState);
         enemyStatesMap.Add(castState.stateName, castState);
     }
     protected override void ChaseTarget(Vector3 point) {
@@ -142,7 +147,8 @@ class Enemy_YBot : MovableEnemy {
 
         targetPosition = point;
 
-        if(!TryRollingDodge()) {
+        if(!TryRollingDodge()
+        && !TryShootSpell()) {
             if((  enemyStateMachine.Compare(idleState)
                || enemyStateMachine.Compare(chaseState))
             && !IsArrive) {
@@ -158,13 +164,25 @@ class Enemy_YBot : MovableEnemy {
         || enemyStateMachine.Compare(dieState))
             return false;
 
-        if(DistanceToTarget < 3f
+        if(DistanceToTarget < 4f
         && currentRollingDodgeCooltime <= 0) {
             currentRollingDodgeCooltime = DECIDING_INTERVAL;
             if(Random.Range(0f, 1f) >= .5f) {
                 SendChangeState(rollState, false);
                 return true;
             }
+        }
+        return false;
+    }
+    private bool TryShootSpell() {
+        if(enemyStateMachine.Compare(hitState)
+        || enemyStateMachine.Compare(dieState)
+        || enemyStateMachine.Compare(shootState))
+            return false;
+
+        if(DistanceToTarget < 10f) {
+            SendChangeState(shootState, false);
+            return true;
         }
         return false;
     }
@@ -199,11 +217,27 @@ class Enemy_YBot : MovableEnemy {
     public void AnimationEvent_CastEnd() {
 
     }
-    public void AnimationEvent_ShotAction() {
+    public void AnimationEvent_ShootAction() {
+        if(!enemyStateMachine.Compare(shootState))
+            return;
 
+        GameObject[] effects = new GameObject[3];
+        effects[0] = PoolerManager.instance.OutPool(ybotShootingSpell.GetKey());
+        effects[0].transform.position = ybotShootingSpellPoint.position;
+        effects[0].transform.rotation = ybotShootingSpellPoint.rotation;
+        effects[0].transform.Rotate(new Vector3(0, -30f, 0));
+
+        effects[1] = PoolerManager.instance.OutPool(ybotShootingSpell.GetKey());
+        effects[1].transform.position = ybotShootingSpellPoint.position;
+        effects[1].transform.rotation = ybotShootingSpellPoint.rotation;
+
+        effects[2] = PoolerManager.instance.OutPool(ybotShootingSpell.GetKey());
+        effects[2].transform.position = ybotShootingSpellPoint.position;
+        effects[2].transform.rotation = ybotShootingSpellPoint.rotation;
+        effects[1].transform.Rotate(new Vector3(0, 30f, 0));
     }
-    public void AnimationEvent_ShotEnd() {
-
+    public void AnimationEvent_ShootEnd() {
+        SendChangeState(BasicState);
     }
     #endregion Animation Events
 
