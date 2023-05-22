@@ -7,11 +7,11 @@ using UnityEngine;
 public class SaveDataVo
 {
 
-    public string user_id;
-    public string user_pw;
-    [SerializeField] public int token;
-    public string skillPoint;
-    [SerializeField]public int skill_UnityBall;
+    public string user_id = "";
+    public string user_pw = "";
+    public string token = "";
+    public string skillPoint = "";
+    [SerializeField]public int skill_UnityBall = 0;
 
     public void load(string saveData)
     {
