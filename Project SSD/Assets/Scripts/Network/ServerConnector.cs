@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 public class ServerConnector : MonoBehaviour
 {
     public static ServerConnector instance;
-
+    public SaveTest test;
     private void Awake()
     {
         if (instance == null)
@@ -53,20 +53,16 @@ public class ServerConnector : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.W))
         {
             saveData = SaveTest.saveData;
-            saveData.skill_UnityBall = 10101010;
-            saveData.skillPoint = "20";
             string json = JsonUtility.ToJson(saveData);
-            StartCoroutine(SendIngameData(json));
+            StartCoroutine(SendInGameData(json));
         }
         
         // 데이터 받아오기 - 서버에서 데이터 받아옴
         if (Input.GetKeyDown(KeyCode.E))
         {
             saveData = SaveTest.saveData;
-            saveData.skill_UnityBall = 10101010;
-            saveData.skillPoint = "20";
             string json = JsonUtility.ToJson(saveData);
-            StartCoroutine(RequestIngameData(json));
+            StartCoroutine(RequestInGameData(json));
         }
     }
 
@@ -106,8 +102,10 @@ public class ServerConnector : MonoBehaviour
             Debug.Log(jsonResponse);
             // SaveTest.saveData = JsonUtility.FromJson<SaveDataVo>(jsonResponse); 
             SaveTest.saveData.load(jsonResponse);
+            test.Status.text = "Login Success";
+            test.UpdateUi();
             // receiveData.print();
-            
+
             // SaveTest.saveData = receiveData;
             // JSON 문자열 파싱
         }
@@ -149,6 +147,8 @@ public class ServerConnector : MonoBehaviour
             // 응답 JSON 문자열 저장
             Debug.Log(jsonResponse);
             Debug.Log("회원가입 성공");
+            test.Status.text = "Login Success";
+            test.UpdateUi();
             saveData = JsonUtility.FromJson<SaveDataVo>(jsonResponse); 
             // JsonUtility.FromJsonOverwrite(jsonResponse, saveData);
             // JSON 문자열 파싱
@@ -164,7 +164,7 @@ public class ServerConnector : MonoBehaviour
         // 위와 동일
     }
     
-    IEnumerator SendIngameData(string postData)
+    IEnumerator SendInGameData(string postData)
     {
         Debug.Log(postData);
         byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
@@ -180,7 +180,8 @@ public class ServerConnector : MonoBehaviour
         }
         if (request.responseCode == 200)
         {
-            
+            test.Status.text = "Update Success";
+            test.UpdateUi();
             Debug.Log("update Success");
         }
         else
@@ -192,7 +193,7 @@ public class ServerConnector : MonoBehaviour
         // 위와 동일
     }
     
-    IEnumerator RequestIngameData(string postData)
+    IEnumerator RequestInGameData(string postData)
     {
         Debug.Log(postData);
         byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
@@ -210,8 +211,10 @@ public class ServerConnector : MonoBehaviour
         {
             
             string jsonResponse = request.downloadHandler.text; 
-            saveData = JsonUtility.FromJson<SaveDataVo>(jsonResponse); 
-            Debug.Log("update Success");
+            saveData = JsonUtility.FromJson<SaveDataVo>(jsonResponse);
+            test.Status.text = "Download Success";
+            test.UpdateUi();
+            Debug.Log("download Success");
         }
         else
         {
