@@ -5309,7 +5309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 8219817416219295659, guid: e13c73c7e5199f448b25d20d7b787c00,
+    effect: {fileID: 1994277406731294138, guid: c3ac296d90aed7b4a8b92aeedba058c7,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -10524,7 +10524,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 1161235893120753315, guid: 03480b20210d8ad44a310a08a1f57528,
+    effect: {fileID: 1994277406731294138, guid: c3ac296d90aed7b4a8b92aeedba058c7,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -11181,7 +11181,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 4991478755197702839, guid: f15db9247ada0b548994e31206d0e01b,
+    effect: {fileID: 5972315631096841491, guid: e1ce5302969721348984076d343df1bb,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -19238,10 +19238,11 @@ MonoBehaviour:
     unUse: {fileID: 6187742542714504873}
     use: {fileID: 1547742904}
   skill:
-    nomalAttacks:
+    basicAttacks:
     - {fileID: 582224120}
     - {fileID: 1902763025}
     - {fileID: 1313301119}
+    - {fileID: 1899042714}
     dodge: {fileID: 136153647}
     dodgeAttack: {fileID: 1733597684}
     downAttack: {fileID: 896612880}
@@ -19271,6 +19272,15 @@ MonoBehaviour:
     - {fileID: 1220641451}
     - {fileID: 1975903017}
   motionTrailEffect: {fileID: 8547884751396219203}
+  motionTrailedMeshRenderers:
+  - {fileID: 6038733770378911544}
+  - {fileID: 3829183876458032114}
+  - {fileID: 7661113233106662902}
+  - {fileID: 8508464388821098393}
+  - {fileID: 3990565359278978935}
+  - {fileID: 8433795509311603224}
+  - {fileID: 3065702216551387468}
+  - {fileID: 6760200753921085128}
   tPlayerCamera: {fileID: 3033226870010222224, guid: 2e9172096aa2e804e88ac5eff8475619,
     type: 3}
   tPlayerMesh: {fileID: 8701659808601196383}
@@ -22888,7 +22898,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8701659808601196383}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -23671,6 +23681,86 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7972339259538638219}
     m_Modifications:
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.curve.scalar
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.62319684
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[0].value
+      value: 0.7692308
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[0].inSlope
+      value: 0.65977526
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[1].inSlope
+      value: 0.0590004
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[0].inWeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[0].outSlope
+      value: 0.65977526
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[1].inWeight
+      value: 0.22608697
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[1].outSlope
+      value: 0.0590004
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[0].outWeight
+      value: 0.15826078
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[1].outWeight
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[0].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: SizeModule.curve.maxCurve.m_Curve.Array.data[1].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4498006971705736499, guid: 7dd4d7bf4ff7809469866785654016e0,
         type: 3}
       propertyPath: m_Name

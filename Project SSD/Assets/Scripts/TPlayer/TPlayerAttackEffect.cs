@@ -58,7 +58,7 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 					Damage damage = new Damage(
 						this.gameObject,
 						damageAmount,
-						.5f,
+						.75f,
 						(hit[i].transform.position - transform.position).normalized * 5f,
 						Damage.DamageType.Normal
 					);

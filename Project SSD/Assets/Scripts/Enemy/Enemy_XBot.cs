@@ -104,12 +104,17 @@ class Enemy_XBot : MovableEnemy {
         };
         hitState.onActive += (State prevState) => {
             enemyAnimator.SetBool("Hit", true);
+            enemyAnimator.SetTrigger("Hit Trigger");
         };
         hitState.onInactive += (State nextState) => {
             enemyAnimator.SetBool("Hit", false);
+            if(hitCoroutine != null
+            && !nextState.Compare(hitState))
+                StopCoroutine(hitCoroutine);
         };
         dieState.onActive += (State prevState) => {
             enemyAnimator.enabled = false;
+            enemyStateMachine.isMuted = true;
         };
         dieState.onInactive += (State prevState) => {
             enemyAnimator.enabled = true;
@@ -122,24 +127,25 @@ class Enemy_XBot : MovableEnemy {
         enemyStatesMap.Add(dieState.stateName, dieState);
     }
     protected override void ChaseTarget(Vector3 point) {
-        if(enemyStateMachine.Compare(hitState))
+        if(enemyStateMachine.Compare(hitState)
+        || enemyStateMachine.Compare(dieState))
             return;
 
         targetPosition = point;
 
-        TryAssault();
-        TryJumpAttack();
-
-        if((  enemyStateMachine.Compare(idleState)
-           || enemyStateMachine.Compare(chaseState))
-        && !IsArrive) {
-            SendChangeState(chaseState, true);
+        if(!TryAssault()
+        && !TryJumpAttack()) {
+            if((  enemyStateMachine.Compare(idleState)
+            || enemyStateMachine.Compare(chaseState))
+            && !IsArrive) {
+                SendChangeState(chaseState, true);
+            }
         }
     }
     protected override void OnLostTarget() {
         SendChangeState(idleState);
     }
-    private void TryJumpAttack() {
+    private bool TryJumpAttack() {
         if(DistanceToTarget > 3f
         && DistanceToTarget < 8f
         && !enemyStateMachine.Compare(jumpAttackState)
@@ -147,7 +153,9 @@ class Enemy_XBot : MovableEnemy {
         && !enemyStateMachine.Compare(hitState)
         && currentJumpAttackCooltime <= 0) {
             SendChangeState(jumpAttackState);
+            return true;
         }
+        return false;
     }
     private IEnumerator JumpAttackCoroutine() {
         Vector3 point1 = transform.position;
@@ -161,13 +169,15 @@ class Enemy_XBot : MovableEnemy {
             yield return null;
         }
     }
-    private void TryAssault() {
+    private bool TryAssault() {
         if(DistanceToTarget < 5f
         && !enemyStateMachine.Compare(jumpAttackState)
         && !enemyStateMachine.Compare(assaultState)
         && !enemyStateMachine.Compare(hitState)) {
             SendChangeState(assaultState, false);
+            return true;
         }
+        return false;
     }
     private IEnumerator AssaultCoroutine() {
         float offset = 0;
@@ -220,7 +230,6 @@ class Enemy_XBot : MovableEnemy {
         Vector3 pushedDestination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
         SendChangeState(hitState);
         while(offset < damage.hittingDuration) {
-
             enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World);
             pushedOffset += Time.deltaTime * 2;
             offset += Time.deltaTime;
@@ -231,6 +240,5 @@ class Enemy_XBot : MovableEnemy {
     protected override void OnDie() {
         base.OnDie();
         SendChangeState(dieState);
-        enemyStateMachine.isMuted = true;
     }
 }

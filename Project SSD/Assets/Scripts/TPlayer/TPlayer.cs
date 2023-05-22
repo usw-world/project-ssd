@@ -24,7 +24,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	[SerializeField] private TPlayerTrackEffect trackEffect;
 	[SerializeField] private CutScenesCameraPos cutScenesCameraPos;
 	[SerializeField] private Effect_MotionTrail motionTrailEffect;
-	private SkinnedMeshRenderer[] skinnedRenderers;
+	[SerializeField] private SkinnedMeshRenderer[] motionTrailedMeshRenderers;
 	[SerializeField] private GameObject tPlayerCamera;
 	[SerializeField] private GameObject tPlayerMesh;
 	[SerializeField] private GameObject tPlayerCanvas;
@@ -56,6 +56,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private bool isPressingMRB;
 	private bool isCheckLateDamageTarget = false;
 	private int attackCount = 0;
+	private bool isAfterBasicAttack = false;
 	private int idleActionIdx = 0;
 	private int hitCount = 0;
 	#endregion Hide Parameters
@@ -81,10 +82,15 @@ public class TPlayer : NetworkBehaviour, IDamageable
     private State idleState2 = new State("Idle2", "Idle");
     private State idleState3 = new State("Idle3", "Idle");
     private State moveState = new State("Move");
-    private State attackState1 = new State("Attack1", "Basic Attack");
-    private State attackState2 = new State("Attack2", "Basic Attack");
-    private State attackState3 = new State("Attack3", "Basic Attack");
-    private State attackState4 = new State("Attack4", "Basic Attack");
+	/* will be removed >> 
+    private State attackState1 = new State("Attack1", BASIC_ATTACK_STATES_TAG);
+    private State attackState2 = new State("Attack2", BASIC_ATTACK_STATES_TAG);
+    private State attackState3 = new State("Attack3", BASIC_ATTACK_STATES_TAG);
+    private State attackState4 = new State("Attack4", BASIC_ATTACK_STATES_TAG);
+	<< will be removed */
+	
+	private State basicAttackState = new State("Basic Attack");
+
     private State dodgeAttackState = new State("Dodge Attack");
     private State downAttackState = new State("Down Attack");
     private State dodgeState = new State("Dodge");
@@ -119,9 +125,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	#endregion UI
 
 	#region Initialize
-	public override void OnStartLocalPlayer() {
-        base.OnStartLocalPlayer();
-    }
+	// public override void OnStartLocalPlayer() {
+    //     base.OnStartLocalPlayer();
+    // }
 	private void Awake()
     {
         if(instance == null)
@@ -134,7 +140,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
         movement = GetComponent<Movement>();
         stateMachine = GetComponent<StateMachine>();
 		lateDamageCntl = GetComponent<LateDamageCntl>();
-		skinnedRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
 	}
     private void Start()
 	{
@@ -144,10 +149,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
         InitializeStateOnInactive();
 
         stateMachine.SetIntialState(idleState1);
-        attackStateGroup.Add(attackState1);
+        /* attackStateGroup.Add(attackState1);
         attackStateGroup.Add(attackState2);
         attackStateGroup.Add(attackState3);
-        attackStateGroup.Add(attackState4);
+        attackStateGroup.Add(attackState4); */
         idleStateGroup.Add(idleState1);
         idleStateGroup.Add(idleState2);
         idleStateGroup.Add(idleState3);
@@ -178,10 +183,14 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		statesMap.Add(idleState2.stateName, idleState2);
 		statesMap.Add(idleState3.stateName, idleState3);
 		statesMap.Add(moveState.stateName, moveState);
+		/* will be removed >>
 		statesMap.Add(attackState1.stateName, attackState1);
 		statesMap.Add(attackState2.stateName, attackState2);
 		statesMap.Add(attackState3.stateName, attackState3);
 		statesMap.Add(attackState4.stateName, attackState4);
+		<< will be removed */
+		statesMap.Add(basicAttackState.stateName, basicAttackState);
+
 		statesMap.Add(dodgeAttackState.stateName, dodgeAttackState);
 		statesMap.Add(downAttackState.stateName, downAttackState);
 		statesMap.Add(dodgeState.stateName, dodgeState);
@@ -208,25 +217,31 @@ public class TPlayer : NetworkBehaviour, IDamageable
         idleState3.onActive = (State prev) => { ChangeAnimation("Idle3"); };
         moveState.onActive = (State prev) => {
 			ChangeAnimation("Move");
-			SwordUse(false);
+			DrawSword(false);
 			trackEffect.moveSmoke.Enable();
 		};
+		/* will be removed >>
         attackState1.onActive = (State prev) => {
 			ChangeAnimation("Attack1");
-			SwordUse(true);
+			DrawSword(true);
 		};
         attackState2.onActive = (State prev) => { ChangeAnimation("Attack2"); };
         attackState3.onActive = (State prev) => { ChangeAnimation("Attack3"); };
         attackState4.onActive = (State prev) => { ChangeAnimation("Attack4"); };
+		 */
 		dodgeAttackState.onActive = (State prev) => {
 			ChangeAnimation("DodgeAttack");
-			SwordUse(true);
+			DrawSword(true);
 			extraMovingPoint = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
 			trackEffect.dodgeMaehwa.Enable();
 		};
+		basicAttackState.onActive = (State prevState) => {
+			DrawSword(true);
+			ChangeAnimation("Basic Attack");
+		};
 		downAttackState.onActive = (State prev) => {
 			ChangeAnimation("DownAttack");
-			SwordUse(true);
+			DrawSword(true);
 			extraMovingPoint = transform.forward + transform.position + (transform.forward * 5f + Vector3.up * .5f);
 			trackEffect.dodgeMaehwa.Enable();
 		};
@@ -235,12 +250,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			isImmune = true;
 			dodgeCoroutine = StartCoroutine(DodgeCoroutine());
 			trackEffect.dodgeMaehwa.Enable();
-			if (prev != idleState1 &&
-				prev != idleState2 &&
-				prev != idleState3 &&
-				prev != moveState)
-			{
-				motionTrailEffect.GenerateTrail(skinnedRenderers);
+
+			if(!prev.Compare("Idle")
+			&& !prev.Compare(moveState)) {
+				motionTrailEffect.GenerateTrail(motionTrailedMeshRenderers);
 			}
 		};
         downState.onActive = (State prev) => {
@@ -255,7 +268,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			ChangeAnimation("Charging");
 			chargingLevel = 0;
 			chargingTime = 0;
-			SwordUse(true);
+			DrawSword(true);
 		};
 		chargingStay.onActive = (State prev) => {
 			sliderCharging.gameObject.SetActive(true);
@@ -267,25 +280,25 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			ChangeAnimation("DrawSwordAttack");
 		};
 		chargingDrawSwordAttack_7time.onActive = (State prev) => {
-			SwordUse(true);
+			DrawSword(true);
 			ChangeAnimation("Draw Sword Attack 7time");
 		};
 		comboAttack_1.onActive = (State prev) => {
-			SwordUse(true);
+			DrawSword(true);
 			ChangeAnimation("Combo Attack 01");
 		};
 		chargingDrawSwordAttack_nonCharging.onActive = (State prev) => {
-			SwordUse(true);
+			DrawSword(true);
 			ChangeAnimation("Draw Sword Attack Non Charging");
 		}; 
 		chargingDrawSwordAttack_2time.onActive = (State prev) => {
-			SwordUse(true);
+			DrawSword(true);
 			ChangeAnimation("Draw Sword Attack 2time");
 		}; // 
 		chargingDrawSwordAttack_specialStart.onActive = (State prev) => {
 			ChangeAnimation("Draw Sword Attack Special Start");
 			isImmune = true;
-			SwordUse(true);
+			DrawSword(true);
 			lateDamageTarget.Clear();
 			CameraManager.instance.SwitchCameara(cutSceneCamList[0]);
 		};
@@ -320,7 +333,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			status.Update();
 		};
         moveState.onStay = () => {
-			Rotate();
+			RotateWithCamera();
 			if (isRush)
 			{
 				if (status.sp > 0)
@@ -337,10 +350,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			status.Update();
 			movement.MoveToward(Vector3.forward * ((isWalk) ? status.speed / 2 : status.speed) * Time.deltaTime);
 		};
-        attackState1.onStay = () => {};
-        attackState2.onStay = () => {};
-        attackState3.onStay = () => {};
-        attackState4.onStay = () => {};
 		dodgeAttackState.onStay = () => { MoveToTargetPos(); };
 		downAttackState.onStay = () => { MoveToTargetPos(); };
 		dodgeState.onStay = () => { };
@@ -377,6 +386,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
         moveState.onInactive = (State next) => {
 			trackEffect.moveSmoke.Disable();
 		};
+		/* will be removed >>
         attackState1.onInactive = (State next) => { 
 			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
 		};
@@ -388,6 +398,11 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		};
         attackState4.onInactive = (State next) => { 
 			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
+		};
+		<< */
+		basicAttackState.onInactive = (State nextState) => {
+			if(attackCoroutine != null)
+				StopCoroutine(attackCoroutine);
 		};
 		dodgeAttackState.onInactive = (State next) => {  };
 		downAttackState.onInactive = (State next) => {  };
@@ -403,12 +418,12 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			sliderCharging.gameObject.SetActive(false);
 		};
 		chargingDrawSwordAttack_nonCharging.onInactive = (State next) => {
-			SwordUse(false);
+			DrawSword(false);
 		};
 		chargingDrawSwordAttack_specialEnd.onInactive = (State next) => {
 			CameraManager.instance.SetPlayerCamera();
             isImmune = false;
-			SwordUse(false);
+			DrawSword(false);
 		};
 		chargingDrawSwordAttack_specialStay.onInactive = (State next) => {
 			tPlayerMesh.SetActive(true);
@@ -422,10 +437,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
     {
         lookVector = moveVecterInput;
 
-        if (stateMachine.currentState == attackState1 ||
+        if (stateMachine.Compare(basicAttackState) ||
+			/* will be removed >>
+			 stateMachine.currentState == attackState1 ||
             stateMachine.currentState == attackState2 ||
             stateMachine.currentState == attackState3 ||
-            stateMachine.currentState == attackState4 ||
+            stateMachine.currentState == attackState4 || 
+			<< */
             stateMachine.currentState == dodgeAttackState ||
             stateMachine.currentState == dodgeState ||
             stateMachine.currentState == downState ||
@@ -463,6 +481,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
     {
         isCanAttack = true;
         attackCount = 0;
+		isAfterBasicAttack = false;
         if (lookVector == Vector3.zero)
             ChangeState(idleState1, false);
         else
@@ -474,10 +493,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		status.hp -= damage.amount;
 
 		if (damage.origin != null)
-		{
 			LookTarget(damage.origin.transform);
-			transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-		}
 
 		if (stateMachine.currentState == downState) return;
 		if (isSuperArmor) return;
@@ -517,17 +533,19 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			stateMachine.currentState == chargingDrawSwordAttack_specialStart ||
 			stateMachine.currentState == chargingDrawSwordAttack_specialEnd ||
 			stateMachine.currentState == comboAttack_1) return;
-		if (lookVector != Vector3.zero) Rotate(10f); 
+		if (lookVector != Vector3.zero) RotateWithCamera(10f); 
 		ChangeState(dodgeState, false);
 		skill.dodge.Use();
 	}
     public void OnAttack()
     {
-		if (!skill.nomalAttacks[attackCount].CanUse()) return;
+		if (!skill.basicAttacks[attackCount].CanUse())
+			return;
 
         if (stateMachine.currentState == dodgeState)
         {
-			OnDodgeAttack(); return;
+			OnDodgeAttack();
+			return;
         }
 		if (stateMachine.currentState == moveState && isRush)
 		{
@@ -537,27 +555,36 @@ public class TPlayer : NetworkBehaviour, IDamageable
 				return;
 			}
 		}
-        if (stateMachine.currentState == damageState ||
-            stateMachine.currentState == dodgeState ||
-            stateMachine.currentState == dodgeAttackState ||
-            stateMachine.currentState == downState ||
-			stateMachine.currentState == chargingStart || 
-			stateMachine.currentState == chargingStay || 
-			isCanAttack == false ||
-			stateMachine.currentState == chargingDrawSwordAttack_7time ||
-			stateMachine.currentState == chargingDrawSwordAttack ||
-			stateMachine.currentState == chargingDrawSwordAttack_nonCharging ||
-			stateMachine.currentState == chargingDrawSwordAttack_specialStay ||
-			stateMachine.currentState == chargingDrawSwordAttack_specialStart ||
-			stateMachine.currentState == chargingDrawSwordAttack_specialEnd ||
-			stateMachine.currentState == comboAttack_1) return;
+        if (stateMachine.currentState == damageState
+		|| stateMachine.currentState == dodgeState
+		|| stateMachine.currentState == dodgeAttackState
+		|| stateMachine.currentState == downState
+		|| stateMachine.currentState == downAttackState
+		|| stateMachine.currentState == chargingStart
+		|| stateMachine.currentState == chargingStay
+		|| stateMachine.currentState == chargingDrawSwordAttack_7time
+		|| stateMachine.currentState == chargingDrawSwordAttack
+		|| stateMachine.currentState == chargingDrawSwordAttack_nonCharging
+		|| stateMachine.currentState == chargingDrawSwordAttack_specialStay
+		|| stateMachine.currentState == chargingDrawSwordAttack_specialStart
+		|| stateMachine.currentState == chargingDrawSwordAttack_specialEnd
+		|| stateMachine.currentState == comboAttack_1)
+			return;
 
-		isCanAttack = false;
+		if(stateMachine.Compare(basicAttackState)) {
+		// Case that Playr is basic attacking >>
+			if(isAfterBasicAttack)
+				ChangeAnimation("Basic Attack");
+			else
+				ChangeAnimation("Buffered Input Basic Attack");
+		}
 
-        if (lookVector != Vector3.zero) Rotate(15f);
+        if (lookVector != Vector3.zero)
+			RotateWithCamera(15f);
 
 		extraMovingPoint = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
-		ChangeState(attackStateGroup[attackCount], false);
+		ChangeState(basicAttackState, false);
+		// ChangeState(attackStateGroup[attackCount], false);
     }
 	public void OnMoveSpeedConvert()
 	{
@@ -603,12 +630,12 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		isPressingMRB = false;
 		if (stateMachine.currentState == chargingStart)
 		{
-			if (lookVector != Vector3.zero) Rotate(15f);
+			if (lookVector != Vector3.zero) RotateWithCamera(15f);
 			ChangeState(chargingDrawSwordAttack_nonCharging);
 			return;
 		}
 		if (stateMachine.currentState != chargingStay) return;
-		if (lookVector != Vector3.zero) Rotate(15f);
+		if (lookVector != Vector3.zero) RotateWithCamera(15f);
 		switch (chargingLevel)
 		{
 			case 0: ChangeState(chargingDrawSwordAttack_nonCharging); break;
@@ -664,7 +691,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	#endregion Input Event
 
 	#region Animation Event
-
 	public void BeCanNextAttack()
 	{
 		isCanAttack = true; 
@@ -682,12 +708,19 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			}
 		}
 	}
+	public void AnimationEvent_OnAttackFrame() {
+		skill.basicAttacks[attackCount].Use();
+		if (attackCoroutine != null)
+			StopCoroutine(attackCoroutine);
+		attackCoroutine = StartCoroutine(AttackCoroutine());
+		isAfterBasicAttack = true;
+	}
 	public void CheckAttackZone()
 	{
-		attackCount = (attackCount >= skill.nomalAttacks.Length) ? 0 : attackCount;
-		skill.nomalAttacks[attackCount].Use();
+		attackCount = (attackCount >= skill.basicAttacks.Length) ? 0 : attackCount;
+		skill.basicAttacks[attackCount].Use();
 		attackCount++;
-		attackCount = (attackCount >= skill.nomalAttacks.Length) ? 0 : attackCount;
+		attackCount = (attackCount >= skill.basicAttacks.Length) ? 0 : attackCount;
 		if (attackCoroutine != null)
 			StopCoroutine(attackCoroutine);
 		attackCoroutine = StartCoroutine(AttackCoroutine());
@@ -756,17 +789,17 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		sliderHP.value = status.hp;
 	}
 
-	private void Rotate(float rotSppedPoint = 1f)
+	private void RotateWithCamera(float rotateSpeed = 1f)
 	{
 		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVector;
-		Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, rotateSpeed * rotSppedPoint * Time.deltaTime);
+        Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, this.rotateSpeed * rotateSpeed * Time.deltaTime);
 		transform.rotation = Quaternion.LookRotation(look);
 		transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
 	}
 	private void LookTarget(Transform target) 
 	{
-		transform.LookAt(target);
-		transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+		Vector3 ylessTargetPos = new Vector3(target.position.x, 0, target.position.z);
+		transform.LookAt(ylessTargetPos);
 	}
 	private void MoveToTargetPos()
 	{
@@ -807,7 +840,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
         currentAnimationTrigger = trigger;
         ani.SetTrigger(currentAnimationTrigger);
     }
-	private void SwordUse(bool use) 
+	private void DrawSword(bool use) 
 	{
 		sword.Set(use); 
 	}
@@ -917,7 +950,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	IEnumerator AttackCoroutine(float speed = 1f)
 	{
 		float offset = 0;
-		Vector3 targetPoint = transform.position + transform.forward * speed;
+		float forceCoef = .5f + (lookVector==Vector3.zero ? 0 : 1);
+		Vector3 targetPoint = transform.position + transform.forward * forceCoef * speed;
 		while (offset < 1)
 		{
 			offset += Time.deltaTime * 6f;
@@ -1039,7 +1073,7 @@ class WeaponTransform
 [Serializable]
 class TPlayerSkillManager 
 {
-	public Skill[] nomalAttacks;
+	public Skill[] basicAttacks;
 	public Skill dodge;
 	public Skill dodgeAttack;
 	public Skill downAttack;

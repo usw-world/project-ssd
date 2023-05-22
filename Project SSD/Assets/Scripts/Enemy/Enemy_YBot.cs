@@ -34,6 +34,10 @@ class Enemy_YBot : MovableEnemy {
     [SerializeField] private Transform ybotBombPoint;
     #endregion Rolling Dodge
 
+    #region Shot Spell
+
+    #endregion Shot Spell
+
     #region Hit
     private Coroutine hitCoroutine;
     #endregion Hit
@@ -50,8 +54,6 @@ class Enemy_YBot : MovableEnemy {
         skinnedRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
     }
     protected override void Update() {
-        /* __ test code >> */
-        TryRollingDodge();
         if(currentRollingDodgeCooltime > 0)
             currentRollingDodgeCooltime -= Time.deltaTime;
     }
@@ -110,12 +112,17 @@ class Enemy_YBot : MovableEnemy {
         };
         hitState.onActive += (State prevState) => {
             enemyAnimator.SetBool("Hit", true);
+            enemyAnimator.SetTrigger("Hit Trigger");
         };
         hitState.onInactive += (State nextState) => {
             enemyAnimator.SetBool("Hit", false);
+            if(hitCoroutine != null
+            && !nextState.Compare(hitState))
+                StopCoroutine(hitCoroutine);
         };
         dieState.onActive += (State prevState) => {
             enemyAnimator.enabled = false;
+            enemyStateMachine.isMuted = true;
         };
         dieState.onInactive += (State prevState) => {
             enemyAnimator.enabled = true;
@@ -130,28 +137,36 @@ class Enemy_YBot : MovableEnemy {
     }
     protected override void ChaseTarget(Vector3 point) {
         if(enemyStateMachine.Compare(hitState)
-        && enemyStateMachine.Compare(rollState))
+        || enemyStateMachine.Compare(rollState))
             return;
 
         targetPosition = point;
 
-        if((  enemyStateMachine.Compare(idleState)
-           || enemyStateMachine.Compare(chaseState))
-        && !IsArrive) {
-            SendChangeState(chaseState, true);
+        if(!TryRollingDodge()) {
+            if((  enemyStateMachine.Compare(idleState)
+               || enemyStateMachine.Compare(chaseState))
+            && !IsArrive) {
+                SendChangeState(chaseState, true);
+            }
         }
     }
     protected override void OnLostTarget() {
         SendChangeState(idleState);
     }
-    private void TryRollingDodge() {
+    private bool TryRollingDodge() {
+        if(enemyStateMachine.Compare(hitState)
+        || enemyStateMachine.Compare(dieState))
+            return false;
+
         if(DistanceToTarget < 3f
         && currentRollingDodgeCooltime <= 0) {
             currentRollingDodgeCooltime = DECIDING_INTERVAL;
             if(Random.Range(0f, 1f) >= .5f) {
                 SendChangeState(rollState, false);
+                return true;
             }
         }
+        return false;
     }
     private IEnumerator RollingDodgeCoroutine() {
         motionTrailEffect.GenerateTrail(skinnedRenderers);
@@ -178,9 +193,6 @@ class Enemy_YBot : MovableEnemy {
     }
 
     #region Animation Events
-    public void AnimationEvent_HitEnd() {
-        SendChangeState(BasicState);
-    }
     public void AnimationEvent_CastAction() {
 
     }
@@ -213,7 +225,7 @@ class Enemy_YBot : MovableEnemy {
         SendChangeState(hitState);
         while(offset < damage.hittingDuration) {
             enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World);
-            pushedOffset += Time.deltaTime / damage.hittingDuration;
+            pushedOffset += Time.deltaTime * 2;
             offset += Time.deltaTime;
             yield return null;
         }
@@ -222,6 +234,5 @@ class Enemy_YBot : MovableEnemy {
     protected override void OnDie() {
         base.OnDie();
         SendChangeState(dieState);
-        enemyStateMachine.isMuted = true;
     }
 }

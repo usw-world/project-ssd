@@ -91,11 +91,9 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         }
     }
     public virtual void OnDamage(Damage damage) {
-        print("OnDamage was called.");
         if(SSDNetworkManager.instance.isHost) {
             var message = new S2CMessage.DamageMessage(this.networkId, damage);
             NetworkServer.SendToAll(message);
-            print("Sended damage message.");
         }
     }
     public virtual void TakeDamage(Damage damage) {
@@ -104,6 +102,8 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         if(hp <= 0) {
             OnDie();
         }
+        Vector3 ylessForceVector = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
+        transform.LookAt(transform.position - ylessForceVector);
     }
     public virtual void AddAttachment(Attachment attachment) {
         // 버프/디버프 추가하는 함수!

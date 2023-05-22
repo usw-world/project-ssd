@@ -12,7 +12,7 @@ public class TPlayerSkill : Skill
 		if (info.effect != null)
 		{
 			effectKey = info.effect?.GetComponent<IPoolableObject>().GetKey();
-			PoolerManager.instance.InsertPooler(effectKey, info.effect, false);
+			PoolerManager.instance.InsertPooler(effectKey, info.effect, false, 5, 2);
 		}
 	}
 	public override void Use()

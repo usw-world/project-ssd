@@ -18,27 +18,26 @@ public class Effect_MotionTrail : MonoBehaviour {
         gobj.SetActive(true);
         gobj.transform.position = transform.position;
         gobj.transform.rotation = transform.rotation;
-        // gobj.transform.LookAt(transform.position + transform.forward);
         StartCoroutine(DelayInPoolCoroutine(gobj, maxDuration));
     }
     private IEnumerator DelayInPoolCoroutine(GameObject target, float delayTime) {
         yield return new WaitForSeconds(delayTime);
         effectsPooler.InPool(target);
     }
-    public void GenerateTrail(SkinnedMeshRenderer[] renderers) {
-        GameObject effect = effectsPooler.OutPool();
-        ParticleSystem p;
-        ParticleSystemRenderer pr;
-        
-        if(effect.TryGetComponent<ParticleSystem>(out p)
-        && effect.TryGetComponent<ParticleSystemRenderer>(out pr)) {
-            Mesh mesh = new Mesh();
-            for (int i = 0; i < renderers.Length; i++)
-			{
-				renderers[i].BakeMesh(mesh);
-			}
-			pr.SetMeshes(new Mesh[]{ mesh });
-			p.Play();
+    public void GenerateTrail(SkinnedMeshRenderer[] skinnedMeshes) {
+        for(int i=0; i<skinnedMeshes.Length; i++) {
+            GameObject effect = effectsPooler.OutPool();
+            ParticleSystem p;
+            ParticleSystemRenderer pr;
+
+            if(effect.TryGetComponent<ParticleSystem>(out p)
+            && effect.TryGetComponent<ParticleSystemRenderer>(out pr)) {
+                Mesh mesh = new Mesh();
+                skinnedMeshes[i].BakeMesh(mesh);
+                pr.SetMeshes(new Mesh[] { mesh });
+                p.Play();
+            }
         }
+        
     }
 }

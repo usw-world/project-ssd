@@ -6,8 +6,6 @@ public class StateMachine : MonoBehaviour {
 
     [HideInInspector] public bool isMuted = false;
 
-    protected bool hasBeenChanged = false;
-
     protected virtual void Start() {
         if(currentState == null) {
             Debug.LogError($"StateMachine on '{gameObject.name}' has not any 'currentState'. Please set initial 'currentState' with SetInitialState(State state).");
@@ -21,7 +19,7 @@ public class StateMachine : MonoBehaviour {
         }
     }
     public virtual void ChangeState(State nextState, bool intoSelf=true) {
-        if(hasBeenChanged || isMuted) return;
+        if(isMuted) return;
         if(!intoSelf && nextState==currentState) return;
         if(currentState == null) {
             Debug.LogError($"StateMachine on '{gameObject.name}' has not any 'currentState'. Please set initial 'currentState' with SetInitialState(State state).");
@@ -30,10 +28,8 @@ public class StateMachine : MonoBehaviour {
             nextState?.onActive?.Invoke(currentState);
             this.nextState = nextState;
             currentState = nextState;
-            hasBeenChanged = true;
         }
     }
-    // protected virtual void LateUpdate() => hasBeenChanged = false;
     public bool Compare(State target) {
         return currentState == target;
     }
@@ -42,7 +38,6 @@ public class StateMachine : MonoBehaviour {
     }
     protected virtual void Update() {
         currentState?.onStay?.Invoke();
-        hasBeenChanged = false;
     }
     protected virtual void FixedUpdate() {
         currentState?.onStayFixed?.Invoke();

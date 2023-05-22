@@ -2990,6 +2990,21 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
         type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 0.5764706
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 0.52156866
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 0.2509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 1057966936823432813, guid: 7dd4d7bf4ff7809469866785654016e0,
+        type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].repeatInterval
       value: 0.1
       objectReference: {fileID: 0}
