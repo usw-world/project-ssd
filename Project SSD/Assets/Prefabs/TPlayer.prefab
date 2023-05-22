@@ -10702,14 +10702,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1547742903}
-  m_LocalRotation: {x: -0.8295201, y: 0.05002505, z: 0.08810673, w: 0.54920965}
-  m_LocalPosition: {x: -0.03, y: 0.07, z: 0.199}
+  m_LocalRotation: {x: -0.8293097, y: 0.087379076, z: 0.11505774, w: 0.53978884}
+  m_LocalPosition: {x: -0.006, y: 0.072, z: 0.189}
   m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3614067098256676181}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: -66.923, y: 193.458, z: -182.015}
+  m_LocalEulerAnglesHint: {x: -66.264, y: 193.872, z: -177.05}
 --- !u!1 &1558941235
 GameObject:
   m_ObjectHideFlags: 0
@@ -11512,7 +11512,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 8219817416219295659, guid: e13c73c7e5199f448b25d20d7b787c00,
+    effect: {fileID: 4905749066253766965, guid: 98cf41dfed77aa04e8e8db8295cb9760,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -13210,7 +13210,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 8668941768095450678, guid: 1683ce3c4f6a3c7439071e6e2a72eb78,
+    effect: {fileID: 8858624474728388485, guid: eb4fdc04c45709a478aa25e7388fe899,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -13591,8 +13591,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 1994277406731294138, guid: c3ac296d90aed7b4a8b92aeedba058c7,
-      type: 3}
+    effect: {fileID: 434862450589315040, guid: e5771bee601c45b4e84e961fddf2400f, type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
@@ -14640,7 +14639,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 5972315631096841491, guid: e1ce5302969721348984076d343df1bb,
+    effect: {fileID: 8213394304429169181, guid: cf9451135631b9b4f99b8f4c8d216dce,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -14701,7 +14700,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 1161235893120753315, guid: 03480b20210d8ad44a310a08a1f57528,
+    effect: {fileID: 1010635183871577458, guid: 440820735e94fee46bfd26043f5bd621,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -16137,7 +16136,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 8219817416219295659, guid: e13c73c7e5199f448b25d20d7b787c00,
+    effect: {fileID: 4905749066253766965, guid: 98cf41dfed77aa04e8e8db8295cb9760,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -16747,7 +16746,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 3977108052114549723, guid: 2dbd00d220fa08e4eab410ea6ada9bea,
+    effect: {fileID: 6540478355613462979, guid: 86303eabf9daf9a45ae84b97745c4b8d,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -17879,7 +17878,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 8219817416219295659, guid: e13c73c7e5199f448b25d20d7b787c00,
+    effect: {fileID: 4905749066253766965, guid: 98cf41dfed77aa04e8e8db8295cb9760,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -18563,7 +18562,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 3977108052114549723, guid: 2dbd00d220fa08e4eab410ea6ada9bea,
+    effect: {fileID: 6540478355613462979, guid: 86303eabf9daf9a45ae84b97745c4b8d,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -18940,7 +18939,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 8219817416219295659, guid: e13c73c7e5199f448b25d20d7b787c00,
+    effect: {fileID: 4905749066253766965, guid: 98cf41dfed77aa04e8e8db8295cb9760,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -19170,11 +19169,19 @@ MonoBehaviour:
       footStep:
         clip: {fileID: 8300000, guid: b5ac17499f887404b8c75930b5002ed2, type: 3}
       drawAttackSpecial_start:
-        clip: {fileID: 8300000, guid: 057e9cb025d998143956246194a95a0d, type: 3}
+        clip: {fileID: 8300000, guid: d8444ed668e8b6e4ebe11a0bec9afc7d, type: 3}
       drawAttackSpecial_stay:
-        clip: {fileID: 8300000, guid: c2bcfb2fa6420ce4fb08a855b3bab661, type: 3}
+        clip: {fileID: 8300000, guid: 835ceaeb002f9a546bdad1b920a117e3, type: 3}
       drawAttackSpecial_end:
         clip: {fileID: 8300000, guid: 10b92fe0287060146bd3c78c4633fc04, type: 3}
+      slash_01:
+        clip: {fileID: 8300000, guid: bee5e67855296174caaa18efd5fc8071, type: 3}
+      slash_02:
+        clip: {fileID: 8300000, guid: d01bd0aa9e4bf4c48b8a5905a0718641, type: 3}
+      slash_03:
+        clip: {fileID: 8300000, guid: 0f9865dcc249d3947a644cb000397f8b, type: 3}
+      dodge:
+        clip: {fileID: 8300000, guid: 9acdf8f129bc5b34a8a8a8510c0be105, type: 3}
     voice:
       dodge:
         clip: {fileID: 8300000, guid: 595df57b3f2ec7345a2b8088a79c6fc7, type: 3}
@@ -19408,7 +19415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcbd5b89cc8b5f44cadb6e3a85e0b828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitEffectBoom01_prefab: {fileID: 2722884100149935785, guid: 4ab924e499315454fb2a3bea29e94d06,
+  hitEffectBoom01_prefab: {fileID: 2722884100149935785, guid: e7a8839fecb42a94e90ffac0407d3e40,
     type: 3}
   hitEffectSlash01_prefab: {fileID: 1111155747428441479, guid: 0b162a747a5f9ab4993fb62eca24eb65,
     type: 3}
@@ -19819,8 +19826,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 1994277406731294138, guid: c3ac296d90aed7b4a8b92aeedba058c7,
-      type: 3}
+    effect: {fileID: 434862450589315040, guid: e5771bee601c45b4e84e961fddf2400f, type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
@@ -23479,7 +23485,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 5972315631096841491, guid: e1ce5302969721348984076d343df1bb,
+    effect: {fileID: 8213394304429169181, guid: cf9451135631b9b4f99b8f4c8d216dce,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
@@ -23730,7 +23736,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimType: 0
   info:
-    effect: {fileID: 8219817416219295659, guid: e13c73c7e5199f448b25d20d7b787c00,
+    effect: {fileID: 4905749066253766965, guid: 98cf41dfed77aa04e8e8db8295cb9760,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 

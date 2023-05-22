@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ac74655b18fef734b97b73c80770577f
+guid: 29d560c0e4bbad44aa2e5a3607eb3f4e
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
@@ -564,8 +564,8 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.95238096
-        functionName: ChargingStart
+      - time: 0.6056165
+        functionName: PutSword
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

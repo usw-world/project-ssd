@@ -96,13 +96,12 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 }
 enum ETPlayerAttackEffect
 {
-	LB_to_RT,
-	LM_to_RM,
-	LM_to_RM_Big,
-	LT_to_RB,
-	RB_to_LT,
-	RM_to_LM,
-	RT_to_LB,
+	LB_to_RT, LB_to_RT_Big,
+	LM_to_RM, LM_to_RM_Big,
+	LT_to_RB, LT_to_RB_Big,
+	RB_to_LT, RB_to_LT_Big,
+	RM_to_LM, RM_to_LM_Big,
+	RT_to_LB, RT_to_LB_Big,
 	NonCgargong,
 	dodge
 }
