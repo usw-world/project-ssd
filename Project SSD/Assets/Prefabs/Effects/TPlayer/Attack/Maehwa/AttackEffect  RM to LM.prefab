@@ -14743,7 +14743,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mode: 0
   attackType: 4
-  hitEffect: {fileID: 2722884100149935785, guid: 4ab924e499315454fb2a3bea29e94d06,
+  hitEffect: {fileID: 1111155747428441479, guid: 0b162a747a5f9ab4993fb62eca24eb65,
     type: 3}
   damageZoneSize: {x: 2, y: 1, z: 2}
   localPos: {x: 0, y: 1, z: 1.25}
+  previewAttackZone: 0

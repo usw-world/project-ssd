@@ -1186,7 +1186,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1144890209}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &1144890211
 Camera:
   m_ObjectHideFlags: 0
@@ -1237,8 +1237,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1144890209}
-  m_LocalRotation: {x: 0, y: -0.98245585, z: 0, w: 0.18649547}
-  m_LocalPosition: {x: 1.331, y: 0.852, z: 1.392}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.852, z: 0.568}
   m_LocalScale: {x: 1.0000004, y: 1.0000001, z: 1.0000005}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1789,7 +1789,7 @@ PrefabInstance:
     - target: {fileID: 1653327185496528104, guid: 21b4e86d4d1498245b1cb7a921b50818,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2142056443031064146, guid: 21b4e86d4d1498245b1cb7a921b50818,
         type: 3}
@@ -1849,12 +1849,12 @@ PrefabInstance:
     - target: {fileID: 4532868903553207535, guid: 21b4e86d4d1498245b1cb7a921b50818,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.292
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4532868903553207535, guid: 21b4e86d4d1498245b1cb7a921b50818,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8716094362318642817, guid: 21b4e86d4d1498245b1cb7a921b50818,
         type: 3}
@@ -2206,12 +2206,12 @@ PrefabInstance:
     - target: {fileID: 1584605597046343488, guid: e344e6a812ef9674589dd92c2bb248ae,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.292
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1584605597046343488, guid: e344e6a812ef9674589dd92c2bb248ae,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1584605597551393234, guid: e344e6a812ef9674589dd92c2bb248ae,
         type: 3}
@@ -2236,7 +2236,7 @@ PrefabInstance:
     - target: {fileID: 1818556725588546470, guid: e344e6a812ef9674589dd92c2bb248ae,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1943486830489612541, guid: e344e6a812ef9674589dd92c2bb248ae,
         type: 3}

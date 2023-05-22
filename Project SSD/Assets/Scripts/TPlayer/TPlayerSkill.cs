@@ -18,12 +18,12 @@ public class TPlayerSkill : Skill
 	public override void Use()
 	{
 		property.nowCoolTime = 0;
-		TPlayer.instance.status.sp -= usingSP;
+		TPlayer.instance.ChangeSp(-usingSP);
 
 		if (info.effect != null)
 		{
 			GameObject effect = PoolerManager.instance.OutPool(effectKey);
-			float damageAmount = TPlayer.instance.DamageAmount * property.skillAP;
+			float damageAmount = TPlayer.instance.GetAp() * property.skillAP;
 			effect.GetComponent<TPlayerAttackEffect>().OnActive(damageAmount);
 		}
 	}

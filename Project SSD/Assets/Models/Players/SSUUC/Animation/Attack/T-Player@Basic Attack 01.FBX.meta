@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 946878677fdad584480d659d4ecf1332
+guid: 0c7893a0d0205f543afdc36e8d9931ab
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
@@ -493,11 +493,12 @@ ModelImporter:
     rigImportErrors: 
     rigImportWarnings: "Copied Avatar Rig Configuration mis-match. Bone length in
       copied configuration does not match position in animation file:\n\t'thigh_l'
-      : position error = 2.854903 mm\n\t'thigh_r' : position error = 3.089882 mm\n\t'calf_r'
-      : position error = 1.233943 mm\n\t'hand_l' : position error = 5.691751 mm\n\t'middle_02_l'
-      : position error = 1.205551 mm\n\t'ring_02_l' : position error = 1.315608 mm\n\t'lowerarm_r'
-      : position error = 1.175152 mm\n\t'hand_r' : position error = 5.617865 mm\n\t'middle_02_r'
-      : position error = 1.204141 mm\n\t'ring_02_r' : position error = 1.314652 mm\n"
+      : position error = 4.042784 mm\n\t'calf_l' : position error = 1.191009 mm\n\t'foot_l'
+      : position error = 1.072073 mm\n\t'thigh_r' : position error = 6.098679 mm\n\t'lowerarm_l'
+      : position error = 1.205701 mm\n\t'hand_l' : position error = 8.635898 mm\n\t'middle_02_l'
+      : position error = 1.192736 mm\n\t'ring_02_l' : position error = 1.301598 mm\n\t'upperarm_r'
+      : position error = 1.195304 mm\n\t'hand_r' : position error = 3.933980 mm\n\t'middle_02_r'
+      : position error = 1.204147 mm\n\t'ring_02_r' : position error = 1.314756 mm\n"
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar
@@ -511,15 +512,25 @@ ModelImporter:
       will be discarded.\n\t'spine_03' has translation animation that will be discarded.\n\t'upperarm_l'
       has translation animation that will be discarded.\n\t'lowerarm_l' has translation
       animation that will be discarded.\n\t'hand_l' has translation animation that
-      will be discarded.\n\t'upperarm_r' has translation animation that will be discarded.\n\t'lowerarm_r'
-      has translation animation that will be discarded.\n\t'hand_r' has translation
-      animation that will be discarded.\n\t'head' has translation animation that
-      will be discarded.\n"
+      will be discarded.\n\t'thumb_03_l' has translation animation that will be discarded.\n\t'index_01_l'
+      has translation animation that will be discarded.\n\t'index_02_l' has translation
+      animation that will be discarded.\n\t'index_03_l' has translation animation
+      that will be discarded.\n\t'middle_01_l' has translation animation that will
+      be discarded.\n\t'middle_02_l' has translation animation that will be discarded.\n\t'middle_03_l'
+      has translation animation that will be discarded.\n\t'ring_01_l' has translation
+      animation that will be discarded.\n\t'ring_02_l' has translation animation
+      that will be discarded.\n\t'ring_03_l' has translation animation that will
+      be discarded.\n\t'pinky_01_l' has translation animation that will be discarded.\n\t'pinky_02_l'
+      has translation animation that will be discarded.\n\t'pinky_03_l' has translation
+      animation that will be discarded.\n\t'upperarm_r' has translation animation
+      that will be discarded.\n\t'lowerarm_r' has translation animation that will
+      be discarded.\n\t'hand_r' has translation animation that will be discarded.\n\t'head'
+      has translation animation that will be discarded.\n"
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 3
+    animationCompression: 0
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -531,8 +542,8 @@ ModelImporter:
       name: T-Player@Basic Attack 01
       takeName: Take 001
       internalID: 0
-      firstFrame: 11
-      lastFrame: 60
+      firstFrame: 0
+      lastFrame: 68
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -552,7 +563,7 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.31539136
+      - time: 0.18649517
         functionName: CheckAttackZone
         data: 
         objectReferenceParameter: {instanceID: 0}

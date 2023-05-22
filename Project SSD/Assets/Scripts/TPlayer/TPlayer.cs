@@ -19,60 +19,51 @@ public class TPlayer : NetworkBehaviour, IDamageable
 
 	#region Show Parameters
 	public PlayerStatus status;
-	[SerializeField] private WeaponTransform sword;
+	[SerializeField] private TPlayerAudioClipPlayer clipPlayer;
+	[SerializeField] private TPlayerWeaponTransform sword;
 	[SerializeField] private TPlayerSkillManager skill;
 	[SerializeField] private TPlayerTrackEffect trackEffect;
-	[SerializeField] private CutScenesCameraPos cutScenesCameraPos;
-	[SerializeField] private Effect_MotionTrail motionTrailEffect;
 	[SerializeField] private SkinnedMeshRenderer[] motionTrailedMeshRenderers;
-	[SerializeField] private GameObject tPlayerCamera;
+	[SerializeField] private TPlayerCutSceneCam cutSceneCam;
+	[SerializeField] private GameObject tPlayerCameraPrefab;
 	[SerializeField] private GameObject tPlayerMesh;
-	[SerializeField] private GameObject tPlayerCanvas;
-	[SerializeField] private CinemachineVirtualCamera[] cutSceneCamList;
+	[SerializeField] private TPayerUI ui;
 	#endregion Show Parameters
 
 	#region Hide Parameters
 	private AttachmentManager attachmentManager;
+	private List<Transform> lateDamageTarget = new List<Transform>();
 	private Coroutine attackCoroutine;
 	private Coroutine dodgeCoroutine;
 	private Coroutine rushCoroutine;
 	private Coroutine WalkCoroutine;
-	private List<Transform> lateDamageTarget = new List<Transform>();
-	private Vector3 lookVector;
-	/// <summary>기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다./summary>
+	private Vector3 lookVector; // 기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다
 	private Vector3 extraMovingPoint;
 	private string currentAnimationTrigger = "";
-	private float idleTime = 0;
-	private float rotateSpeed = 30f;
-	private float idleActionTime = 5f;
-	private int chargingLevel = 0;
-	private float chargingTime = 0;
 	private float[] chargingMaxTime = { 0.5f, 0.5f, 0.5f };
-	private bool isImmune = false;
+	private float idleActionTime = 5f;
+	private float chargingTime = 0;
+	private float rotateSpeed = 30f;
+	private float idleTime = 0;
+	private bool isCheckLateDamageTarget = false;
+	private bool isPressingMRB = false;
 	private bool isSuperArmor = false;
 	private bool isCanAttack = false;
+	private bool isImmune = false;
 	private bool isWalk = false;
 	private bool isRush = false;
-	private bool isPressingMRB;
-	private bool isCheckLateDamageTarget = false;
-	private int attackCount = 0;
 	private bool isAfterBasicAttack = false;
+	private int chargingLevel = 0;
 	private int idleActionIdx = 0;
+	private int attackCount = 0;
 	private int hitCount = 0;
 	#endregion Hide Parameters
 
-	public float DamageAmount{
-		get
-		{
-			return 10f;
-		}
-	}
-
 	#region Component
+	private LateDamageCntl lateDamageCntl;
+    private StateMachine stateMachine;
 	private Movement movement;
     private Animator ani;
-    private StateMachine stateMachine;
-	private LateDamageCntl lateDamageCntl;
 	#endregion Component
 
 	#region States
@@ -106,23 +97,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private State chargingDrawSwordAttack_7time = new State("chargingDrawSwordAttack_7time");
 	private State chargingDrawSwordAttack_2time = new State("chargingDrawSwordAttack_2time");
 	private State comboAttack_1 = new State("comboAttack_1");
-	// 
+	
 	private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
 	#endregion States
-
-	#region UI temp
-	public Slider sliderHP;
-	public Slider sliderSP;
-	public Slider sliderCharging;
-	public Image imgCharging;
-	public Image imgChargingBackground;
-	public Image imgCutSceneSwordTrail;
-	private Color red = new Color(1f, 0f, 0f);
-	private Color orange = new Color(1f, 0.65f, 0f);
-	private Color yellow = new Color(1f, 1f, 0f);
-	private Color darkYellow = new Color(0.8f, 0.8f, 0f);
-	#endregion UI
 
 	#region Initialize
 	// public override void OnStartLocalPlayer() {
@@ -138,7 +116,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		attachmentManager = GetComponent<AttachmentManager>();
         ani = GetComponent<Animator>();
         movement = GetComponent<Movement>();
-        stateMachine = GetComponent<StateMachine>();
+		clipPlayer.Initialize();
+		stateMachine = GetComponent<StateMachine>();
 		lateDamageCntl = GetComponent<LateDamageCntl>();
 	}
     private void Start()
@@ -147,6 +126,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
         InitializeStateOnActive();
         InitializeStateOnStay();
         InitializeStateOnInactive();
+		ui.InitializeUI();
 
         stateMachine.SetIntialState(idleState1);
         /* attackStateGroup.Add(attackState1);
@@ -156,9 +136,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
         idleStateGroup.Add(idleState1);
         idleStateGroup.Add(idleState2);
         idleStateGroup.Add(idleState3);
-		
-		sliderHP.maxValue = status.maxHp;
-		sliderSP.maxValue = status.maxSp;
+
 		trackEffect.dodgeMaehwa.Enable();
 		trackEffect.dodgeMaehwa.Disable();
 
@@ -167,13 +145,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
         	Cursor.lockState = CursorLockMode.Locked;
 		}
 		else{
-			tPlayerCanvas.SetActive(false);
+			ui.canvas.SetActive(false);
 		}
 	}
     private void InitializeCamera() {
         if(isLocalPlayer &&
 		PlayerCamera.instance == null) {
-            GameObject camera = Instantiate(tPlayerCamera);
+            GameObject camera = Instantiate(tPlayerCameraPrefab);
 			camera.GetComponent<PlayerCamera>().SetTarget(this.transform);
 			CameraManager.instance.playerCam = camera.GetComponent <CinemachineVirtualCamera>();
         }
@@ -183,12 +161,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		statesMap.Add(idleState2.stateName, idleState2);
 		statesMap.Add(idleState3.stateName, idleState3);
 		statesMap.Add(moveState.stateName, moveState);
-		/* will be removed >>
-		statesMap.Add(attackState1.stateName, attackState1);
-		statesMap.Add(attackState2.stateName, attackState2);
-		statesMap.Add(attackState3.stateName, attackState3);
-		statesMap.Add(attackState4.stateName, attackState4);
-		<< will be removed */
 		statesMap.Add(basicAttackState.stateName, basicAttackState);
 
 		statesMap.Add(dodgeAttackState.stateName, dodgeAttackState);
@@ -220,15 +192,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			DrawSword(false);
 			trackEffect.moveSmoke.Enable();
 		};
-		/* will be removed >>
-        attackState1.onActive = (State prev) => {
-			ChangeAnimation("Attack1");
-			DrawSword(true);
-		};
-        attackState2.onActive = (State prev) => { ChangeAnimation("Attack2"); };
-        attackState3.onActive = (State prev) => { ChangeAnimation("Attack3"); };
-        attackState4.onActive = (State prev) => { ChangeAnimation("Attack4"); };
-		 */
 		dodgeAttackState.onActive = (State prev) => {
 			ChangeAnimation("DodgeAttack");
 			DrawSword(true);
@@ -253,8 +216,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 
 			if(!prev.Compare("Idle")
 			&& !prev.Compare(moveState)) {
-				motionTrailEffect.GenerateTrail(motionTrailedMeshRenderers);
+				trackEffect.motionTrailEffect.GenerateTrail(motionTrailedMeshRenderers);
 			}
+			clipPlayer.voice.dodge.Play();
 		};
         downState.onActive = (State prev) => {
 			ChangeAnimation("Down");
@@ -268,13 +232,19 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			ChangeAnimation("Charging");
 			chargingLevel = 0;
 			chargingTime = 0;
+			
 			DrawSword(true);
+			ui.SetChargingLevel(chargingLevel, chargingMaxTime[0]);
+
+			if(!prev.Compare("Idle")
+			&& !prev.Compare(moveState)) {
+				trackEffect.motionTrailEffect.GenerateTrail(motionTrailedMeshRenderers);
+			}
 		};
 		chargingStay.onActive = (State prev) => {
-			sliderCharging.gameObject.SetActive(true);
-			sliderCharging.value = 0;
-			sliderCharging.maxValue = chargingMaxTime[0];
-			SetChargingSliderColor();
+			ui.sliderCharging.gameObject.SetActive(true);
+			ui.SetChargingValue(0);
+			clipPlayer.voice.chargingStart.Play(); ;
 		}; 
 		chargingDrawSwordAttack.onActive = (State prev) => {
 			ChangeAnimation("DrawSwordAttack");
@@ -294,24 +264,28 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		chargingDrawSwordAttack_2time.onActive = (State prev) => {
 			DrawSword(true);
 			ChangeAnimation("Draw Sword Attack 2time");
-		}; // 
+		}; 
 		chargingDrawSwordAttack_specialStart.onActive = (State prev) => {
 			ChangeAnimation("Draw Sword Attack Special Start");
 			isImmune = true;
 			DrawSword(true);
 			lateDamageTarget.Clear();
-			CameraManager.instance.SwitchCameara(cutSceneCamList[0]);
+			CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[0]);
+			clipPlayer.voice.drawAttackSpecialReady.Play();
+			clipPlayer.effect.drawAttackSpecial_start.Play();
 		};
 		chargingDrawSwordAttack_specialStay.onActive = (State prev) => {
 			tPlayerMesh.SetActive(false);
 			isCheckLateDamageTarget = true;
 			StartCoroutine(DrawAttackSpecialCutScene());
-            CameraManager.instance.SwitchCameara(cutSceneCamList[1]);
+            CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[1]);
+			clipPlayer.voice.drawAttackSpecialStart.Play();
+			clipPlayer.effect.drawAttackSpecial_stay.Play();
 		};
 		chargingDrawSwordAttack_specialEnd.onActive = (State prev) => {
             ChangeAnimation("Draw Sword Attack Special End");
 			StartCoroutine(DrawAttackSpecialEnd());
-			CameraManager.instance.SwitchCameara(cutSceneCamList[2]);
+			CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[2]);
 		};
 	}
 	private void InitializeStateOnStay()
@@ -324,13 +298,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
 				idleActionIdx = Random.Range(1, idleStateGroup.Count);
 				ChangeState(idleStateGroup[idleActionIdx], false);
 			}
-			status.Update();
+			ChangeSp(Time.deltaTime * 20f);
 		};
         idleState2.onStay = () => {
-			status.Update();
+			ChangeSp(Time.deltaTime * 20f);
 		};
         idleState3.onStay = () => {
-			status.Update();
+			ChangeSp(Time.deltaTime * 20f);
 		};
         moveState.onStay = () => {
 			RotateWithCamera();
@@ -338,8 +312,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			{
 				if (status.sp > 0)
 				{
-					status.sp -= Time.deltaTime * 10f;
-					movement.MoveToward(Vector3.forward * status.speed * 2f * Time.deltaTime);
+					ChangeSp(-Time.deltaTime * 10f);
+					movement.MoveToward(Vector3.forward * status.GetSpeed() * 2f * Time.deltaTime);
 					return;
 				}
 				else
@@ -347,19 +321,23 @@ public class TPlayer : NetworkBehaviour, IDamageable
 					OnRushToRun();
 				}
 			}
-			status.Update();
-			movement.MoveToward(Vector3.forward * ((isWalk) ? status.speed / 2 : status.speed) * Time.deltaTime);
+			ChangeSp(Time.deltaTime * 20f);
+			movement.MoveToward(Vector3.forward * ((isWalk) ? status.GetSpeed() / 2 : status.GetSpeed()) * Time.deltaTime);
 		};
 		dodgeAttackState.onStay = () => { MoveToTargetPos(); };
 		downAttackState.onStay = () => { MoveToTargetPos(); };
 		dodgeState.onStay = () => { };
-        downState.onStay = () => { status.Update(); };
+        downState.onStay = () => {
+			ChangeSp(Time.deltaTime * 20f);
+		};
         damageState.onStay = () => {
 			if (hitCount >= 3) OnDown(); 
 		};
-		chargingStart.onStay = () => { status.Update(); };
+		chargingStart.onStay = () => {
+			ChangeSp(Time.deltaTime * 20f);
+		};
 		chargingStay.onStay = () => {
-			status.Update(); status.Update(); status.Update();
+			ChangeSp(Time.deltaTime * 50f);
 			if (chargingLevel < chargingMaxTime.Length)
 			{
 				chargingTime += Time.deltaTime;
@@ -368,14 +346,14 @@ public class TPlayer : NetworkBehaviour, IDamageable
 					chargingLevel++;
 					chargingTime = 0;
 					if (chargingLevel < chargingMaxTime.Length)
-						sliderCharging.maxValue = chargingMaxTime[chargingLevel];
-					SetChargingSliderColor();
+						ui.SetChargingLevel(chargingLevel, chargingMaxTime[chargingLevel]);
+					else {
+						ui.SetChargingLevel(chargingLevel, 0); ;
+						clipPlayer.voice.chargingFull.Play();
+					}
 				}
-				sliderCharging.value = chargingTime;
+				ui.SetChargingValue(chargingTime);
 			}
-		};
-		chargingDrawSwordAttack_specialStay.onStay = () => {
-			//movement.MoveToward(Vector3.forward * 10f * Time.deltaTime);
 		};
 	}
 	private void InitializeStateOnInactive()
@@ -386,20 +364,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
         moveState.onInactive = (State next) => {
 			trackEffect.moveSmoke.Disable();
 		};
-		/* will be removed >>
-        attackState1.onInactive = (State next) => { 
-			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
-		};
-        attackState2.onInactive = (State next) => { 
-			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
-		};
-        attackState3.onInactive = (State next) => { 
-			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
-		};
-        attackState4.onInactive = (State next) => { 
-			if (attackCoroutine != null) StopCoroutine(attackCoroutine); 
-		};
-		<< */
 		basicAttackState.onInactive = (State nextState) => {
 			if(attackCoroutine != null)
 				StopCoroutine(attackCoroutine);
@@ -415,7 +379,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
         damageState.onInactive = (State next) => {  };
 		chargingStart.onInactive = (State next) => { };
 		chargingStay.onInactive = (State next) => {
-			sliderCharging.gameObject.SetActive(false);
+			ui.sliderCharging.gameObject.SetActive(false);
 		};
 		chargingDrawSwordAttack_nonCharging.onInactive = (State next) => {
 			DrawSword(false);
@@ -632,13 +596,17 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		{
 			if (lookVector != Vector3.zero) RotateWithCamera(15f);
 			ChangeState(chargingDrawSwordAttack_nonCharging);
+			clipPlayer.voice.attack_01.Play();
 			return;
 		}
 		if (stateMachine.currentState != chargingStay) return;
 		if (lookVector != Vector3.zero) RotateWithCamera(15f);
 		switch (chargingLevel)
 		{
-			case 0: ChangeState(chargingDrawSwordAttack_nonCharging); break;
+			case 0: 
+				ChangeState(chargingDrawSwordAttack_nonCharging);
+				clipPlayer.voice.nonCharging.Play(); 
+				break;
 			case 1: ChangeState(chargingDrawSwordAttack); break;
 			case 2: ChangeState(chargingDrawSwordAttack_2time); break;
 			case 3: ChangeState(chargingDrawSwordAttack_specialStart); break;
@@ -743,9 +711,17 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		skill.downAttack.Use();
 		trackEffect.dodgeMaehwa.Disable();
 	}
-	public void ChackDrawSwordAttack()
+	public void ChackDrawSwordAttack(int soundType)
 	{
 		skill.charging_DrawSwordAttack.Use();
+		switch (soundType)
+		{
+			case 0: clipPlayer.voice.attack_03.Play(); break;
+			case 1:
+				ChangeSp(30f); ;
+				clipPlayer.voice.attack_04.Play(); 
+				break;
+		}
 		if (attackCoroutine != null)
 			StopCoroutine(attackCoroutine);
 		attackCoroutine = StartCoroutine(AttackCoroutine(3f));
@@ -769,13 +745,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		StartCoroutine(DrawAttackDamage());
 	}
+	public void OnFootStepClip() 
+	{
+		clipPlayer.effect.footStep.PlayOneShot();
+	}
 	#endregion Animation Event
 
-	private void Update()
-	{
-		sliderSP.value = status.sp;
-		sliderHP.value = status.hp;
-	}
+	#region public method
 	public void AddAttachment(Attachment attachment) {
 		attachmentManager.AddAttachment(attachment);
 	}
@@ -786,9 +762,24 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		{
 			status.hp = status.maxHp;
 		}
-		sliderHP.value = status.hp;
+		ui.RefeshHp(status.hp);
 	}
+	public void ChangeSp(float amount)
+	{
+		status.sp += amount;
+		if (status.sp > status.maxSp)
+		{
+			status.sp = status.maxSp;
+		}
+		ui.RefeshSp(status.sp);
+	}
+	public float GetAp() 
+	{
+		return status.GetLastAp();
+	}
+	#endregion public method
 
+	#region private method
 	private void RotateWithCamera(float rotateSpeed = 1f)
 	{
 		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVector;
@@ -858,28 +849,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			Debug.LogError(e);
 		}
 	}
-	private void SetChargingSliderColor() {
-		switch (chargingLevel)
-		{
-			case 0:
-				imgCharging.color = yellow;
-				imgChargingBackground.color = darkYellow; 
-				break;
-			case 1:
-				imgCharging.color = orange;
-				imgChargingBackground.color = yellow;
-				break;
-			case 2:
-				imgCharging.color = red;
-				imgChargingBackground.color = orange;
-				break;
-			case 3:
-				imgCharging.color = red;
-				imgChargingBackground.color = red;
-				break;
-		}
-	}
-	IEnumerator SmoothConvert(bool fade)
+	private IEnumerator SmoothConvert(bool fade)
 	{
 		float target = (fade) ? 0 : 0.5f;
 		float now = ani.GetFloat("Speed");
@@ -905,7 +875,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		now = target;
 		ani.SetFloat("Speed", now);
 	}
-	IEnumerator SmoothConvertRush(bool fade)
+	private IEnumerator SmoothConvertRush(bool fade)
 	{
 		float target = (fade) ? 1f : 0.5f;
 		float now = ani.GetFloat("Speed");
@@ -933,7 +903,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		now = target;
 		ani.SetFloat("Speed", now);
 	}
-	IEnumerator DodgeCoroutine()
+	private IEnumerator DodgeCoroutine()
 	{
 		float offset = 0;
 		Vector3 targetPoint = Vector3.forward;
@@ -947,7 +917,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			yield return null;
 		}
 	}
-	IEnumerator AttackCoroutine(float speed = 1f)
+	private IEnumerator AttackCoroutine(float speed = 1f)
 	{
 		float offset = 0;
 		float forceCoef = .5f + (lookVector==Vector3.zero ? 0 : 1);
@@ -962,70 +932,74 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			yield return null;
 		}
 	}
-	IEnumerator DrawAttackSpecialCutScene()
+	private IEnumerator DrawAttackSpecialCutScene()
 	{
 		float numTime = 0;
 		float colorA = 1f;
 		Vector3 targetPoint = Vector3.forward;
-
-		imgCutSceneSwordTrail.gameObject.SetActive(true);
-		imgCutSceneSwordTrail.rectTransform.localScale = new Vector3(0.5f, 0.5f);
-		imgCutSceneSwordTrail.color = new Color(1f, 1f, 1f, 1f);
-
-		while (imgCutSceneSwordTrail.rectTransform.localScale.y < 21f)
+		ui.imgCutSceneSwordTrail.gameObject.SetActive(true);
+		ui.imgCutSceneSwordTrail.rectTransform.localScale = new Vector3(0.5f, 0.5f);
+		ui.imgCutSceneSwordTrail.color = new Color(1f, 1f, 1f, 1f);
+		while (ui.imgCutSceneSwordTrail.rectTransform.localScale.y < 21f)
 		{
 			numTime += Time.deltaTime * 2f;
 			float s = 1f - Mathf.Cos(numTime);
-			imgCutSceneSwordTrail.rectTransform.localScale += new Vector3(s, s * s);
+			ui.imgCutSceneSwordTrail.rectTransform.localScale += new Vector3(s, s * s);
 
 			Vector3 d = Vector3.Lerp(Vector3.zero, targetPoint, Mathf.Sin(Mathf.PI * .5f + numTime * .5f * Mathf.PI));
 			d.y = 0;
 			movement.MoveToward(d * Time.deltaTime * 80f);
 			yield return null;
 		}
-
 		stateMachine.ChangeState(chargingDrawSwordAttack_specialEnd);
-
-		while (imgCutSceneSwordTrail.color.a != 0)
+		while (ui.imgCutSceneSwordTrail.color.a != 0)
 		{
 			colorA = (colorA > 0) ? colorA - Time.deltaTime : 0;
-			imgCutSceneSwordTrail.color = new Color(1f, 1f, 1f, colorA);
+			ui.imgCutSceneSwordTrail.color = new Color(1f, 1f, 1f, colorA);
 			yield return null;
 		}
-
-		imgCutSceneSwordTrail.gameObject.SetActive(false);
+		ui.imgCutSceneSwordTrail.gameObject.SetActive(false);
 	}
-	IEnumerator DrawAttackDamage()
+	private IEnumerator DrawAttackDamage()
 	{
+		clipPlayer.effect.drawAttackSpecial_end.Play();
 		for (int i = 0; i < 10; i++)
 		{
 			Damage damage = new Damage(
 				this.gameObject,
-				DamageAmount * 0.15f,
+				GetAp() * 0.15f,
 				.5f,
 				Vector3.zero,
 				Damage.DamageType.Normal
-			);
+			) ;
 			lateDamageCntl.OnDamage(lateDamageTarget, damage, EHitEffectType.slash_1);
 			yield return new WaitForSeconds(0.1f);
 		}
 		yield return new WaitForSeconds(0.3f);
 		ResetState();
 	}
-	IEnumerator DrawAttackSpecialEnd()
+	private IEnumerator DrawAttackSpecialEnd()
 	{
 		ChangeAnimation("Draw Sword Attack Special End Stay");
 		yield return new WaitForSeconds(0.3f);
-		Damage damage = new Damage(
-			this.gameObject,
-			DamageAmount * 2f,
-			3f,
-			Vector3.zero,
-			Damage.DamageType.Normal
-		);
-		lateDamageCntl.OnDamage(lateDamageTarget, damage, EHitEffectType.slash_1);
-		yield return new WaitForSeconds(1f);
-		ChangeAnimation("Draw Sword Attack Special End");
+		if (lateDamageTarget.Count != 0) {
+			Damage damage = new Damage(
+				this.gameObject,
+				GetAp() * 2f,
+				3f,
+				Vector3.zero,
+				Damage.DamageType.Normal
+			);
+			lateDamageCntl.OnDamage(lateDamageTarget, damage, EHitEffectType.slash_1);
+			yield return new WaitForSeconds(0.5f);
+			ChangeAnimation("Draw Sword Attack Special End");
+			clipPlayer.voice.drawAttackSpecialEnd.Play();
+		} 
+		else{
+			clipPlayer.voice.drawAttackSpecialEnd_Miss.Play();
+			yield return new WaitForSeconds(1f);
+			ResetState();
+		}
 	}
 	private void OnTriggerEnter(Collider other)
 	{
@@ -1038,26 +1012,36 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			}
 		}
 	}
+	#endregion private method
 }
 [Serializable]
 public class PlayerStatus
 {
-	public float speed = 3f;     // 이동속도
-	public float maxHp = 100f;       // 최대 체력
-	public float maxSp = 100f;       // 최대 스테미너
-	public float hp = 100f;      // 체력
-	public float sp = 100f;      // 스테미너 ** 시작하면서 set 하는거 어떤지?
-	public float ap = 10f;      // 공격력
-	public float hpRecovery = 1f;
-	public float spRecovery = 1f;
-	public void Update() 
+	public float speed = 3f;      	 // 이동속도
+	public float hp = 100f;    		 // 체력
+	public float sp = 100f;     	 // 스테미너 ** 시작하면서 set 하는거 어떤지?
+	public float ap = 10f;     		 // 공격력
+	public float maxHp = 100f;   	 // 최대 체력
+	public float maxSp = 100f;    	 // 최대 스테미너
+	public float speedBoost = 1f; 	 // 이동속도 상승량
+	public float recoveryHp = 1f; 	 // 체력 회복 속도 상승량
+	public float recoverySp = 1f; 	 // 스테미나 회복 속도 상승량
+	public float apBoost = 1f;	   	 // 공격력 상승량
+	public float GetLastAp() 
 	{
-		hp = (hp < maxHp) ? hp += Time.deltaTime * hpRecovery : maxHp;
-		sp = (sp < maxSp) ? sp += Time.deltaTime * spRecovery : maxSp;
+		return ap * apBoost;
+	}
+	public float GetRecoverySp() 
+	{
+		return Time.deltaTime * 20f * recoverySp;
+	}
+	public float GetSpeed()
+	{
+		return speed * speedBoost;
 	}
 }
 [Serializable]
-class WeaponTransform
+class TPlayerWeaponTransform
 {
 	public Transform weapon; // 무기
 	public Transform unUse;  // 무기 사용 안할 때 위치
@@ -1083,13 +1067,163 @@ class TPlayerSkillManager
 	public Skill[] combo_1;
 }
 [Serializable]
-class CutScenesCameraPos
+class TPlayerCutSceneCam
 {
-	public Transform[] drawAttackSpecial;
+	public CinemachineVirtualCamera[] drawAttack;
 }
 [Serializable]
 class TPlayerTrackEffect
 {
+	public Effect_MotionTrail motionTrailEffect;
 	public TrackEffect dodgeMaehwa;
 	public TrackEffect moveSmoke;
+}
+[Serializable]
+class TPayerUI 
+{
+	public GameObject canvas;
+	public Slider sliderHP;
+	public Slider sliderSP;
+	public Slider sliderCharging;
+	public Image imgCharging;
+	public Image imgChargingBackground;
+	public Image imgCutSceneSwordTrail;
+	private Color red = new Color(1f, 0f, 0f);
+	private Color orange = new Color(1f, 0.65f, 0f);
+	private Color yellow = new Color(1f, 1f, 0f);
+	private Color darkYellow = new Color(0.8f, 0.8f, 0f);
+	public void InitializeUI() 
+	{
+		PlayerStatus status = TPlayer.instance.status;
+		sliderHP.maxValue = status.maxHp;
+		sliderSP.maxValue = status.maxSp;
+		sliderCharging.gameObject.SetActive(false);
+		imgCutSceneSwordTrail.gameObject.SetActive(false);
+	}
+	public void SetChargingLevel(int level, float maxValue) 
+	{
+		sliderCharging.maxValue = maxValue;
+		switch (level)
+		{
+			case 0:
+				imgCharging.color = yellow;
+				imgChargingBackground.color = darkYellow;
+				break;
+			case 1:
+				imgCharging.color = orange;
+				imgChargingBackground.color = yellow;
+				break;
+			case 2:
+				imgCharging.color = red;
+				imgChargingBackground.color = orange;
+				break;
+			case 3:
+				imgCharging.color = red;
+				imgChargingBackground.color = red;
+				break;
+		}
+	}
+	public void SetChargingValue(float value)
+	{
+		sliderCharging.value = value;
+	}
+	public void RefeshHp(float value) 
+	{
+		sliderHP.value = value;
+	}
+	public void RefeshSp(float value)
+	{
+		sliderSP.value = value;
+	}
+}
+[Serializable]
+class TPlayerAudioClip
+{
+	[SerializeField] private AudioClip clip;
+	private AudioSource audioSource;
+	public TPlayerAudioClip(TPlayerAudioClip origin, AudioSource audioSource) 
+	{
+		clip = origin.clip;
+		this.audioSource = audioSource;
+	}
+	public void Play() 
+	{
+		audioSource.clip = clip;
+		audioSource.Play();
+	}
+	public void PlayOneShot()
+	{
+		audioSource.PlayOneShot(clip);
+	}
+}
+[Serializable]
+class TPlayerSoundBGM
+{
+	public TPlayerAudioClip test_01;
+	public void Initialize(AudioSource audioSource)
+	{
+		test_01 = new TPlayerAudioClip(test_01, audioSource);
+	}
+}
+[Serializable]
+class TPlayerSoundEffect
+{
+	public TPlayerAudioClip footStep;
+	public TPlayerAudioClip drawAttackSpecial_start;
+	public TPlayerAudioClip drawAttackSpecial_stay;
+	public TPlayerAudioClip drawAttackSpecial_end;
+	public void Initialize(AudioSource audioSource)
+	{
+		footStep = new TPlayerAudioClip(footStep, audioSource);
+		drawAttackSpecial_start = new TPlayerAudioClip(drawAttackSpecial_start, audioSource);
+		drawAttackSpecial_stay = new TPlayerAudioClip(drawAttackSpecial_stay, audioSource);
+		drawAttackSpecial_end = new TPlayerAudioClip(drawAttackSpecial_end, audioSource);
+	}
+}
+[Serializable]
+class TPlayerSoundVoice
+{
+	public TPlayerAudioClip dodge;
+	public TPlayerAudioClip attack_01;
+	public TPlayerAudioClip attack_02;
+	public TPlayerAudioClip attack_03;
+	public TPlayerAudioClip attack_04;
+	public TPlayerAudioClip nonCharging;
+	public TPlayerAudioClip chargingFull;
+	public TPlayerAudioClip chargingStart;
+	public TPlayerAudioClip drawAttackSpecialEnd;
+	public TPlayerAudioClip drawAttackSpecialEnd_Miss;
+	public TPlayerAudioClip drawAttackSpecialReady;
+	public TPlayerAudioClip drawAttackSpecialStart;
+	public void Initialize(AudioSource audioSource)
+	{
+		dodge = new TPlayerAudioClip(dodge, audioSource);
+		attack_01 = new TPlayerAudioClip(attack_01, audioSource);
+		attack_02 = new TPlayerAudioClip(attack_02, audioSource);
+		attack_03 = new TPlayerAudioClip(attack_03, audioSource);
+		attack_04 = new TPlayerAudioClip(attack_04, audioSource);
+		nonCharging = new TPlayerAudioClip(nonCharging, audioSource);
+		chargingFull = new TPlayerAudioClip(chargingFull, audioSource);
+		chargingStart = new TPlayerAudioClip(chargingStart, audioSource);
+		drawAttackSpecialEnd = new TPlayerAudioClip(drawAttackSpecialEnd, audioSource);
+		drawAttackSpecialReady = new TPlayerAudioClip(drawAttackSpecialReady, audioSource);
+		drawAttackSpecialStart = new TPlayerAudioClip(drawAttackSpecialStart, audioSource);
+		drawAttackSpecialEnd_Miss = new TPlayerAudioClip(drawAttackSpecialEnd_Miss, audioSource);
+	}
+}
+[Serializable]
+class TPlayerAudioClipPlayer
+{
+	[SerializeField] private AudioSource audioSourceEffect;
+	[SerializeField] private AudioSource audioSourceVoice;
+	[SerializeField] private AudioSource audioSourceBGM;
+	public TPlayerSoundEffect effect;
+	public TPlayerSoundVoice voice;
+	public TPlayerSoundBGM bgm;
+	public void Initialize()
+	{
+		effect.Initialize(audioSourceEffect);
+		voice.Initialize(audioSourceVoice);
+		bgm.Initialize(audioSourceBGM);
+	}
 }
