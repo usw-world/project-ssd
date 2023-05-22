@@ -38309,7 +38309,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254181566}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!20 &1254181569
 Camera:
   m_ObjectHideFlags: 0
@@ -38360,8 +38360,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1254181566}
-  m_LocalRotation: {x: 0, y: -0.98245585, z: 0, w: 0.18649547}
-  m_LocalPosition: {x: 1.331, y: 0.852, z: 1.392}
+  m_LocalRotation: {x: 0, y: -0.0036689541, z: 0, w: 0.99999326}
+  m_LocalPosition: {x: -0.82, y: 0.569, z: -1.075}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
