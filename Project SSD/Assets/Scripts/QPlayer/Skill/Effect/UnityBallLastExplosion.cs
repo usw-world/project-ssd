@@ -16,7 +16,6 @@ public class UnityBallLastExplosion : MonoBehaviour, IPoolableObject
 		{
 			IDamageable target = hit[i].GetComponent<IDamageable>();
 			Damage damage = new Damage(
-				this.gameObject,
 				damageAmount,
 				.3f,
 				(hit[i].transform.position - transform.position).normalized * 2f,

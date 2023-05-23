@@ -41,6 +41,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private Vector3 lookVector; // 기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다
 	private Vector3 nextAttackDirection; // 기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다
 	private Vector3 extraMovingPoint;
+	// Damage is Sychronized >>
+	private Damage beingDamage;
 	private string currentAnimationTrigger = "";
 	private float[] chargingMaxTime = { 0.5f, 0.5f, 0.5f };
 	private float idleActionTime = 5f;
@@ -449,14 +451,17 @@ public class TPlayer : NetworkBehaviour, IDamageable
         else
             ChangeState(moveState, false);
     }
+	[Command]
 	public void OnDamage(Damage damage) {
 		if (isImmune) // 무적이면 실행 안함
 			return;
 
 		status.hp -= damage.amount;
-
-		if (damage.origin != null)
-			LookTarget(damage.origin.transform);
+		ui.RefreshHp(status.hp / status.maxHp);
+		
+		if (damage.forceVector != Vector3.zero) {
+			LookDirection(-damage.forceVector);
+		}
 
 		if (stateMachine.Compare(downState)
 		|| isSuperArmor)
@@ -465,6 +470,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		if(damageCoroutine != null)
 			StopCoroutine(damageCoroutine);
 		damageCoroutine = StartCoroutine(DamageCoroutine(damage));
+	}
+	[ClientRpc]
+	private void TakeDamage(Damage damage) {
+
 	}
 	private IEnumerator DamageCoroutine(Damage damage) {
 		float offset = 0f;
@@ -795,7 +804,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		{
 			status.hp = status.maxHp;
 		}
-		ui.RefeshHp(status.hp);
+		ui.RefreshHp(status.hp);
 	}
 	public void ChangeSp(float amount)
 	{
@@ -804,7 +813,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		{
 			status.sp = status.maxSp;
 		}
-		ui.RefeshSp(status.sp);
+		ui.ReFreshStamina(status.sp);
 	}
 	public float GetAp() 
 	{
@@ -817,13 +826,11 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVector;
         Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, this.rotateSpeed * rotateSpeed * Time.deltaTime);
-		transform.rotation = Quaternion.LookRotation(look);
-		transform.eulerAngles = new Vector3(0, transform.rotation.eulerAngles.y, 0);
+		transform.eulerAngles = new Vector3(0, Quaternion.LookRotation(look).eulerAngles.y, 0);
 	}
-	private void LookTarget(Transform target) 
-	{
-		Vector3 ylessTargetPos = new Vector3(target.position.x, 0, target.position.z);
-		transform.LookAt(ylessTargetPos);
+	private void LookDirection(Vector3 target) {
+		Vector3 ylessTargetPos = new Vector3(target.x, 0, target.z);
+		transform.LookAt(transform.position + ylessTargetPos);
 	}
 	private void MoveToTargetPos()
 	{
@@ -999,7 +1006,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		for (int i = 0; i < 10; i++)
 		{
 			Damage damage = new Damage(
-				this.gameObject,
 				GetAp() * 0.15f,
 				.5f,
 				Vector3.zero,
@@ -1017,7 +1023,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		yield return new WaitForSeconds(0.3f);
 		if (lateDamageTarget.Count != 0) {
 			Damage damage = new Damage(
-				this.gameObject,
 				GetAp() * 2f,
 				3f,
 				Vector3.zero,
@@ -1162,11 +1167,11 @@ class TPayerUI
 	{
 		sliderCharging.value = value;
 	}
-	public void RefeshHp(float value) 
+	public void RefreshHp(float value) 
 	{
 		sliderHP.value = value;
 	}
-	public void RefeshSp(float value)
+	public void ReFreshStamina(float value)
 	{
 		sliderSP.value = value;
 	}

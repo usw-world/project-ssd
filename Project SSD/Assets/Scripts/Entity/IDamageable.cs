@@ -7,8 +7,8 @@ public interface IDamageable {
 
     public abstract void OnDamage(Damage damage);
 }
+[System.Serializable]
 public struct Damage {
-    public GameObject origin;
     public float amount;
     public float hittingDuration;
     public Vector3 forceVector;
@@ -18,8 +18,7 @@ public struct Damage {
         Normal,
         Down
     }
-    public Damage(GameObject origin, float amount, float hittingDuration, Vector3 forceVector, DamageType damageType) {
-        this.origin = origin;
+    public Damage(float amount, float hittingDuration, Vector3 forceVector, DamageType damageType) {
         this.amount = amount;
         this.hittingDuration = hittingDuration;
         this.forceVector = forceVector;

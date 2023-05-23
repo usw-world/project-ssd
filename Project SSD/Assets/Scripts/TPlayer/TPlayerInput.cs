@@ -19,7 +19,7 @@ public class TPlayerInput : MonoBehaviour
 
 	private void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Alpha1)) player.OnDamage(new Damage(null, 10f, 0, Vector3.zero, Damage.DamageType.Normal));    // 임시
+		if (Input.GetKeyDown(KeyCode.Alpha1)) player.OnDamage(new Damage(10f, 0, Vector3.zero, Damage.DamageType.Normal));    // 임시
 		if (Input.GetKeyDown(KeyCode.Alpha2)) player.OnDown();      // 임시
 		if (Input.GetKeyDown(KeyCode.Q)) player.OnComboAttack();      // 임시
 		if (Input.GetKeyDown(KeyCode.E)) player.OnDrawSwordAttack7time();      // 임시

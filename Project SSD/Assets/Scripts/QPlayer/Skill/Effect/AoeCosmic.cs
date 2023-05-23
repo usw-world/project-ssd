@@ -23,7 +23,7 @@ public class AoeCosmic : MonoBehaviour, IPoolableObject
         if (particle.particleCount <= 0f)
         {
             IDamageable target = enemy.gameObject.GetComponent<IDamageable>();
-            Damage damage = new Damage(gameObject, damageAmount, 1f, (enemy.transform.position - transform.position).normalized * 10f, Damage.DamageType.Normal);
+            Damage damage = new Damage(damageAmount, 1f, (enemy.transform.position - transform.position).normalized * 10f, Damage.DamageType.Normal);
             target.OnDamage(damage);
             return;
         }

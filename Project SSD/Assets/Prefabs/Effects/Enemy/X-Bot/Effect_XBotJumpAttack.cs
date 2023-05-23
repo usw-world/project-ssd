@@ -16,7 +16,6 @@ public class Effect_XBotJumpAttack : MonoBehaviour, IPoolableObject {
         Collider[] inners = Physics.OverlapSphere(transform.position, radius, ~(1<<8));
         foreach(Collider inner in inners) {
 			Damage damage = new Damage(
-				gameObject, 
 				amount, 
 				1.5f,
 				Vector3.zero, 

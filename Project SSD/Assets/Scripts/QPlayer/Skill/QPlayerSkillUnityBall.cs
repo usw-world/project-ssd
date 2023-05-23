@@ -115,7 +115,7 @@ public class QPlayerSkillUnityBall : Skill
 			Attachment attachment = new Attachment(option03_debuffTime, 1f, options[3].image);
 			attachment.onStay = (gameObject) => {
 				IDamageable enemy = gameObject.GetComponent<IDamageable>();
-				Damage damage = new Damage(null, DamageAmout * option03_damageAmount * 0.01f, 0, Vector3.zero, Damage.DamageType.Normal);
+				Damage damage = new Damage(DamageAmout * option03_damageAmount * 0.01f, 0, Vector3.zero, Damage.DamageType.Normal);
 				enemy.OnDamage(damage);
 			};
 			temp.AddDebuff(attachment); // 매게변수도 투사체에 디버프를 추가함

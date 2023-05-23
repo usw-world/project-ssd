@@ -89,7 +89,6 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 			if(player != null) {
 				Vector3 forceVector = (inners[i].transform.position - this.transform.position).normalized * forceScalar;
 				Damage damage = new Damage(
-					this.gameObject,
 					this.damageAmount,
 					this.hittingDuration,
 					forceVector,

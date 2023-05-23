@@ -15,7 +15,6 @@ public class Effect_XBotAssault : MonoBehaviour {
 		&& other.gameObject.layer == 7) {
 			Vector3 force = (other.transform.position - transform.position).normalized * forceScalar;
 			Damage damage = new Damage(
-				gameObject,
 				amount,
 				.75f,
 				force,

@@ -103,8 +103,10 @@ class Enemy_XBot : MovableEnemy {
             StopCoroutine(jumpAttackCoroutine);
         };
         hitState.onActive += (State prevState) => {
-            enemyAnimator.SetBool("Hit", true);
-            enemyAnimator.SetTrigger("Hit Trigger");
+            if(prevState.Compare(hitState))
+                enemyAnimator.SetTrigger("Hit Trigger");
+            else
+                enemyAnimator.SetBool("Hit", true);
         };
         hitState.onInactive += (State nextState) => {
             enemyAnimator.SetBool("Hit", false);

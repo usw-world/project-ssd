@@ -39,7 +39,6 @@ public class Effect_YBotShootingSpell : MonoBehaviour, IPoolableObject {
 		&& other.gameObject.layer == 7) { // Player Layer
 			Vector3 forceVector = (other.transform.position - this.transform.position).normalized * forceScalar;
 			Damage damage = new Damage(
-				this.gameObject,
 				this.damageAmount,
 				this.hittingDuration,
 				forceVector,

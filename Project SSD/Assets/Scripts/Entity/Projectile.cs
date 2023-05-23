@@ -23,7 +23,6 @@ public class Projectile : MonoBehaviour
 			Instantiate(hitEffect, transform.position, Quaternion.Euler(0, 0, 0));
 			gameObject.SetActive(false);
 			Damage damage = new Damage(
-				this.gameObject,
 				this.amount,
 				.2f,
 				Vector3.zero,

@@ -98,7 +98,6 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 		{
 			IDamageable target = other.gameObject.GetComponent<IDamageable>();
 			Damage damage = new Damage(
-				gameObject,
 				damageAmount,
 				.5f,
 				(other.transform.position - transform.position).normalized * 10f,

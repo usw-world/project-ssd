@@ -43,7 +43,6 @@ public class Effect_YBotBomb : MonoBehaviour, IPoolableObject {
 				Collider inner = inners[i];
 				Vector3 force = Vector3.Scale(new Vector3(1, 0, 1), inner.transform.position - transform.position).normalized * forceScalar;
 				Damage damage = new Damage(
-					this.gameObject,
 					damageAmount,
 					hittingDuration,
 					force,
