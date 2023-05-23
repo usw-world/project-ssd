@@ -201,8 +201,12 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			trackEffect.dodgeMaehwa.Enable();
 		};
 		basicAttackState.onActive = (State prevState) => {
-			DrawSword(true);
-			ChangeAnimation("Basic Attack");
+			if(prevState.Compare(basicAttackState))
+				ChangeAnimation("Buffered Input Basic Attack");
+			else {
+				DrawSword(true);
+				ChangeAnimation("Basic Attack");
+			}
 		};
 		downAttackState.onActive = (State prev) => {
 			ChangeAnimation("DownAttack");
@@ -549,18 +553,18 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		|| stateMachine.currentState == comboAttack_1)
 			return;
 
-		if(stateMachine.Compare(basicAttackState)) {
+		// if(stateMachine.Compare(basicAttackState)) {
 		// Case that Playr is basic attacking >>
-			if(isAfterBasicAttack)
-				ChangeAnimation("Basic Attack");
-			else
-				ChangeAnimation("Buffered Input Basic Attack");
-		}
+		// 	if(isAfterBasicAttack)
+		// 		ChangeAnimation("Basic Attack");
+		// 	else
+		// 		ChangeAnimation("Buffered Input Basic Attack");
+		// }
 
 		nextAttackDirection = lookVector;
 
 		extraMovingPoint = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
-		ChangeState(basicAttackState, false);
+		ChangeState(basicAttackState, true);
 		// ChangeState(attackStateGroup[attackCount], false);
     }
 	public void OnMoveSpeedConvert()

@@ -40,7 +40,9 @@ class Enemy_YBot : MovableEnemy {
     #endregion Shoot Spell
 
     #region Mine Spell
+    private const float MINE_COOLTIME = 10f;
     [SerializeField] private Effect_YBotMineSpell ybotMineSpell;
+    private float currentMineCooltime = 0;
     #endregion Mine Spell
 
     #region Hit
@@ -61,6 +63,8 @@ class Enemy_YBot : MovableEnemy {
     protected override void Update() {
         if(currentRollingDodgeCooltime > 0)
             currentRollingDodgeCooltime -= Time.deltaTime;
+        if(currentMineCooltime > 0)
+            currentMineCooltime -= Time.deltaTime;
     }
     #endregion Unity Events
 
@@ -155,6 +159,7 @@ class Enemy_YBot : MovableEnemy {
         targetPosition = point;
 
         if(!TryRollingDodge()
+        && !TrySetUpMine()
         && !TryShootSpell()) {
             if((  enemyStateMachine.Compare(idleState)
                || enemyStateMachine.Compare(chaseState))
@@ -168,7 +173,8 @@ class Enemy_YBot : MovableEnemy {
     }
     private bool TryRollingDodge() {
         if(enemyStateMachine.Compare(hitState)
-        || enemyStateMachine.Compare(dieState))
+        || enemyStateMachine.Compare(dieState)
+        || enemyStateMachine.Compare(castState))
             return false;
 
         if(DistanceToTarget < 4f
@@ -184,11 +190,27 @@ class Enemy_YBot : MovableEnemy {
     private bool TryShootSpell() {
         if(enemyStateMachine.Compare(hitState)
         || enemyStateMachine.Compare(dieState)
-        || enemyStateMachine.Compare(shootState))
+        || enemyStateMachine.Compare(shootState)
+        || enemyStateMachine.Compare(castState))
             return false;
 
         if(DistanceToTarget < 10f) {
             SendChangeState(shootState, false);
+            return true;
+        }
+        return false;
+    }
+    private bool TrySetUpMine() {
+        if(enemyStateMachine.Compare(hitState)
+        || enemyStateMachine.Compare(dieState)
+        || enemyStateMachine.Compare(shootState)
+        || enemyStateMachine.Compare(castState))
+            return false;
+        
+        if(DistanceToTarget < 12f
+        && currentMineCooltime <= 0) {
+            SendChangeState(castState, false);
+            currentMineCooltime = MINE_COOLTIME;
             return true;
         }
         return false;
@@ -219,10 +241,12 @@ class Enemy_YBot : MovableEnemy {
 
     #region Animation Events
     public void AnimationEvent_CastAction() {
-
+        Vector3 minePos = new Vector3(targetPosition.x + Random.Range(-5, 6), targetPosition.y, targetPosition.z + Random.Range(-5, 6));
+        GameObject effect = PoolerManager.instance.OutPool(ybotMineSpell.GetKey());
+        effect.transform.position = minePos;
     }
     public void AnimationEvent_CastEnd() {
-
+        SendChangeState(BasicState);
     }
     public void AnimationEvent_ShootAction() {
         if(!enemyStateMachine.Compare(shootState))

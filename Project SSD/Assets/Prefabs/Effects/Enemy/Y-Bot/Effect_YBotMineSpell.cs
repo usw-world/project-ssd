@@ -4,19 +4,21 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
+	public bool isActive = false;
 	[SerializeField] private float explosionRadius = 3f;
 	[SerializeField] private float explosionDelay = .25f;
+	[SerializeField] private float setUpDelay = 1f;
+	private float currentSetUpDelay = 0;
 	private float triggerTime = 0;
 
 	[SerializeField] private float damageAmount = 35f;
 	[SerializeField] private float forceScalar = 10f;
 	[SerializeField] private float hittingDuration = .75f;
 
-
 	[SerializeField] private CapsuleCollider capsuleCollider;
 	[SerializeField] private DecalProjector delayProjector;
 	[SerializeField] private DecalProjector rangeProjector;
-	private float duration = 10f;
+	private float duration = 15f;
 	private float lifetime = 0;
 	private bool hasTriggered = false;
 	private bool hasExplosion = false;
@@ -41,7 +43,7 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 
 		rangeProjector.enabled = true;
 		delayProjector.enabled = true;
-		rangeProjector.size = new Vector3(explosionRadius*2, explosionRadius*2, rangeProjector.size.z);
+		rangeProjector.size = new Vector3(0, 0, rangeProjector.size.z);
 		delayProjector.size = new Vector3(0, 0, delayProjector.size.z);
 		explosionParticle.transform.localScale = Vector3.one * 1/2 * explosionRadius;
 
@@ -52,21 +54,34 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 		if(hasExplosion)
 			return;
 			
+		if(!isActive) {
+			currentSetUpDelay = Mathf.Min(setUpDelay, currentSetUpDelay+Time.deltaTime);
+			float projectorRadius = explosionRadius*2 * 1/setUpDelay * currentSetUpDelay;
+			rangeProjector.size = new Vector3(projectorRadius, projectorRadius, rangeProjector.size.z);
+			if(currentSetUpDelay >= setUpDelay)
+				isActive = true;
+			return;
+		}
+			
 		lifetime += Time.deltaTime;
+		if(lifetime >= duration) {
+			rangeProjector.enabled = false;
+			delayProjector.enabled = false;
+			Disapear();
+		}
+
 		if(hasTriggered) {
 			triggerTime = Mathf.Min(explosionDelay, triggerTime+Time.deltaTime);
-			delayProjector.size = new Vector3(explosionRadius*2 * 1/explosionDelay * triggerTime, explosionRadius*2 * 1/explosionDelay * triggerTime, delayProjector.size.z);
+			float projectorRadius = explosionRadius*2 * 1/explosionDelay * triggerTime;
+			delayProjector.size = new Vector3(projectorRadius, projectorRadius, delayProjector.size.z);
 			if(triggerTime >= explosionDelay) {
 				Explosion();
 			}
 		}
-
-		if(lifetime >= duration) {
-			Disapear();
-		}
 	}
-	private void OnTriggerEnter(Collider other) {
-        if(!hasTriggered
+	private void OnTriggerStay(Collider other) {
+        if(isActive
+		&& !hasTriggered
 		&& other.gameObject.layer == 7) { // Player Layer
 			TriggerMine();
 			Disapear();
@@ -83,7 +98,9 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 	}
 	private void Explosion() {
 		hasExplosion = true;
-		Collider[] inners = Physics.OverlapSphere(transform.position, explosionRadius, 1<<7);
+		Vector3 point1 = transform.position + Vector3.up*5;
+		Vector3 point2 = transform.position - Vector3.up*5;
+		Collider[] inners = Physics.OverlapCapsule(point1, point2, explosionRadius, 1<<7);
 		for (int i=0; i<inners.Length; i++) {
 			TPlayer player = inners[i].GetComponent<TPlayer>();
 			if(player != null) {
@@ -97,16 +114,16 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 				player.OnDamage(damage);
 			}
 		}
-		explosionParticle.Play();
 		rangeProjector.enabled = false;
 		delayProjector.enabled = false;
+		explosionParticle.Play();
 		Disapear();
 	}
 	private IEnumerator InPoolCoroutine() {
 		yield return new WaitForSeconds(5f);
-		explosionParticle.Stop();
 		rangeProjector.enabled = false;
 		delayProjector.enabled = false;
+		explosionParticle.Stop();
 		PoolerManager.instance.InPool(this.GetKey(), this.gameObject);
 	}
 }

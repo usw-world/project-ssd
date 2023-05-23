@@ -91,6 +91,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 10
@@ -5321,6 +5322,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -10300,6 +10302,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 80
@@ -10536,6 +10539,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -11042,6 +11046,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 30
@@ -11193,6 +11198,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -11254,6 +11260,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -11524,6 +11531,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 50
@@ -13222,6 +13230,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -13602,6 +13611,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -14651,6 +14661,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 50
@@ -14712,6 +14723,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -15366,6 +15378,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 50
@@ -16025,6 +16038,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 10
@@ -16148,6 +16162,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -16758,6 +16773,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -17890,6 +17906,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -18574,6 +18591,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -18951,6 +18969,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -19364,7 +19383,7 @@ MonoBehaviour:
   enableAngleLimits: 1
   enableCollision: 1
   enableLengthLimits: 1
-  collideWithGround: 1
+  collideWithGround: 0
   groundHeight: 0
   springBones:
   - {fileID: 3159772804222161880}
@@ -19828,6 +19847,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -23488,6 +23508,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0
@@ -23739,6 +23760,7 @@ MonoBehaviour:
     coolTime: 0
     skillAP: 0.8
     nowCoolTime: 100
+    isUseSkill: 0
     ready: 0
     quickUse: 0
   usingSP: 0

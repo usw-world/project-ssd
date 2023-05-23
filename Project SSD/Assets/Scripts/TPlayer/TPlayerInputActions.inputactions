@@ -15,9 +15,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Attack",
+                    "name": "MLB",
                     "type": "Button",
                     "id": "11cd795f-5e93-4fe1-be70-3d3fee3288d2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MRB",
+                    "type": "Button",
+                    "id": "4e0ab667-a077-48e3-bbe0-475380ced7ab",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -81,15 +90,6 @@
                     "name": "EndRush",
                     "type": "Button",
                     "id": "4aae780e-4c0d-4a1d-99ff-d35ed1130553",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "StartCharging",
-                    "type": "Button",
-                    "id": "4e0ab667-a077-48e3-bbe0-475380ced7ab",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -168,14 +168,14 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack",
+                    "action": "MLB",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "f21c64af-b5dc-4d4b-9935-bae755704f1a",
-                    "path": "<Mouse>/leftButton",
+                    "path": "<Keyboard>/j",
                     "interactions": "Hold(duration=0.6,pressPoint=0.1)",
                     "processors": "",
                     "groups": "",
@@ -251,23 +251,23 @@
                 },
                 {
                     "name": "",
-                    "id": "3bd3ad1d-9684-4396-b385-63177ea4921a",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "Press",
-                    "processors": "",
-                    "groups": "",
-                    "action": "StartCharging",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "0355b7ef-3bab-47ae-a209-97f2fa3422e7",
                     "path": "<Mouse>/rightButton",
                     "interactions": "Press(pressPoint=1.401298E-45,behavior=1)",
                     "processors": "",
                     "groups": "",
                     "action": "EndCharging",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3bd3ad1d-9684-4396-b385-63177ea4921a",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MRB",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

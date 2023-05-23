@@ -25,6 +25,8 @@ public class NavigateableMovement : Movement
 	public void MoveToPoint(Vector3 point, float speed, int layerMask = 1<<6) {
 		isArrive = false;
 		navMesh.nextPosition = transform.position;
+		navMesh.enabled = false;
+		navMesh.enabled = true;
 		navMesh.SetDestination(point);
 		pathIndex = 0;
 		pointMoveSpeed = speed;
