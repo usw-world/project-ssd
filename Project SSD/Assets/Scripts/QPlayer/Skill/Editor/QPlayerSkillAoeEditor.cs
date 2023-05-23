@@ -27,17 +27,15 @@ public class QPlayerSkillAoeEditor : Editor
 	{
 		// base.OnInspectorGUI(); return;
 		//serializedObject.Update();
-		EditorGUILayout.HelpBox("QPlayer의 스킬 Gather Enemies을 설정합니다.", MessageType.None);
+		EditorGUILayout.HelpBox("QPlayer의 스킬 장판을 설정합니다.", MessageType.None);
 
-		EditorGUILayout.FloatField("테스트", data.options.Length);
 		data.info.name = EditorGUILayout.TextField("스킬 이름", data.info.name);
 		data.info.skillText = EditorGUILayout.TextField("스킬 설명", data.info.skillText);
 		data.info.effect = (GameObject)EditorGUILayout.ObjectField("장판 오브젝트", data.info.effect, typeof(GameObject), true);
-		data.cosmic = (GameObject)EditorGUILayout.ObjectField("코스믹 오브젝트", data.cosmic, typeof(GameObject), true);
 		data.info.skillImage = (Sprite)EditorGUILayout.ObjectField("이미지", data.info.skillImage, typeof(Sprite), true);
-		data.area.distance = EditorGUILayout.FloatField("사정거리", data.area.distance);
+        data.area.range = EditorGUILayout.FloatField("마우스의 공격 범위", data.area.range);
+        data.area.distance = EditorGUILayout.FloatField("사정거리", data.area.distance);
         data.info.effect.GetComponent<SphereCollider>().radius = EditorGUILayout.FloatField("공격 범위", data.info.effect.GetComponent<SphereCollider>().radius);
-		data.cosmic.GetComponent<CapsuleCollider>().radius = EditorGUILayout.FloatField("당기는 범위", data.cosmic.GetComponent<CapsuleCollider>().radius);
         data.property.coolTime = EditorGUILayout.FloatField("쿨타임", data.property.coolTime);
 		data.property.skillAP = EditorGUILayout.FloatField("스킬 피해량(%)", data.property.skillAP);
 		data.aimType = (AimType)EditorGUILayout.EnumPopup("조준 타입", data.aimType);
@@ -51,6 +49,10 @@ public class QPlayerSkillAoeEditor : Editor
 		data.options[1].active = EditorGUILayout.Toggle("특성 2 활성화", data.options[1].active);
 		data.options[2].active = EditorGUILayout.Toggle("특성 3 활성화", data.options[2].active);
 		data.options[3].active = EditorGUILayout.Toggle("특성 4 활성화", data.options[3].active);
+        data.options[4].active = EditorGUILayout.Toggle("특성 5 활성화", data.options[4].active);
+        data.options[5].active = EditorGUILayout.Toggle("특성 6 활성화", data.options[5].active);
+        data.options[6].active = EditorGUILayout.Toggle("특성 7 활성화", data.options[6].active);
+        data.options[7].active = EditorGUILayout.Toggle("특성 8 활성화", data.options[7].active);
 
 
         if (fixOption)
@@ -68,16 +70,18 @@ public class QPlayerSkillAoeEditor : Editor
 			switch (option)
 			{
 				case eSkillOption.option_1:
-					data.option00_increaseCastingSpeed = EditorGUILayout.FloatField("데미지 상승량(%)", data.option00_increaseCastingSpeed);
-					if (data.option00_increaseCastingSpeed <= 0) Error("'캐스팅 속도 증가량(%)'를 설정하십시오");
+                    data.option00_buffTime = EditorGUILayout.FloatField("버프 시간", data.option00_buffTime);
+                    data.option00_increaseTPlayerAp = EditorGUILayout.FloatField("TPlayer 공격력 상승량(%)", data.option00_increaseTPlayerAp);
+					if (data.option00_increaseTPlayerAp <= 0) Error("'공격력 상승량(%)'를 설정하십시오");
 					break;
 				case eSkillOption.option_2:
-					data.option01_decreaseSkillCoolDown = EditorGUILayout.FloatField("속도 상승량(%)", data.option01_decreaseSkillCoolDown);
+					data.option01_decreaseSkillCoolDown = EditorGUILayout.FloatField("스킬 쿨타임 감소량(%)", data.option01_decreaseSkillCoolDown);
 					if (data.option01_decreaseSkillCoolDown <= 0) Error("'스킬 쿨타임 감소량(%)'을 설정하십시오");
 					break;
-				case eSkillOption.option_3:
-
-					break;
+				case eSkillOption.option_4:
+					data.option04_effect = (GameObject)EditorGUILayout.ObjectField("장판 오브젝트", data.option04_effect, typeof(GameObject), true);
+                    if (data.option04_effect == null) Error("'장판 오브젝트가 없습니다.");
+                    break;
 
 			}
 			 //data.options[idx].amount = EditorGUILayout.FloatField("크기 상승량", data.options[idx].amount);
