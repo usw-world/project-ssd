@@ -192,8 +192,8 @@ public class QPlayer : NetworkBehaviour
             string animationParameter = "1H Casting";
 
             var skillUnityball = usingSkill as QPlayerSkillUnityBall;
-            if(skillUnityball != null && skillUnityball.options[7].active)
-                animationParameter = "2H Casting";
+            //if(skillUnityball != null && skillUnityball.options[7].active)
+            //    animationParameter = "2H Casting";
 
             ChangeAnimation(animationParameter);
         };

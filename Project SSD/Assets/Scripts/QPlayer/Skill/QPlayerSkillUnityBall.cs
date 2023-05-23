@@ -84,16 +84,19 @@ public class QPlayerSkillUnityBall : Skill
 
 		if (options[6].active)
 		{
+			print("유니티 허브 볼 발사");
 			obj = PoolerManager.instance.OutPool(option06_effectKey);
 			temp = obj.GetComponent<UnityHubBall>();
 		}
 		else if (options[7].active)
 		{
+			print("유니티 볼오오오올 발사");
 			obj = PoolerManager.instance.OutPool(option07_effectKey);
 			temp = obj.GetComponent<UnityBaaaall>();
 		}
 		else
 		{
+			print("유니티 볼 발사");
 			obj = PoolerManager.instance.OutPool(infoEffectKey);
 			temp = obj.GetComponent<UnityBall>();
 		}
@@ -104,14 +107,16 @@ public class QPlayerSkillUnityBall : Skill
 
 		if (options[2].active)
 		{
+			print("TPlayer 치료!");
 			Attachment attachment = new Attachment(option02_buffTime, 1f, options[2].image);
 			attachment.onStay = (gameObject) => {
 				TPlayer.instance.ChangeHp(DamageAmout * option02_healingAmount * 0.01f / 1f);
 			};
-			TPlayer.instance.AddAttachment(attachment); // 매게변수도 TPlayer에게 버프를 추가함
+			TPlayer.instance?.AddAttachment(attachment); // 매게변수도 TPlayer에게 버프를 추가함
 		}
 		if (options[3].active)
 		{
+			print("적에게 지속 데미지!");
 			Attachment attachment = new Attachment(option03_debuffTime, 1f, options[3].image);
 			attachment.onStay = (gameObject) => {
 				IDamageable enemy = gameObject.GetComponent<IDamageable>();
@@ -122,12 +127,13 @@ public class QPlayerSkillUnityBall : Skill
 		}
 		if (options[4].active)
 		{
+			print("명중 후 폭발!");
 			temp.AddLastExplosion(option04_effectKey, LastExplosionDamegeAmout); // 마지막 폭발 데미지 전달
 		}
 		if (options[5].active)
 		{
+			print("유도기능 on");
 			temp.OnActiveGuided(); // 유도기능 활성화
-			print("유도 On");
 		}
 	}
 	public override string GetAnimationTigger()
