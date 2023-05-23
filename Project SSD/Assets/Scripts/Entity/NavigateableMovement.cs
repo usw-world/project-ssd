@@ -32,7 +32,7 @@ public class NavigateableMovement : Movement
 	}
 	public void Stop() {
 		isArrive = true;
-		moveToPointLayerMask = 1<<6;
+		moveToPointLayerMask = 1 << 6 ;
 	}
 	public void SetSpeed(float nextSpeed) {
 		pointMoveSpeed = nextSpeed;

@@ -69,7 +69,7 @@ class Enemy_XBot : MovableEnemy {
         chaseState.onActive += (State prevState) => {
             enemyAnimator.SetBool("Chase", true);
             transform.LookAt(new Vector3(targetPosition.x, transform.position.y, targetPosition.z));
-            enemyMovement.MoveToPoint(targetPosition, moveSpeed, 5<<6);
+            enemyMovement.MoveToPoint(targetPosition, moveSpeed, moveLayerMask);
         };
         chaseState.onStay += () => {
             if(IsArrive) {
@@ -167,7 +167,7 @@ class Enemy_XBot : MovableEnemy {
         float offset = 0;
         while(offset < 1) {
             offset += Time.deltaTime;
-            enemyMovement.MoveToward(distance * Time.deltaTime*.8f, Space.World, 5<<6);
+            enemyMovement.MoveToward(distance * Time.deltaTime*.8f, Space.World, moveLayerMask);
             yield return null;
         }
     }
@@ -188,7 +188,7 @@ class Enemy_XBot : MovableEnemy {
         dir.y = 0;
 
         while(offset < 1) {
-            enemyMovement.MoveToward(dir * 10f * Time.deltaTime, Space.World, 5<<6);
+            enemyMovement.MoveToward(dir * 10f * Time.deltaTime, Space.World, moveLayerMask);
             offset += Time.deltaTime;
             yield return null;
         }
@@ -231,7 +231,7 @@ class Enemy_XBot : MovableEnemy {
         Vector3 pushedDestination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
         SendChangeState(hitState);
         while(offset < damage.hittingDuration) {
-            enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World);
+            enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World, moveLayerMask);
             pushedOffset += Time.deltaTime * 2;
             offset += Time.deltaTime;
             yield return null;
