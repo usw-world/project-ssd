@@ -84,7 +84,7 @@ class Enemy_YBot : MovableEnemy {
         chaseState.onActive += (State prevState) => {
             enemyAnimator.SetBool("Chase", true);
             transform.LookAt(new Vector3(targetPosition.x, transform.position.y, targetPosition.z));
-            enemyMovement.MoveToPoint(targetPosition, moveSpeed, 5<<6);
+            enemyMovement.MoveToPoint(targetPosition, moveSpeed, moveLayerMask);
         };
         chaseState.onStay += () => {
             if(IsArrive) {
@@ -228,7 +228,7 @@ class Enemy_YBot : MovableEnemy {
         while(offset < 1f) {
             offset += Time.deltaTime * 1.25f;
             tick++;
-            enemyMovement.MoveToward(transform.forward * Mathf.Pow((1-offset)*5, 2) * Time.deltaTime, Space.World);
+            enemyMovement.MoveToward(transform.forward * Mathf.Pow((1-offset)*5, 2) * Time.deltaTime, Space.World, moveLayerMask);
             if(offset < .3f && tick >= motionTrailInterval) {
                 tick= 0;
                 motionTrailEffect.GenerateTrail(skinnedRenderers);
@@ -289,7 +289,7 @@ class Enemy_YBot : MovableEnemy {
         Vector3 pushedDestination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
         SendChangeState(hitState);
         while(offset < damage.hittingDuration) {
-            enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World);
+            enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World, moveLayerMask);
             pushedOffset += Time.deltaTime * 2;
             offset += Time.deltaTime;
             yield return null;

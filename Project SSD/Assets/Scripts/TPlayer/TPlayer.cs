@@ -263,6 +263,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		chargingDrawSwordAttack_nonCharging.onActive = (State prev) => {
 			DrawSword(true);
 			ChangeAnimation("Draw Sword Attack Non Charging");
+			clipPlayer.voice.attack_01.Play();
 		}; 
 		chargingDrawSwordAttack_2time.onActive = (State prev) => {
 			DrawSword(true);
@@ -273,7 +274,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			isImmune = true;
 			DrawSword(true);
 			lateDamageTarget.Clear();
-			CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[0]);
+			if(isLocalPlayer)
+				CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[0]);
 			clipPlayer.voice.drawAttackSpecialReady.Play();
 			clipPlayer.effect.drawAttackSpecial_start.PlayOneShot();
 		};
@@ -281,14 +283,16 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			tPlayerMesh.SetActive(false);
 			isCheckLateDamageTarget = true;
 			StartCoroutine(DrawAttackSpecialCutScene());
-            CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[1]);
+			if (isLocalPlayer)
+				CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[1]);
 			clipPlayer.voice.drawAttackSpecialStart.Play();
 			clipPlayer.effect.drawAttackSpecial_stay.PlayOneShot();
 		};
 		chargingDrawSwordAttack_specialEnd.onActive = (State prev) => {
             ChangeAnimation("Draw Sword Attack Special End");
 			StartCoroutine(DrawAttackSpecialEnd());
-			CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[2]);
+			if (isLocalPlayer)
+				CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[2]);
 		};
 	}
 	private void InitializeStateOnStay()
@@ -393,7 +397,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			DrawSword(false);
 		};
 		chargingDrawSwordAttack_specialEnd.onInactive = (State next) => {
-			CameraManager.instance.SetPlayerCamera();
+			if (isLocalPlayer)
+				CameraManager.instance.SetPlayerCamera();
             isImmune = false;
 			DrawSword(false);
 		};
@@ -458,14 +463,16 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		TakeDamage(damage);
 	}
 	[ClientRpc]
-	private void TakeDamage(Damage damage) {
+	private void TakeDamage(Damage damage)
+	{
 		if (isImmune) // 무적이면 실행 안함
 			return;
 
 		status.hp -= damage.amount;
 		ui.RefreshHp(status.hp / status.maxHp);
-		
-		if (damage.forceVector != Vector3.zero) {
+
+		if (damage.forceVector != Vector3.zero)
+		{
 			LookDirection(-damage.forceVector);
 		}
 
@@ -473,7 +480,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		|| isSuperArmor)
 			return;
 
-		if(damageCoroutine != null)
+		if (damageCoroutine != null)
 			StopCoroutine(damageCoroutine);
 		damageCoroutine = StartCoroutine(DamageCoroutine(damage));
 	}
@@ -615,7 +622,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		{
 			if (lookVector != Vector3.zero) RotateWithCamera(15f);
 			ChangeState(chargingDrawSwordAttack_nonCharging);
-			clipPlayer.voice.attack_01.Play();
 			return;
 		}
 		if (stateMachine.currentState != chargingStay) return;
@@ -624,7 +630,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		{
 			case 0: 
 				ChangeState(chargingDrawSwordAttack_nonCharging);
-				clipPlayer.voice.nonCharging.Play(); 
 				break;
 			case 1: ChangeState(chargingDrawSwordAttack); break;
 			case 2: ChangeState(chargingDrawSwordAttack_2time); break;
@@ -744,10 +749,12 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		trackEffect.dodgeMaehwa.Disable();
 		clipPlayer.effect.slash_03.PlayOneShot();
 	}
-	public void ChackDrawSwordAttack()
+	public void ChackDrawSwordAttack(int sound)
 	{
 		skill.charging_DrawSwordAttack.Use();
 		clipPlayer.effect.slash_03.PlayOneShot();
+		if(sound == 1)
+			clipPlayer.voice.attack_02.Play();
 		if (attackCoroutine != null)
 			StopCoroutine(attackCoroutine);
 		attackCoroutine = StartCoroutine(AttackCoroutine(3f));

@@ -122,7 +122,14 @@ public class QPlayer : NetworkBehaviour
             movement.enabled = false;
             ChangeAnimation(FLY_ANIMATION_PARAMETER);
         };
-        attachedState.onStay += () => {};
+        attachedState.onStay += () => {
+			Vector3 targetPos = tPlayerGobj.transform.position;
+			float returnSpeed = 10.0f * Time.deltaTime;
+			targetPos.y += 2;
+			targetPos.x -= 1;
+			Vector3 temp = Vector3.zero;
+			transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref temp, returnSpeed);
+		};
         attachedState.onInactive += (State nextState) => { };
         #endregion Attached State
         
@@ -132,6 +139,15 @@ public class QPlayer : NetworkBehaviour
             movement.enabled = false;
             ChangeAnimation(FLY_ANIMATION_PARAMETER);
         };
+		returnState.onStay = () =>
+		{
+			Vector3 targetPos = tPlayerGobj.transform.position;
+			float returnSpeed = 10.0f * Time.deltaTime;
+			targetPos.y += 2;
+			targetPos.x -= 1;
+			Vector3 temp = Vector3.zero;
+			transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref temp, returnSpeed);
+		};
         returnState.onInactive += (State nextState) => { };
         #endregion Return State
 
@@ -179,7 +195,6 @@ public class QPlayer : NetworkBehaviour
             if(skillUnityball != null && skillUnityball.options[7].active)
                 animationParameter = "2H Casting";
 
-            // animator.SetTrigger(usingSkill.GetAnimationTigger());
             ChangeAnimation(animationParameter);
         };
         unityBallState.onStay = () => { };
