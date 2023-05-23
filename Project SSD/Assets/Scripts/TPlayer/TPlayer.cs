@@ -41,8 +41,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private Vector3 lookVector; // 기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다
 	private Vector3 nextAttackDirection; // 기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다
 	private Vector3 extraMovingPoint;
-	// Damage is Sychronized >>
-	private Damage beingDamage;
 	private string currentAnimationTrigger = "";
 	private float[] chargingMaxTime = { 0.5f, 0.5f, 0.5f };
 	private float idleActionTime = 5f;
@@ -453,6 +451,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
     }
 	[Command]
 	public void OnDamage(Damage damage) {
+		TakeDamage(damage);
+	}
+	[ClientRpc]
+	private void TakeDamage(Damage damage) {
 		if (isImmune) // 무적이면 실행 안함
 			return;
 
@@ -470,10 +472,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		if(damageCoroutine != null)
 			StopCoroutine(damageCoroutine);
 		damageCoroutine = StartCoroutine(DamageCoroutine(damage));
-	}
-	[ClientRpc]
-	private void TakeDamage(Damage damage) {
-
 	}
 	private IEnumerator DamageCoroutine(Damage damage) {
 		float offset = 0f;

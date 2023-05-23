@@ -76,7 +76,7 @@ MonoBehaviour:
   runInBackground: 1
   autoStartServerBuild: 1
   autoConnectClientBuild: 0
-  sendRate: 30
+  sendRate: 120
   offlineScene: 
   onlineScene: 
   transport: {fileID: 5166133502167492904}
@@ -95,4 +95,4 @@ MonoBehaviour:
   qPlayerObject: {fileID: 2136718358471616647, guid: d8bf16506c20a4c72bf06419ea2bd1ef,
     type: 3}
   player: {fileID: 0}
-  testTarget: 1
+  testTarget: 0
