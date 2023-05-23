@@ -13,12 +13,15 @@ public class Effect_YBotShootingSpell : MonoBehaviour, IPoolableObject {
 	
 	[SerializeField] private ParticleSystem flyingParticle;
 	[SerializeField] private ParticleSystem explosionParticle;
+	private Coroutine inPoolCoroutine;
 	
     public string GetKey() {
         return GetType().ToString();
     }
 
 	private void OnEnable() {
+		if(inPoolCoroutine != null)
+			StopCoroutine(inPoolCoroutine);
 		flyingParticle.Play();
 		lifetime = 0;
 		isActive = true;
@@ -50,7 +53,7 @@ public class Effect_YBotShootingSpell : MonoBehaviour, IPoolableObject {
 		isActive = false;
 		flyingParticle.Stop();
 		explosionParticle.Play();
-		StartCoroutine(InPoolCoroutine());
+		inPoolCoroutine = StartCoroutine(InPoolCoroutine());
 	}
 	private IEnumerator InPoolCoroutine() {
 		yield return new WaitForSeconds(5f);

@@ -11,14 +11,17 @@ public class Effect_YBotBomb : MonoBehaviour, IPoolableObject {
 	
 	[SerializeField] private ParticleSystem bombParticle;
 	[SerializeField] private ParticleSystem explosionParticle;
+	private Coroutine inPoolCoroutine;
 	
     public string GetKey() {
         return GetType().ToString();
     }
 
 	private void OnEnable() {
+		if(inPoolCoroutine != null)
+			StopCoroutine(inPoolCoroutine);
 		currentSpeed = 10;
-		StartCoroutine(InPoolCoroutine());
+		inPoolCoroutine = StartCoroutine(InPoolCoroutine());
 	}
 	private void Update() {
 		transform.Translate(Vector3.up * currentSpeed * Time.deltaTime);

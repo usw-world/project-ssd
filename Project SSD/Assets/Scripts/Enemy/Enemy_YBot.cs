@@ -34,10 +34,14 @@ class Enemy_YBot : MovableEnemy {
     [SerializeField] private Transform ybotBombPoint;
     #endregion Rolling Dodge
 
-    #region Shot Spell
+    #region Shoot Spell
     [SerializeField] private Effect_YBotShootingSpell ybotShootingSpell;
     [SerializeField] private Transform ybotShootingSpellPoint;
-    #endregion Shot Spell
+    #endregion Shoot Spell
+
+    #region Mine Spell
+    [SerializeField] private Effect_YBotMineSpell ybotMineSpell;
+    #endregion Mine Spell
 
     #region Hit
     private Coroutine hitCoroutine;
@@ -63,6 +67,7 @@ class Enemy_YBot : MovableEnemy {
     private void InitializePoolers() {
         PoolerManager.instance.InsertPooler(ybotBomb.GetKey(), ybotBomb.gameObject, true);
         PoolerManager.instance.InsertPooler(ybotShootingSpell.GetKey(), ybotShootingSpell.gameObject, true);
+        PoolerManager.instance.InsertPooler(ybotMineSpell.GetKey(), ybotMineSpell.gameObject, true);
     }
     private void InitializeState() {
         idleState.onActive += (State prevState) => {

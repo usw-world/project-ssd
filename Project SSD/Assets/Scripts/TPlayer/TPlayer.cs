@@ -39,6 +39,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private Coroutine WalkCoroutine;
 	private Coroutine damageCoroutine;
 	private Vector3 lookVector; // 기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다
+	private Vector3 nextAttackDirection; // 기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다
 	private Vector3 extraMovingPoint;
 	private string currentAnimationTrigger = "";
 	private float[] chargingMaxTime = { 0.5f, 0.5f, 0.5f };
@@ -468,7 +469,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private IEnumerator DamageCoroutine(Damage damage) {
 		float offset = 0f;
         Vector3 pushedDestination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
-		ChangeState(damageState);
+		if(damage.hittingDuration > 0)
+			ChangeState(damageState);
 		while(offset < damage.hittingDuration) {
             movement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, offset*2) * Time.deltaTime, Space.World);
 			offset += Time.deltaTime;
@@ -548,8 +550,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 				ChangeAnimation("Buffered Input Basic Attack");
 		}
 
-        if (lookVector != Vector3.zero && attackCount != 0)
-			RotateWithCamera(15f);
+		nextAttackDirection = lookVector;
 
 		extraMovingPoint = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
 		ChangeState(basicAttackState, false);
@@ -687,12 +688,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			}
 		}
 	}
-	public void AnimationEvent_OnAttackFrame() {
-		skill.basicAttacks[attackCount].Use();
-		if (attackCoroutine != null)
-			StopCoroutine(attackCoroutine);
-		attackCoroutine = StartCoroutine(AttackCoroutine());
-		isAfterBasicAttack = true;
+	public void AnimationEvent_StartAttack() {
+        if (nextAttackDirection != Vector3.zero)
+			RotateWithCamera(15f);
 	}
 	public void CheckAttackZone()
 	{

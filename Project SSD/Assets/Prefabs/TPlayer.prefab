@@ -18977,7 +18977,6 @@ GameObject:
   - component: {fileID: 575347874802459017}
   - component: {fileID: 1378400513}
   - component: {fileID: 4795450059883276390}
-  - component: {fileID: 7515789427258574890}
   - component: {fileID: 1491484156070005974}
   - component: {fileID: -4656682673565989524}
   - component: {fileID: -8032123507149664610}
@@ -19419,14 +19418,6 @@ MonoBehaviour:
     type: 3}
   hitEffectSlash01_prefab: {fileID: 1111155747428441479, guid: 0b162a747a5f9ab4993fb62eca24eb65,
     type: 3}
---- !u!81 &7515789427258574890
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6410919741541939096}
-  m_Enabled: 1
 --- !u!82 &1491484156070005974
 AudioSource:
   m_ObjectHideFlags: 0
