@@ -112,8 +112,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   homingArea: {fileID: 7007607472061520163}
-  lastExplosion: {fileID: 0}
-  poolerKey: unityBall
+  isHoming: 0
+  lastExplosionKey: 
 --- !u!1 &8137220019541114625
 GameObject:
   m_ObjectHideFlags: 0
@@ -158,7 +158,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 8
+  m_Radius: 3
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7007607472061520163
 MonoBehaviour:
@@ -172,4 +172,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c85d5d98463603498c60c13ff167890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isActive: 1
+  triggerEnterEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  triggerStayEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  triggerExitEvent:
+    m_PersistentCalls:
+      m_Calls: []

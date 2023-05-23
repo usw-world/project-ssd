@@ -127,6 +127,7 @@ public class QPlayerSkillUnityBall : Skill
 		if (options[5].active)
 		{
 			temp.OnActiveGuided(); // 유도기능 활성화
+			print("유도 On");
 		}
 	}
 	public override string GetAnimationTigger()

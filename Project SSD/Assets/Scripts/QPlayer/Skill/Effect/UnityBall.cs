@@ -13,7 +13,7 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 	protected float homingPerformance = .1f;
 	protected float lastExplosionDamage;
 	protected bool isLastExplosion = false;
-	protected bool isHoming = false;
+	public bool isHoming = false;
 	protected Coroutine hideCoroutine = null;
 	public string lastExplosionKey;
 
@@ -23,12 +23,12 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 		this.damageAmount = damage;
 		this.speed = speed;
 	}
-	protected void Start()
+	protected void Awake()
 	{
 		if (homingArea != null)
 		{
 			homingArea.onTriggerEnter += OnDetectHomingTarget;
-			homingArea.onTriggerExit += OnDetectHomingTarget;
+			homingArea.onTriggerExit += OnLostHomingTarget;
 		}
 	}
 	protected void Update()

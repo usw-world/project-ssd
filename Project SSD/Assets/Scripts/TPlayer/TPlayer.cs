@@ -169,7 +169,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
     {
         idleState1.onActive = (State prev) => {
 			idleTime = 0;
-			if (prev == basicAttackState )
+			if (prev == basicAttackState)
 			{
 				if (attackCount != 0)
 				{
@@ -510,19 +510,19 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		if (!skill.basicAttacks[attackCount].CanUse())
 			return;
 
-   //     if (stateMachine.currentState == dodgeState)
-   //     {
-			//OnDodgeAttack();
-			//return;
-   //     }
-		if (stateMachine.currentState == moveState && isRush)
+		if (stateMachine.currentState == dodgeState)
 		{
-			if (skill.dodgeAttack.CanUse()) 
-			{
-				OnDodgeAttack();
-				return;
-			}
+			OnDodgeAttack();
+			return;
 		}
+		//if (stateMachine.currentState == moveState && isRush)
+		//{
+		//	if (skill.dodgeAttack.CanUse()) 
+		//	{
+		//		OnDodgeAttack();
+		//		return;
+		//	}
+		//}
         if (stateMachine.currentState == damageState
 		|| stateMachine.currentState == dodgeState
 		|| stateMachine.currentState == dodgeAttackState
@@ -548,7 +548,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 				ChangeAnimation("Buffered Input Basic Attack");
 		}
 
-        if (lookVector != Vector3.zero)
+        if (lookVector != Vector3.zero && attackCount != 0)
 			RotateWithCamera(15f);
 
 		extraMovingPoint = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
@@ -1132,6 +1132,8 @@ class TPayerUI
 		PlayerStatus status = TPlayer.instance.status;
 		sliderHP.maxValue = status.maxHp;
 		sliderSP.maxValue = status.maxSp;
+		sliderHP.value = status.hp;
+		sliderSP.value = status.sp;
 		sliderCharging.gameObject.SetActive(false);
 		imgCutSceneSwordTrail.gameObject.SetActive(false);
 	}
