@@ -40,15 +40,6 @@ public class QPlayerSkillUnityBallEditor : Editor
 		fixOption = EditorGUILayout.Toggle("특성 설정", fixOption);
 		EditorGUILayout.Space();
 
-        data.options[0].active = EditorGUILayout.Toggle("특성 1 활성화", data.options[0].active);
-        data.options[1].active = EditorGUILayout.Toggle("특성 2 활성화", data.options[1].active);
-        data.options[2].active = EditorGUILayout.Toggle("특성 3 활성화", data.options[2].active);
-        data.options[3].active = EditorGUILayout.Toggle("특성 4 활성화", data.options[3].active);
-        data.options[4].active = EditorGUILayout.Toggle("특성 5 활성화", data.options[4].active);
-        data.options[5].active = EditorGUILayout.Toggle("특성 6 활성화", data.options[5].active);
-        data.options[6].active = EditorGUILayout.Toggle("특성 7 활성화", data.options[6].active);
-        data.options[7].active = EditorGUILayout.Toggle("특성 8 활성화", data.options[7].active);
-
         if (fixOption)
 		{
 			option = (eSkillOption)EditorGUILayout.EnumPopup("특성", option);
@@ -66,35 +57,42 @@ public class QPlayerSkillUnityBallEditor : Editor
 				case eSkillOption.option_1:
 					data.option00_increasingSkillPower = EditorGUILayout.FloatField("데미지 상승량(%)", data.option00_increasingSkillPower);
 					if (data.option00_increasingSkillPower <= 0) Error("'데미지 상승량(%)'을 설정하십시오");
+					data.options[0].active = EditorGUILayout.Toggle("활성화", data.options[0].active);
 					break;
 				case eSkillOption.option_2:
 					data.option01_increasingSpeed = EditorGUILayout.FloatField("속도 상승량(%)", data.option01_increasingSpeed);
 					if (data.option01_increasingSpeed <= 0) Error("'속도 상승량(%)'을 설정하십시오");
+					data.options[1].active = EditorGUILayout.Toggle("활성화", data.options[1].active);
 					break;
 				case eSkillOption.option_3:
 					data.option02_buffTime = EditorGUILayout.FloatField("버프 유지 시간", data.option02_buffTime);
 					data.option02_healingAmount = EditorGUILayout.FloatField("총 회복량(%)", data.option02_healingAmount);
+					data.options[2].active = EditorGUILayout.Toggle("활성화", data.options[2].active);
 					if (data.option02_buffTime <= 0) Error("'버프 유지 시간'을 설정하십시오");
 					if (data.option02_healingAmount <= 0) Error("'총 회복량(%)'을 설정하십시오");
 					break;
 				case eSkillOption.option_4:
 					data.option03_debuffTime = EditorGUILayout.FloatField("디버프 유지시간", data.option03_debuffTime);
 					data.option03_damageAmount = EditorGUILayout.FloatField("총 데미지량(%)", data.option03_damageAmount);
+					data.options[3].active = EditorGUILayout.Toggle("활성화", data.options[3].active);
 					if (data.option03_debuffTime <= 0) Error("'디버프 유지시간'을 설정하십시오");
 					if (data.option03_damageAmount <= 0) Error("'총 데미지량(%)'을 설정하십시오");
 					break;
 				case eSkillOption.option_5:
 					data.option04_effect = (GameObject)EditorGUILayout.ObjectField("투사체", data.option04_effect, typeof(GameObject), true);
 					data.option04_explosionDamageAmount = EditorGUILayout.FloatField("폭발 총 데미지량(%)", data.option04_explosionDamageAmount);
+					data.options[4].active = EditorGUILayout.Toggle("활성화", data.options[4].active);
 					if (data.option04_explosionDamageAmount <= 0) Error("'폭발 총 데미지량'을 설정하십시오");
 					break;
 				case eSkillOption.option_6:
 					data.option05_increasingSpeed = EditorGUILayout.FloatField("속도 상승량(%)", data.option05_increasingSpeed);
+					data.options[5].active = EditorGUILayout.Toggle("활성화", data.options[5].active);
 					if (data.option05_increasingSpeed <= 0) Error("'속도 상승량'을 설정하십시오");
 					break;
 				case eSkillOption.option_7:
 					data.option06_effect = (GameObject)EditorGUILayout.ObjectField("투사체", data.option06_effect, typeof(GameObject), true);
 					data.option06_childDamegeAmount = EditorGUILayout.FloatField("유니티볼 피해량(%)", data.option06_childDamegeAmount);
+					data.options[6].active = EditorGUILayout.Toggle("활성화", data.options[6].active);
 					if (data.option06_effect == null) Error("투사체'를 설정하십시오");
 					if (data.option06_childDamegeAmount <= 0) Error("'유니티볼 피해량'을 설정하십시오");
 					break;
@@ -102,6 +100,7 @@ public class QPlayerSkillUnityBallEditor : Editor
 					data.option07_effect = (GameObject)EditorGUILayout.ObjectField("투사체", data.option07_effect, typeof(GameObject), true);
 					data.option07_increasingSize = EditorGUILayout.FloatField("크기 증가량(%)", data.option07_increasingSize);
 					data.option07_increasingSkillPower = EditorGUILayout.FloatField("증가 피해량(%)", data.option07_increasingSkillPower);
+					data.options[7].active = EditorGUILayout.Toggle("활성화", data.options[7].active);
 					if (data.option07_effect == null) Error("투사체'를 설정하십시오");
 					if (data.option07_increasingSize <= 0) Error("'크기 증가량'을 설정하십시오");
 					if (data.option07_increasingSkillPower <= 0) Error("'피해 증가량'을 설정하십시오");
