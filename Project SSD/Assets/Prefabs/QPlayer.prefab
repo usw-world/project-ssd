@@ -169,7 +169,7 @@ MonoBehaviour:
   option05_increasingSpeed: 50
   option06_effect: {fileID: 5353631418847978442, guid: e8968dc41ca70b640b5a91a8fa54e31b,
     type: 3}
-  option06_childDamegeAmount: 0
+  option06_childDamegeAmount: 30
   option07_effect: {fileID: 5208415891999506307, guid: 9316b71799d9a2d42bc34870a2948e4e,
     type: 3}
   option07_increasingSize: 300

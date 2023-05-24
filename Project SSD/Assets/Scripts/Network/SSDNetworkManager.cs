@@ -108,6 +108,7 @@ public partial class SSDNetworkManager : NetworkManager {
         NetworkClient.RegisterHandler<S2CMessage.ShareUserInformationsMessage>(OnShareUserInformations);
         NetworkClient.RegisterHandler<S2CMessage.SyncEnemyMessage>(OnSyncEnemy);
         NetworkClient.RegisterHandler<S2CMessage.SyncEnemyStateMessage>(OnSyncEnemyState);
+        NetworkClient.RegisterHandler<S2CMessage.UnityBallSetTargetMessage>(OnUnityBallSetTarget);
         #endregion Client Handler Initialize
     }
     protected void OnJoinRoom(NetworkConnectionToClient conn, JoinRoomMessage message) {

@@ -17,7 +17,6 @@ abstract public class Skill : MonoBehaviour
 	}
 	public virtual void Use() { print("함수가 오버라이드 되지 않았습니다"); }
 	public virtual void Use(Vector3 target) { print("함수가 오버라이드 되지 않았습니다"); }
-	public abstract string GetAnimationTigger();
 	public abstract bool CanUse();
 }
 public enum AimType {

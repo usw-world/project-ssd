@@ -147,9 +147,4 @@ public class QPlayerSkillAoe : Skill
     {
 
     }
-
-    public override string GetAnimationTigger()
-    {
-        return "1H Casting";
-    }
 }

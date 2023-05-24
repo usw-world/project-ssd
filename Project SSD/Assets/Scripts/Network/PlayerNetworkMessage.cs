@@ -70,6 +70,16 @@ namespace S2CMessage {
             this.damage = damage;
         }
     }
+	public struct UnityBallSetTargetMessage : NetworkMessage
+	{
+		public int networkId;
+		public int targetNetworkId;
+		public UnityBallSetTargetMessage(int networkId, int targetNetworkId)
+		{
+			this.networkId = networkId;
+			this.targetNetworkId = targetNetworkId;
+		}
+	}
 }
 public struct Position {
     public float x;

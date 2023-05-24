@@ -27,10 +27,6 @@ public class TPlayerSkill : Skill
 			effect.GetComponent<TPlayerAttackEffect>().OnActive(damageAmount);
 		}
 	}
-	public override string GetAnimationTigger()
-	{
-		return "";
-	}
 	public override bool CanUse()
 	{
 		status = TPlayer.instance.status;

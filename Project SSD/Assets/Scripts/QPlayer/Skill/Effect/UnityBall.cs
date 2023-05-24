@@ -1,3 +1,5 @@
+using Mirror;
+using S2CMessage;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,8 +18,10 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 	public bool isHoming = false;
 	protected Coroutine hideCoroutine = null;
 	public string lastExplosionKey;
-
-    public virtual void OnActive(float damage, float speed)
+	public int networkId = -1;
+	private static int unityBallCount = 0;
+	public static Dictionary<int, UnityBall> unityBallInScene = new Dictionary<int, UnityBall>();
+	public virtual void OnActive(float damage, float speed)
 	{
 		hideCoroutine = StartCoroutine(Hide());
 		this.damageAmount = damage;
@@ -30,6 +34,9 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 			homingArea.onTriggerEnter += OnDetectHomingTarget;
 			homingArea.onTriggerExit += OnLostHomingTarget;
 		}
+		networkId = unityBallCount;
+		unityBallCount++;
+		unityBallInScene.Add(networkId, this);
 	}
 	protected void Update()
 	{
@@ -117,9 +124,17 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 		{
 			if (other.gameObject.layer == 8)
 			{
-				if (!targets.Contains(other.transform))
+				Enemy target = other.GetComponent<Enemy>();
+				if (target != null)
 				{
-					targets.Add(other.transform);
+					if (!targets.Contains(other.transform))
+					{
+						if (SSDNetworkManager.instance.isHost)
+						{
+							int enemyNetId = other.GetComponent<Enemy>().networkId;
+							NetworkServer.SendToAll<UnityBallSetTargetMessage>(new UnityBallSetTargetMessage(networkId, enemyNetId));
+						}
+					}
 				}
 			}
 		}
@@ -132,6 +147,20 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 				targets.Remove(other.transform);
 			}
 		}
+	}
+	public void AddTarget(int enemyNetId)
+	{
+		List<Enemy> enemys = EnemyManager.instance.enemiesInScene;
+		Enemy target = null;
+		for (int i = 0; i < enemys.Count; i++)
+		{
+			if(enemys[i].networkId == enemyNetId)
+			{
+				target = enemys[i];
+				break;
+			}
+		}
+		targets.Add(target.transform);
 	}
 	public string GetKey()
 	{
