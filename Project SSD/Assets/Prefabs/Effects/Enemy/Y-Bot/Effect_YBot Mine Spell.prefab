@@ -5061,8 +5061,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 650d5c21d7269d94d842cc9d198f1c09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 0
   explosionRadius: 3
   explosionDelay: 1
+  setUpDelay: 1
   damageAmount: 35
   forceScalar: 10
   hittingDuration: 0.75
@@ -5098,7 +5100,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7875490865170404723}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10861,7 +10863,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 200
+        scalar: 50
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -10911,7 +10913,7 @@ ParticleSystem:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-      cycleCount: 15
+      cycleCount: 3
       repeatInterval: 0.01
       probability: 1
   SizeModule:
@@ -13869,7 +13871,7 @@ ParticleSystem:
         m_RotationOrder: 4
     maxLights: 20
   TrailModule:
-    enabled: 0
+    enabled: 1
     mode: 0
     ratio: 1
     lifetime:
@@ -14703,6 +14705,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
+  - {fileID: 2100000, guid: ada876e0d4c502c4cbe8f15d575ad327, type: 2}
   - {fileID: 2100000, guid: ada876e0d4c502c4cbe8f15d575ad327, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0

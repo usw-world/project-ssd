@@ -6,18 +6,17 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
-    [SerializeField] private RectTransform cutSceneBannerTop;           // 상단 배너
-    [SerializeField] private RectTransform cutSceneBannerBottom;        // 하단 배너
-    [SerializeField] private float CinemaMoveSpeed = 130f;      // 배너가 움직이는 속도
 
 	[SerializeField] private List<Image> skillImage;
 	[SerializeField] private List<Image> skillCoolTimeFill;
 	[SerializeField] private List<Image> skillSelect;
 	List<Skill> playerSkills;
 
+	[SerializeField] private TPlayerUI tPlayerUI;
+	[SerializeField] private QPlayerUI qPlayerUI;
+
  	[SerializeField] private GameObject alertUi;
 
-	private UIManager() { }
     private void Awake() {
 		if(instance == null)
 			instance = this;
@@ -25,8 +24,7 @@ public class UIManager : MonoBehaviour
 			Destroy(this.gameObject);
         DontDestroyOnLoad(gameObject);
 	}
-	private void Update()
-	{
+	private void Update() {
 		if (playerSkills != null)
 		{
 			for (int i = 0; i < playerSkills.Count; i++)
@@ -60,8 +58,11 @@ public class UIManager : MonoBehaviour
 			skillSelect[i].enabled = false;
 		}
 	}
+	public GameObject AlertMessage() {
+		return Instantiate(alertUi, FindObjectOfType<Canvas>().transform);
+	}
 
-
+	/*
 	public void StartCutScene()
     {
         StartCoroutine(OnBanner());
@@ -91,9 +92,5 @@ public class UIManager : MonoBehaviour
         }
         cutSceneBannerTop.anchoredPosition = new Vector2(0, 65f);
         cutSceneBannerBottom.anchoredPosition = new Vector2(0, -65f);
-    }
-
-	public GameObject AlertMessage() {
-		return Instantiate(alertUi, FindObjectOfType<Canvas>().transform);
-	}
+    }*/
 }

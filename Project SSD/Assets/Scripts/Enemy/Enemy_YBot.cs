@@ -241,7 +241,7 @@ class Enemy_YBot : MovableEnemy {
 
     #region Animation Events
     public void AnimationEvent_CastAction() {
-        Vector3 minePos = new Vector3(targetPosition.x + Random.Range(-5, 6), targetPosition.y, targetPosition.z + Random.Range(-5, 6));
+        Vector3 minePos = targetPosition;
         GameObject effect = PoolerManager.instance.OutPool(ybotMineSpell.GetKey());
         effect.transform.position = minePos;
     }

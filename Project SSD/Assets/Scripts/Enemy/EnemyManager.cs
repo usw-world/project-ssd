@@ -11,7 +11,7 @@ public class EnemyManager : MonoBehaviour {
     private float elapsedTime = 0;
     private bool isHost = false;
 
-    [SerializeField] private List<Enemy> enemiesInScene;
+    public List<Enemy> enemiesInScene { get; private set; }
     
     private void Awake() {
         if(instance == null)

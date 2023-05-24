@@ -58,15 +58,15 @@ public abstract class PlayerCamera : MonoBehaviour {
 
     #endregion
 
-    public void StartCutScene(GameObject targetCamera) {
-        targetCamera.SetActive(true);
-        UIManager.instance.StartCutScene();
-    }
+    // public void StartCutScene(GameObject targetCamera) {
+    //     targetCamera.SetActive(true);
+    //     UIManager.instance.StartCutScene();
+    // }
 
-    public void EndCutScene(GameObject targetCamera) {
-        targetCamera.SetActive(false);
-        UIManager.instance.EndCutScene();
-    }
+    // public void EndCutScene(GameObject targetCamera) {
+    //     targetCamera.SetActive(false);
+    //     UIManager.instance.EndCutScene();
+    // }
 
 
     // 플레이어 에서 호출
