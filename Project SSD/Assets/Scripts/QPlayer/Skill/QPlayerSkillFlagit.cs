@@ -9,7 +9,7 @@ public class QPlayerSkillFlagit : Skill
 		 기본 쿨 8초
 
 		 options[0] = 주변 추가 지속 데미지 o
-		 options[1] = 주변 실드 - 티플에 실드 구현
+		 options[1] = 주변 실드 - 티플에 실드 구현 o
 
 		 options[2] = 쿨감 3초	o
 		 options[3] = 경직 시간 4초 o
@@ -18,23 +18,29 @@ public class QPlayerSkillFlagit : Skill
 		 options[5] = 낙하 속도 증가 o
 
 		 options[6] = 데미지 아주 강하게, 크기 증가 o
-		 options[7] = 3개 체인으로 사용 
+		 options[7] = 3개 체인으로 사용 o
 	*/
-	private int chainCount = 0;
-
 	private string effectKey;
+	private float usingSp = 10f;
+	private bool isRuningChainSkill = false;
+	private int chainCount = 0;
 	private void Start()
 	{
 		effectKey = info.effect.GetComponent<IPoolableObject>().GetKey();
 		PoolerManager.instance.InsertPooler(effectKey, info.effect, false);
 	}
 	private void EndChainSkill()
-	{
-		chainCount = 0;
-		// 쿨타임 시작
+	{ 
+		if (isRuningChainSkill)
+		{
+			isRuningChainSkill = false;
+			chainCount = 0;
+			property.nowCoolTime = 0;
+		}
 	}
 	IEnumerator ChainSkillTimeOut()
 	{
+		isRuningChainSkill = true;
 		yield return new WaitForSeconds(5f);
 		EndChainSkill();
 	}
@@ -48,13 +54,14 @@ public class QPlayerSkillFlagit : Skill
 		if (options[7].active)
 		{
 			chainCount++;
+			QPlayer.instance.status.sp -= usingSp;
 			if (chainCount == 1) StartCoroutine(ChainSkillTimeOut());
-			if (chainCount >= 3) EndChainSkill(); 
-			// sp 감소
+			else if (chainCount >= 3) EndChainSkill();
 		}
 		else
 		{
-			// sp 감소 , 쿨타임 시작
+			property.nowCoolTime = 0;
+			QPlayer.instance.status.sp -= usingSp;
 		}
 
 		Vector3 sponPos = target;
@@ -66,15 +73,25 @@ public class QPlayerSkillFlagit : Skill
 		flagitObj = PoolerManager.instance.OutPool(effectKey);
 		flagit = flagitObj.GetComponent<Effect_Flagit>();
 
-		flagit.SetDamage(10f);
+		float lastDamage = QPlayer.instance.GetAP() * property.skillAP;
+
+		flagit.Initialize(lastDamage);
 
 		if (options[0].active)
 		{
-			flagit.ActiveDotDamage(10f);
+			flagit.ActiveDotDamage(lastDamage * 0.2f);
 		}
 		if (options[1].active)
 		{
-			flagit.ActiveShield(10f);
+			Attachment attachment = new Attachment(2f, 1f, options[1].image, EAttachmentType.shield);
+			TPlayerShield shield = new TPlayerShield(lastDamage * 0.5f);
+			attachment.onAction = (gameObject) => {
+				TPlayer.instance.AddShield(shield);
+			};
+			attachment.onInactive = (gameObject) => {
+				TPlayer.instance.RemoveShield(shield);
+			};
+			flagit.ActiveShield(attachment);
 		}
 		if (options[3].active)
 		{
@@ -97,6 +114,13 @@ public class QPlayerSkillFlagit : Skill
 	}
 	public override bool CanUse()
 	{
-		return true;
+		if (
+			property.nowCoolTime >= property.coolTime || 
+			QPlayer.instance.status.sp >= usingSp
+			)
+		{
+			return true;
+		}
+		return false;
 	}
 }

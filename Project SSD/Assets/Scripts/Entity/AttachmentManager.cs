@@ -31,20 +31,24 @@ public class Attachment
 {
 	public float time;
 	public float interval;
+	public EAttachmentType type;
 	public Coroutine coroutine;
 	public Sprite image;
 	public Action<GameObject> onAction;
 	public Action<GameObject> onStay;
 	public Action<GameObject> onInactive;
-	public Attachment(float time, float interval, Sprite image) {
+	public Attachment(float time, float interval, Sprite image, EAttachmentType type) {
 		this.time = time;
 		this.interval = interval;
 		this.image = image;
+		this.type = type;
 	}
 }
 public enum EAttachmentType
 {
-	damage, slow, inability,
+	damage,		// 데미지
+	slow,		// 슬로우
+	inability,	// 기절
 	healing,    // 힐
 	shield,     // 쉴드
 	boost       // 공격력 상승

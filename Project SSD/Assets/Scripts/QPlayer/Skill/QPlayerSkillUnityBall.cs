@@ -104,7 +104,7 @@ public class QPlayerSkillUnityBall : Skill
 
 		if (options[2].active)
 		{
-			Attachment attachment = new Attachment(option02_buffTime, 1f, options[2].image);
+			Attachment attachment = new Attachment(option02_buffTime, 1f, options[2].image, EAttachmentType.healing);
 			attachment.onStay = (gameObject) => {
 				TPlayer.instance.ChangeHp(DamageAmout * option02_healingAmount * 0.01f / 1f);
 			};
@@ -112,7 +112,7 @@ public class QPlayerSkillUnityBall : Skill
 		}
 		if (options[3].active)
 		{
-			Attachment attachment = new Attachment(option03_debuffTime, 1f, options[3].image);
+			Attachment attachment = new Attachment(option03_debuffTime, 1f, options[3].image, EAttachmentType.damage);
 			attachment.onStay = (gameObject) => {
 				IDamageable enemy = gameObject.GetComponent<IDamageable>();
 				Damage damage = new Damage(DamageAmout * option03_damageAmount * 0.01f, 0, Vector3.zero, Damage.DamageType.Normal);

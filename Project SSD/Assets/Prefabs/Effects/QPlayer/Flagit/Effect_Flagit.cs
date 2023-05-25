@@ -7,11 +7,11 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 	[SerializeField] private GameObject dotDamageObj;
 
 	private Animator animator;
+	private Attachment shield;
 	private string animationTrigger;
 
 	private float damageAmount;
 	private float dotDamageAmount;
-	private float shieldAmount;
 
 	private bool activeDamageZone = false;
 	private bool isDotDamage = false;
@@ -52,10 +52,16 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 		if (isShield) RunShield();
 		if (isDotDamage) StartCoroutine(RunDotDamage());
 	}
-	public void SetDamage(float damageAmount)
+	public void Initialize(float damageAmount)
 	{
 		this.damageAmount = damageAmount;
-	}
+		activeDamageZone = false;
+		isDotDamage = false;
+		isShield = false;
+		isFlinching4s = false;
+		isAreaTwice = false;
+		isBig = false;
+}
 	private float GetLastDamage()
 	{
 		float amount = damageAmount;
@@ -105,10 +111,10 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 	#endregion options[0] 지속데미지
 
 	#region options[1] 쉴드 주기
-	public void ActiveShield(float shieldAmount)
+	public void ActiveShield(Attachment shield)
 	{
 		isShield = true;
-		this.shieldAmount = shieldAmount;
+		this.shield = shield;
 	}
 	private void RunShield()
 	{
@@ -119,7 +125,14 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 		hit = Physics.OverlapSphere(transform.position, size, 1 << 7);
 		if (hit.Length != 0)
 		{
-			// 실드 주기
+			for (int i = 0; i < hit.Length; i++)
+			{
+				TPlayer player = hit[i].GetComponent<TPlayer>();
+				if (player != null)
+				{
+					player.AddAttachment(shield);
+				}
+			}
 		}
 	}
 	#endregion options[1] 쉴드 주기
@@ -155,10 +168,6 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 		isBig = true;
 	}
 	#endregion  options[6] 강한 1개
-
-	#region  options[7] 3개 체인 스킬
-	#endregion  options[7] 3개 체인 스킬
-
 	public string GetKey()
 	{
 		return GetType().ToString();

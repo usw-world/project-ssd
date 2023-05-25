@@ -31,7 +31,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	#endregion Show Parameters
 
 	#region Hide Parameters
-	private AttachmentManager attachmentManager;
+	private AttachmentManager attachmentManager = new AttachmentManager();
+	private TPlayerShieldManager shieldManager = new TPlayerShieldManager();
 	private List<Transform> lateDamageTarget = new List<Transform>();
 	private Coroutine attackCoroutine;
 	private Coroutine dodgeCoroutine;
@@ -468,16 +469,20 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		if (isImmune) // 무적이면 실행 안함
 			return;
 
+		damage.amount = shieldManager.UsingShield(damage.amount); // 실드가 있으면 데미지 차감
+
 		status.hp -= damage.amount;
 		ui.RefreshHp(status.hp / status.maxHp);
 
-		if (damage.forceVector != Vector3.zero)
+		if (damage.forceVector != Vector3.zero && damage.amount > 0)
 		{
 			LookDirection(-damage.forceVector);
 		}
 
 		if (stateMachine.Compare(downState)
-		|| isSuperArmor)
+		|| isSuperArmor
+		|| damage.amount == 0
+		)
 			return;
 
 		if (damageCoroutine != null)
@@ -805,6 +810,14 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	#region public method
 	public void AddAttachment(Attachment attachment) {
 		attachmentManager.AddAttachment(attachment);
+	}
+	public void AddShield(TPlayerShield shield)
+	{
+		shieldManager.AddShield(shield);
+	}
+	public void RemoveShield(TPlayerShield shield)
+	{
+		shieldManager.RemoveShield(shield);
 	}
 	public void ChangeHp(float amount)
 	{
@@ -1282,5 +1295,47 @@ class TPlayerAudioClipPlayer
 		effect.Initialize(audioSourceEffect);
 		voice.Initialize(audioSourceVoice);
 		bgm.Initialize(audioSourceBGM);
+	}
+}
+class TPlayerShieldManager
+{
+	private List<TPlayerShield> shields = new List<TPlayerShield>();
+	public void AddShield(TPlayerShield shield)
+	{
+		shields.Add(shield);
+	}
+	public void RemoveShield(TPlayerShield shield)
+	{
+		shields.Remove(shield);
+	}
+	public float UsingShield(float damage)
+	{
+		float lastDamage = damage;
+		for (int i = 0; i < shields.Count; i++)
+		{
+			if (shields[i].amount != 0)
+			{
+				if (shields[i].amount >= lastDamage)
+				{
+					shields[i].amount -= lastDamage;
+					lastDamage = 0;
+					break;
+				}
+				else
+				{
+					lastDamage -= shields[i].amount;
+					shields[i].amount = 0;
+				}
+			}
+		}
+		return lastDamage;
+	}
+}
+public class TPlayerShield
+{
+	public float amount;
+	public TPlayerShield(float amount)
+	{
+		this.amount = amount;
 	}
 }

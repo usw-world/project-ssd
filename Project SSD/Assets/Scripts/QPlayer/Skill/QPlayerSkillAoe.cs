@@ -113,7 +113,7 @@ public class QPlayerSkillAoe : Skill
     {
         if (options[0].active && aoe.isTPlayerOnAoe == false)
         {
-            Attachment attachment = new Attachment(option00_buffTime, 1.0f, options[0].image);
+            Attachment attachment = new Attachment(option00_buffTime, 1.0f, options[0].image, EAttachmentType.boost);
             
             attachment.onStay += (gameObject) => 
             {
