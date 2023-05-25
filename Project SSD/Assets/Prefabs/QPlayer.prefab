@@ -2575,7 +2575,7 @@ MonoBehaviour:
     type: 3}
   skills:
   - {fileID: 815916524}
-  - {fileID: 1014519257454759615}
+  - {fileID: 7393513717579459165}
   skillDistanceDecal: {fileID: 133424475}
   skillTargetAreaDecal: {fileID: 1915510282}
 --- !u!114 &2136718357887273198
@@ -5441,7 +5441,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7840320927882399181}
-  - component: {fileID: 1014519257454759615}
+  - component: {fileID: 7393513717579459165}
   m_Layer: 0
   m_Name: Aoe
   m_TagString: Untagged
@@ -5464,7 +5464,7 @@ Transform:
   m_Father: {fileID: 1539545108}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1014519257454759615
+--- !u!114 &7393513717579459165
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5484,7 +5484,7 @@ MonoBehaviour:
     name: "\uC7A5\uD310"
   area:
     distance: 5
-    range: 2
+    range: 3
   property:
     coolTime: 5
     skillAP: 3
@@ -5495,7 +5495,19 @@ MonoBehaviour:
   options:
   - name: 
     info: 
+    image: {fileID: 21300000, guid: 788967baed2496043a4a5e3c09e2d1cb, type: 3}
+    active: 0
+  - name: 
+    info: 
     image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 21300000, guid: 788967baed2496043a4a5e3c09e2d1cb, type: 3}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 21300000, guid: 788967baed2496043a4a5e3c09e2d1cb, type: 3}
     active: 0
   - name: 
     info: 
@@ -5513,27 +5525,18 @@ MonoBehaviour:
     info: 
     image: {fileID: 0}
     active: 0
-  - name: 
-    info: 
-    image: {fileID: 0}
-    active: 0
-  - name: 
-    info: 
-    image: {fileID: 0}
-    active: 0
-  - name: 
-    info: 
-    image: {fileID: 0}
-    active: 0
-  cosmic: {fileID: 0}
   option00_increaseTPlayerAp: 0
-  option00_buffTime: 0
+  option00_buffTime: 3
   option01_decreaseSkillCoolDown: 0
-  option02_increaseAoeAp: 0
-  option03_decreaseEnemyMoveSpeed: 0
+  option02_generateTPlayerShield: 0
+  option02_buffTime: 3
+  option03_increaseTPlayerRecoverySp: 0
+  option03_buffTime: 3
   option04_canMoveAoe: 0
   option04_effect: {fileID: 580516407111906339, guid: 3e66fe6e8dba76646ad2b265debf5440,
     type: 3}
   option05_generateBlackHole: 0
+  option05_effect: {fileID: 2085498540453025328, guid: 9d98dbe5c3b9f3f40ab94617ec1ec8b3,
+    type: 3}
   option06_holdingAndDamage: 0
-  option07_throwBlackHoleAndExplosion: 0
+  option07_aoeExplosion: 0

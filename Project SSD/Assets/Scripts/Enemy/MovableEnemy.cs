@@ -4,7 +4,7 @@ using UnityEngine;
 public abstract class MovableEnemy : Enemy {
     [SerializeField] protected float moveSpeed = 1f;
     [SerializeField] protected float arriveDistance = 0.5f;
-	protected const int moveLayerMask = 1 << 6 | 1 << 8 | 1 << 12;
+	protected const int moveLayerMask = 1 << 6 | 1 << 8 | 1 << 12 | 1 << 13;
     protected bool IsArrive {
         get {
             Vector3 point1 = Vector3.Scale(new Vector3(1, 0, 1), transform.position);

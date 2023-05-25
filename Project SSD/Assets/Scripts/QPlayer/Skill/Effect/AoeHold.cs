@@ -4,59 +4,46 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.ParticleSystem;
 
 public class AoeHold : MonoBehaviour, IPoolableObject
 {
     public MeshCollider holdCollider;
-    private float damageAmount;
+
     private bool isOnDamage = false;
 
-    [HideInInspector] public ParticleSystem particle;
-    [HideInInspector] public bool isTPlayerOnAoe = false;
+    private ParticleSystem particle;
+    private IDamageable target;
+    private Collider colliderEnemy;
 
-    public void OnActive(float damage)
-    {
-        this.damageAmount = damage;
-    }
+    public GameObject explosion;
     private void Start()
     {
         particle = GetComponent<ParticleSystem>();
         StartCoroutine(DestoryTimer());
     }
 
-
-    private void OnTriggerStay(Collider enemy)
+    private void OnTriggerEnter(Collider enemy)
     {
-        //enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, new Vector3(transform.position.x, enemy.transform.position.y, transform.position.z), 0.1f); // 블랙홀 기능
-
-        //if (particle.particleCount <= 0f)
-        //{
-        //    IDamageable target = enemy.gameObject.GetComponent<IDamageable>();
-        //    Damage damage = new Damage(gameObject, damageAmount, 1f, (enemy.transform.position - transform.position).normalized * 10f, Damage.DamageType.Normal);
-
-        //    if (target != null)
-        //        target.OnDamage(damage);
-
-        //    return;
-        //}
+        EnterEnemyOnAoe(enemy);
     }
 
-    private void OnTriggerEnter(Collider coll)
+    private void EnterEnemyOnAoe(Collider enemy)
     {
-        EnterEnemyOnAoe(coll);
-        EnterTPlayerOnAoe(coll);
-    }
-
-    private void EnterEnemyOnAoe(Collider coll)
-    {
-        if (coll.gameObject.layer == LayerMask.NameToLayer("Enemy") && isOnDamage == false)
+        if (enemy.gameObject.layer == LayerMask.NameToLayer("Enemy") && isOnDamage == false)
         {
-            IDamageable target = coll.gameObject.GetComponent<IDamageable>();
-            Damage damage = new Damage(damageAmount, 1f, (coll.transform.position - transform.position).normalized * 10f, Damage.DamageType.Normal);
+            this.colliderEnemy = enemy;
+            target = enemy.gameObject.GetComponent<IDamageable>();
 
-            if (target != null)
-                target.OnDamage(damage);
+            if (AoeAttackDamage.GetInstance().isMultipleAttack)
+            {
+                StartCoroutine(AoeAttackDamage.GetInstance().DoMultipleAttack(target, enemy, this.transform));
+            }
+            else
+            {
+                AoeAttackDamage.GetInstance().DoGeneralDamageAttack(target, enemy, this.transform);
+            }
 
             isOnDamage = true;
 
@@ -64,19 +51,16 @@ public class AoeHold : MonoBehaviour, IPoolableObject
             holdCollider.isTrigger = false;
         }
     }
-
-    private void EnterTPlayerOnAoe(Collider coll)
-    {
-        if (coll.CompareTag("TPlayer"))
-        { 
-            isTPlayerOnAoe = true;
-        }
-    }
-
     IEnumerator DestoryTimer()
     {
         yield return new WaitForSeconds(particle.startLifetime);
         PoolerManager.instance.InPool(GetType().ToString(), gameObject);
+
+        if (AoeAttackDamage.GetInstance().isExplosion)
+        {
+            Instantiate(explosion, transform.position, transform.rotation);
+            AoeAttackDamage.GetInstance().DoExplosionDamageAttack(target, colliderEnemy, this.transform);
+        }
     }
 
     public string GetKey()
