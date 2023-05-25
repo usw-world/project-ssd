@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
 	[SerializeField] private QPlayerUI qPlayerUI;
 
  	[SerializeField] private GameObject alertUi;
+	[SerializeField] private EscapeMenu escapeMenu;
 
     private void Awake() {
 		if(instance == null)
@@ -57,6 +58,9 @@ public class UIManager : MonoBehaviour
 		{
 			skillSelect[i].enabled = false;
 		}
+	}
+	public void OnPressEscape() {
+		escapeMenu.OnPressEscape();
 	}
 	public GameObject AlertMessage() {
 		return Instantiate(alertUi, FindObjectOfType<Canvas>().transform);

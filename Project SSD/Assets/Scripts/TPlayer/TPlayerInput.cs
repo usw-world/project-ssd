@@ -34,4 +34,6 @@ public class TPlayerInput : MonoBehaviour
 	void OnStartRush() => player.OnRunToRush();
 	void OnEndRush() => player.OnRushToRun();
 	void OnEndCharging() => player.OnChargingEnd();
+
+	void OnEscape() => UIManager.instance.OnPressEscape();
 }

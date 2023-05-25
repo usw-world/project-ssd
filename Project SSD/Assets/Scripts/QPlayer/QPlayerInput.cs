@@ -28,4 +28,6 @@ public class QPlayerInput : MonoBehaviour
 	void OnComeBack() => player.ReturnToTPlayer();
 	void OnRB_click() => player.MouseRightClick();
 	void OnLB_click() => player.MouseLeftClick();
+	
+	void OnEscape() => UIManager.instance.OnPressEscape();
 }
