@@ -5,11 +5,9 @@ using UnityEngine;
 public class AoeBlackHole : MonoBehaviour, IPoolableObject
 {
     private ParticleSystem particle;
-    private IDamageable target;
-    private Collider colliderEnemy;
+    private HashSet<Collider> attackedEnemies = new HashSet<Collider>();
 
     public GameObject explosion;
-
     private void Start()
     {
         particle = GetComponent<ParticleSystem>();
@@ -24,36 +22,48 @@ public class AoeBlackHole : MonoBehaviour, IPoolableObject
         }
     }
 
-    private void OnTriggerEnter(Collider enemy)
+    private void OnTriggerEnter(Collider coll)
     {
-        EnterEnemyInAoe(enemy);
+        if (coll.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            if (!attackedEnemies.Contains(coll))
+            {
+                EnterEnemyInAoe(coll);
+                attackedEnemies.Add(coll);
+            }
+        }
+
+        if (coll.gameObject.CompareTag("TPlayer"))
+        {
+            EnterTPlayerInAoe();
+        }
     }
 
     private void EnterEnemyInAoe(Collider enemy)
     {
-        if (enemy.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (AoeAttackDamage.GetInstance().isMultipleAttack)
         {
-            this.colliderEnemy = enemy;
-            target = enemy.gameObject.GetComponent<IDamageable>();
-            if (AoeAttackDamage.GetInstance().isMultipleAttack)
-            {
-                StartCoroutine(AoeAttackDamage.GetInstance().DoMultipleAttack(target, enemy, this.transform));
-            }
-            else
-            {
-                AoeAttackDamage.GetInstance().DoGeneralDamageAttack(target, enemy, this.transform);
-            }
+            StartCoroutine(AoeAttackDamage.GetInstance().DoMultipleAttack(enemy, transform));
         }
+        else
+        {
+            AoeAttackDamage.GetInstance().DoGeneralDamageAttack(enemy, transform);
+        }
+    }
+    private void EnterTPlayerInAoe()
+    {
+        AoeBuffer.GetInstance().onEnter.Invoke();
     }
     IEnumerator DestoryTimer()
     {
         yield return new WaitForSeconds(particle.startLifetime);
         PoolerManager.instance.InPool(GetType().ToString(), gameObject);
 
-        if (AoeAttackDamage.GetInstance().isExplosion && target != null)
+        if (AoeAttackDamage.GetInstance().isExplosion)
         {
-            Instantiate(explosion, transform.position, transform.rotation);
-            AoeAttackDamage.GetInstance().DoExplosionDamageAttack(target, colliderEnemy, this.transform);
+            GameObject obj = (GameObject) Instantiate(explosion, transform.position, transform.rotation);
+            AoeAttackDamage.GetInstance().DoExplosionDamageAttack(attackedEnemies, transform);
+            Destroy(obj, obj.GetComponent<ParticleSystem>().startLifetime);
         }
     }
     public string GetKey()

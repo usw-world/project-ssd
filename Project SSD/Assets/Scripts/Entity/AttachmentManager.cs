@@ -10,7 +10,7 @@ public class AttachmentManager : MonoBehaviour
 
 		attachments.Add(attachment);
 		attachment.coroutine = StartCoroutine(Run(attachment));
-	}
+    }
 	public void Clear() {
 		for (int i = 0; i < attachments.Count; i++)	{
 			StopCoroutine(attachments[i].coroutine);

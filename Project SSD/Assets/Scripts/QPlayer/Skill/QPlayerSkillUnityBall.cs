@@ -106,6 +106,7 @@ public class QPlayerSkillUnityBall : Skill
 		{
 			Attachment attachment = new Attachment(option02_buffTime, 1f, options[2].image, EAttachmentType.healing);
 			attachment.onStay = (gameObject) => {
+				print("123");
 				TPlayer.instance.ChangeHp(DamageAmout * option02_healingAmount * 0.01f / 1f);
 			};
 			TPlayer.instance?.AddAttachment(attachment); // 매게변수도 TPlayer에게 버프를 추가함

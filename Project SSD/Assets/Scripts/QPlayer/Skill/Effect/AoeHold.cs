@@ -11,11 +11,8 @@ public class AoeHold : MonoBehaviour, IPoolableObject
 {
     public MeshCollider holdCollider;
 
-    private bool isOnDamage = false;
-
     private ParticleSystem particle;
-    private IDamageable target;
-    private Collider colliderEnemy;
+    private HashSet<Collider> attackedEnemies = new HashSet<Collider>();
 
     public GameObject explosion;
     private void Start()
@@ -24,32 +21,40 @@ public class AoeHold : MonoBehaviour, IPoolableObject
         StartCoroutine(DestoryTimer());
     }
 
-    private void OnTriggerEnter(Collider enemy)
+    private void OnTriggerEnter(Collider coll)
     {
-        EnterEnemyOnAoe(enemy);
+        if (coll.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            if (!attackedEnemies.Contains(coll))
+            {
+                EnterEnemyInAoe(coll);
+                attackedEnemies.Add(coll);
+            }
+        }
+
+        if (coll.gameObject.CompareTag("TPlayer"))
+        {
+            EnterTPlayerInAoe();
+        }
     }
 
-    private void EnterEnemyOnAoe(Collider enemy)
+    private void EnterEnemyInAoe(Collider enemy)
     {
-        if (enemy.gameObject.layer == LayerMask.NameToLayer("Enemy") && isOnDamage == false)
+        if (AoeAttackDamage.GetInstance().isMultipleAttack)
         {
-            this.colliderEnemy = enemy;
-            target = enemy.gameObject.GetComponent<IDamageable>();
-
-            if (AoeAttackDamage.GetInstance().isMultipleAttack)
-            {
-                StartCoroutine(AoeAttackDamage.GetInstance().DoMultipleAttack(target, enemy, this.transform));
-            }
-            else
-            {
-                AoeAttackDamage.GetInstance().DoGeneralDamageAttack(target, enemy, this.transform);
-            }
-
-            isOnDamage = true;
-
-            this.transform.GetComponent<CapsuleCollider>().enabled = false;
-            holdCollider.isTrigger = false;
+            StartCoroutine(AoeAttackDamage.GetInstance().DoMultipleAttack(enemy, transform));
         }
+        else
+        {
+            AoeAttackDamage.GetInstance().DoGeneralDamageAttack(enemy, transform);
+        }
+
+        holdCollider.isTrigger = false;
+    }
+
+    private void EnterTPlayerInAoe()
+    {
+        AoeBuffer.GetInstance().onEnter.Invoke();
     }
     IEnumerator DestoryTimer()
     {
@@ -58,8 +63,9 @@ public class AoeHold : MonoBehaviour, IPoolableObject
 
         if (AoeAttackDamage.GetInstance().isExplosion)
         {
-            Instantiate(explosion, transform.position, transform.rotation);
-            AoeAttackDamage.GetInstance().DoExplosionDamageAttack(target, colliderEnemy, this.transform);
+            GameObject obj = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
+            AoeAttackDamage.GetInstance().DoExplosionDamageAttack(attackedEnemies, transform);
+            Destroy(obj, obj.GetComponent<ParticleSystem>().startLifetime);
         }
     }
 

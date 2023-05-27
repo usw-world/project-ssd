@@ -8,11 +8,8 @@ using static UnityEngine.ParticleSystem;
 
 public class Aoe : MonoBehaviour, IPoolableObject
 {
-    private bool isOnDamage = false;
-
     private ParticleSystem particle;
-
-    private List<Collider> enemies = new List<Collider>();
+    private HashSet<Collider> attackedEnemies = new HashSet<Collider>();
 
     private void Start()
     {
@@ -20,29 +17,31 @@ public class Aoe : MonoBehaviour, IPoolableObject
         StartCoroutine(DestoryTimer());
     }
 
-    private void OnTriggerEnter(Collider enemy)
+    private void OnTriggerEnter(Collider coll)
     {
-        if (enemy.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (coll.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            enemies.Add(enemy);
-        }
-        print(isOnDamage);
-        if (isOnDamage == false)
-        {
-            for (int i = 0; i < enemies.Count; i++)
+            if (!attackedEnemies.Contains(coll))
             {
-                EnterEnemyInAoe(enemies[i]);
+                EnterEnemyInAoe(coll);
+                attackedEnemies.Add(coll);
             }
-            isOnDamage = true;
         }
-        print(isOnDamage + " aaa");
+
+        if (coll.gameObject.CompareTag("TPlayer"))
+        {
+            EnterTPlayerInAoe();
+        }
     }
 
     private void EnterEnemyInAoe(Collider enemy)
     {
-            IDamageable target = enemy.gameObject.GetComponent<IDamageable>();
-            if (target != null)
-                AoeAttackDamage.GetInstance().DoGeneralDamageAttack(target, enemy, transform);
+         AoeAttackDamage.GetInstance().DoGeneralDamageAttack(enemy, transform);
+    }
+
+    private void EnterTPlayerInAoe()
+    {
+        AoeBuffer.GetInstance()?.onEnter?.Invoke();
     }
 
     IEnumerator DestoryTimer()
@@ -55,5 +54,20 @@ public class Aoe : MonoBehaviour, IPoolableObject
     {
         return GetType().ToString();
     }
+}
 
+public class AoeBuffer
+{
+    public Action onEnter;
+
+    private static AoeBuffer Instance = null;
+
+    public static AoeBuffer GetInstance()
+    {
+        if (Instance == null)
+        {
+            Instance = new AoeBuffer();
+        }
+        return Instance;
+    }
 }

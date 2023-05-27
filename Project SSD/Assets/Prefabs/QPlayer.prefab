@@ -5493,44 +5493,46 @@ MonoBehaviour:
     ready: 1
     quickUse: 0
   options:
-  - name: 
-    info: 
+  - name: "\uACF5\uACA9\uB825 \uC0C1\uC2B9"
+    info: "TPlayer\uAC00 \uC7A5\uD310 \uC548\uC5D0 \uB4E4\uC5B4\uC624\uBA74 \uACF5\uACA9\uB825
+      3\uCD08 \uB3D9\uC548 5% \uC99D\uAC00"
     image: {fileID: 21300000, guid: 788967baed2496043a4a5e3c09e2d1cb, type: 3}
     active: 0
-  - name: 
-    info: 
-    image: {fileID: 0}
+  - name: "\uCFE8\uD0C0\uC784 \uAC10\uC18C"
+    info: "\uC2A4\uD0AC \uCFE8\uD0C0\uC784 10% \uAC10\uC18C"
+    image: {fileID: 21300000, guid: 0196868fb326a824bb5f8b1039a7abea, type: 3}
     active: 0
-  - name: 
-    info: 
+  - name: "\uC274\uB4DC \uC0DD"
+    info: "TPlayer \uC274\uB4DC \uCD5C\uB300 \uCCB4\uB825\uC758 10%"
     image: {fileID: 21300000, guid: 788967baed2496043a4a5e3c09e2d1cb, type: 3}
     active: 0
-  - name: 
-    info: 
+  - name: "SP \uD68C\uBCF5 \uC99D\uAC00"
+    info: "TPlayer SP \uD68C\uBCF5 \uC18D\uB3C4 10% \uC99D\uAC00"
     image: {fileID: 21300000, guid: 788967baed2496043a4a5e3c09e2d1cb, type: 3}
     active: 0
-  - name: 
-    info: 
-    image: {fileID: 0}
+  - name: "\uD640\uB529"
+    info: "\uC7A5\uD310 3\uCD08 \uC720\uC9C0 \uBC0F \uC548\uC5D0 \uAC00\uB450\uAE30"
+    image: {fileID: 21300000, guid: 6df54b69d111be346b310c3eb909a0b2, type: 3}
     active: 0
-  - name: 
-    info: 
-    image: {fileID: 0}
+  - name: "\uBE14\uB799\uD640"
+    info: "\uBE14\uB799\uD640\uC744 \uC0DD\uC131\uD558\uC5EC \uC801\uC744 \uB04C\uC5B4\uB2F9\uAE30"
+    image: {fileID: 21300000, guid: 6df54b69d111be346b310c3eb909a0b2, type: 3}
     active: 0
-  - name: 
-    info: 
-    image: {fileID: 0}
+  - name: "\uC9C0\uC18D \uB370\uBBF8\uC9C0"
+    info: "\uC7A5\uD310 \uC801\uC5D0\uAC8C 15 6\uBC88 0.5\uCD08 \uAC04\uACA9\uC73C\uB85C
+      \uB370\uBBF8\uC9C0"
+    image: {fileID: 21300000, guid: 6df54b69d111be346b310c3eb909a0b2, type: 3}
     active: 0
-  - name: 
-    info: 
-    image: {fileID: 0}
+  - name: "\uD391"
+    info: "\uB9C8\uC9C0\uB9C9\uC5D0 \uD3ED\uBC1C \uB370\uBBF8\uC9C0 100"
+    image: {fileID: 21300000, guid: 6df54b69d111be346b310c3eb909a0b2, type: 3}
     active: 0
-  option00_increaseTPlayerAp: 0
+  option00_increaseTPlayerAp: 5
   option00_buffTime: 3
-  option01_decreaseSkillCoolDown: 0
-  option02_generateTPlayerShield: 0
+  option01_decreaseSkillCoolDown: 10
+  option02_generateTPlayerShield: 10
   option02_buffTime: 3
-  option03_increaseTPlayerRecoverySp: 0
+  option03_increaseTPlayerRecoverySp: 10
   option03_buffTime: 3
   option04_canMoveAoe: 0
   option04_effect: {fileID: 580516407111906339, guid: 3e66fe6e8dba76646ad2b265debf5440,
@@ -5538,5 +5540,6 @@ MonoBehaviour:
   option05_generateBlackHole: 0
   option05_effect: {fileID: 2085498540453025328, guid: 9d98dbe5c3b9f3f40ab94617ec1ec8b3,
     type: 3}
-  option06_holdingAndDamage: 0
-  option07_aoeExplosion: 0
+  option06_holdingAndDamage: 15
+  option06_damageFrequency: 6
+  option07_aoeExplosion: 100

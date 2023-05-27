@@ -1,8 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Interactions;
 
 public class QPlayerSkillAoe : Skill
 {
@@ -15,11 +12,12 @@ public class QPlayerSkillAoe : Skill
     public float option02_buffTime;
     public float option03_increaseTPlayerRecoverySp;
     public float option03_buffTime;
-    public float option04_canMoveAoe;
+    [HideInInspector] public float option04_canMoveAoe;
     public GameObject option04_effect;
-    public float option05_generateBlackHole;
+    [HideInInspector] public float option05_generateBlackHole;
     public GameObject option05_effect;
     public float option06_holdingAndDamage;
+    public int option06_damageFrequency;
     public float option07_aoeExplosion;
 
     private string infoEffectKey;
@@ -42,7 +40,6 @@ public class QPlayerSkillAoe : Skill
 
     private void Awake()
     {
-        
         infoEffectKey = info.effect.GetComponent<IPoolableObject>().GetKey();
         option04_effectKey = option04_effect.GetComponent<IPoolableObject>().GetKey();
         option05_effectKey = option05_effect.GetComponent<IPoolableObject>().GetKey();
@@ -59,10 +56,6 @@ public class QPlayerSkillAoe : Skill
 
     public override void Use(Vector3 target)
     {
-        ActiveOption00();
-        ActiveOption01();
-        ActiveOption02();
-        ActiveOption03();
         SkillCoolDown(target);
     }
 
@@ -71,7 +64,6 @@ public class QPlayerSkillAoe : Skill
         if (property.isUseSkill == false)
         {
             property.isUseSkill = true;
-            
             SummonAoe(target);
             StartCoroutine(SkillCoolDownCoroutine(property.coolTime + 100f));
         }
@@ -94,7 +86,27 @@ public class QPlayerSkillAoe : Skill
 
     private void SummonAoe(Vector3 target)
     {
-        AoeAttackDamage.GetInstance().damageAmount = damageAmount;
+        AoeAttackDamage aoeAttack = AoeAttackDamage.GetInstance();
+        AoeBuffer aoeBuffer = AoeBuffer.GetInstance();
+
+        if (options[0].active)
+        {
+            aoeBuffer.onEnter += ActiveOption00;
+        }
+        else if (options[1].active && isUseDecreaseCoolDown == false)
+        {
+            ActiveOption01();
+        }
+        if (options[2].active && TPlayer.instance != null)
+        {
+            aoeBuffer.onEnter += ActiveOption02;
+        }
+        else if (options[3].active && TPlayer.instance != null)
+        {
+            aoeBuffer.onEnter += ActiveOption03;
+        }
+
+        aoeAttack.damageAmount = damageAmount;
         if (options[4].active)
         {
             GameObject aoeHoldObj = PoolerManager.instance.OutPool(option04_effectKey);
@@ -103,16 +115,18 @@ public class QPlayerSkillAoe : Skill
             aoeHold.transform.position = target;
             if (options[6].active)
             {
-                AoeAttackDamage.GetInstance().isMultipleAttack = true;
+                aoeAttack.multipleAttackDamage = option06_holdingAndDamage;
+                aoeAttack.damageFrequency = option06_damageFrequency;
+                aoeAttack.isMultipleAttack = true;
             }
             else if (options[7].active)
             {
-                AoeAttackDamage.GetInstance().isExplosion = true;
+                aoeAttack.explosionDamage = option07_aoeExplosion;
+                aoeAttack.isExplosion = true;
             }
         }
         else if (options[5].active)
         {
-
             GameObject aoeBlackHoleObj = PoolerManager.instance.OutPool(option05_effectKey);
             AoeBlackHole aoeBlackHole = aoeBlackHoleObj.GetComponent<AoeBlackHole>();
 
@@ -120,11 +134,14 @@ public class QPlayerSkillAoe : Skill
             
             if (options[6].active)
             {
-                AoeAttackDamage.GetInstance().isMultipleAttack = true;
+                aoeAttack.multipleAttackDamage = option06_holdingAndDamage;
+                aoeAttack.damageFrequency = option06_damageFrequency;
+                aoeAttack.isMultipleAttack = true;
             }
             else if (options[7].active)
             {
-                AoeAttackDamage.GetInstance().isExplosion = true;
+                aoeAttack.explosionDamage = option07_aoeExplosion;
+                aoeAttack.isExplosion = true;
             }
         }
         else
@@ -135,83 +152,79 @@ public class QPlayerSkillAoe : Skill
             aoe.transform.position = target;
         }
     }
-    private void ActiveOption00()
+    private void ActiveOption00()   // 공격력 5% 상승
     {
-        if (options[0].active)
+        float apBoostTemp = 0f;
+        AoeBuffer aoeBuffer = AoeBuffer.GetInstance();
+        Attachment attachment = new Attachment(option00_buffTime, 1.0f, options[0].image, EAttachmentType.boost);
+
+        if (isGiveBoostBuff == false)
         {
-            Attachment attachment = new Attachment(option00_buffTime, 1.0f, options[0].image, EAttachmentType.boost);
-            
-            if (isGiveBoostBuff == false)
+            attachment.onAction = (gameObject) =>
             {
-                attachment.onAction += (gameObject) =>
-                {
-                   // TPlayer.instance.apBoost = option00_increaseTPlayerAp;    // 공격력 5% 상승
-                   isGiveBoostBuff = true;
-                };
-            }
-            attachment.onInactive += (gameObject) =>
-            {
-                isGiveBoostBuff = false;
+                apBoostTemp = TPlayer.instance.status.apBoost;
+                TPlayer.instance.status.apBoost = option00_increaseTPlayerAp;    
+                isGiveBoostBuff = true;
             };
-
-            TPlayer.instance?.AddAttachment(attachment);
         }
-    }
-    private void ActiveOption01()
-    {
-        if (options[1].active && isUseDecreaseCoolDown == false)
+        attachment.onInactive = (gameObject) =>
         {
-            property.coolTime = property.coolTime - (property.coolTime / 10);
-            isUseDecreaseCoolDown = true;
-        }
+            aoeBuffer.onEnter -= ActiveOption00;
+            TPlayer.instance.status.apBoost = apBoostTemp;
+            isGiveBoostBuff = false;
+        };
+        TPlayer.instance?.AddAttachment(attachment);
+    }
+    private void ActiveOption01()   // 스킬 쿨타임 10% 감소 
+    {
+        property.coolTime = property.coolTime - (property.coolTime / option01_decreaseSkillCoolDown);
+        isUseDecreaseCoolDown = true;
     }
 
-    private void ActiveOption02()
+    private void ActiveOption02()   // TPlayer 쉴드 최대 체력의 10%
     {
-        if (options[2].active && TPlayer.instance != null)
-        {
-            Attachment attachment = new Attachment(option02_buffTime, 1.0f, options[2].image, EAttachmentType.shield);
-            TPlayerShield shield = new TPlayerShield(TPlayer.instance.status.maxHp / 10f);
+        AoeBuffer aoeBuffer = AoeBuffer.GetInstance();
+        Attachment attachment = new Attachment(option02_buffTime, 1.0f, options[2].image, EAttachmentType.shield);
+        TPlayerShield shield = new TPlayerShield(TPlayer.instance.status.maxHp / option02_generateTPlayerShield);
 
-            if (isGiveShieldBuff == false)
+        if (isGiveShieldBuff == false)
+        {
+            attachment.onAction = (gameObject) =>
             {
-                attachment.onAction += (gameObject) =>
-                {
-                    TPlayer.instance?.AddShield(shield);
-                    isGiveShieldBuff = true;
-                };
-            }
-            attachment.onInactive += (gameObject) =>
-            {
-                TPlayer.instance.RemoveShield(shield);
-                isGiveShieldBuff = false;
+                TPlayer.instance?.AddShield(shield);
+                isGiveShieldBuff = true;
             };
-            TPlayer.instance?.AddAttachment(attachment);
         }
+        attachment.onInactive = (gameObject) =>
+        {
+            aoeBuffer.onEnter -= ActiveOption02;
+            TPlayer.instance?.RemoveShield(shield);
+            isGiveShieldBuff = false;
+        };
+        TPlayer.instance?.AddAttachment(attachment);
     }
 
-    private void ActiveOption03()
+    private void ActiveOption03()   // TPlayer SP 회복 속도 10% 증가
     {
         float spTemp = 0f;
-        if (options[3].active && TPlayer.instance != null)
-        {
-            Attachment attachment = new Attachment(option03_buffTime, 1.0f, options[3].image, EAttachmentType.slow);
+        AoeBuffer aoeBuffer = AoeBuffer.GetInstance();
+        Attachment attachment = new Attachment(option03_buffTime, 1.0f, options[3].image, EAttachmentType.boost);
 
-            if (isGiveRecoverySpBuff == false)
+        if (isGiveRecoverySpBuff == false)
+        {
+            attachment.onAction = (gameObject) =>
             {
-                attachment.onAction += (gameObject) =>
-                {
-                    spTemp = TPlayer.instance.status.recoverySp;
-                    TPlayer.instance.status.recoverySp = 3f;
-                    isGiveRecoverySpBuff = true;
-                };
-            }
-            attachment.onInactive += (gameObject) =>
-            {
-                TPlayer.instance.status.recoverySp = spTemp;
-                isGiveRecoverySpBuff = false;
+                spTemp = TPlayer.instance.status.recoverySp;
+                TPlayer.instance.status.recoverySp = option03_increaseTPlayerRecoverySp;
+                isGiveRecoverySpBuff = true;
             };
-            TPlayer.instance?.AddAttachment(attachment);
         }
+        attachment.onInactive = (gameObject) =>
+        {
+            aoeBuffer.onEnter -= ActiveOption03;
+            TPlayer.instance.status.recoverySp = spTemp;
+            isGiveRecoverySpBuff = false;
+        };
+        TPlayer.instance?.AddAttachment(attachment);
     }
 }
