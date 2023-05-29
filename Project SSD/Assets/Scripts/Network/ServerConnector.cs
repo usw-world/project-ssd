@@ -32,8 +32,6 @@ public class ServerConnector : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             saveData = new SaveDataVo();
-            saveData.user_id = "Lucius1";
-            saveData.user_pw = "asdf";
             string json = JsonUtility.ToJson(saveData);
             StartCoroutine(Register(json));
         }
@@ -42,8 +40,8 @@ public class ServerConnector : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Space))
         {
             saveData = new SaveDataVo();
-            saveData.user_id = "Lucius1";
-            saveData.user_pw = "asdf";
+            //saveData.user_id = "Lucius1";
+            //saveData.user_pw = "asdf";
             string json = JsonUtility.ToJson(saveData);
             StartCoroutine(Login(json));
         }
@@ -65,10 +63,6 @@ public class ServerConnector : MonoBehaviour
         }
     }
 
-    public SaveDataVo search(SaveDataVo data)
-    {
-        return null;
-    }
 
     IEnumerator Login(string postData)
     {
@@ -87,12 +81,6 @@ public class ServerConnector : MonoBehaviour
         // 응답 수신 방식 지정
         yield return request.SendWebRequest(); 
         // 요청 보내기
-        if (request.result != UnityWebRequest.Result.Success) 
-            // 요청 실패시 에러 출력
-        {
-            Debug.LogError(request.error);
-            yield break;
-        }
 
         if (request.responseCode == 200)
         {
@@ -122,7 +110,6 @@ public class ServerConnector : MonoBehaviour
         // // POST로 보낼 JSON 데이터
         Debug.Log(postData);
         byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
-
         UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/register", "POST");
         // POST 요청 생성
         request.uploadHandler.Dispose();
@@ -133,12 +120,6 @@ public class ServerConnector : MonoBehaviour
         // 응답 수신 방식 지정
         yield return request.SendWebRequest(); 
         // 요청 보내기
-        if (request.result != UnityWebRequest.Result.Success) 
-            // 요청 실패시 에러 출력
-        {
-            Debug.LogError(request.error);
-            yield break;
-        }
 
         if (request.responseCode == 200)
         {
@@ -172,11 +153,6 @@ public class ServerConnector : MonoBehaviour
         request.uploadHandler = (UploadHandler)new UploadHandlerRaw(postDataBytes); 
         request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer(); 
         yield return request.SendWebRequest(); 
-        if (request.result != UnityWebRequest.Result.Success) 
-        {
-            Debug.LogError(request.error);
-            yield break;
-        }
         if (request.responseCode == 200)
         {
             test.Status.text = "Update Success";
@@ -201,11 +177,7 @@ public class ServerConnector : MonoBehaviour
         request.uploadHandler = (UploadHandler)new UploadHandlerRaw(postDataBytes); 
         request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer(); 
         yield return request.SendWebRequest(); 
-        if (request.result != UnityWebRequest.Result.Success) 
-        {
-            Debug.LogError(request.error);
-            yield break;
-        }
+
         if (request.responseCode == 200)
         {
             

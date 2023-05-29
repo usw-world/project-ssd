@@ -36,13 +36,12 @@ public class Skill_wheel : MonoBehaviour, IPoolableObject
     public void OnActive()
     {
         wheelPrefabKey = wheelPrefab.GetComponent<IPoolableObject>().GetKey();
-        wheelOption07PrefabKey = wheelOption07Prefab.GetComponent<IPoolableObject>().GetKey();
-        // 같은 스크립트라서 풀러에서 뽑을 때 모양 똑같이 나오는거 수정 예정
+        wheelOption07PrefabKey = wheelOption07Prefab.GetComponent<IPoolableObject>().GetKey()+"_option07";
         PoolerManager.instance.InsertPooler(wheelPrefabKey, wheelPrefab, false);
         PoolerManager.instance.InsertPooler(wheelOption07PrefabKey, wheelOption07Prefab, false);
         CreateWheel();
-        if(option7Active)
-            StartCoroutine(DestroySelf(durationTime));
+        //if(option7Active)
+        //    StartCoroutine(DestroySelf(durationTime));
         //StartCoroutine(DestroySelf(durationTime));
     }
 
@@ -76,14 +75,29 @@ public class Skill_wheel : MonoBehaviour, IPoolableObject
             radius += Time.deltaTime * 2;
         if (option7Active)
         {
-            index = 0;
-            foreach (GameObject temp in wheel)
+            if (degree < maxDegree) {
+                index = 0;
+                foreach (GameObject temp in wheel)
+                {
+                    var rad = Mathf.Deg2Rad * (degree + (++index * (360f / wheel.Length)));
+                    var x = distance * Mathf.Sin(rad);
+                    var z = distance * Mathf.Cos(rad);
+                    temp.transform.position = target.transform.position + new Vector3(x, 0, z) * radius;
+                    temp.transform.position += new Vector3(0, 1.0f);
+                }
+            }
+            else
             {
-                var rad = Mathf.Deg2Rad * (degree + (++index * (360f / wheel.Length)));
-                var x = distance * Mathf.Sin(rad);
-                var z = distance * Mathf.Cos(rad);
-                temp.transform.position = target.transform.position + new Vector3(x, 0, z) * radius;
-                temp.transform.position += new Vector3(0, 1.0f);
+                index = 0;
+                foreach (GameObject temp in wheel)
+                {
+                    temp.GetComponent<Wheel>().rotate = false;
+                    Vector3 rot = TPlayer.instance.transform.rotation.eulerAngles;
+                    rot.y = ++index * (360f / wheel.Length);
+                    temp.transform.rotation = Quaternion.Euler(rot);
+                    temp.transform.position += temp.transform.forward * Time.deltaTime * 8;
+                }
+                StartCoroutine(DestroySelf(2f));
             }
         }
         else
@@ -172,5 +186,10 @@ public class Skill_wheel : MonoBehaviour, IPoolableObject
             Destroy(temp.gameObject);
         }
         Destroy(this.gameObject);
+    }
+
+    IEnumerator ThrowWheel()
+    {
+        yield return new WaitForSeconds(1.5f);
     }
 }

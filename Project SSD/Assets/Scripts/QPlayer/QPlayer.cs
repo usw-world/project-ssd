@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
 using UnityEngine.Rendering.Universal;
+using Cinemachine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -215,6 +216,7 @@ public class QPlayer : NetworkBehaviour
         if(isLocalPlayer
 		&& PlayerCamera.instance == null) {
             GameObject camera = Instantiate(qPlayerCamera);
+            CameraManager.instance.playerCam = camera.GetComponent<CinemachineVirtualCamera>();
 			camera.GetComponent<PlayerCamera>().SetTarget(this.transform);
         }
     }

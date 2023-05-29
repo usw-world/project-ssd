@@ -26,7 +26,7 @@ public class QPlayerSkillWheel : Skill
         PoolerManager.instance.InsertPooler(wheelCreatorKey, wheelCreator, false);
     }
 
-    private void Update()
+    public override void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
             Use();

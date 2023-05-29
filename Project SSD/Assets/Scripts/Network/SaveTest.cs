@@ -27,8 +27,6 @@ public class SaveTest : MonoBehaviour
 
     public void UpdateUi()
     {
-        data[0].text = saveData.user_id;
-        data[1].text = saveData.user_pw;
         data[2].text = saveData.token;
         data[3].text = saveData.skillPoint;
         data[4].text = saveData.skill_UnityBall+"";
@@ -45,8 +43,6 @@ public class SaveTest : MonoBehaviour
     public void ResetData()
     {
         Status.text = "Logout";
-        saveData.user_id = "";
-        saveData.user_pw = "";
         saveData.token = "";
         saveData.skillPoint = "";
         saveData.skill_UnityBall = int.Parse("0");

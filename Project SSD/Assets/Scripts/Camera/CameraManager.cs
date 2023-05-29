@@ -7,7 +7,7 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     public static CameraManager instance;
-    [HideInInspector] public CinemachineVirtualCamera playerCam;
+    public CinemachineVirtualCamera playerCam;
     [HideInInspector] public CinemachineVirtualCamera mainCam;
     private CinemachineVirtualCamera prevCam;
     private CinemachineBrain cinemachineBrain;

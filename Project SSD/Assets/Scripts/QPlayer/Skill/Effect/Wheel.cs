@@ -6,6 +6,7 @@ using UnityEngine;
 public class Wheel : MonoBehaviour, IPoolableObject
 {
     public float strength;
+    public bool rotate = true;
     public Skill_wheel skill_Wheel = null;
 
     Wheel(float strength)
@@ -31,8 +32,8 @@ public class Wheel : MonoBehaviour, IPoolableObject
 
     private void Update()
     {
-
-        transform.Rotate((new Vector3(0, 5, 0)));
+        if(rotate)
+            transform.Rotate((new Vector3(0, 5, 0)));
     }
 
     public string GetKey()

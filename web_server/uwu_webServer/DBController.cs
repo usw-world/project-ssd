@@ -36,8 +36,6 @@ namespace uwu_webServer
             while (reader.Read())
             {
                 Console.WriteLine("read user data");
-                data.Add("user_id", $"{reader["user_id"]}");
-                data.Add("user_pw", reader["user_pw"].ToString());
                 data.Add("token", reader["user_token"].ToString());
             }
         }
