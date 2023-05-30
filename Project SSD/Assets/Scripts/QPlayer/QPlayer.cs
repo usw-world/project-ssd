@@ -33,6 +33,7 @@ public class QPlayer : NetworkBehaviour
     #region State Machine
     StateMachine stateMachine;
     Dictionary<string, State> statesMap = new Dictionary<string, State>();
+    Dictionary<Skill, State> statesSkillMap = new Dictionary<Skill, State>();
 
     State attachedState = new State("Attached");
     State separatedState = new State("Separated");
@@ -190,10 +191,11 @@ public class QPlayer : NetworkBehaviour
             qPlayerRot.z = 0;
             transform.eulerAngles = qPlayerRot;
             canAttack = false;
+			usingSkill = skills[0];
 
-            string animationParameter = "1H Casting";
+			string animationParameter = "1H Casting";
 
-            var skillUnityball = usingSkill as QPlayerSkillUnityBall;
+			QPlayerSkillUnityBall skillUnityball = usingSkill as QPlayerSkillUnityBall;
             //if(skillUnityball != null && skillUnityball.options[7].active)
             //    animationParameter = "2H Casting";
 
@@ -201,8 +203,11 @@ public class QPlayer : NetworkBehaviour
         };
         unityBallState.onStay = () => { };
         unityBallState.onInactive = (State nextState) => { canAttack = true; };
-        #endregion UnityBall State
-    }
+		#endregion UnityBall State
+
+		statesSkillMap.Add(skills[0], unityBallState);
+
+	}
     private IEnumerator ReturnCoroutine() {
         float offset = 0;
         while(offset < 1) {
@@ -253,13 +258,19 @@ public class QPlayer : NetworkBehaviour
             ChangeState(moveState, false);
         }
     }
-    public void OnRunSkill() 
+    public void OnRunSkill() // 애니메이션 이벤트
     {
         usingSkill.Use(targetPoint);
     }
     public void ResetState() 
     {
-        ChangeState(separatedState, false);
+		if (prevState != null)
+		{
+			ChangeState(prevState, false);
+			prevState = null;
+		}
+		else
+			ChangeState(separatedState, false);
     }
 
     #region Change State With Network
@@ -363,9 +374,8 @@ public class QPlayer : NetworkBehaviour
     private void UseAmingSkill(int skillIndex, Vector3 targetPoint) {
         prevState = stateMachine.currentState;
         canAttack = false;
-        usingSkill = skills[skillIndex];
         this.targetPoint = targetPoint;
-        stateMachine.ChangeState(unityBallState);
+        stateMachine.ChangeState(statesSkillMap[skills[skillIndex]]);
         DisableAim();
     }
 }
