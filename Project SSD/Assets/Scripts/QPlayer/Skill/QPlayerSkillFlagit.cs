@@ -115,7 +115,7 @@ public class QPlayerSkillFlagit : Skill
 	public override bool CanUse()
 	{
 		if (
-			property.nowCoolTime >= property.coolTime || 
+			property.nowCoolTime >= property.coolTime && 
 			QPlayer.instance.status.sp >= usingSp
 			)
 		{

@@ -4,25 +4,31 @@ using UnityEngine;
 
 public class Effect_Flagit : MonoBehaviour, IPoolableObject
 {
-	[SerializeField] private GameObject dotDamageObj;
+	public static List<Effect_Flagit> inSceneObj = new List<Effect_Flagit>();
+	[SerializeField] private GameObject dotDamagePrefab;
+	public Transform lightningMuzzle;
 
 	private Animator animator;
 	private Attachment shield;
 	private string animationTrigger;
-
+	private string dotDamageEffectKey;
 	private float damageAmount;
 	private float dotDamageAmount;
-
 	private bool activeDamageZone = false;
 	private bool isDotDamage = false;
 	private bool isShield = false;
 	private bool isFlinching4s = false;
 	private bool isAreaTwice = false;
 	private bool isBig = false;
+
 	private void Awake()
 	{
-		if (isBig) transform.localScale = Vector3.zero * 2f;
 		animator = GetComponent<Animator>();
+	}
+	private void Start()
+	{
+		dotDamageEffectKey = dotDamagePrefab.GetComponent<IPoolableObject>().GetKey();
+		PoolerManager.instance.InsertPooler(dotDamageEffectKey, dotDamagePrefab, false);
 	}
 	public void Run() // 이펙트 시작할때 실행
 	{
@@ -61,29 +67,43 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 		isFlinching4s = false;
 		isAreaTwice = false;
 		isBig = false;
-}
+		inSceneObj.Add(this);
+	}
 	private float GetLastDamage()
 	{
 		float amount = damageAmount;
 		if (isBig) amount *= 3f;
 		return amount;
 	}
+	IEnumerator InPool()
+	{
+		yield return new WaitForSeconds(5f);
+		PoolerManager.instance.InPool(GetKey(), gameObject);
+		inSceneObj.Remove(this);
+	}
 
 	#region options[0] 지속데미지
 	IEnumerator RunDotDamage()
 	{
-		dotDamageObj.SetActive(true);
 		Collider[] hit = null;
-		float size = 2f;
-		if (isBig) size += 1f;
-		if (isAreaTwice) {
-			size = 4f;
-			dotDamageObj.transform.localScale = Vector3.zero * 2f;
-		}else{
-			dotDamageObj.transform.localScale = Vector3.zero;
-		}
+		
 		for (int i = 0; i < 5; i++)
 		{
+			GameObject dotDamageObj = PoolerManager.instance.OutPool(dotDamageEffectKey);
+			dotDamageObj.transform.position = transform.position;
+			dotDamageObj.transform.position += Vector3.up;
+			StartCoroutine(InPoolEffect(dotDamageObj, dotDamageEffectKey, 2f));
+			float size = 2f;
+			if (isBig) size += 1f;
+			if (isAreaTwice)
+			{
+				size = 4f;
+				dotDamageObj.transform.localScale = new Vector3(4f, 0.5f, 4f);
+			}
+			else
+			{
+				dotDamageObj.transform.localScale = new Vector3(2f, 0.5f, 2f);
+			}
 			hit = Physics.OverlapSphere(transform.position, size, 1 << 8);
 			for (int j = 0; j < hit.Length; j++)
 			{
@@ -101,7 +121,11 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 			}
 			yield return new WaitForSeconds(1f);
 		}
-		dotDamageObj.SetActive(false);
+	}
+	IEnumerator InPoolEffect(GameObject obj, string key, float time)
+	{
+		yield return new WaitForSeconds(time);
+		PoolerManager.instance.InPool(key, obj);
 	}
 	public void ActiveDotDamage(float dotDamageAmount)
 	{
