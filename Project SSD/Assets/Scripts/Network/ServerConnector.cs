@@ -18,64 +18,14 @@ public class ServerConnector : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
-    private SaveDataVO saveData = new SaveDataVO();
-
     // private string apiUrl = "https://uwu-web.azurewebsites.net";
     private string apiUrl = "http://localhost:5034";
 
-    // 주소
-
-    void Start() {
-        // StartCoroutine(PostData());
+    public void Login(string id, string password, Action callback=null, Action<string> errorCallback=null) {
+        string json = $"{{\"user_id\":\"{id}\",\"user_pw\":\"{password}\"}}";
+        StartCoroutine(LoginCoroutine(json, callback, errorCallback));
     }
-
-    private void Update()
-    {
-        /*
-        // 회원가입 - 이미 존재하면 500 return
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            saveData = new SaveDataVO();
-            saveData.user_id = "Lucius1";
-            saveData.user_pw = "asdf";
-            string json = JsonUtility.ToJson(saveData);
-            StartCoroutine(Register(json));
-        }
-        
-        // 로그인 - 접속과 동시에 세이브 데이터 받아옴
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            saveData = new SaveDataVO();
-            saveData.user_id = "Lucius1";
-            saveData.user_pw = "asdf";
-            string json = JsonUtility.ToJson(saveData);
-            StartCoroutine(Login(json));
-        }
-
-        // 데이터 보내기 - 서버로 데이터 전송
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            saveData = SaveTest.saveData;
-            string json = JsonUtility.ToJson(saveData);
-            StartCoroutine(SendInGameData(json));
-        }
-        
-        // 데이터 받아오기 - 서버에서 데이터 받아옴
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            saveData = SaveTest.saveData;
-            string json = JsonUtility.ToJson(saveData);
-            StartCoroutine(RequestInGameData(json));
-        }
-        */
-    }
-
-    public void Login(string json, Action<string> callback) {
-        StartCoroutine(LoginCoroutine(json, callback));
-    }
-    private IEnumerator LoginCoroutine(string postData, Action<string> callback) {
-        // string postData = "{\"status\": \"test\" }"; 
-        // // POST로 보낼 JSON 데이터
+    private IEnumerator LoginCoroutine(string postData, Action callback, Action<string> errorCallback=null) {
         byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
 
         UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/login", "POST");
@@ -92,14 +42,15 @@ public class ServerConnector : MonoBehaviour
 
         if(request.responseCode == 200) {
             string jsonResponse = request.downloadHandler.text;
-            // 응답 JSON 문자열 저장
-            Debug.Log(jsonResponse);
-            SaveDataVO saveData = new SaveDataVO();
-            this.saveData.Load(jsonResponse);
-            GameManager.instance?.SetSaveData(this.saveData);
-            callback?.Invoke(saveData.token);
-        } else {
-            Debug.LogError(request.responseCode);
+
+            SaveDataVO saveData = new SaveDataVO(jsonResponse);
+            GameManager.instance?.SetSaveData(saveData);
+
+            callback?.Invoke();
+        } else if(request.responseCode == 400) {
+            errorCallback?.Invoke("아이디 또는 패스워드가 일치하지 않습니다.");
+        } else if(request.responseCode == 500) {
+            errorCallback?.Invoke("서버가 요청을 처리할 수 없습니다.");
         }
         request.Dispose();
     }
@@ -108,7 +59,11 @@ public class ServerConnector : MonoBehaviour
             GUI.Label(Rect.zero, networkStatusText);
     }
 
-    private IEnumerator RegisterCoroutine(string postData, Action callback=null) {
+    public void Register(string id, string password, Action callback=null, Action<string> errorCallback=null) {
+        string json = $"{{\"user_id\":\"{id}\",\"user_pw\":\"{password}\"}}";
+        StartCoroutine(RegisterCoroutine(json, callback, errorCallback));
+    }
+    private IEnumerator RegisterCoroutine(string postData, Action callback=null, Action<string> errorCallback=null) {
         // string postData = "{\"status\": \"test\" }"; 
         // // POST로 보낼 JSON 데이터
         Debug.Log(postData);
@@ -126,15 +81,15 @@ public class ServerConnector : MonoBehaviour
 
         if (request.responseCode == 200) {
             string jsonResponse = request.downloadHandler.text; 
-            // 응답 JSON 문자열 저장
-            Debug.Log(jsonResponse);
-            Debug.Log("회원가입 성공");
-            saveData = JsonUtility.FromJson<SaveDataVO>(jsonResponse); 
-            // JsonUtility.FromJsonOverwrite(jsonResponse, saveData);
-            // JSON 문자열 파싱
+            print(jsonResponse);
+            
+            SaveDataVO saveData = new SaveDataVO();
+            saveData = JsonUtility.FromJson<SaveDataVO>(jsonResponse);
+            GameManager.instance.SetSaveData(saveData);
 
             Debug.Log(saveData.ToString());
             callback?.Invoke();
+            print("Success Register.");
         }
         else
         {
@@ -166,17 +121,25 @@ public class ServerConnector : MonoBehaviour
         // 위와 동일
     }
     
-    private IEnumerator RequestIngameDataCoroutiune(string postData)
-    {
-        Debug.Log(postData);
-        byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
-        UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/getData", "POST");
+    private void RequestIngameData(Action<string> errorCallback=null) {
+        string userToken = GameManager.instance.saveData.token;
+        if(userToken != null) {
+            StartCoroutine(RequestIngameDataCoroutiune(userToken));
+        } else {
+            errorCallback?.Invoke("사용자 인증에 실패하였습니다.");
+        }
+    }
+    private IEnumerator RequestIngameDataCoroutiune(string userToken) {
+        byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(userToken);
+        UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/get-data", "POST");
         request.uploadHandler.Dispose();
         request.uploadHandler = (UploadHandler)new UploadHandlerRaw(postDataBytes); 
         request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer(); 
         yield return request.SendWebRequest(); 
         if (request.responseCode == 200) {
-            string jsonResponse = request.downloadHandler.text; 
+            string jsonResponse = request.downloadHandler.text;
+            SaveDataVO saveData = new SaveDataVO();
+            saveData.Write(jsonResponse);
             saveData = JsonUtility.FromJson<SaveDataVO>(jsonResponse);
             Debug.Log("download Success");
         } else {

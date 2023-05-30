@@ -4,6 +4,9 @@ using TMPro;
 
 using Mirror;
 
+[System.Serializable]
+public class NetworkEvent : UnityEngine.Events.UnityEvent {}
+
 public class LobbyManager : MonoBehaviour {
     static public LobbyManager instance;
 
@@ -27,6 +30,7 @@ public class LobbyManager : MonoBehaviour {
     #region Login UI
     [SerializeField] private TMP_InputField idField;
     [SerializeField] private TMP_InputField passwordField;
+    [SerializeField] private NetworkEvent onLoginSuccess;
     #endregion Login UI
 
     #region Join UI
@@ -45,7 +49,6 @@ public class LobbyManager : MonoBehaviour {
         SSDNetworkManager.instance.HostSession();
     }
     public void OnClickJoinButton() {
-		print("OnClickJoinButton");
         SSDNetworkManager.instance.JoinSession(addressField.text);
     }
     public void OnClickCloseRoomButton() {
@@ -78,16 +81,34 @@ public class LobbyManager : MonoBehaviour {
     } 
 
     public void Login() {
-        string json = $"{{\"user_id\":\"{idField.text}\",\"user_pw\":\"{passwordField.text}\"}}";
-        print(json);
         ServerConnector connector = ServerConnector.instance;
         if(connector != null) {
-            connector.Login(json, (string token) => {
-                print("Login Success.\n" + token);
-            });
+            connector.Login(
+                idField.text,
+                passwordField.text,
+                () => {
+                    print("Login Success.");
+                    onLoginSuccess?.Invoke();
+                },
+                (string error) => {
+                    UIManager.instance.AlertMessage(error);
+                }
+            );
         }
     }
     public void Join() {
-        string json = $"{{\"user_id\":\"{joinIdField.text}\",\"user_pw\":\"{joinPasswordField.text}\"}}";
+        ServerConnector connector = ServerConnector.instance;
+        if(connector != null) {
+            connector.Register(
+                joinIdField.text,
+                joinPasswordField.text,
+                () => {
+                    print("Join Success.\n");
+                },
+                (string error) => {
+                    UIManager.instance.AlertMessage(error);
+                }
+            );
+        }
     }
 }

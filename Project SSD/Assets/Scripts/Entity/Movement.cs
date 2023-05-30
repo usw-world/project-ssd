@@ -23,7 +23,7 @@ public class Movement : MonoBehaviour {
         }
     }
     private CapsuleCollider ownCollider;
-    [System.NonSerialized] public int blockLayer = 1<<6;
+    [System.NonSerialized] public int blockLayer = 1<<6|1<<11;
     public float pullingCoef = .2f;
     #endregion Collider Information
 
@@ -38,7 +38,7 @@ public class Movement : MonoBehaviour {
     }
     protected virtual void Start() {}
     
-    public void MoveToward(Vector3 direction, Space space = Space.Self, int layerMask=1<<6) {
+    public void MoveToward(Vector3 direction, Space space = Space.Self, int layerMask=1<<6|1<<11) {
         (Vector3 point1, Vector3 point2, float radius) = colliderBounds.RaycastComponent;
         
         if(space == Space.Self)

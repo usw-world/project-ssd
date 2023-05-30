@@ -1540,7 +1540,7 @@ PrefabInstance:
     - target: {fileID: 5067108883536876213, guid: ac6c898579b8e2e4484d1c354e346fe4,
         type: 3}
       propertyPath: testTarget
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5166133502167492906, guid: ac6c898579b8e2e4484d1c354e346fe4,
         type: 3}
@@ -44961,7 +44961,7 @@ GameObject:
   - component: {fileID: 1889122530}
   - component: {fileID: 1889122534}
   m_Layer: 0
-  m_Name: Cylinder
+  m_Name: '[Temporary] Q Player'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45636,7 +45636,8 @@ MonoBehaviour:
   skillSelect: []
   tPlayerUI: {fileID: 0}
   qPlayerUI: {fileID: 0}
-  alertUi: {fileID: 0}
+  commonHudCanvas: {fileID: 0}
+  alertUIPrefab: {fileID: 0}
   escapeMenu: {fileID: 0}
 --- !u!1 &2084848685
 GameObject:

@@ -64,9 +64,7 @@ public partial class SSDNetworkManager : NetworkManager {
     private void OnCloseRoom() {
         NetworkClient.OnDisconnectedEvent -= OnCloseRoom;
         if(isHost) return;
-        GameObject gobj = UIManager.instance.AlertMessage();
-        AlertUI alert = gobj.GetComponent<AlertUI>();
-        alert?.SetMessage("Server is dead.");
+        AlertUI alert = UIManager.instance.AlertMessage("Server is dead.");
         alert?.onClickConfirmButton.AddListener(() => {
             if(LobbyManager.instance != null) {
                 LobbyManager.instance.OpenLobbyUi();

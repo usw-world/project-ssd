@@ -82,6 +82,11 @@ public class Skill_wheel : MonoBehaviour, IPoolableObject
                     var rad = Mathf.Deg2Rad * (degree + (++index * (360f / wheel.Length)));
                     var x = distance * Mathf.Sin(rad);
                     var z = distance * Mathf.Cos(rad);
+                    
+                    temp.GetComponent<Wheel>().rotate = false;
+                    Vector3 rot = TPlayer.instance.transform.rotation.eulerAngles;
+                    rot.y = ++index * (360f / wheel.Length);
+                    temp.transform.rotation = Quaternion.Euler(rot);
                     temp.transform.position = target.transform.position + new Vector3(x, 0, z) * radius;
                     temp.transform.position += new Vector3(0, 1.0f);
                 }

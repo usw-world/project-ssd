@@ -7,16 +7,17 @@ using UnityEngine;
 public class SaveDataVO {
     public string token = "";
     public string skillPoint = "";
-    [SerializeField]public int skill_UnityBall = 0;
+    public int currentStage = 0;
 
-    public void Load(string saveData) {
-        JsonUtility.FromJsonOverwrite(saveData, this);
+    public int skill_unityBall = 0;
+    public int skill_aoe = 0;
+
+    public SaveDataVO() {}
+    public SaveDataVO(string json) {
+        JsonUtility.FromJsonOverwrite(json, this);
     }
 
-    public void Print()
-    {
-        Debug.Log(token);
-        Debug.Log(skillPoint);
-        Debug.Log(skill_UnityBall);
+    public void Write(string saveData) {
+        JsonUtility.FromJsonOverwrite(saveData, this);
     }
 }

@@ -15,7 +15,8 @@ public class UIManager : MonoBehaviour
 	[SerializeField] private TPlayerUI tPlayerUI;
 	[SerializeField] private QPlayerUI qPlayerUI;
 
- 	[SerializeField] private GameObject alertUi;
+	[SerializeField] private Canvas commonHudCanvas;
+ 	[SerializeField] private GameObject alertUIPrefab;
 	[SerializeField] private EscapeMenu escapeMenu;
 
     private void Awake() {
@@ -62,8 +63,15 @@ public class UIManager : MonoBehaviour
 	public void OnPressEscape() {
 		escapeMenu.OnPressEscape();
 	}
-	public GameObject AlertMessage() {
-		return Instantiate(alertUi, FindObjectOfType<Canvas>().transform);
+	public AlertUI AlertMessage(string message) {
+		GameObject alertUIGobj = Instantiate(alertUIPrefab, commonHudCanvas.transform);
+		AlertUI alertUI = alertUIGobj.GetComponent<AlertUI>();
+		if(alertUI != null) {
+			alertUI.SetMessage(message);
+		} else {
+			Debug.LogError("Message box for alert is loaded but it hasn't 'AlertUI' Component.");
+		}
+		return alertUI;
 	}
 
 	/*

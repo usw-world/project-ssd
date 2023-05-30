@@ -10,7 +10,7 @@ public class NavigateableMovement : Movement
 	public bool isArrive { get; private set; } = true;
 	private int pathIndex = 0;
 	private Vector3 nextDestination;
-	private int moveToPointLayerMask = 1<<6;
+	private int moveToPointLayerMask = 1<<6|1<<11;
 	/// <summary>This value will be multiplied to Time.deltaTime.</summary>
 	[SerializeField] private float pointMoveSpeed = 1f;
 
@@ -22,7 +22,7 @@ public class NavigateableMovement : Movement
 		navMesh.speed = 0;
 		navMesh.angularSpeed = 0;
 	}
-	public void MoveToPoint(Vector3 point, float speed, int layerMask = 1<<6) {
+	public void MoveToPoint(Vector3 point, float speed, int layerMask = 1<<6|1<<11) {
 		isArrive = false;
 		navMesh.nextPosition = transform.position;
 		navMesh.enabled = false;

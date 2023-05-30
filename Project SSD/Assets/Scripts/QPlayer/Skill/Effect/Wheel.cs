@@ -21,13 +21,25 @@ public class Wheel : MonoBehaviour, IPoolableObject
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag.Equals("Environment"))
-        {
-            other.transform.Translate(-other.transform.forward * strength * 0.02f);
-            // 문제생기면 addForce로 변경 예정
-            if (skill_Wheel != null)
-                this.gameObject.SetActive(false);
+        IDamageable enemy;
+        if(other.TryGetComponent<IDamageable>(out enemy)) {
+            Vector3 force = transform.forward * 15f;
+            Damage damage = new Damage(
+                10,
+                .5f,
+                force,
+                Damage.DamageType.Normal
+            );
+            enemy.OnDamage(damage);
         }
+
+        // if (other.gameObject.tag.Equals("Environment"))
+        // {
+        //     other.transform.Translate(-other.transform.forward * strength * 0.02f);
+        //     // 문제생기면 addForce로 변경 예정
+        //     if (skill_Wheel != null)
+        //         this.gameObject.SetActive(false);
+        // }
     }
 
     private void Update()
