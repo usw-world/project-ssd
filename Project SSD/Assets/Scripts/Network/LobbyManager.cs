@@ -75,7 +75,7 @@ public class LobbyManager : MonoBehaviour {
     }
     public void OnClickStartButton() {
         SSDNetworkManager.instance.StartGame();
-    }
+    } 
 
     public void Login() {
         string json = $"{{\"user_id\":\"{idField.text}\",\"user_pw\":\"{passwordField.text}\"}}";

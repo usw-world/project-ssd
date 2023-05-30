@@ -4,20 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class SaveDataVo
-{
-
-
+public class SaveDataVO {
     public string token = "";
     public string skillPoint = "";
     [SerializeField]public int skill_UnityBall = 0;
 
-    public void load(string saveData)
-    {
+    public void Load(string saveData) {
         JsonUtility.FromJsonOverwrite(saveData, this);
     }
 
-    public void print()
+    public void Print()
     {
         Debug.Log(token);
         Debug.Log(skillPoint);

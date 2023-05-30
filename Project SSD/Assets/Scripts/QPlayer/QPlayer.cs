@@ -19,6 +19,7 @@ public class QPlayer : NetworkBehaviour
 
     #region Q-Player Status
     public PlayerStatus status;
+    private float qPlayerSp;
     bool isAttached = true;
     bool canAttack = true;
     #endregion Q-Player Status

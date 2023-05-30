@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2992542243031410716}
   - component: {fileID: 2324870477538072652}
-  - component: {fileID: 2992542243031410719}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -45,22 +44,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec371d537e8af1043b0125a6ebf17854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2992542243031410719
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2992542243031410714}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e40e7aece85e334e8915778dde5a34a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cutSceneBannerTop: {fileID: 0}
-  cutSceneBannerBottom: {fileID: 0}
-  CinemaMoveSpeed: 130
-  skillImage: []
-  skillCoolTimeFill: []
-  skillSelect: []
-  alertUi: {fileID: 0}

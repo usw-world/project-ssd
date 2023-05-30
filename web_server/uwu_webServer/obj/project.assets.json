@@ -9,8 +9,12 @@
   },
   "packageFolders": {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     "C:\\Users\\xx\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+=======
+    "C:\\Users\\pjun2\\.nuget\\packages\\": {}
+>>>>>>> Stashed changes
 =======
     "C:\\Users\\pjun2\\.nuget\\packages\\": {}
 >>>>>>> Stashed changes
@@ -19,17 +23,23 @@
     "version": "1.0.0",
     "restore": {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       "projectUniqueName": "D:\\Side\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
       "projectName": "uwu_webServer",
       "projectPath": "D:\\Side\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
       "packagesPath": "C:\\Users\\xx\\.nuget\\packages\\",
       "outputPath": "D:\\Side\\project-ssd\\web_server\\uwu_webServer\\obj\\",
 =======
+=======
+>>>>>>> Stashed changes
       "projectUniqueName": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
       "projectName": "uwu_webServer",
       "projectPath": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
       "packagesPath": "C:\\Users\\pjun2\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\obj\\",
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       "projectStyle": "PackageReference",
       "fallbackFolders": [
@@ -37,8 +47,12 @@
       ],
       "configFilePaths": [
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         "C:\\Users\\xx\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+=======
+        "C:\\Users\\pjun2\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> Stashed changes
 =======
         "C:\\Users\\pjun2\\AppData\\Roaming\\NuGet\\NuGet.Config",
 >>>>>>> Stashed changes
@@ -50,6 +64,10 @@
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+        "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+>>>>>>> Stashed changes
 =======
         "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
 >>>>>>> Stashed changes
@@ -93,6 +111,9 @@
           }
         },
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
       }
     }

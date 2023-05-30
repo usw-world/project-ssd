@@ -5,12 +5,12 @@ using UnityEngine.UI;
 
 public class SaveTest : MonoBehaviour
 {
-    public static SaveDataVo saveData = new SaveDataVo();
+    public static SaveDataVO saveData = new SaveDataVO();
     // Start is called before the first frame update
     public Text[] data;
-    public Text Status;
-    public InputField SpInput;
-    public InputField UBInput;
+    public Text statusText;
+    public InputField spInput;
+    public InputField ubInput;
     void Start()
     {
     }
@@ -20,7 +20,7 @@ public class SaveTest : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            saveData.print();
+            saveData.Print();
             UpdateUi();
         }
     }
@@ -34,15 +34,15 @@ public class SaveTest : MonoBehaviour
 
     public void ChangeData()
     {
-        saveData.skillPoint = SpInput.text;
-        saveData.skill_UnityBall = int.Parse(UBInput.text);
+        saveData.skillPoint = spInput.text;
+        saveData.skill_UnityBall = int.Parse(ubInput.text);
         UpdateUi();
-        Status.text = "InGame Data Changed";
+        statusText.text = "InGame Data Changed";
     }
 
     public void ResetData()
     {
-        Status.text = "Logout";
+        statusText.text = "Logout";
         saveData.token = "";
         saveData.skillPoint = "";
         saveData.skill_UnityBall = int.Parse("0");
