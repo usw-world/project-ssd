@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text.Json.Nodes;
@@ -31,7 +32,7 @@ namespace uwu_webServer
             reader.Close();
             return answer;
         }
-        public void ReadUser(MySqlDataReader reader, JsonObject data)
+        private void ReadUser(MySqlDataReader reader, JsonObject data)
         {
             while (reader.Read())
             {
@@ -104,8 +105,19 @@ namespace uwu_webServer
             return "Error";
         }
         
-        public void SearchTable(string sql, string type, JsonObject data)
+        public void SearchTable(string sql, Action<MySqlDataReader> callback)
         {
+            MySqlDataReader? reader = null;
+            try {
+                var command = new MySqlCommand(sql, conn);
+                reader = command.ExecuteReader();
+                callback?.Invoke(reader);
+            } catch(Exception e) {
+                Console.WriteLine(e.StackTrace);
+            } finally {
+                reader?.Close();
+            }
+            /*
             try
             {
                 var command = new MySqlCommand(sql, conn);
@@ -125,6 +137,7 @@ namespace uwu_webServer
             {
                 Console.WriteLine(e.StackTrace);
             }
+            */
         }
         
         

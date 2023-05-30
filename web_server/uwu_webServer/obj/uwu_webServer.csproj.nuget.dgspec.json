@@ -1,60 +1,20 @@
 {
   "format": 1,
   "restore": {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    "D:\\Side\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj": {}
+    "C:\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj": {}
   },
   "projects": {
-    "D:\\Side\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj": {
+    "C:\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Side\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
+        "projectUniqueName": "C:\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
         "projectName": "uwu_webServer",
-        "projectPath": "D:\\Side\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
-        "packagesPath": "C:\\Users\\xx\\.nuget\\packages\\",
-        "outputPath": "D:\\Side\\project-ssd\\web_server\\uwu_webServer\\obj\\",
-=======
-    "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj": {}
-  },
-  "projects": {
-    "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
-        "projectName": "uwu_webServer",
-        "projectPath": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
-        "packagesPath": "C:\\Users\\pjun2\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\obj\\",
->>>>>>> Stashed changes
-=======
-    "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj": {}
-  },
-  "projects": {
-    "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
-        "projectName": "uwu_webServer",
-        "projectPath": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
-        "packagesPath": "C:\\Users\\pjun2\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\obj\\",
->>>>>>> Stashed changes
+        "projectPath": "C:\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
+        "packagesPath": "C:\\Users\\Usoock\\.nuget\\packages\\",
+        "outputPath": "C:\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-          "C:\\Users\\xx\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-=======
-          "C:\\Users\\pjun2\\AppData\\Roaming\\NuGet\\NuGet.Config",
->>>>>>> Stashed changes
-=======
-          "C:\\Users\\pjun2\\AppData\\Roaming\\NuGet\\NuGet.Config",
->>>>>>> Stashed changes
+          "C:\\Users\\Usoock\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -62,14 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-          "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
->>>>>>> Stashed changes
-=======
-          "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
->>>>>>> Stashed changes
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -87,6 +39,12 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
+          "dependencies": {
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[8.0.33, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -98,9 +56,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-<<<<<<< Updated upstream
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
-=======
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -109,11 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }

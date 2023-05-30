@@ -1,11 +1,7 @@
-using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
+using MySql.Data.MySqlClient;
 
 namespace uwu_webServer
 {
@@ -85,9 +81,14 @@ namespace uwu_webServer
                             string password = requestBody.RootElement.GetProperty("user_pw").GetString();
                             Console.WriteLine(user_id+" : "+password);
                             string sql = $"select * from user where user_id = '{user_id}'";
-                            dbc.SearchTable(sql, "user", answer);
-                            if (answer.ToString().Equals("{}"))
-                            {
+
+                            dbc.SearchTable(sql, (MySqlDataReader reader) => {
+                                reader.Read();
+                                string pw = reader.GetString("user_pw");
+                                
+                            });
+                            
+                            if (answer.ToString().Equals("{}")) {
                                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                                 Console.WriteLine("아이디 확인");
                                 return;
@@ -99,7 +100,6 @@ namespace uwu_webServer
                                 string token = dbc.SetToken(answer["user_id"].ToString());
                                 dbc.SearchTable(sql, "skill", answer);
                                 answer["token"] = token;
-                                Console.WriteLine(answer.ToString());
                                 context.Response.Headers["Content-Type"] = "application/json";
                                 context.Response.StatusCode = StatusCodes.Status200OK;
                                 await context.Response.WriteAsync(answer.ToString());
@@ -143,7 +143,7 @@ namespace uwu_webServer
                     });
                     #endregion
                     
-                    endpoints.MapPost("/getData", async context =>
+                    endpoints.MapPost("/get-data", async context =>
                     {
                         using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
                         {
