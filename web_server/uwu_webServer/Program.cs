@@ -20,11 +20,10 @@ namespace uwu_webServer
                     {
                         JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
                         string user_id = requestBody.RootElement.GetProperty("user_id").GetString();
-                        Console.WriteLine(user_id);
                         string user_pw = requestBody.RootElement.GetProperty("user_pw").GetString();
                         var sql = $"select * from user where user_id = '{user_id}'";
                         var value = new JsonObject(); 
-                        dbc.SearchTable(sql, "user", value);
+                        // dbc.SearchTable(sql, "user", value);
                         Console.WriteLine(value.ToString());
                         
                         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
@@ -49,7 +48,7 @@ namespace uwu_webServer
                     {
                         var sql = "select * from user";
                         var value = new JsonObject();
-                        dbc.SearchTable(sql, "user", value);
+                        // dbc.SearchTable(sql, "user", value);
                         if (value == null)
                             return;
                         context.Response.Headers["Content-Type"] = "application/json";
@@ -61,7 +60,7 @@ namespace uwu_webServer
                         var sql = "select * from skill";
 
                         JsonObject value = new JsonObject();
-                        dbc.SearchTable(sql, "skill", value);
+                        // dbc.SearchTable(sql, "skill", value);
                         if (value == null)
                             return;
                         context.Response.Headers["Content-Type"] = "application/json";
@@ -71,43 +70,55 @@ namespace uwu_webServer
                     #region 로그인 
                     endpoints.MapPost("/login", async context =>
                     {
-
                         // 요청 바디 파싱
-                        using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
-                        {
-                            JsonObject answer = new JsonObject();
+                        using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8)) {
                             JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
-                            string user_id = requestBody.RootElement.GetProperty("user_id").GetString();
-                            string password = requestBody.RootElement.GetProperty("user_pw").GetString();
-                            Console.WriteLine(user_id+" : "+password);
-                            string sql = $"select * from user where user_id = '{user_id}'";
 
-                            dbc.SearchTable(sql, (MySqlDataReader reader) => {
-                                reader.Read();
-                                string pw = reader.GetString("user_pw");
-                                
-                            });
-                            
-                            if (answer.ToString().Equals("{}")) {
-                                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                                Console.WriteLine("아이디 확인");
-                                return;
-                            }
-                            
-                            if (answer["user_pw"].ToString().Equals(password))
-                            {
-                                sql = $"select * from skill where id = '{user_id}'";
-                                string token = dbc.SetToken(answer["user_id"].ToString());
-                                dbc.SearchTable(sql, "skill", answer);
-                                answer["token"] = token;
+                            JsonObject answer = new JsonObject();
+
+                            JsonElement idJson;
+                            JsonElement pwdJson;
+
+                            if(requestBody.RootElement.TryGetProperty("user_id", out idJson)
+                            && requestBody.RootElement.TryGetProperty("user_pw", out pwdJson)) {
                                 context.Response.Headers["Content-Type"] = "application/json";
-                                context.Response.StatusCode = StatusCodes.Status200OK;
+                                
+                                string? requestId = idJson.GetString();
+                                string? requestPwd = pwdJson.GetString();
+                                if(requestId == null
+                                || requestPwd == null
+                                || requestId == ""
+                                || requestPwd == "") {
+                                    answer["message"] = "아이디와 패스워드는 공백일 수 없습니다.";
+                                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                    await context.Response.WriteAsync(answer.ToString());
+                                    return;
+                                }
+                                string token = "";
+                                bool successSearchUser = dbc.SearchUser(requestId, async (MySqlDataReader reader) => {
+                                    reader.Read();
+                                    string searchedPwd = reader.GetString("user_pw");
+                                    if(searchedPwd == requestPwd) {
+                                        token = GenerateToken() + requestId;
+                                    } else {
+                                        answer["message"] = "아이디 또는 패스워드가 일치하지 않습니다.";
+                                        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                        await context.Response.WriteAsync(answer.ToString());
+                                        return;
+                                    }
+                                });
+                                if(successSearchUser) {
+                                    dbc.SetToken(token, requestId);
+                                    answer["token"] = token;
+                                    context.Response.StatusCode = StatusCodes.Status200OK;
+                                    await context.Response.WriteAsync(answer.ToString());
+                                }
+                            } else {
+                                answer["message"] = "올바르지 않은 요청을 수신하였습니다.";
+                                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                
                                 await context.Response.WriteAsync(answer.ToString());
-                            }
-                            else
-                            {
-                                Console.WriteLine("비밀번호 확인");
-                                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                                return;
                             }
                         }
                     });
@@ -153,7 +164,7 @@ namespace uwu_webServer
                             var token = requestBody.RootElement.GetProperty("token").GetString();
                             var user_id = dbc.FindId(token);
                             sql = $"select * from skill where id = '{user_id}'";
-                            dbc.SearchTable(sql, "skill", answer);
+                            // dbc.SearchTable(sql, "skill", answer);
                             answer["token"] = token;
                             Console.WriteLine(answer.ToString());
                             context.Response.Headers["Content-Type"] = "application/json";
@@ -188,6 +199,11 @@ namespace uwu_webServer
         //     context.Response.StatusCode = StatusCodes.Status405MethodNotAllowed;
         //     return Task.CompletedTask;
         // }
+        public string GenerateToken() {
+            var bytes = new byte[4];
+            System.Security.Cryptography.RandomNumberGenerator.Create().GetBytes(bytes);
+            return Convert.ToHexString(bytes);
+        }
     }
     
 

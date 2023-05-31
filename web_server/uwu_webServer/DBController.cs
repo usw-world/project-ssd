@@ -5,23 +5,18 @@ using System.Text.Json.Nodes;
 using MySql.Data.MySqlClient;
 using Org.BouncyCastle.Utilities;
 
-namespace uwu_webServer
-{
-    public class DBController
-    {
-        public DBController()
-        {
+namespace uwu_webServer {
+    public class DBController {
+        public DBController() {
             conn = new MySqlConnection(ConnectionContext);
             conn.Open();
         }
 
-        public int UpdateData(string sql)
-        {
+        public int UpdateData(string sql) {
             return new MySqlCommand(sql, conn).ExecuteNonQuery();
         }
 
-        public string FindId(string token)
-        {
+        public string FindId(string token) {
             var answer = "";
             var sql = $"select user_id from user where user_token = '{token}';";
             var reader = new MySqlCommand(sql, conn).ExecuteReader();
@@ -32,8 +27,7 @@ namespace uwu_webServer
             reader.Close();
             return answer;
         }
-        private void ReadUser(MySqlDataReader reader, JsonObject data)
-        {
+        private void ReadUser(MySqlDataReader reader, JsonObject data) {
             while (reader.Read())
             {
                 Console.WriteLine("read user data");
@@ -41,8 +35,7 @@ namespace uwu_webServer
             }
         }
 
-        private void ReadSkill(MySqlDataReader reader, JsonObject data)
-        {
+        private void ReadSkill(MySqlDataReader reader, JsonObject data) {
             while (reader.Read())
             {
                 data.Add("skillPoint", reader["skillPoint"].ToString());
@@ -58,55 +51,49 @@ namespace uwu_webServer
 
         public string GenerateToken(int length)
         {
-            using (var crypto = new RNGCryptoServiceProvider())
-            {
-                var bits = (length * 6);
-                var byte_size = ((bits + 7) / 8);
-                var byteArray = new byte[byte_size];
-                crypto.GetBytes(byteArray);
-                return Convert.ToBase64String(byteArray);
-            }
+            var bits = (length * 6);
+            var byte_size = ((bits + 7) / 8);
+            var byteArray = new byte[byte_size];
+            // crypto.GetBytes(byteArray);
+            RandomNumberGenerator.Create().GetBytes(byteArray);
+            return Convert.ToBase64String(byteArray);
         }
-        public string SetToken(string user_id)
+        public bool SetToken(string token, string userId)
         {
-            var token = "";
-            bool flag;
-            string sql;
             try
             {
-                do
-                {
-                    flag = false;
-                    sql = $"select * from user where user_token = '{token}';";
-                    token = GenerateToken(8);
-                    Console.WriteLine("token value change");
-                    var reader = new MySqlCommand(sql, conn).ExecuteReader();
-                    while (reader.Read())
-                    {
-                        flag = true;
-                    }
-                    reader.Close();
-                } while (flag);
-                Console.WriteLine("test End token : "+token);
-                sql = $"update user set user_token = '{token}' where user_id = '{user_id}';";
+                string sql = $"UPDATE user SET user_token='{token}' WHERE user_id='{userId}';";
                 int status = new MySqlCommand(sql, conn).ExecuteNonQuery();
                 if(status == 1)
                     Console.WriteLine("토큰 변경 성공");
                 else
                     Console.WriteLine("토큰 변경 실패");
                 Console.WriteLine(token);
-                return token+"";
+                return true;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.StackTrace);
+            catch (Exception e) {
+                Console.Error.WriteLine(e);
+                return false;
             }
+        }
 
-            return "Error";
+        public bool SearchUser(string userId, Action<MySqlDataReader> callback) {
+            MySqlDataReader? reader = null;
+            try {
+                var command = new MySqlCommand("SELECT * FROM user WHERE user_id=@user_id", conn);
+                command.Parameters.Add(new MySqlParameter("@user_id", userId));
+                reader = command.ExecuteReader();
+                callback?.Invoke(reader);
+                return true;
+            } catch(Exception e) {
+                Console.WriteLine(e.StackTrace);
+                return false;
+            } finally {
+                reader?.Close();
+            }
         }
         
-        public void SearchTable(string sql, Action<MySqlDataReader> callback)
-        {
+        public void SearchTable(string sql, Action<MySqlDataReader> callback) {
             MySqlDataReader? reader = null;
             try {
                 var command = new MySqlCommand(sql, conn);
@@ -117,29 +104,6 @@ namespace uwu_webServer
             } finally {
                 reader?.Close();
             }
-            /*
-            try
-            {
-                var command = new MySqlCommand(sql, conn);
-                MySqlDataReader reader = command.ExecuteReader();
-                switch (type)
-                {
-                    case "user":
-                        ReadUser(reader, data);
-                        break;  
-                    case "skill":
-                        ReadSkill(reader, data);
-                        break;
-                }
-                reader.Close();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.StackTrace);
-            }
-            */
         }
-        
-        
     }
 }
