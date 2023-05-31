@@ -25,6 +25,7 @@ public class QPlayerInput : MonoBehaviour
 	void OnSkill05() => player.OnSkill(4);
 	void OnSkill06() => player.OnSkill(5);
 	void OnSkill07() => player.OnSkill(6);
+	void OnSkill08() => player.OnSkill(7);
 	void OnComeBack() => player.ReturnToTPlayer();
 	void OnRB_click() => player.MouseRightClick();
 	void OnLB_click() => player.MouseLeftClick();

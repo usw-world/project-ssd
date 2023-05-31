@@ -87,6 +87,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Skill08",
+                    "type": "Button",
+                    "id": "bcbb738b-8f08-4fa3-a4b8-6a1009a61413",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "ComeBack",
                     "type": "Button",
                     "id": "74decf13-a815-4fc1-bc2b-a3f957132434",
@@ -284,6 +293,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "58e0d6e5-5e96-42a1-aea4-ff4d35a237f8",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill08",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

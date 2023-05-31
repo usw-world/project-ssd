@@ -24,6 +24,28 @@ public class QPlayerSkillFlagit : Skill
 	private float usingSp = 10f;
 	private bool isRuningChainSkill = false;
 	private int chainCount = 0;
+	private void Awake()
+	{
+		options[0].name = "자기장";
+		options[0].info = "주변 적에게 지속 데미지";
+		options[1].name = "매트릭스";
+		options[1].info = "파트너에게 실드 재공";
+		options[2].name = "빠른 준비";
+		options[2].info = "쿨타임 3초 감소";
+		options[3].name = "감전";
+		options[3].info = "경직시간 3초 증가";
+		options[4].name = "넓은 공격";
+		options[4].info = "범위 증가";
+		options[5].name = "빠른 공격";
+		options[5].info = "시전시간 감소";
+		options[6].name = "차아암!";
+		options[6].info = "범위, 대미지 증가";
+		options[7].name = "참참참";
+		options[7].info = "체인스킬로 변경, 3회 연속사용 가능";
+		options[0].active = true;
+		options[2].active = true;
+		options[7].active = true;
+	}
 	private void Start()
 	{
 		effectKey = info.effect.GetComponent<IPoolableObject>().GetKey();
@@ -72,7 +94,7 @@ public class QPlayerSkillFlagit : Skill
 
 		flagitObj = PoolerManager.instance.OutPool(effectKey);
 		flagit = flagitObj.GetComponent<Effect_Flagit>();
-
+		flagitObj.transform.position = target;
 		float lastDamage = QPlayer.instance.GetAP() * property.skillAP;
 
 		flagit.Initialize(lastDamage);

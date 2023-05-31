@@ -41,6 +41,8 @@ public class QPlayer : NetworkBehaviour
     State moveState = new State("Move");
     State unityBallState = new State("Unity Ball");
     State aoeState = new State("Aoe");
+    State flagitState = new State("flagitState");
+    State lightningState = new State("lightningState");
     State prevState;
     string currentAnimationTrigger = "";
     #endregion State Machine
@@ -197,17 +199,17 @@ public class QPlayer : NetworkBehaviour
 
             string animationParameter = "1H Casting";
 
-            QPlayerSkillUnityBall skillUnityball = usingSkill as QPlayerSkillUnityBall;
-            //if(skillUnityball != null && skillUnityball.options[7].active)
-            //    animationParameter = "2H Casting";
-
-            ChangeAnimation(animationParameter);
+			QPlayerSkillUnityBall skillUnityball = usingSkill as QPlayerSkillUnityBall;
+			if (skillUnityball != null && skillUnityball.options[7].active)
+				animationParameter = "2H Casting";
+			ChangeAnimation(animationParameter);
         };
         unityBallState.onStay = () => { };
         unityBallState.onInactive = (State nextState) => { canAttack = true; };
         #endregion UnityBall State
 
         #region Aoe State
+
         aoeState.onActive = (State prevState) =>
         {
             transform.LookAt(targetPoint);
@@ -226,10 +228,60 @@ public class QPlayer : NetworkBehaviour
         {
             canAttack = true;
         };
-        #endregion
+		#endregion  Aoe State
 
-        statesSkillMap.Add(skills[0], unityBallState);
+		#region Flagit State
+		flagitState.onActive = (State prevState) =>
+		{
+			transform.LookAt(targetPoint);
+			Vector3 qPlayerRot = transform.eulerAngles;
+			qPlayerRot.x = 0;
+			qPlayerRot.z = 0;
+			transform.eulerAngles = qPlayerRot;
+			canAttack = false;
+			usingSkill = skills[4];
+
+			string animationParameter = "1H Casting";
+
+			ChangeAnimation(animationParameter);
+		};
+		flagitState.onStay = () => { };
+		flagitState.onInactive = (State nextState) => { canAttack = true; };
+		#endregion Flagit State
+
+		#region Lightning State
+		lightningState.onActive = (State prevState) =>
+		{
+			transform.LookAt(targetPoint);
+			Vector3 qPlayerRot = transform.eulerAngles;
+			qPlayerRot.x = 0;
+			qPlayerRot.z = 0;
+			transform.eulerAngles = qPlayerRot;
+			canAttack = false;
+			usingSkill = skills[5];
+			QPlayerSkillLightning lightning = usingSkill as QPlayerSkillLightning;
+
+			string animationParameter = "1H Casting";
+
+			if (lightning.options[7].active)
+			{
+				animationParameter = "2H Casting";
+			}
+			if (lightning.options[1].active)
+			{
+				animationParameter += "Fast";
+			}
+			
+			ChangeAnimation(animationParameter);
+		};
+		lightningState.onStay = () => { };
+		lightningState.onInactive = (State nextState) => { canAttack = true; };
+		#endregion Lightning State
+
+		statesSkillMap.Add(skills[0], unityBallState);
         statesSkillMap.Add(skills[1], aoeState); 
+		statesSkillMap.Add(skills[4], flagitState);
+		statesSkillMap.Add(skills[5], lightningState);
 	}
     private IEnumerator ReturnCoroutine() {
         float offset = 0;
@@ -326,10 +378,10 @@ public class QPlayer : NetworkBehaviour
     }
 
     public void OnSkill(int index) {
-        if (index > skills.Count) {
-            Debug.LogWarning("Skill index want to use is out of range.");
-            return;
-        }
+        //if (index > skills.Count) {
+        //    Debug.LogWarning("Skill index want to use is out of range.");
+        //    return;
+        //}
         if (!canAttack) return;
 
         Skill selectedSkill = skills[index]; // 사용하고자 하는 스킬 가져오기

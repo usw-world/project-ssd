@@ -15,18 +15,38 @@ public class QPlayerSkillLightning : Skill
 		7 - 애너지 파
 
 		작업 대기
-		1 - 선딜 감소 - QPlayer에서 참조하여 사용할 예정
 
 		사전 작업 필요
 		3 - 적 기절		- 3초 # 적 기절시키는 기능 구현
 
 		작업 완료
 		0 - 데미지 증가 - 50%
+		1 - 선딜 감소 - QPlayer에서 참조하여 사용할 예정
 		2 - TPlayer sp 회복량 상승 - 5초 , 30%
 		4 - 지속 피해	- 5초, 최종데미지 50%
 		5 - 넓이 증가 - 30% 증가
 		6 - 집중 공격 - 활성화된 flagit 에서 타겟방향으로 같은 공격을 함
 	*/
+	private void Awake()
+	{
+		options[0].name = "고전압";
+		options[0].info = "데미지 증가 50%";
+		options[1].name = "빠른 공격";
+		options[1].info = "선딜 감소";
+		options[2].name = "자극제";
+		options[2].info = "파트너의 스테미너 회복량을 30% 증가시킵니다";
+		options[3].name = "감전";
+		options[3].info = "적을 3초간 기절 시킵니다";
+		options[4].name = "잔류";
+		options[4].info = "5초동안 적에게 데미지의 50%만큼 지속 피해를 가합니다";
+		options[5].name = "과전류";
+		options[5].info = "폭이 증가합니다";
+		options[6].name = "자성";
+		options[6].info = "근처의 Flagit에서 목표지점으로 추가 공격을 가합니다";
+		options[7].name = "레일건";
+		options[7].info = "아주 강한 공격으로 바뀝니다";
+		options[6].active = true;
+	}
 	private void Start()
 	{
 		effectKey = info.effect.GetComponent<IPoolableObject>().GetKey();
@@ -74,7 +94,6 @@ public class QPlayerSkillLightning : Skill
 			};
 			TPlayer.instance.AddAttachment(attachment);
 		}
-
 		if (options[3].active)
 		{
 			Attachment attachment = new Attachment(3f, 1f, info.skillImage, EAttachmentType.inability);
@@ -113,6 +132,10 @@ public class QPlayerSkillLightning : Skill
 				Effect_Lightning subLightning = lightningObj.GetComponent<Effect_Lightning>();
 				subLightningObj.transform.position = Effect_Flagit.inSceneObj[i].lightningMuzzle.position;
 				subLightningObj.transform.LookAt(target);
+				Vector3 subLightningRot = subLightningObj.transform.eulerAngles;
+				subLightningRot.x = 0;
+				subLightningRot.z = 0;
+				subLightningObj.transform.eulerAngles = subLightningRot;
 				subLightning.Initialize(lightning);
 				subLightning.Run();
 			}

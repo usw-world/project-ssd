@@ -11,7 +11,13 @@ public class Effect_Lightning : MonoBehaviour, IPoolableObject
 	protected bool isBroadAttack = false;
 	protected Attachment damage;
 	protected Attachment inability;
+	[SerializeField] protected bool previewDamageZone;
+	protected GameObject previewBoxPrefab;
 
+	protected void Awake()
+	{
+		previewBoxPrefab = Resources.Load("previewBoxPrefab") as GameObject;
+	}
 	public void Initialize(float damageAmount)
 	{
 		this.damageAmount = damageAmount;
@@ -45,18 +51,63 @@ public class Effect_Lightning : MonoBehaviour, IPoolableObject
 	}
 	#endregion 옵션 4 지속데미지
 
+	#region 옵션 5 폭 증가
 	public void ActiveBroadAttack(bool active)
 	{
 		isBroadAttack = active;
 	}
+	#endregion 옵션 5 폭 증가
 
 	public void Run()
 	{
+		Collider[] hit = null;
+		Vector3 size;
+		if (isBroadAttack)
+		{
+			size = new Vector3(2f, 1f, 10f);
+			transform.localScale = Vector3.one * 2f;
+		}
+		else
+		{
+			size = new Vector3(1f, 1f, 10f);
+			transform.localScale = Vector3.one;
+		}
+		float flinching = 1f;
 
+		hit = Physics.OverlapBox(transform.position + transform.forward * 5f, size * 0.5f, QPlayer.instance.transform.rotation, 1 << 8);
+		for (int i = 0; i < hit.Length; i++)
+		{
+			IDamageable target = hit[i].GetComponent<IDamageable>();
+			Damage damage = new Damage(
+				damageAmount,
+				flinching,
+				(hit[i].transform.position - transform.position).normalized * 5f,
+				Damage.DamageType.Normal
+			);
+			target.OnDamage(damage);
+			Enemy enemy;
+			if (TryGetComponent<Enemy>(out enemy))
+			{
+				if (isAttachmentDamage) enemy.AddAttachment(this.damage);
+				if (isAttachmentInability) enemy.AddAttachment(inability);
+			}
+		}
+		StartCoroutine(InPool());
+
+		if (previewDamageZone)
+		{
+			GameObject previewBox = Instantiate(previewBoxPrefab, transform.position + transform.forward * 5f, QPlayer.instance.transform.rotation);
+			previewBox.transform.localScale = size;
+			Destroy(previewBox, 2f);
+		}
 	}
-
-	public string GetKey()
+	IEnumerator InPool()
 	{
-		return GetKey().ToString();
+		yield return new WaitForSeconds(5f);
+		PoolerManager.instance.InPool(GetKey(), gameObject);
+	}
+	virtual public string GetKey()
+	{
+		return GetType().ToString();
 	}
 }
