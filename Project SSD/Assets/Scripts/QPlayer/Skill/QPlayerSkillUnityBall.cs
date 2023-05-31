@@ -28,6 +28,7 @@ public class QPlayerSkillUnityBall : Skill
 	public GameObject option07_effect;
 	public float option07_increasingSize;
 	public float option07_increasingSkillPower;
+	public float usingSp = 10f;
 
 	float DamageAmout {
 		get {
@@ -76,6 +77,9 @@ public class QPlayerSkillUnityBall : Skill
 	}
 	public override void Use(Vector3 target)
 	{
+		QPlayer.instance.status.sp -= usingSp;
+		property.nowCoolTime = 0;
+
 		Vector3 sponPos = QPlayer.instance.transform.position;
 		sponPos.y = target.y + 1;
 
@@ -132,7 +136,14 @@ public class QPlayerSkillUnityBall : Skill
 	}
 	public override bool CanUse()
 	{
-		return true;
+		if (
+			property.nowCoolTime >= property.coolTime &&
+			QPlayer.instance.status.sp >= usingSp
+			)
+		{
+			return true;
+		}
+		return false;
 	}
 }
 
