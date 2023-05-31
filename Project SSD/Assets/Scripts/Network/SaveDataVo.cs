@@ -21,3 +21,7 @@ public class SaveDataVO {
         JsonUtility.FromJsonOverwrite(saveData, this);
     }
 }
+
+public class ErrorMessage {
+    public string message;
+}

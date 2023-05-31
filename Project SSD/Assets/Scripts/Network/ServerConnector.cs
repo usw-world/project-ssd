@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Text.Json;
 
 using UnityEngine;
 using UnityEngine.Networking;
@@ -27,6 +26,7 @@ public class ServerConnector : MonoBehaviour
         StartCoroutine(LoginCoroutine(json, callback, errorCallback));
     }
     private IEnumerator LoginCoroutine(string postData, Action callback, Action<string> errorCallback=null) {
+        print(1);
         byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
 
         UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/login", "POST");
@@ -49,8 +49,8 @@ public class ServerConnector : MonoBehaviour
 
             callback?.Invoke();
         } else if(request.responseCode == 400) {
-            JsonDocument res = JsonDocument.Parse(json);
-            print(res.RootElement.GetProperty("message").GetString());
+            var error = JsonUtility.FromJson<ErrorMessage>(json);
+            print(error.message);
             errorCallback?.Invoke("아이디 또는 패스워드가 일치하지 않습니다.");
         } else if(request.responseCode == 500) {
             errorCallback?.Invoke("서버가 요청을 처리할 수 없습니다.");
