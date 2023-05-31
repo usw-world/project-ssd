@@ -8,6 +8,9 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 	[SerializeField] private GameObject dotDamagePrefab;
 	public Transform lightningMuzzle;
 
+	[SerializeField] private bool previewDamageZone = false;
+	[SerializeField] private bool previewDotDamageZone = false;
+	private GameObject previewSpherePrefab;
 	private Animator animator;
 	private Attachment shield;
 	private string animationTrigger;
@@ -23,6 +26,7 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 
 	private void Awake()
 	{
+		previewSpherePrefab = Resources.Load("previewSpherePrefab") as GameObject;
 		animator = GetComponent<Animator>();
 	}
 	private void Start()
@@ -33,6 +37,8 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 	public void Run() // 이펙트 시작할때 실행
 	{
 		animator.SetTrigger(animationTrigger);
+		if (isBig) transform.localScale = Vector3.one * 3f;
+		else transform.localScale = Vector3.one;
 	}
 	public void ActiveDamageZone() // 데미지 시작할때 함수
 	{
@@ -57,6 +63,15 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 		}
 		if (isShield) RunShield();
 		if (isDotDamage) StartCoroutine(RunDotDamage());
+		StartCoroutine(InPool());
+
+		if (previewDamageZone)
+		{
+			GameObject previewSphere = Instantiate(previewSpherePrefab, transform.position, transform.rotation);
+			previewSphere.transform.localScale = Vector3.one * size * 1.5f;
+			print(previewSphere.transform.localScale);
+			Destroy(previewSphere, 2f);
+		}
 	}
 	public void Initialize(float damageAmount)
 	{
@@ -91,18 +106,21 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 		{
 			GameObject dotDamageObj = PoolerManager.instance.OutPool(dotDamageEffectKey);
 			dotDamageObj.transform.position = transform.position;
-			dotDamageObj.transform.position += Vector3.up;
+			dotDamageObj.transform.position += new Vector3(0, 0.25f, 0);
 			StartCoroutine(InPoolEffect(dotDamageObj, dotDamageEffectKey, 2f));
 			float size = 2f;
-			if (isBig) size += 1f;
 			if (isAreaTwice)
 			{
 				size = 4f;
-				dotDamageObj.transform.localScale = new Vector3(4f, 0.5f, 4f);
+				dotDamageObj.transform.localScale = new Vector3(2f, 0.2f, 2f);
 			}
 			else
 			{
-				dotDamageObj.transform.localScale = new Vector3(2f, 0.5f, 2f);
+				dotDamageObj.transform.localScale = new Vector3(1f, 0.2f, 1f);
+			}
+			if (isBig) {
+				size += 2f;
+				dotDamageObj.transform.localScale += new Vector3(1f, 0, 1f);
 			}
 			hit = Physics.OverlapSphere(transform.position, size, 1 << 8);
 			for (int j = 0; j < hit.Length; j++)
@@ -118,6 +136,13 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 					);
 					target.OnDamage(damage);
 				}
+			}
+			if (previewDotDamageZone)
+			{
+				GameObject previewSphere = Instantiate(previewSpherePrefab, transform.position, transform.rotation);
+				previewSphere.transform.localScale = Vector3.one * size * 1.5f;
+				print(previewSphere.transform.localScale);
+				Destroy(previewSphere, 0.5f);
 			}
 			yield return new WaitForSeconds(1f);
 		}

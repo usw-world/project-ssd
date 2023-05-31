@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Effect_LightningStrike : Effect_Lightning
+public class Effect_FlagitDotDamage : MonoBehaviour, IPoolableObject
 {
-	override public string GetKey()
+	public string GetKey()
 	{
 		return GetType().ToString();
 	}

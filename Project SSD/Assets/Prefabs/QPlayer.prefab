@@ -174,99 +174,6 @@ MonoBehaviour:
     type: 3}
   option07_increasingSize: 300
   option07_increasingSkillPower: 200
---- !u!1 &990334917
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 990334919}
-  m_Layer: 0
-  m_Name: summor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &990334919
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 990334917}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1539545108}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1040615814
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1040615816}
-  m_Layer: 0
-  m_Name: single point explosion
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1040615816
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1040615814}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1539545108}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1063546360
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1063546362}
-  m_Layer: 0
-  m_Name: FireBall_2
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1063546362
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1063546360}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1539545108}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1539545107
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,10 +203,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 159024193}
-  - {fileID: 1063546362}
-  - {fileID: 990334919}
-  - {fileID: 1040615816}
   - {fileID: 7840320927882399181}
+  - {fileID: 7186774510172318168}
+  - {fileID: 1938260947175486813}
   m_Father: {fileID: 2136718358471914663}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -358,6 +264,100 @@ MonoBehaviour:
   m_Offset: {x: 0, y: 0, z: 50}
   m_Size: {x: 3, y: 3, z: 100}
   m_FadeFactor: 0.321
+--- !u!1 &64595478785733121
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7186774510172318168}
+  - component: {fileID: 4642750732663670702}
+  m_Layer: 0
+  m_Name: Flagit
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7186774510172318168
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 64595478785733121}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1539545108}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4642750732663670702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 64595478785733121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25ab26d8e91192249a1e17b8ed0a32ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimType: 0
+  info:
+    effect: {fileID: 1098564023588801211, guid: bbb85fc32bb49c04c8c74f5a4e1b3f03,
+      type: 3}
+    skillImage: {fileID: 0}
+    skillText: 
+    name: 
+  area:
+    distance: 1
+    range: 1
+  property:
+    coolTime: 0
+    skillAP: 1
+    nowCoolTime: 100
+    isUseSkill: 0
+    ready: 0
+    quickUse: 0
+  options:
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
 --- !u!1 &2136718358471616513
 GameObject:
   m_ObjectHideFlags: 0
@@ -2560,7 +2560,7 @@ MonoBehaviour:
   status:
     speed: 3
     hp: 100
-    sp: 100
+    sp: 9999
     ap: 10
     maxHp: 100
     maxSp: 100
@@ -2576,6 +2576,12 @@ MonoBehaviour:
   skills:
   - {fileID: 815916524}
   - {fileID: 7393513717579459165}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 4642750732663670702}
+  - {fileID: 5595377120989333443}
+  - {fileID: 0}
+  - {fileID: 0}
   skillDistanceDecal: {fileID: 133424475}
   skillTargetAreaDecal: {fileID: 1915510282}
 --- !u!114 &2136718357887273198
@@ -5462,7 +5468,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1539545108}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7393513717579459165
 MonoBehaviour:
@@ -5543,3 +5549,97 @@ MonoBehaviour:
   option06_holdingAndDamage: 15
   option06_damageFrequency: 6
   option07_aoeExplosion: 100
+--- !u!1 &9047360050862676591
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1938260947175486813}
+  - component: {fileID: 5595377120989333443}
+  m_Layer: 0
+  m_Name: Lightning
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1938260947175486813
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9047360050862676591}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1539545108}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5595377120989333443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9047360050862676591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c66d1953f7229834ea2bf5a52725a870, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimType: 0
+  info:
+    effect: {fileID: 6021731790126890362, guid: a6783bc9d7ca38e428d9aa3496884b11,
+      type: 3}
+    skillImage: {fileID: 0}
+    skillText: 
+    name: 
+  area:
+    distance: 1
+    range: 1
+  property:
+    coolTime: 0
+    skillAP: 1
+    nowCoolTime: 100
+    isUseSkill: 0
+    ready: 0
+    quickUse: 0
+  options:
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
