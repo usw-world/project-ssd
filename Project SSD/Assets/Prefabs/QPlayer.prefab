@@ -174,6 +174,7 @@ MonoBehaviour:
     type: 3}
   option07_increasingSize: 300
   option07_increasingSkillPower: 200
+  usingSp: 10
 --- !u!1 &1539545107
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,6 +207,7 @@ Transform:
   - {fileID: 7840320927882399181}
   - {fileID: 7186774510172318168}
   - {fileID: 1938260947175486813}
+  - {fileID: 8793967351446171706}
   m_Father: {fileID: 2136718358471914663}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2577,7 +2579,7 @@ MonoBehaviour:
   - {fileID: 815916524}
   - {fileID: 7393513717579459165}
   - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8961894095574113727}
   - {fileID: 4642750732663670702}
   - {fileID: 5595377120989333443}
   - {fileID: 0}
@@ -5549,6 +5551,101 @@ MonoBehaviour:
   option06_holdingAndDamage: 15
   option06_damageFrequency: 6
   option07_aoeExplosion: 100
+--- !u!1 &7659364530784881967
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8793967351446171706}
+  - component: {fileID: 8961894095574113727}
+  m_Layer: 0
+  m_Name: Shield
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8793967351446171706
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7659364530784881967}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1539545108}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8961894095574113727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7659364530784881967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7031e1a085357ce4faa0b96e56afd318, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimType: 0
+  info:
+    effect: {fileID: 0}
+    skillImage: {fileID: 0}
+    skillText: 
+    name: 
+  area:
+    distance: 1
+    range: 1
+  property:
+    coolTime: 30
+    skillAP: 1
+    nowCoolTime: 100
+    isUseSkill: 0
+    ready: 0
+    quickUse: 0
+  options:
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  explosionPrefab: {fileID: 6795033730232503878, guid: c1bfe936601913a42b8fa6d55f64503f,
+    type: 3}
 --- !u!1 &9047360050862676591
 GameObject:
   m_ObjectHideFlags: 0

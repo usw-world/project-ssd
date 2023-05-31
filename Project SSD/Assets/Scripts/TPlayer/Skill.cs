@@ -16,6 +16,7 @@ abstract public class Skill : MonoBehaviour
 			property.nowCoolTime += Time.deltaTime;
 	}
 	public virtual void Use() { print("함수가 오버라이드 되지 않았습니다"); }
+	public virtual void Use(float damage) { print("함수가 오버라이드 되지 않았습니다"); }
 	public virtual void Use(Vector3 target) { print("함수가 오버라이드 되지 않았습니다"); }
 	public abstract bool CanUse();
 }

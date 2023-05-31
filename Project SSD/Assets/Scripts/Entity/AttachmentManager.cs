@@ -51,5 +51,6 @@ public enum EAttachmentType
 	inability,	// 기절
 	healing,    // 힐
 	shield,     // 쉴드
-	boost       // 공격력 상승
+	boost,      // 공격력 상승
+	etc
 }

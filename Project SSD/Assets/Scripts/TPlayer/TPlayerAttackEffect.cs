@@ -46,6 +46,10 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 				position = tPlayer.transform.position - tPlayer.transform.forward + (tPlayer.transform.forward * 4f) + Vector3.up;
 				hit = Physics.OverlapBox(position, damageZoneSize, tPlayer.transform.rotation, 1 << 8);
 				break;
+			case Mode.CounterAttack:
+				position = tPlayer.transform.position;
+				hit = Physics.OverlapSphere(position, 3f, 1 << 8);
+				break;
 		}
 		if (hit != null)
 		{
@@ -78,6 +82,68 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 			Destroy(previewBox, 2f);
 		}
 	}
+	public void OnActiveMotionTrail(float damageAmount, Transform motionTrail) 
+	{
+		transform.parent = motionTrail;
+		transform.localPosition = localPos;
+		transform.parent = null;
+		transform.rotation = motionTrail.rotation;
+
+		StartCoroutine(Hide());
+
+		Vector3 position = Vector3.zero;
+		Collider[] hit = null;
+
+		switch (mode)
+		{
+			case Mode.Nomal:
+				position = motionTrail.position - motionTrail.forward + (motionTrail.forward * 2f) + Vector3.up;
+				hit = Physics.OverlapBox(position, damageZoneSize, motionTrail.rotation, 1 << 8);
+				break;
+			case Mode.Dodge:
+				position = motionTrail.position - motionTrail.forward - (motionTrail.forward * 2f) + Vector3.up;
+				hit = Physics.OverlapBox(position, damageZoneSize, motionTrail.rotation, 1 << 8);
+				break;
+			case Mode.NonCgargong:
+				position = motionTrail.position - motionTrail.forward + (motionTrail.forward * 4f) + Vector3.up;
+				hit = Physics.OverlapBox(position, damageZoneSize, motionTrail.rotation, 1 << 8);
+				break;
+			case Mode.CounterAttack:
+				position = motionTrail.position;
+				hit = Physics.OverlapSphere(position, 3f, 1 << 8);
+				break;
+		}
+		if (hit != null)
+		{
+			for (int i = 0; i < hit.Length; i++)
+			{
+				IDamageable target = hit[i].GetComponent<IDamageable>();
+
+				if (target != null)
+				{
+					Damage damage = new Damage(
+						damageAmount,
+						.75f,
+						(hit[i].transform.position - transform.position).normalized * 5f,
+						Damage.DamageType.Normal
+					);
+					target.OnDamage(damage);
+
+					GameObject hitEffect = PoolerManager.instance.OutPool(hitEffectKey);
+					hitEffect.transform.position = hit[i].transform.position;
+					hitEffect.transform.position += Vector3.up;
+					hitEffect.transform.parent = null;
+					StartCoroutine(HideHitEffect(hitEffect));
+				}
+			}
+		}
+		if (previewAttackZone)
+		{
+			GameObject previewBox = Instantiate(previewBoxPrefab, position, motionTrail.rotation);
+			previewBox.transform.localScale = damageZoneSize;
+			Destroy(previewBox, 2f);
+		}
+	}
 	public string GetKey()
 	{
 		return GetType() + attackType.ToString();
@@ -102,9 +168,10 @@ enum ETPlayerAttackEffect
 	RM_to_LM, RM_to_LM_Big,
 	RT_to_LB, RT_to_LB_Big,
 	NonCgargong,
-	dodge
+	dodge,
+	CounterAttack
 }
 enum Mode
 {
-	Nomal, Dodge, NonCgargong
+	Nomal, Dodge, NonCgargong, CounterAttack
 }

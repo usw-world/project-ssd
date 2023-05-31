@@ -43,12 +43,15 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private Vector3 nextAttackDirection; // 기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다
 	private Vector3 extraMovingPoint;
 	private string currentAnimationTrigger = "";
+	private float invincibilityAndActionAmount = 0;
 	private float[] chargingMaxTime = { 0.5f, 0.5f, 0.5f };
 	private float idleActionTime = 5f;
 	private float chargingTime = 0;
 	private float rotateSpeed = 30f;
 	private float idleTime = 0;
+	private bool isInvincibilityAndAction = false;
 	private bool isCheckLateDamageTarget = false;
+	private bool isMotionTrail = false;
 	private bool isPressingMRB = false;
 	private bool isSuperArmor = false;
 	private bool isCanAttack = false;
@@ -125,8 +128,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
         idleStateGroup.Add(idleState2);
         idleStateGroup.Add(idleState3);
 
-		trackEffect.dodgeMaehwa.Enable();
-		trackEffect.dodgeMaehwa.Disable();
+		trackEffect.Set();
 
 		InitializeCamera();
 		if (isLocalPlayer) { 
@@ -466,6 +468,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	[ClientRpc]
 	private void TakeDamage(Damage damage)
 	{
+		if (isInvincibilityAndAction)
+			invincibilityAndActionAmount += damage.amount;
+
 		if (isImmune) // 무적이면 실행 안함
 			return;
 
@@ -717,6 +722,12 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		attackCount = (attackCount >= skill.basicAttacks.Length) ? 0 : attackCount;
 		skill.basicAttacks[attackCount].Use();
+		if (isMotionTrail) 
+		{
+			TPlayerMotionTrail motionTrail = trackEffect.GetMotionTrail();
+			TPlayerSkill currSkill = skill.basicAttacks[attackCount] as TPlayerSkill;
+			motionTrail.SetAction(attackCount, currSkill.GetEffectKey());
+		}
 		attackCount++;
 		attackCount = (attackCount >= skill.basicAttacks.Length) ? 0 : attackCount;
 		clipPlayer.effect.slash_01.PlayOneShot();
@@ -814,10 +825,15 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	public void AddShield(TPlayerShield shield)
 	{
 		shieldManager.AddShield(shield);
+		trackEffect.shield.Enable();
 	}
 	public void RemoveShield(TPlayerShield shield)
 	{
 		shieldManager.RemoveShield(shield);
+		if (shieldManager.GetCount() == 0)
+		{
+			trackEffect.shield.Disable();
+		}
 	}
 	public void ChangeHp(float amount)
 	{
@@ -840,6 +856,30 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	public float GetAp() 
 	{
 		return status.GetLastAp();
+	}
+	public void SetActiveInvincibilityAndAction(bool active, EInvincibilityAndActionType type) 
+	{
+		if (active)
+		{
+			isInvincibilityAndAction = true;
+			invincibilityAndActionAmount = 0;
+		}
+		else
+		{
+			switch (type)
+			{
+				case EInvincibilityAndActionType.Counterattack:
+					skill.counterattack.Use(invincibilityAndActionAmount);
+					break;
+				case EInvincibilityAndActionType.Healing:
+					ChangeHp(invincibilityAndActionAmount);
+					break;
+			}
+		}
+	}
+	public void SetACtionMotionTrail(bool active) 
+	{
+		isMotionTrail = active;
 	}
 	#endregion public method
 
@@ -1074,6 +1114,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	#endregion private method
 }
+public enum EInvincibilityAndActionType 
+{
+	None, Counterattack, Healing
+}
 [Serializable]
 public class PlayerStatus
 {
@@ -1125,6 +1169,7 @@ class TPlayerSkillManager
 	public Skill charging_DrawSwordAttack_nonCharging;
 	public Skill[] charging_DrawSwordAttack_7time;
 	public Skill[] combo_1;
+	public Skill counterattack;
 }
 [Serializable]
 class TPlayerCutSceneCam
@@ -1137,6 +1182,25 @@ class TPlayerTrackEffect
 	public Effect_MotionTrail motionTrailEffect;
 	public TrackEffect dodgeMaehwa;
 	public TrackEffect moveSmoke;
+	public TrackEffect shield;
+	public GameObject motionTrailPrefab;
+	[HideInInspector] public string motionTrailKey;
+	public void Set() 
+	{
+		dodgeMaehwa.Enable();
+		dodgeMaehwa.Disable();
+		moveSmoke.Disable();
+		moveSmoke.Enable();
+		shield.Enable();
+		shield.Disable();
+		motionTrailKey = motionTrailPrefab.GetComponent<IPoolableObject>().GetKey();
+		PoolerManager.instance.InsertPooler(motionTrailKey, motionTrailPrefab, false);
+	}
+	public TPlayerMotionTrail GetMotionTrail() 
+	{
+		GameObject motionTrail = PoolerManager.instance.OutPool(motionTrailKey);
+		return motionTrail.GetComponent<TPlayerMotionTrail>();
+	}
 }
 [Serializable]
 class TPayerUI 
@@ -1330,6 +1394,7 @@ class TPlayerShieldManager
 		}
 		return lastDamage;
 	}
+	public int GetCount() { return shields.Count; }
 }
 public class TPlayerShield
 {
