@@ -23,10 +23,10 @@ class Enemy_YBot : MovableEnemy {
     private Vector3 targetPosition;
 
     [SerializeField] private Effect_MotionTrail motionTrailEffect;
-    private SkinnedMeshRenderer[] skinnedRenderers;
+    [SerializeField] private SkinnedMeshRenderer[] skinnedRenderers;
 
     #region Rolling Dodge
-    private const float DECIDING_INTERVAL = 2f;
+    private const float DECIDING_INTERVAL = 0.2f;
     private float currentRollingDodgeCooltime = 0;
     private Coroutine rollingDodgeCoroutine;
 
@@ -58,7 +58,7 @@ class Enemy_YBot : MovableEnemy {
         enemyStateMachine.SetIntialState(idleState);
         InitializeState();
         InitializePoolers();
-        skinnedRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
+        // skinnedRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
     }
     protected override void Update() {
         if(currentRollingDodgeCooltime > 0)
@@ -66,6 +66,7 @@ class Enemy_YBot : MovableEnemy {
         if(currentMineCooltime > 0)
             currentMineCooltime -= Time.deltaTime;
     }
+    float t;
     #endregion Unity Events
 
     private void InitializePoolers() {
@@ -137,11 +138,14 @@ class Enemy_YBot : MovableEnemy {
                 StopCoroutine(hitCoroutine);
         };
         dieState.onActive += (State prevState) => {
-            enemyAnimator.enabled = false;
+            enemyAnimator.SetBool("Die", true);
             enemyStateMachine.isMuted = true;
+            hpSlider.gameObject.SetActive(false);
         };
         dieState.onInactive += (State prevState) => {
-            enemyAnimator.enabled = true;
+            enemyStateMachine.isMuted = false;
+            enemyAnimator.SetBool("Die", false);
+            hpSlider.gameObject.SetActive(true);
         };
         enemyStatesMap.Add(idleState.stateName, idleState);
         enemyStatesMap.Add(chaseState.stateName, chaseState);
@@ -287,7 +291,8 @@ class Enemy_YBot : MovableEnemy {
         float offset = 0;
         float pushedOffset = 0;
         Vector3 pushedDestination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
-        SendChangeState(hitState);
+        if(damage.hittingDuration > 0)
+            SendChangeState(hitState);
         while(offset < damage.hittingDuration) {
             enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World, moveLayerMask);
             pushedOffset += Time.deltaTime * 2;

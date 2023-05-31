@@ -11,14 +11,14 @@ public class Effect_MotionTrail : MonoBehaviour {
     private void Start() {
         effectsPooler = new ObjectPooler(particle.gameObject, OnInPoolParticle, OnOutPoolParticle, this.transform);
     }
-    private void OnInPoolParticle(GameObject gobj) {
-        gobj.SetActive(false);
+    private void OnInPoolParticle(GameObject effect) {
+        effect.SetActive(false);
     }
-    private void OnOutPoolParticle(GameObject gobj) {
-        gobj.SetActive(true);
-        gobj.transform.position = transform.position;
-        gobj.transform.rotation = transform.rotation;
-        StartCoroutine(DelayInPoolCoroutine(gobj, maxDuration));
+    private void OnOutPoolParticle(GameObject effect) {
+        effect.SetActive(true);
+        effect.transform.position = transform.position;
+        effect.transform.rotation = transform.rotation;
+        StartCoroutine(DelayInPoolCoroutine(effect, maxDuration));
     }
     private IEnumerator DelayInPoolCoroutine(GameObject target, float delayTime) {
         yield return new WaitForSeconds(delayTime);
@@ -33,11 +33,10 @@ public class Effect_MotionTrail : MonoBehaviour {
             if(effect.TryGetComponent<ParticleSystem>(out p)
             && effect.TryGetComponent<ParticleSystemRenderer>(out pr)) {
                 Mesh mesh = new Mesh();
-                skinnedMeshes[i].BakeMesh(mesh);
+                skinnedMeshes[i].BakeMesh(mesh, true);
                 pr.SetMeshes(new Mesh[] { mesh });
                 p.Play();
             }
         }
-        
     }
 }

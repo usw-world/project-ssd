@@ -15,6 +15,7 @@ class Enemy_XBot : MovableEnemy {
     }
     private State assaultState = new State("Assault");
     private State jumpAttackState = new State("Jump Attack");
+    private State stunnedState = new State("Stunned");
     private State hitState = new State("Hit");
     private State dieState = new State("Die");
     #endregion States
@@ -102,6 +103,12 @@ class Enemy_XBot : MovableEnemy {
             enemyAnimator.SetBool("Jump Attack", false);
             StopCoroutine(jumpAttackCoroutine);
         };
+        stunnedState.onActive = (State prevState) => {
+            enemyAnimator.SetBool("Stunned", false);
+        };
+        stunnedState.onInactive = (State nextState) => {
+            enemyAnimator.SetBool("Stunned", false);
+        };
         hitState.onActive += (State prevState) => {
             if(prevState.Compare(hitState))
                 enemyAnimator.SetTrigger("Hit Trigger");
@@ -115,16 +122,20 @@ class Enemy_XBot : MovableEnemy {
                 StopCoroutine(hitCoroutine);
         };
         dieState.onActive += (State prevState) => {
-            enemyAnimator.enabled = false;
+            enemyAnimator.SetBool("Die", true);
             enemyStateMachine.isMuted = true;
+            hpSlider.gameObject.SetActive(false);
         };
         dieState.onInactive += (State prevState) => {
-            enemyAnimator.enabled = true;
+            enemyAnimator.SetBool("Die", false);
+            enemyStateMachine.isMuted = false;
+            hpSlider.gameObject.SetActive(true);
         };
         enemyStatesMap.Add(idleState.stateName, idleState);
         enemyStatesMap.Add(chaseState.stateName, chaseState);
         enemyStatesMap.Add(assaultState.stateName, assaultState);
         enemyStatesMap.Add(jumpAttackState.stateName, jumpAttackState);
+        enemyStatesMap.Add(stunnedState.stateName, stunnedState);
         enemyStatesMap.Add(hitState.stateName, hitState);
         enemyStatesMap.Add(dieState.stateName, dieState);
     }
@@ -137,8 +148,8 @@ class Enemy_XBot : MovableEnemy {
 
         if(!TryAssault()
         && !TryJumpAttack()) {
-            if((  enemyStateMachine.Compare(idleState)
-            || enemyStateMachine.Compare(chaseState))
+            if((   enemyStateMachine.Compare(idleState)
+                || enemyStateMachine.Compare(chaseState))
             && !IsArrive) {
                 SendChangeState(chaseState, true);
             }
@@ -229,7 +240,8 @@ class Enemy_XBot : MovableEnemy {
         float offset = 0;
         float pushedOffset = 0;
         Vector3 pushedDestination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
-        SendChangeState(hitState);
+        if(damage.hittingDuration > 0)
+            SendChangeState(hitState);
         while(offset < damage.hittingDuration) {
             enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World, moveLayerMask);
             pushedOffset += Time.deltaTime * 2;

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Text.Json;
+
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -40,14 +41,16 @@ public class ServerConnector : MonoBehaviour
         yield return request.SendWebRequest(); 
         // 요청 보내기
 
+        string json = request.downloadHandler.text;
         if(request.responseCode == 200) {
-            string jsonResponse = request.downloadHandler.text;
 
-            SaveDataVO saveData = new SaveDataVO(jsonResponse);
+            SaveDataVO saveData = new SaveDataVO(json);
             GameManager.instance?.SetSaveData(saveData);
 
             callback?.Invoke();
         } else if(request.responseCode == 400) {
+            JsonDocument res = JsonDocument.Parse(json);
+            print(res.RootElement.GetProperty("message").GetString());
             errorCallback?.Invoke("아이디 또는 패스워드가 일치하지 않습니다.");
         } else if(request.responseCode == 500) {
             errorCallback?.Invoke("서버가 요청을 처리할 수 없습니다.");
@@ -80,8 +83,7 @@ public class ServerConnector : MonoBehaviour
         // 요청 보내기
 
         if (request.responseCode == 200) {
-            string jsonResponse = request.downloadHandler.text; 
-            print(jsonResponse);
+            string jsonResponse = request.downloadHandler.text;
             
             SaveDataVO saveData = new SaveDataVO();
             saveData = JsonUtility.FromJson<SaveDataVO>(jsonResponse);

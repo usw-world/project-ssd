@@ -217,7 +217,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		};
 		dodgeState.onActive = (State prev) => {
 			ChangeAnimation("Dodge");
-			isImmune = true;
+			// isImmune = true;
 			dodgeCoroutine = StartCoroutine(DodgeCoroutine());
 			trackEffect.dodgeMaehwa.Enable();
 
@@ -969,13 +969,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		float offset = 0;
 		Vector3 targetPoint = Vector3.forward;
-
-		while (offset < 1)
-		{
+		
+		while (offset < 1) {
 			offset += Time.deltaTime * 2.5f;
 			Vector3 d = Vector3.Lerp(Vector3.zero, targetPoint, Mathf.Sin(Mathf.PI * .5f + offset * .5f * Mathf.PI));
 			d.y = 0;
 			movement.MoveToward(d * Time.deltaTime * 16f);
+
 			yield return null;
 		}
 	}
@@ -990,7 +990,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			targetPoint.y = transform.position.y;
 			Vector3 dir = Vector3.Lerp(transform.position, targetPoint, Time.deltaTime * 10f) - transform.position;
 			dir.y = 0;
-			movement.MoveToward(dir, Space.World, 5<<6); 
+			movement.MoveToward(dir, Space.World, 1<<6 | 1<<8 | 1<<11); 
 			yield return null;
 		}
 	}

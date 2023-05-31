@@ -22,7 +22,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     [SerializeField] protected float hp;
     protected bool isDead;
 
-    [SerializeField] private Slider hpSlider;
+    [SerializeField] protected Slider hpSlider;
     #endregion Status
 
     protected bool targetInRange;
