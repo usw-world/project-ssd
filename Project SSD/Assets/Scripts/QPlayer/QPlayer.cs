@@ -40,6 +40,7 @@ public class QPlayer : NetworkBehaviour
     State returnState = new State("Return");
     State moveState = new State("Move");
     State unityBallState = new State("Unity Ball");
+    State aoeState = new State("Aoe");
     State prevState;
     string currentAnimationTrigger = "";
     #endregion State Machine
@@ -115,6 +116,7 @@ public class QPlayer : NetworkBehaviour
         statesMap.Add(returnState.stateName, returnState);
         statesMap.Add(moveState.stateName, moveState);
         statesMap.Add(unityBallState.stateName, unityBallState);
+        statesMap.Add(aoeState.stateName, aoeState);
         //statesMap.Add(oneHandCastingState.stateName, oneHandCastingState);
         #endregion Register States
 
@@ -126,31 +128,31 @@ public class QPlayer : NetworkBehaviour
             ChangeAnimation(FLY_ANIMATION_PARAMETER);
         };
         attachedState.onStay += () => {
-			Vector3 targetPos = tPlayerGobj.transform.position;
-			float returnSpeed = 10.0f * Time.deltaTime;
-			targetPos.y += 2;
-			targetPos.x -= 1;
-			Vector3 temp = Vector3.zero;
-			transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref temp, returnSpeed);
-		};
+            Vector3 targetPos = tPlayerGobj.transform.position;
+            float returnSpeed = 10.0f * Time.deltaTime;
+            targetPos.y += 2;
+            targetPos.x -= 1;
+            Vector3 temp = Vector3.zero;
+            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref temp, returnSpeed);
+        };
         attachedState.onInactive += (State nextState) => { };
         #endregion Attached State
-        
+
         #region Return State
         returnState.onActive += (State prevState) => {
             movement.Stop();
             movement.enabled = false;
             ChangeAnimation(FLY_ANIMATION_PARAMETER);
         };
-		returnState.onStay = () =>
-		{
-			Vector3 targetPos = tPlayerGobj.transform.position;
-			float returnSpeed = 10.0f * Time.deltaTime;
-			targetPos.y += 2;
-			targetPos.x -= 1;
-			Vector3 temp = Vector3.zero;
-			transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref temp, returnSpeed);
-		};
+        returnState.onStay = () =>
+        {
+            Vector3 targetPos = tPlayerGobj.transform.position;
+            float returnSpeed = 10.0f * Time.deltaTime;
+            targetPos.y += 2;
+            targetPos.x -= 1;
+            Vector3 temp = Vector3.zero;
+            transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref temp, returnSpeed);
+        };
         returnState.onInactive += (State nextState) => { };
         #endregion Return State
 
@@ -161,7 +163,7 @@ public class QPlayer : NetworkBehaviour
             ChangeAnimation(IDLE_ANIMATION_PARAMETER);
         };
         separatedState.onStay += () => {
-            if(!movement.isArrive)
+            if (!movement.isArrive)
                 ChangeState(moveState, false);
         };
         separatedState.onInactive += (State nextState) => { };
@@ -174,7 +176,7 @@ public class QPlayer : NetworkBehaviour
             ChangeAnimation(FLY_ANIMATION_PARAMETER);
         };
         moveState.onStay += () => {
-            if(movement.isArrive)
+            if (movement.isArrive)
                 ChangeState(separatedState, false);
         };
         moveState.onInactive += (State nextState) => {
@@ -184,18 +186,18 @@ public class QPlayer : NetworkBehaviour
 
         #region UnityBall State
         unityBallState.onActive = (State prevState) =>
-		{
+        {
             transform.LookAt(targetPoint);
             Vector3 qPlayerRot = transform.eulerAngles;
             qPlayerRot.x = 0;
             qPlayerRot.z = 0;
             transform.eulerAngles = qPlayerRot;
             canAttack = false;
-			usingSkill = skills[0];
+            usingSkill = skills[0];
 
-			string animationParameter = "1H Casting";
+            string animationParameter = "1H Casting";
 
-			QPlayerSkillUnityBall skillUnityball = usingSkill as QPlayerSkillUnityBall;
+            QPlayerSkillUnityBall skillUnityball = usingSkill as QPlayerSkillUnityBall;
             //if(skillUnityball != null && skillUnityball.options[7].active)
             //    animationParameter = "2H Casting";
 
@@ -203,10 +205,31 @@ public class QPlayer : NetworkBehaviour
         };
         unityBallState.onStay = () => { };
         unityBallState.onInactive = (State nextState) => { canAttack = true; };
-		#endregion UnityBall State
+        #endregion UnityBall State
 
-		statesSkillMap.Add(skills[0], unityBallState);
+        #region Aoe State
+        aoeState.onActive = (State prevState) =>
+        {
+            transform.LookAt(targetPoint);
+            Vector3 qPlayerRot = transform.eulerAngles;
+            qPlayerRot.x = 0;
+            qPlayerRot.z = 0;
+            transform.eulerAngles = qPlayerRot;
+            canAttack = false;
+            usingSkill = skills[1];
+            ChangeAnimation("1H Casting");
+        };
+        aoeState.onStay = () =>
+        {
+        };
+        aoeState.onInactive = (State nextState) =>
+        {
+            canAttack = true;
+        };
+        #endregion
 
+        statesSkillMap.Add(skills[0], unityBallState);
+        statesSkillMap.Add(skills[1], aoeState); 
 	}
     private IEnumerator ReturnCoroutine() {
         float offset = 0;
