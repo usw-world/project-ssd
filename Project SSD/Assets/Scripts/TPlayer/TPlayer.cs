@@ -725,6 +725,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		if (isMotionTrail) 
 		{
 			TPlayerMotionTrail motionTrail = trackEffect.GetMotionTrail();
+			motionTrail.transform.position = transform.position;
+			motionTrail.transform.rotation = transform.rotation;
 			TPlayerSkill currSkill = skill.basicAttacks[attackCount] as TPlayerSkill;
 			motionTrail.SetAction(attackCount, currSkill.GetEffectKey());
 		}
