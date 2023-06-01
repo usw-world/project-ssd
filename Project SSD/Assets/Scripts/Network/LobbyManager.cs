@@ -12,18 +12,19 @@ public class LobbyManager : MonoBehaviour {
 
     bool isHost { get => SSDNetworkManager.instance.isHost; }
 
+    [SerializeField] private LoadingUI loadingUI;
+    [SerializeField] private NetworkEvent onConnectServer;
+    [SerializeField] private NetworkEvent onErrorConnectServer;
+    [SerializeField] private NetworkEvent onStartWithoutSaveData;
+
     #region Room UI
     [SerializeField] private GameObject lobbyUis;
     [SerializeField] private GameObject roomUis;
-
     [HideInInspector] public string hostName = null;
     [HideInInspector] public string guestName = null;
-
     [SerializeField] private Text hostNameText;
     [SerializeField] private Text guestNameText;
-
     [SerializeField] private InputField addressField;
-
     [SerializeField] private Button startButton;
     #endregion Room UI
 
@@ -43,8 +44,18 @@ public class LobbyManager : MonoBehaviour {
             instance = this;
         else
             Destroy(this.gameObject);
+        
     }
-
+    public void OnClickConnectServer() {
+        loadingUI.OnStartLoading();
+        ServerConnector.instance.Ping(
+            ()             => { onConnectServer?.Invoke(); },
+            (string error) => { onErrorConnectServer?.Invoke(); }
+        );
+    }
+    public void StartWithoutSaveDate() {
+        onStartWithoutSaveData?.Invoke();
+    }
     public void OnClickHostButton() {
         SSDNetworkManager.instance.HostSession();
     }

@@ -21,12 +21,30 @@ public class ServerConnector : MonoBehaviour
     // private string apiUrl = "https://uwu-web.azurewebsites.net";
     private string apiUrl = "http://localhost:5034";
 
+    public void Ping(Action callback=null, Action<string> errorCallback=null) {
+        StartCoroutine(PingCorourine(callback, errorCallback));
+    }
+    private IEnumerator PingCorourine(Action callback=null, Action<string> errorCallback=null) {
+        UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/ping", "");
+        yield return request.SendWebRequest();
+        if(request.responseCode == 200) {
+            callback?.Invoke();
+        } else {
+            ErrorMessage error = JsonUtility.FromJson<ErrorMessage>(request.downloadHandler.text);
+            if(error == null
+            || error.message == ""
+            || error.message == null) {
+                errorCallback?.Invoke("서버에 연결 할 수 없습니다.");
+            } else {
+                errorCallback?.Invoke(error.message);
+            }
+        }
+    }
     public void Login(string id, string password, Action callback=null, Action<string> errorCallback=null) {
         string json = $"{{\"user_id\":\"{id}\",\"user_pw\":\"{password}\"}}";
         StartCoroutine(LoginCoroutine(json, callback, errorCallback));
     }
     private IEnumerator LoginCoroutine(string postData, Action callback, Action<string> errorCallback=null) {
-        print(1);
         byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
 
         UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/login", "POST");
@@ -50,10 +68,10 @@ public class ServerConnector : MonoBehaviour
             callback?.Invoke();
         } else if(request.responseCode == 400) {
             var error = JsonUtility.FromJson<ErrorMessage>(json);
-            print(error.message);
-            errorCallback?.Invoke("아이디 또는 패스워드가 일치하지 않습니다.");
+            errorCallback?.Invoke(error.message);
         } else if(request.responseCode == 500) {
-            errorCallback?.Invoke("서버가 요청을 처리할 수 없습니다.");
+            var error = JsonUtility.FromJson<ErrorMessage>(json);
+            errorCallback?.Invoke(error.message);
         }
         request.Dispose();
     }

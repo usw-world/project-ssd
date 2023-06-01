@@ -15,6 +15,12 @@ namespace uwu_webServer
             {
                 app.UseEndpoints(endpoints =>
                 {
+                    #region
+                    endpoints.MapPost("/ping", async (context) => {
+                        context.Response.StatusCode = StatusCodes.Status200OK;
+                        await context.Response.WriteAsync("pong");
+                    });
+                    #endregion
                     #region 회원가입
                     endpoints.MapPost("/register", async context =>
                     {

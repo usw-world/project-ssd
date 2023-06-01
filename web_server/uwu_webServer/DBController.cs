@@ -15,7 +15,6 @@ namespace uwu_webServer {
         public int UpdateData(string sql) {
             return new MySqlCommand(sql, conn).ExecuteNonQuery();
         }
-
         public string FindId(string token) {
             var answer = "";
             var sql = $"select user_id from user where user_token = '{token}';";
@@ -34,7 +33,6 @@ namespace uwu_webServer {
                 data.Add("token", reader["user_token"].ToString());
             }
         }
-
         private void ReadSkill(MySqlDataReader reader, JsonObject data) {
             while (reader.Read())
             {
