@@ -44,20 +44,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b78a7ca32c7be4b8ca439860a5704332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wheelPrefab: {fileID: 7426704100556097849, guid: 6cbdd74eaa7314db797aaa30f2a0d5fe,
+    type: 3}
+  wheelOption07Prefab: {fileID: 5408000289764332269, guid: 23c8951241ee33c4c9569c306f9e4b0a,
+    type: 3}
+  explosionEffect: {fileID: 7424769584987530233, guid: cd57622868cf044d0a547955ca6fc2f0,
+    type: 3}
   speed: 0
   scale: 0
   strength: 0
   target: {fileID: 0}
   durationTime: 0
-  quantity: 1
+  maxDegree: 0
   distance: 0
   radius: 0
-  usingSkill: 0
-  option7Active: 0
-  option06: 0
-  wheelPrefab: {fileID: 7426704100556097849, guid: 6cbdd74eaa7314db797aaa30f2a0d5fe,
-    type: 3}
-  wheelOption07Prefab: {fileID: 5408000289764332269, guid: 23c8951241ee33c4c9569c306f9e4b0a,
-    type: 3}
-  maxDegree: 0
   index: 0
+  quantity: 1
+  usingSkill: 0
+  option07IsActive: 0
+  option06IsActive: 0

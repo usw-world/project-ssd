@@ -15,11 +15,13 @@ public class TrackEffect : MonoBehaviour
 	}
 	public void Enable()
 	{
+		gameObject.SetActive(true);
 		transform.parent = null;
 		enable = true;
 	}
 	public void Disable() 
 	{
+		gameObject.SetActive(false);
 		transform.position = target.position + offset;
 		transform.parent = target;
 		enable = false; 

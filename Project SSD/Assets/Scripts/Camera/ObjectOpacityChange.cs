@@ -13,7 +13,7 @@ public class ObjectOpacityChange : MonoBehaviour
         ray = Instantiate(rayPrefab, transform);
         //direction = (playerPos - transform.position).normalized;
     }
-    private void LateUpdate()
+    private void Update()
     {
         ray.transform.position = transform.position;
         ray.transform.rotation = transform.rotation;

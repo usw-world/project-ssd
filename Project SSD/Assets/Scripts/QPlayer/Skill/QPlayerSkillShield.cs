@@ -45,17 +45,17 @@ public class QPlayerSkillShield : Skill
 		options[7].name = "전화위복";
 		options[7].info = "0.5초간 파트너가 무적이 됩니다. 무적시간이 끝나면 파트너의 HP를 무적시간때 받은 데미지의 100%만큼 회복합니다.";
 		options[1].active = true;
-		options[3].active = true;
+		//options[3].active = true;
 		options[4].active = true;
 		options[5].active = true;
-		options[6].active = true;
+		options[7].active = true;
 	}
 	private void Start()
 	{
 		explosionKey = explosionPrefab.GetComponent<IPoolableObject>().GetKey();
 		PoolerManager.instance.InsertPooler(explosionKey, explosionPrefab, false);
 	}
-	public override void Use()
+	public override void Use(Vector3 target)
 	{
 		QPlayer.instance.status.sp -= usingSp;
 
@@ -75,18 +75,15 @@ public class QPlayerSkillShield : Skill
 		attachment.onAction = (target) => {
 			TPlayer.instance.AddShield(shield);
 			if (options[4].active) TPlayer.instance.SetACtionMotionTrail(true);
-			if (options[6].active) TPlayer.instance.SetActiveInvincibilityAndAction(true, EInvincibilityAndActionType.Counterattack);
-			if (options[7].active) TPlayer.instance.SetActiveInvincibilityAndAction(true, EInvincibilityAndActionType.Healing);
 		};
 		attachment.onStay = (target) => {
 			if (shield.amount <= 0 && !isExplosion)
 			{
 				// 실드가 공격으로 사라질때
+				TPlayer.instance.RemoveShield(shield);
 				isExplosion = true;
 				if (options[4].active) TPlayer.instance.SetACtionMotionTrail(false);
 				if (options[5].active) Explosion(shieldAmunt);
-				if (options[6].active) TPlayer.instance.SetActiveInvincibilityAndAction(false, EInvincibilityAndActionType.Counterattack);
-				if (options[7].active) TPlayer.instance.SetActiveInvincibilityAndAction(false, EInvincibilityAndActionType.Healing);
 			}
 		};
 		attachment.onInactive = (target) => {
@@ -97,12 +94,25 @@ public class QPlayerSkillShield : Skill
 				isExplosion = true;
 				if (options[4].active) TPlayer.instance.SetACtionMotionTrail(false);
 				if (options[5].active) Explosion(shieldAmunt);
-				if (options[6].active) TPlayer.instance.SetActiveInvincibilityAndAction(false, EInvincibilityAndActionType.Counterattack);
-				if (options[7].active) TPlayer.instance.SetActiveInvincibilityAndAction(false, EInvincibilityAndActionType.Healing);
 			}
 		};
+
 		TPlayer.instance.AddAttachment(attachment);
 
+		if (options[6].active || options[7].active)
+		{
+			Attachment Invincibility = new Attachment(0.5f, 0.1f, info.skillImage, EAttachmentType.inability);
+			Invincibility.onAction = (target) => {
+				if (options[6].active) TPlayer.instance.SetActiveInvincibilityAndAction(true, EInvincibilityAndActionType.Counterattack);
+				if (options[7].active) TPlayer.instance.SetActiveInvincibilityAndAction(true, EInvincibilityAndActionType.Healing);
+			};
+			Invincibility.onStay = (target) => { };
+			Invincibility.onInactive = (target) => {
+				if (options[6].active) TPlayer.instance.SetActiveInvincibilityAndAction(false, EInvincibilityAndActionType.Counterattack);
+				if (options[7].active) TPlayer.instance.SetActiveInvincibilityAndAction(false, EInvincibilityAndActionType.Healing);
+			};
+			TPlayer.instance.AddAttachment(Invincibility);
+		}
 		if (options[2].active) RecoverySp(shieldTime); 
 	}
 	private void RecoverySp(float shieldTime) 
