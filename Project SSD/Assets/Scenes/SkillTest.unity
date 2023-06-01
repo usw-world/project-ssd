@@ -1542,6 +1542,11 @@ PrefabInstance:
       propertyPath: testTarget
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5166133502167492904, guid: ac6c898579b8e2e4484d1c354e346fe4,
+        type: 3}
+      propertyPath: Port
+      value: 7778
+      objectReference: {fileID: 0}
     - target: {fileID: 5166133502167492906, guid: ac6c898579b8e2e4484d1c354e346fe4,
         type: 3}
       propertyPath: m_RootOrder
@@ -32862,7 +32867,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!135 &1096367514
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -45102,7 +45107,7 @@ MonoBehaviour:
   - name: 
     info: 
     image: {fileID: 0}
-    active: 0
+    active: 1
   - name: 
     info: 
     image: {fileID: 0}

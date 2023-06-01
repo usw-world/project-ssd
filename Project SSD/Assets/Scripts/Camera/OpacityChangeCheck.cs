@@ -6,7 +6,7 @@ public class OpacityChangeCheck : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer.Equals(14))
+        if (other.gameObject.layer.Equals(6))
         {
             var color = other.gameObject.GetComponent<MeshRenderer>().material.color;
             var editColor = new Color(color.r, color.g, color.b, 0.5f);
@@ -16,7 +16,7 @@ public class OpacityChangeCheck : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer.Equals(14))
+        if (other.gameObject.layer.Equals(6))
         {
             var color = other.gameObject.GetComponent<MeshRenderer>().material.color;
             var editColor = new Color(color.r, color.g, color.b, 1);
