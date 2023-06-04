@@ -7,17 +7,15 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-	[SerializeField] private List<Image> skillImage;
-	[SerializeField] private List<Image> skillCoolTimeFill;
-	[SerializeField] private List<Image> skillSelect;
-	List<Skill> playerSkills;
-
 	[SerializeField] private TPlayerUI tPlayerUI;
 	[SerializeField] private QPlayerUI qPlayerUI;
 
 	[SerializeField] private Canvas commonHudCanvas;
  	[SerializeField] private GameObject alertUIPrefab;
 	[SerializeField] private EscapeMenu escapeMenu;
+
+	[SerializeField] private Animator fadeInOutAnimator;
+	private Coroutine fadeInOutCoroutine;
 
     private void Awake() {
 		if(instance == null)
@@ -26,39 +24,28 @@ public class UIManager : MonoBehaviour
 			Destroy(this.gameObject);
         DontDestroyOnLoad(gameObject);
 	}
-	private void Update() {
-		if (playerSkills != null)
-		{
-			for (int i = 0; i < playerSkills.Count; i++)
-			{
-				if (playerSkills[i] != null)
-				{
-					skillCoolTimeFill[i].fillAmount = 1 - playerSkills[i].property.nowCoolTime / playerSkills[i].property.coolTime;
-				}
-			}
-			
-		}
+
+	public void FadeIn(float delay=0f, float duration=2f, System.Action callback=null) {
+		fadeInOutAnimator.SetFloat("Fade Speed", 1f/duration);
+		if(fadeInOutCoroutine != null)
+			StopCoroutine(fadeInOutCoroutine);
+		fadeInOutCoroutine = StartCoroutine(FadeInOutCoroutine(true, delay, duration, callback));
 	}
-	public void SetSkillImage(List<Skill> skills)
-	{
-		playerSkills = skills;
-		for (int i = 0; i < skillImage.Count; i++)
-		{
-			skillImage[i].sprite = skills[i].info.skillImage;
-		}
+	public void FadeOut(float delay=0f, float duration=2f, System.Action callback=null) {
+		fadeInOutAnimator.SetFloat("Fade Speed", 1f/duration);
+		if(fadeInOutCoroutine != null)
+			StopCoroutine(fadeInOutCoroutine);
+		fadeInOutCoroutine = StartCoroutine(FadeInOutCoroutine(false, delay, duration, callback));
 	}
-	public void SelectSkill(Skill skill)
-	{
-		UnSelectSkill();
-		int idx = playerSkills.IndexOf(skill);
-		skillSelect[idx].enabled = true;
-	}
-	public void UnSelectSkill()
-	{
-		for (int i = 0; i < skillSelect.Count; i++)
-		{
-			skillSelect[i].enabled = false;
-		}
+	public IEnumerator FadeInOutCoroutine(bool fadeIn, float delay, float duration, System.Action callback) {
+		yield return new WaitForSeconds(delay);
+		if(fadeIn)
+			fadeInOutAnimator.SetTrigger("Fade In");
+		else
+			fadeInOutAnimator.SetTrigger("Fade Out");
+
+		yield return new WaitForSeconds(duration);
+		callback?.Invoke();
 	}
 	public void OnPressEscape() {
 		escapeMenu.OnPressEscape();
