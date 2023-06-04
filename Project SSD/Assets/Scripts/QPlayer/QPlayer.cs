@@ -22,6 +22,7 @@ public class QPlayer : NetworkBehaviour
     private float qPlayerSp;
     bool isAttached = true;
     bool canAttack = true;
+    bool isCanMove = true;
     #endregion Q-Player Status
 
     #region Movement
@@ -258,12 +259,13 @@ public class QPlayer : NetworkBehaviour
 		#region Lightning State
 		lightningState.onActive = (State prevState) =>
 		{
-			transform.LookAt(targetPoint);
+            transform.LookAt(targetPoint);
 			Vector3 qPlayerRot = transform.eulerAngles;
 			qPlayerRot.x = 0;
 			qPlayerRot.z = 0;
 			transform.eulerAngles = qPlayerRot;
 			canAttack = false;
+            isCanMove = false;
 			usingSkill = skills[5];
 			QPlayerSkillLightning lightning = usingSkill as QPlayerSkillLightning;
 
@@ -271,7 +273,7 @@ public class QPlayer : NetworkBehaviour
 
 			if (lightning.options[7].active)
 			{
-				animationParameter = "2H Casting";
+				animationParameter = "1H Stay"; // 임시로 1H로 해둠
 			}
 			if (lightning.options[1].active)
 			{
@@ -281,7 +283,10 @@ public class QPlayer : NetworkBehaviour
 			ChangeAnimation(animationParameter);
 		};
 		lightningState.onStay = () => { };
-		lightningState.onInactive = (State nextState) => { canAttack = true; };
+		lightningState.onInactive = (State nextState) => { 
+            canAttack = true;
+            isCanMove = true;
+        };
 		#endregion Lightning State
 
 		#region Shield State
@@ -304,26 +309,34 @@ public class QPlayer : NetworkBehaviour
 		#region FightGhostFist State
 		fightGhostFistState.onActive = (State prevState) =>
 		{
-			transform.LookAt(TPlayer.instance.transform);
+			transform.LookAt(targetPoint);
 			Vector3 qPlayerRot = transform.eulerAngles;
 			qPlayerRot.x = 0;
 			qPlayerRot.z = 0;
 			transform.eulerAngles = qPlayerRot;
 			canAttack = false;
+			isCanMove = false;
 			usingSkill = skills[6];
 			QPlayerSkillFightGhostFist fightGhostFist = usingSkill as QPlayerSkillFightGhostFist;
 
 			float damageAmount = GetAP() * fightGhostFist.GetSkillPower();
 
-			string animationParameter = "1H Casting";
+			string animationParameter = "1H Stay";
 			if (fightGhostFist.options[3].active)
 				animationParameter += "Fast"; 
 			ChangeAnimation(animationParameter);
 
-			if (fightGhostFist.options[0].active)
-				fightGhostFist.transform.localScale = Vector3.one * 3f;
+            //fightGhostFist.GetEffect().transform.parent = fightGhostFistZone.transform;
+
+            //fightGhostFistZone.gameObject.SetActive(true);
+
+            ParticleSystem.EmissionModule psEmission = fightGhostFistZone.GetComponent<ParticleSystem>().emission;
+            psEmission.rateOverDistance = 5;
+
+            if (fightGhostFist.options[2].active)
+                fightGhostFistZone.transform.localScale = Vector3.one * 4f;
 			else
-				fightGhostFist.transform.localScale = Vector3.one * 1.5f;
+                fightGhostFistZone.transform.localScale = Vector3.one * 1.5f;
 
 			List<IDamageable> damageEnemy = new List<IDamageable>();
 			fightGhostFistZone.onTriggerEnter = (target) => {
@@ -354,7 +367,7 @@ public class QPlayer : NetworkBehaviour
 							OnFightGhostFist(false);
 					}
 				}
-				if (target.gameObject == TPlayer.instance.gameObject)
+				if (fightGhostFist.options[6].active && target.gameObject == TPlayer.instance.gameObject)
 				{
 					bool isActiveShield = true;
 					TPlayerShield shield = new TPlayerShield(damageAmount);
@@ -389,21 +402,26 @@ public class QPlayer : NetworkBehaviour
 			 */
 		};
 		fightGhostFistState.onStay = () => { };
-		fightGhostFistState.onInactive = (State nextState) => { canAttack = true; };
+		fightGhostFistState.onInactive = (State nextState) => { };
 		#endregion FightGhostFist State
 
 		#region fightGhostFistStay State
 		fightGhostFistStayState.onActive = (State prevState) =>
 		{
-			string animationParameter = "1H Stay";
-			ChangeAnimation(animationParameter);
 			if (fightGhostFistCoroutine != null) StopCoroutine(fightGhostFistCoroutine);
 			fightGhostFistCoroutine = StartCoroutine(TimeOutFightGhostFist());
 		};
 		fightGhostFistStayState.onStay = () => {
-			movement.MoveToward(Vector3.forward * Time.deltaTime * 10f);
+			movement.MoveToward(Vector3.forward * Time.deltaTime * 30f);
 		};
-		fightGhostFistStayState.onInactive = (State nextState) => { canAttack = true; };
+		fightGhostFistStayState.onInactive = (State nextState) => { 
+            canAttack = true;
+            isCanMove = true;
+            fightGhostFistZone.onTriggerEnter = null;
+            ParticleSystem.EmissionModule psEmission = fightGhostFistZone.GetComponent<ParticleSystem>().emission;
+            psEmission.rateOverDistance = 0;
+            //fightGhostFistZone.gameObject.SetActive(false);
+        };
 		#endregion FightGhostFistStay State
 		// 
 		statesSkillMap.Add(skills[0], unityBallState);
@@ -416,7 +434,7 @@ public class QPlayer : NetworkBehaviour
 	private Coroutine fightGhostFistCoroutine;
 	private IEnumerator TimeOutFightGhostFist()
 	{
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(.25f);
 		OnFightGhostFist(false);
 	}
 	private IEnumerator ReturnCoroutine() {
@@ -447,6 +465,7 @@ public class QPlayer : NetworkBehaviour
 
     }
     public void ReturnToTPlayer() {
+        if (!isCanMove) return;
         ChangeState(returnState, false);
     }
     public void MouseLeftClick() {
@@ -455,6 +474,7 @@ public class QPlayer : NetworkBehaviour
         }
     }
     public void MouseRightClick() {
+        if (!isCanMove) return;
 		if (isAiming) {
             DisableAim();
             return;
@@ -492,10 +512,6 @@ public class QPlayer : NetworkBehaviour
 			if (stateMachine.currentState == fightGhostFistStayState)
 			{
 				ResetState();
-			}
-			else
-			{
-				print("이미 종료된 무령권");
 			}
 		}
 	}
@@ -601,7 +617,6 @@ public class QPlayer : NetworkBehaviour
         prevState = stateMachine.currentState;
         canAttack = false;
         this.targetPoint = targetPoint;
-		print(skills[skillIndex]);
         stateMachine.ChangeState(statesSkillMap[skills[skillIndex]]);
         DisableAim();
     }

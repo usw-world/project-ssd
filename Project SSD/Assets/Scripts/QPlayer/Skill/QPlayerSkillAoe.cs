@@ -154,7 +154,6 @@ public class QPlayerSkillAoe : Skill
     }
     private void ActiveOption00()   // 공격력 5% 상승
     {
-        float apBoostTemp = 0f;
         AoeBuffer aoeBuffer = AoeBuffer.GetInstance();
         Attachment attachment = new Attachment(option00_buffTime, 1.0f, options[0].image, EAttachmentType.boost);
 
@@ -162,15 +161,14 @@ public class QPlayerSkillAoe : Skill
         {
             attachment.onAction = (gameObject) =>
             {
-                apBoostTemp = TPlayer.instance.status.apBoost;
-                TPlayer.instance.status.apBoost = option00_increaseTPlayerAp;    
+                TPlayer.instance.status.apBoost += option00_increaseTPlayerAp;    
                 isGiveBoostBuff = true;
             };
         }
         attachment.onInactive = (gameObject) =>
         {
             aoeBuffer.onEnter -= ActiveOption00;
-            TPlayer.instance.status.apBoost = apBoostTemp;
+            TPlayer.instance.status.apBoost -= option00_increaseTPlayerAp;
             isGiveBoostBuff = false;
         };
         TPlayer.instance?.AddAttachment(attachment);
@@ -183,22 +181,34 @@ public class QPlayerSkillAoe : Skill
 
     private void ActiveOption02()   // TPlayer 쉴드 최대 체력의 10%
     {
+        float shieldAmount = TPlayer.instance.status.maxHp / option02_generateTPlayerShield;
         AoeBuffer aoeBuffer = AoeBuffer.GetInstance();
         Attachment attachment = new Attachment(option02_buffTime, 1.0f, options[2].image, EAttachmentType.shield);
-        TPlayerShield shield = new TPlayerShield(TPlayer.instance.status.maxHp / option02_generateTPlayerShield);
+        TPlayerShield shield = new TPlayerShield(shieldAmount);
 
         if (isGiveShieldBuff == false)
         {
             attachment.onAction = (gameObject) =>
             {
                 TPlayer.instance?.AddShield(shield);
+                TPlayer.instance.SetACtionMotionTrail(true);
                 isGiveShieldBuff = true;
+            };
+            attachment.onStay = (gameObject) =>
+            {
+                if (shield.amount <= 0)
+                {
+                    TPlayer.instance.RemoveShield(shield);
+                    TPlayer.instance.SetACtionMotionTrail(false);
+                    isGiveShieldBuff = false;
+                }
             };
         }
         attachment.onInactive = (gameObject) =>
         {
             aoeBuffer.onEnter -= ActiveOption02;
             TPlayer.instance?.RemoveShield(shield);
+            TPlayer.instance.SetACtionMotionTrail(false);
             isGiveShieldBuff = false;
         };
         TPlayer.instance?.AddAttachment(attachment);
@@ -206,7 +216,6 @@ public class QPlayerSkillAoe : Skill
 
     private void ActiveOption03()   // TPlayer SP 회복 속도 10% 증가
     {
-        float spTemp = 0f;
         AoeBuffer aoeBuffer = AoeBuffer.GetInstance();
         Attachment attachment = new Attachment(option03_buffTime, 1.0f, options[3].image, EAttachmentType.boost);
 
@@ -214,15 +223,14 @@ public class QPlayerSkillAoe : Skill
         {
             attachment.onAction = (gameObject) =>
             {
-                spTemp = TPlayer.instance.status.recoverySp;
-                TPlayer.instance.status.recoverySp = option03_increaseTPlayerRecoverySp;
+                TPlayer.instance.status.recoverySp += option03_increaseTPlayerRecoverySp;
                 isGiveRecoverySpBuff = true;
             };
         }
         attachment.onInactive = (gameObject) =>
         {
             aoeBuffer.onEnter -= ActiveOption03;
-            TPlayer.instance.status.recoverySp = spTemp;
+            TPlayer.instance.status.recoverySp -= option03_increaseTPlayerRecoverySp;
             isGiveRecoverySpBuff = false;
         };
         TPlayer.instance?.AddAttachment(attachment);

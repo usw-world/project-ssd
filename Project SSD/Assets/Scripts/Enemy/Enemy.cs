@@ -39,6 +39,10 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         enemyAnimator = enemyAnimator==null ? GetComponent<Animator>() : enemyAnimator;
         target = FindObjectOfType<TPlayer>()?.gameObject;
         attachmentManager = GetComponent<AttachmentManager>(); // 버프/디버프 메니저
+		if (attachmentManager == null)
+		{
+            attachmentManager = gameObject.AddComponent<AttachmentManager>();
+        }
     }
     protected virtual void Start() {
         if(SSDNetworkManager.instance.isHost)

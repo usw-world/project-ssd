@@ -22,61 +22,57 @@ namespace uwu_webServer
                     });
                     #endregion
                     #region 회원가입
-                    endpoints.MapPost("/register", async context =>
-                    {
-                        JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
-                        string user_id = requestBody.RootElement.GetProperty("user_id").GetString();
-                        string user_pw = requestBody.RootElement.GetProperty("user_pw").GetString();
-                        var sql = $"select * from user where user_id = '{user_id}'";
-                        var value = new JsonObject(); 
-                        // dbc.SearchTable(sql, "user", value);
-                        Console.WriteLine(value.ToString());
-                        
-                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                        
-                        if (value.ToString().Equals("{}"))
-                        {
-                            context.Response.StatusCode = StatusCodes.Status200OK;
-                            int status;
-                            sql = $"insert into user(user_id, user_pw) values ('{user_id}', '{user_pw}');";
-                            dbc.UpdateData(sql);
-                            sql = $"insert into skill(id) value('{user_id}');";
-                            status = dbc.UpdateData(sql);
-                            if (status != 1)
-                                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                    endpoints.MapPost("/register", async (context) => {
+                        using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8)) {
+                            JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
+
+                            JsonObject answer = new JsonObject();
+
+                            JsonElement idJson;
+                            JsonElement pwdJson;
+
+                            if(requestBody.RootElement.TryGetProperty("user_id", out idJson)
+                            && requestBody.RootElement.TryGetProperty("user_pw", out pwdJson)) {
+                                context.Response.Headers["Content-Type"] = "application/json";
+                                
+                                string? requestId = idJson.GetString();
+                                string? requestPwd = pwdJson.GetString();
+                                if(requestId == null
+                                || requestPwd == null
+                                || requestId == ""
+                                || requestPwd == "") {
+                                    answer["message"] = "아이디와 패스워드는 공백일 수 없습니다.";
+                                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                    await context.Response.WriteAsync(answer.ToString());
+                                    return;
+                                }
+                                bool alreadyExitId = dbc.SearchUser(requestId);
+                                if(!alreadyExitId) {
+                                    dbc.InsertUser(requestId, requestPwd);
+
+                                    string token = GenerateToken() + requestId;
+                                    dbc.SetToken(token, requestId);
+
+                                    answer["token"] = token;
+                                    context.Response.StatusCode = StatusCodes.Status200OK;
+                                    await context.Response.WriteAsync(answer.ToString());
+                                } else {
+                                    answer["message"] = "이미 사용 중인 아이디입니다.";
+                                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                    await context.Response.WriteAsync(answer.ToString());
+                                }
+                            } else {
+                                answer["message"] = "올바르지 않은 요청을 수신하였습니다.";
+                                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                
+                                await context.Response.WriteAsync(answer.ToString());
+                                return;
+                            }
                         }
-                        context.Response.Headers["Content-Type"] = "application/json";
-                        await context.Response.WriteAsync(value.ToString());
                     });
                     #endregion
-                    
-                    endpoints.MapPost("/user", async context =>
-                    {
-                        var sql = "select * from user";
-                        var value = new JsonObject();
-                        // dbc.SearchTable(sql, "user", value);
-                        if (value == null)
-                            return;
-                        context.Response.Headers["Content-Type"] = "application/json";
-                        await context.Response.WriteAsync(value.ToString());
-                    });
-                    // endpoints.Map("/", HandlePostRequest);
-                    endpoints.MapPost("/skill", async context =>
-                    {
-                        var sql = "select * from skill";
-
-                        JsonObject value = new JsonObject();
-                        // dbc.SearchTable(sql, "skill", value);
-                        if (value == null)
-                            return;
-                        context.Response.Headers["Content-Type"] = "application/json";
-                        await context.Response.WriteAsync(value.ToString());
-                    });
-                    
                     #region 로그인 
-                    endpoints.MapPost("/login", async context =>
-                    {
-                        // 요청 바디 파싱
+                    endpoints.MapPost("/login", async (context) => {
                         using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8)) {
                             JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
 
@@ -131,8 +127,7 @@ namespace uwu_webServer
                     #endregion
                     
                     #region 업데이트
-                    endpoints.MapPost("/update", async context =>
-                    {
+                    endpoints.MapPost("/update", async (context) => {
                         using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
                         {
                             var sql = "";
@@ -160,7 +155,7 @@ namespace uwu_webServer
                     });
                     #endregion
                     
-                    endpoints.MapPost("/get-data", async context =>
+                    endpoints.MapPost("/get-data", async (context) =>
                     {
                         using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
                         {
@@ -185,26 +180,6 @@ namespace uwu_webServer
                 
             }
         }
-        
-        // private Task HandlePostRequest(HttpContext context)
-        // {
-        //     if (context.Request.Method == HttpMethods.Post)
-        //     {
-        //         string requestBody;
-        //         using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8))
-        //         {
-        //             requestBody = reader.ReadToEnd();
-        //         }
-        //
-        //         // TODO: 요청 데이터 처리 로직 작성
-        //
-        //         context.Response.StatusCode = StatusCodes.Status200OK;
-        //         return context.Response.WriteAsync("POST 요청이 성공적으로 처리되었습니다.");
-        //     }
-        //
-        //     context.Response.StatusCode = StatusCodes.Status405MethodNotAllowed;
-        //     return Task.CompletedTask;
-        // }
         public string GenerateToken() {
             var bytes = new byte[4];
             System.Security.Cryptography.RandomNumberGenerator.Create().GetBytes(bytes);

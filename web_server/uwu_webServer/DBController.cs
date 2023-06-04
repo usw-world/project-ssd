@@ -12,6 +12,22 @@ namespace uwu_webServer {
             conn.Open();
         }
 
+        public int InsertUser(string userId, string userPw) {
+            string userInsertSql = "INSERT INTO uwu.user (user_id, user_pw) VALUES(@userId, @userPw)";
+            var userCommand = new MySqlCommand(userInsertSql, conn);
+            userCommand.Parameters.Add(new MySqlParameter("@userId", userId));
+            userCommand.Parameters.Add(new MySqlParameter("@userPw", userPw));
+
+            string skillDataInsertSql = "INSERT INTO uwu.skill (id) VALUES(@userId)";
+            var skillDataCommand = new MySqlCommand(skillDataInsertSql, conn);
+            skillDataCommand.Parameters.Add(new MySqlParameter("@userId", userId));
+            if(userCommand.ExecuteNonQuery() >= 0
+            && skillDataCommand.ExecuteNonQuery() >= 0) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
         public int UpdateData(string sql) {
             return new MySqlCommand(sql, conn).ExecuteNonQuery();
         }
@@ -19,16 +35,14 @@ namespace uwu_webServer {
             var answer = "";
             var sql = $"select user_id from user where user_token = '{token}';";
             var reader = new MySqlCommand(sql, conn).ExecuteReader();
-            while (reader.Read())
-            {
+            while (reader.Read()) {
                 answer = reader["user_id"].ToString();
             }
             reader.Close();
             return answer;
         }
         private void ReadUser(MySqlDataReader reader, JsonObject data) {
-            while (reader.Read())
-            {
+            while (reader.Read()) {
                 Console.WriteLine("read user data");
                 data.Add("token", reader["user_token"].ToString());
             }
@@ -47,20 +61,12 @@ namespace uwu_webServer {
         private MySqlConnection conn;
         private const string ConnectionContext = "Server=pjr-uwu.mysql.database.azure.com;UserID = hwan;Password=truelove08!;Database=uwu;";
 
-        public string GenerateToken(int length)
-        {
-            var bits = (length * 6);
-            var byte_size = ((bits + 7) / 8);
-            var byteArray = new byte[byte_size];
-            // crypto.GetBytes(byteArray);
-            RandomNumberGenerator.Create().GetBytes(byteArray);
-            return Convert.ToBase64String(byteArray);
-        }
-        public bool SetToken(string token, string userId)
-        {
-            try
-            {
+        public bool SetToken(string token, string userId) {
+            try {
                 string sql = $"UPDATE user SET user_token='{token}' WHERE user_id='{userId}';";
+                var command = new MySqlCommand("UPDATE user SET user_token=@token WHERE user_id=@userId");
+                command.Parameters.Add(new MySqlParameter("@token", token));
+                command.Parameters.Add(new MySqlParameter("@userId", userId));
                 int status = new MySqlCommand(sql, conn).ExecuteNonQuery();
                 if(status == 1)
                     Console.WriteLine("토큰 변경 성공");
@@ -68,19 +74,20 @@ namespace uwu_webServer {
                     Console.WriteLine("토큰 변경 실패");
                 Console.WriteLine(token);
                 return true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Console.Error.WriteLine(e);
                 return false;
             }
         }
 
-        public bool SearchUser(string userId, Action<MySqlDataReader> callback) {
+        public bool SearchUser(string userId, Action<MySqlDataReader>? callback=null) {
             MySqlDataReader? reader = null;
             try {
                 var command = new MySqlCommand("SELECT * FROM user WHERE user_id=@user_id", conn);
                 command.Parameters.Add(new MySqlParameter("@user_id", userId));
                 reader = command.ExecuteReader();
+                if(!reader.HasRows)
+                    throw new System.Exception("There is no data that is consistent in table.");
                 callback?.Invoke(reader);
                 return true;
             } catch(Exception e) {

@@ -868,6 +868,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		}
 		else
 		{
+			isInvincibilityAndAction = false;
 			switch (type)
 			{
 				case EInvincibilityAndActionType.Counterattack:
