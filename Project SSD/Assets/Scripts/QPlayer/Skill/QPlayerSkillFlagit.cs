@@ -42,9 +42,14 @@ public class QPlayerSkillFlagit : Skill
 		options[6].info = "범위, 대미지 증가";
 		options[7].name = "참참참";
 		options[7].info = "체인스킬로 변경, 3회 연속사용 가능";
-		options[0].active = true;
-		options[2].active = true;
-		options[7].active = true;
+		//options[0].active = true;
+		//options[1].active = true;
+		//options[2].active = true;
+		//options[3].active = true;
+		//options[4].active = true;
+		//options[5].active = true;
+		//options[6].active = true;
+		//options[7].active = true;
 	}
 	private void Start()
 	{
