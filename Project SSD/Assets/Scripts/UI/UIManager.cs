@@ -26,23 +26,23 @@ public class UIManager : MonoBehaviour
 	}
 
 	public void FadeIn(float delay=0f, float duration=2f, System.Action callback=null) {
-		fadeInOutAnimator.SetFloat("Fade Speed", 1f/duration);
 		if(fadeInOutCoroutine != null)
 			StopCoroutine(fadeInOutCoroutine);
 		fadeInOutCoroutine = StartCoroutine(FadeInOutCoroutine(true, delay, duration, callback));
 	}
 	public void FadeOut(float delay=0f, float duration=2f, System.Action callback=null) {
-		fadeInOutAnimator.SetFloat("Fade Speed", 1f/duration);
 		if(fadeInOutCoroutine != null)
 			StopCoroutine(fadeInOutCoroutine);
 		fadeInOutCoroutine = StartCoroutine(FadeInOutCoroutine(false, delay, duration, callback));
 	}
 	public IEnumerator FadeInOutCoroutine(bool fadeIn, float delay, float duration, System.Action callback) {
-		yield return new WaitForSeconds(delay);
+		fadeInOutAnimator.SetFloat("Fade Speed", 0);
 		if(fadeIn)
 			fadeInOutAnimator.SetTrigger("Fade In");
 		else
 			fadeInOutAnimator.SetTrigger("Fade Out");
+		yield return new WaitForSeconds(delay);
+		fadeInOutAnimator.SetFloat("Fade Speed", 1f/duration);
 
 		yield return new WaitForSeconds(duration);
 		callback?.Invoke();

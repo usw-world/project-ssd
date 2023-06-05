@@ -26,6 +26,8 @@ public class LobbyManager : MonoBehaviour {
     [HideInInspector] public string guestName = null;
     [SerializeField] private TMP_Text hostNameText;
     [SerializeField] private TMP_Text guestNameText;
+    [SerializeField] private Image roomTPlayerImage;
+    [SerializeField] private Image roomQPlayerImage;
     [SerializeField] private InputField addressField;
     [SerializeField] private Button startButton;
     #endregion Room UI
@@ -84,6 +86,8 @@ public class LobbyManager : MonoBehaviour {
     public void RefreshRoom() {
         hostNameText.text = hostName ?? "_";
         guestNameText.text = guestName ?? "_";
+        roomTPlayerImage.color = hostName==null ? Color.black : Color.white;
+        roomQPlayerImage.color = guestName==null ? Color.black : Color.white;
         startButton.gameObject.SetActive(SSDNetworkManager.instance.isHost);
     }
     public void OpenLobbyUi() {
@@ -119,5 +123,8 @@ public class LobbyManager : MonoBehaviour {
                 (string error) => { UIManager.instance.AlertMessage(error); }
             );
         }
+    }
+    public void SetIMECompositionMode(bool next) {
+        Input.imeCompositionMode = !next ? IMECompositionMode.Auto : IMECompositionMode.Off;
     }
 }
