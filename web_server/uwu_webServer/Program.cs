@@ -36,7 +36,7 @@ namespace uwu_webServer
                                 context.Response.Headers["Content-Type"] = "application/json";
                                 
                                 string? requestId = idJson.GetString();
-                                string? requestPwd = pwdJson.GetString();
+                                string? requestPwd = ConvertKR2EN(pwdJson.GetString());
                                 if(requestId == null
                                 || requestPwd == null
                                 || requestId == ""
@@ -86,7 +86,7 @@ namespace uwu_webServer
                                 context.Response.Headers["Content-Type"] = "application/json";
                                 
                                 string? requestId = idJson.GetString();
-                                string? requestPwd = pwdJson.GetString();
+                                string? requestPwd = ConvertKR2EN(pwdJson.GetString());
                                 if(requestId == null
                                 || requestPwd == null
                                 || requestId == ""
@@ -128,35 +128,65 @@ namespace uwu_webServer
                     
                     #region 업데이트
                     endpoints.MapPost("/update", async (context) => {
-                        using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
-                        {
-                            var sql = "";
-                            JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
-                            var token = requestBody.RootElement.GetProperty("token").GetString();
-                            var user_id = dbc.FindId(token);
-                            var skillPoint = requestBody.RootElement.GetProperty("skillPoint").GetString();
-                            var skill_UnityBall = requestBody.RootElement.GetProperty("skill_UnityBall");
-                            Console.WriteLine(token+" / "+user_id+" / "+skillPoint+" / "+skill_UnityBall);
-                            sql = $"update skill set skillPoint = '{skillPoint}' where id = '{user_id}'";
-                            dbc.UpdateData(sql);
-                            sql = $"update skill set skill_UnityBall = '{skill_UnityBall}' where id = '{user_id}'";
-                            int result = dbc.UpdateData(sql);
-                            if (result == 1)
-                            {
+                        using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8)) {
+                            // user_id	        varchar(16)         ||       id       	    varchar(255)
+                            // user_pw	        varchar(255)	    ||       t_sklil_data     varchar(255)
+                            // user_token	    varchar(255)        ||       q_sklil_data     varchar(255)
+                            // t_experience	    int	                ||
+                            // t_level	        int	                ||
+                            // q_experience	    int 	            ||
+                            // q_level	        int	                ||
+                            try {
+                                string sql = "";
+                                JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
+                                JsonElement json = requestBody.RootElement;
+
+                                string? token = json.GetProperty("token").GetString();
+                                if(token == null)
+                                    throw new Exception("Invalid request exception.");
+                                string user_id = dbc.FindId(token);
+
+                                int tExp = json.GetProperty("tExp").GetInt16();
+                                int qExp = json.GetProperty("qExp").GetInt16();
+                                int tLevel = json.GetProperty("tLevel").GetInt16();
+                                int qLevel = json.GetProperty("qLevel").GetInt16();
+                                sql = @$"
+                                    UPDATE user SET 
+                                        t_exp='{tExp}', 
+                                        q_exp='{qExp}', 
+                                        t_level='{tLevel}',
+                                        q_level='{qLevel}'
+                                    WHERE 
+                                        user_id='{user_id}'
+                                ";
+                                int result = dbc.UpdateData(sql);
+                                if(result < 0)
+                                    throw new Exception("Failed update user data.");
+                                
+                                string tSkillData = GetHexFromEnumerator(json.GetProperty("tSkillData").EnumerateArray());
+                                string qSkillData = GetHexFromEnumerator(json.GetProperty("qSkillData").EnumerateArray());
+                                sql = @$"
+                                    UPDATE skill SET 
+                                        t_sklil_data='{tSkillData}',
+                                        q_sklil_data='{qSkillData}'
+                                    WHERE 
+                                        id='{user_id}'
+                                ";
+                                result = dbc.UpdateData(sql);
+                                if(result < 0)
+                                    throw new Exception("Failed update skill data.");
+
                                 context.Response.Headers["Content-Type"] = "application/json";
                                 context.Response.StatusCode = StatusCodes.Status200OK;
-                            }
-                            else
-                            {
-                                Console.WriteLine("DB Update Error");
+                            } catch(Exception e) {
+                                Console.Error.WriteLine(e);
                                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                             }
                         }
                     });
                     #endregion
                     
-                    endpoints.MapPost("/get-data", async (context) =>
-                    {
+                    endpoints.MapPost("/get-data", async (context) => {
                         using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
                         {
                             var sql = "";
@@ -174,10 +204,8 @@ namespace uwu_webServer
                         }
                     });
                 });
-            }
-            catch (Exception e)
-            {
-                
+            } catch (Exception e) {
+                Console.Error.WriteLine(e);
             }
         }
         public string GenerateToken() {
@@ -185,14 +213,46 @@ namespace uwu_webServer
             System.Security.Cryptography.RandomNumberGenerator.Create().GetBytes(bytes);
             return Convert.ToHexString(bytes);
         }
+        private string GetHexFromEnumerator(IEnumerator<JsonElement> enumerator) {
+            List<string> result = new List<string>();
+            if(enumerator.MoveNext()) {
+                result.Add(enumerator.Current.GetInt16().ToString("X"));
+            }
+            string.Join(" ", result.ToArray());
+            return string.Join(" ", result);
+        }
+        private string? ConvertKR2EN(string? kr) {
+            return kr?.Replace('ㅂ', 'q')
+            .Replace('ㅈ', 'w')
+            .Replace('ㄷ', 'e')
+            .Replace('ㄱ', 'r')
+            .Replace('ㅅ', 't')
+            .Replace('ㅛ', 'y')
+            .Replace('ㅕ', 'u')
+            .Replace('ㅑ', 'i')
+            .Replace('ㅐ', 'o')
+            .Replace('ㅔ', 'p')
+            .Replace('ㅁ', 'a')
+            .Replace('ㄴ', 's')
+            .Replace('ㅇ', 'd')
+            .Replace('ㄹ', 'f')
+            .Replace('ㅎ', 'g')
+            .Replace('ㅗ', 'h')
+            .Replace('ㅓ', 'j')
+            .Replace('ㅏ', 'k')
+            .Replace('ㅣ', 'l')
+            .Replace('ㅋ', 'z')
+            .Replace('ㅌ', 'x')
+            .Replace('ㅊ', 'c')
+            .Replace('ㅍ', 'v')
+            .Replace('ㅠ', 'b')
+            .Replace('ㅜ', 'n')
+            .Replace('ㅡ', 'm');
+        }
     }
     
-
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
+    public class Program {
+        public static void Main(string[] args){
             CreateHostBuilder(args).Build().Run();
         }
 

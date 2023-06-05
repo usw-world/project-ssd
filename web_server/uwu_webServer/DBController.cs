@@ -18,9 +18,11 @@ namespace uwu_webServer {
             userCommand.Parameters.Add(new MySqlParameter("@userId", userId));
             userCommand.Parameters.Add(new MySqlParameter("@userPw", userPw));
 
-            string skillDataInsertSql = "INSERT INTO uwu.skill (id) VALUES(@userId)";
+            string skillDataInsertSql = "INSERT INTO uwu.skill (id, t_skill_data, q_skill_data) VALUES(@userId, @tSkillData, @qSkillData)";
             var skillDataCommand = new MySqlCommand(skillDataInsertSql, conn);
             skillDataCommand.Parameters.Add(new MySqlParameter("@userId", userId));
+            skillDataCommand.Parameters.Add(new MySqlParameter("@tSkillData", "00 00 00 00 00 00"));
+            skillDataCommand.Parameters.Add(new MySqlParameter("@qSkillData", "00 00 00 00 00 00 00"));
             if(userCommand.ExecuteNonQuery() >= 0
             && skillDataCommand.ExecuteNonQuery() >= 0) {
                 return -1;
