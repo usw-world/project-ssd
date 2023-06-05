@@ -5438,7 +5438,8 @@ MonoBehaviour:
     info: 
     image: {fileID: 0}
     active: 0
-  explosionPrefab: {fileID: 0}
+  explosionPrefab: {fileID: 6051951395916466761, guid: c60c22f33193ddf43bbbd094aed51e21,
+    type: 3}
 --- !u!1 &3087339538322573302
 GameObject:
   m_ObjectHideFlags: 0
