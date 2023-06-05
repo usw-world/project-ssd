@@ -51,9 +51,10 @@ public class QPlayerSkillFightGhostFist : Skill
 	}
 	private void Start()
 	{
-		effectKey = info.effect.GetComponent<IPoolableObject>().GetKey();
+		//effectKey = info.effect.GetComponent<IPoolableObject>().GetKey();
 		explosionKey = explosionPrefab.GetComponent<IPoolableObject>().GetKey();
-		PoolerManager.instance.InsertPooler(effectKey, info.effect, false);
+
+		//PoolerManager.instance.InsertPooler(effectKey, info.effect, false);
 		PoolerManager.instance.InsertPooler(explosionKey, explosionPrefab, false);
 	}
 	public override void Use(Vector3 target)

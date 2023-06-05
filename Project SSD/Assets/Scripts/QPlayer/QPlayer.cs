@@ -47,7 +47,9 @@ public class QPlayer : NetworkBehaviour
     State shieldState = new State("shieldState");
     State fightGhostFistState = new State("fightGhostFistState");
     State fightGhostFistStayState = new State("fightGhostFistStayState");
-    State prevState;
+	State finishSkillState = new State("finishSkillState");
+
+	State prevState;
     string currentAnimationTrigger = "";
     #endregion State Machine
 
@@ -63,9 +65,10 @@ public class QPlayer : NetworkBehaviour
     const string OneHandCasting_ANIMATION_PARAMETER = "1H Casting";
     #endregion Animation
 
-
     [SerializeField] private GameObject qPlayerCamera;
     [SerializeField] private CollisionEventHandler fightGhostFistZone;
+	[SerializeField] private List<GameObject> finishSkillCamera = new List<GameObject>();
+	private Coroutine fightGhostFistCoroutine;
 
 	#region Skill
 	public List<Skill> skills;
@@ -127,6 +130,8 @@ public class QPlayer : NetworkBehaviour
         statesMap.Add(shieldState.stateName, shieldState);
         statesMap.Add(fightGhostFistState.stateName, fightGhostFistState);
         statesMap.Add(fightGhostFistStayState.stateName, fightGhostFistStayState);
+        statesMap.Add(finishSkillState.stateName, finishSkillState);
+
         #endregion Register States
 
         #region Attached State
@@ -423,29 +428,45 @@ public class QPlayer : NetworkBehaviour
             //fightGhostFistZone.gameObject.SetActive(false);
         };
 		#endregion FightGhostFistStay State
-		// 
+
+		#region FinishSkillState State
+		finishSkillState.onActive = (State prevState) =>{
+			canAttack = false;
+			stateMachine.enabled = false;
+			ChangeFinishSkillCamera(0);
+		};
+		finishSkillState.onStay = () => { };
+		finishSkillState.onInactive = (State nextState) => {
+			canAttack = true;
+			stateMachine.enabled = true;
+			ChangeFinishSkillCamera(-1);
+		};
+		#endregion FinishSkillState State
+
 		statesSkillMap.Add(skills[0], unityBallState);
         statesSkillMap.Add(skills[1], aoeState); 
+
 		statesSkillMap.Add(skills[3], shieldState);
 		statesSkillMap.Add(skills[4], flagitState);
 		statesSkillMap.Add(skills[5], lightningState);
 		statesSkillMap.Add(skills[6], fightGhostFistState);
+		statesSkillMap.Add(skills[7], finishSkillState);
 	}
-	private Coroutine fightGhostFistCoroutine;
+	public void ChangeFinishSkillCamera(int idx)
+	{
+		if (SSDNetworkManager.instance.isHost) return;
+
+		for (int i = 0; i<finishSkillCamera.Count; i++)
+			finishSkillCamera[i].SetActive(false);
+
+		if (idx != -1)
+			finishSkillCamera[idx].SetActive(true);
+	}
 	private IEnumerator TimeOutFightGhostFist()
 	{
 		yield return new WaitForSeconds(.25f);
 		OnFightGhostFist(false);
 	}
-	private IEnumerator ReturnCoroutine() {
-        float offset = 0;
-        while(offset < 1) {
-            offset += Time.deltaTime;
-            transform.position = Vector3.Lerp(transform.position, tPlayerGobj.transform.position, offset);
-            yield return null;
-        }
-        ChangeState(attachedState, false);
-    }
     private void InitializeCamera() {
         if(isLocalPlayer
 		&& PlayerCamera.instance == null) {
@@ -515,6 +536,7 @@ public class QPlayer : NetworkBehaviour
 			}
 		}
 	}
+
 	#region Change State With Network
 	private void ChangeState(State state, bool intoSelf=true) {
         if(isLocalPlayer)
@@ -543,7 +565,6 @@ public class QPlayer : NetworkBehaviour
         currentAnimationTrigger = trigger;
         animator.SetTrigger(currentAnimationTrigger);
     }
-
     public void OnSkill(int index) {
         //if (index > skills.Count) {
         //    Debug.LogWarning("Skill index want to use is out of range.");
