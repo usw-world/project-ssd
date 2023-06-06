@@ -54,6 +54,7 @@ namespace uwu_webServer
                                     dbc.SetToken(token, requestId);
 
                                     answer["token"] = token;
+                                    answer["userId"] = requestId;
                                     context.Response.StatusCode = StatusCodes.Status200OK;
                                     await context.Response.WriteAsync(answer.ToString());
                                 } else {
@@ -112,6 +113,7 @@ namespace uwu_webServer
                                 if(successSearchUser) {
                                     dbc.SetToken(token, requestId);
                                     answer["token"] = token;
+                                    answer["userId"] = requestId;
                                     context.Response.StatusCode = StatusCodes.Status200OK;
                                     await context.Response.WriteAsync(answer.ToString());
                                 }

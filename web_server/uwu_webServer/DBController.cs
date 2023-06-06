@@ -70,11 +70,11 @@ namespace uwu_webServer {
                 command.Parameters.Add(new MySqlParameter("@token", token));
                 command.Parameters.Add(new MySqlParameter("@userId", userId));
                 int status = new MySqlCommand(sql, conn).ExecuteNonQuery();
-                if(status == 1)
-                    Console.WriteLine("토큰 변경 성공");
-                else
-                    Console.WriteLine("토큰 변경 실패");
-                Console.WriteLine(token);
+                // if(status == 1)
+                //     Console.WriteLine("토큰 변경 성공");
+                // else
+                //     Console.WriteLine("토큰 변경 실패");
+                // Console.WriteLine(token);
                 return true;
             } catch (Exception e) {
                 Console.Error.WriteLine(e);

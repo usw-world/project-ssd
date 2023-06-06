@@ -98,9 +98,9 @@ public class LobbyManager : MonoBehaviour {
         lobbyUis.SetActive(false);
         roomUis.SetActive(true);
     }
-    public void OnClickStartButton() {
-        SSDNetworkManager.instance.StartGame();
-    } 
+    public void OnClickStartButton(string sceneName) {
+        SSDNetworkManager.instance.LoadScene(sceneName);
+    }
 
     public void Login() {
         ServerConnector connector = ServerConnector.instance;
@@ -125,6 +125,10 @@ public class LobbyManager : MonoBehaviour {
         }
     }
     public void SetIMECompositionMode(bool next) {
-        Input.imeCompositionMode = !next ? IMECompositionMode.Auto : IMECompositionMode.Off;
+        StartCoroutine(SetIMECompositionModeDelay(next));
+    }
+    private System.Collections.IEnumerator SetIMECompositionModeDelay(bool next) {
+        yield return null;
+        Input.imeCompositionMode = next ? IMECompositionMode.Auto : IMECompositionMode.Off;
     }
 }

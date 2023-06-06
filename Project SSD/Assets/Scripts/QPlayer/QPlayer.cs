@@ -117,8 +117,8 @@ public class QPlayer : NetworkBehaviour
         tPlayerGobj = TPlayer.instance?.gameObject ?? GameObject.FindGameObjectWithTag("TPlayer");
         stamina = maxStamina;
 
-        InitializedState();
         InitializeCamera();
+        InitializedState();
     }
     private void InitializedState() {
         #region Register States

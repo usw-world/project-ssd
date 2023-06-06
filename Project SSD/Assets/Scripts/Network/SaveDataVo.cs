@@ -5,6 +5,7 @@ using UnityEngine;
 
 [Serializable]
 public class SaveDataVO {
+    public string userId = "";
     public string token = "";
 
     public int tExp = 0;
