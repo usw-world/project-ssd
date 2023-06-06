@@ -50,6 +50,7 @@ public class QPlayer : NetworkBehaviour
     State fightGhostFistStayState = new State("fightGhostFistStayState");
 	State finishSkillState = new State("finishSkillState");
 	State finishSkillRailgun = new State("finishSkillRailgun");
+	State finishSkillRush = new State("finishSkillRush");
 
 	State prevState;
     string currentAnimationTrigger = "";
@@ -135,7 +136,7 @@ public class QPlayer : NetworkBehaviour
         statesMap.Add(fightGhostFistStayState.stateName, fightGhostFistStayState);
         statesMap.Add(finishSkillState.stateName, finishSkillState);
         statesMap.Add(finishSkillRailgun.stateName, finishSkillRailgun);
-
+        statesMap.Add(finishSkillRush.stateName, finishSkillRush);
         #endregion Register States
 
         #region Attached State
@@ -452,21 +453,34 @@ public class QPlayer : NetworkBehaviour
             StartCoroutine(FinishSkillRailRunDamage());
         };
         finishSkillRailgun.onStay = () => {
+            targetPoint = GetAimingPoint();
             Quaternion currRot = transform.rotation;
-			transform.LookAt(GetAimingPoint());
+			transform.LookAt(targetPoint);
 			Quaternion targetRot = transform.rotation;
             transform.rotation = currRot;
             transform.rotation = Quaternion.Lerp(currRot, targetRot, Time.deltaTime);
 		};
         finishSkillRailgun.onInactive = (State nextState) => {
+            OnFinishSkillEffect(-1);
+            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+        };
+        #endregion FinishSkillRailgun State
+
+        #region FinishSkillRush State
+        finishSkillRush.onActive = (State prevState) => {
+            ChangeAnimation("power up");
+            ChangeFinishSkillCamera(2);
+        };
+        finishSkillRush.onStay = () => { };
+        finishSkillRush.onInactive = (State nextState) => {
             canAttack = true;
             isCanMove = true;
             movement.enabled = true;
             GetComponent<NavMeshAgent>().enabled = true;
             ChangeFinishSkillCamera(-1);
-            OnFinishSkillEffect(-1);
+            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
         };
-        #endregion FinishSkillRailgun State
+        #endregion FinishSkillRush State
 
         statesSkillMap.Add(skills[0], unityBallState);
         statesSkillMap.Add(skills[1], aoeState); 
@@ -497,6 +511,9 @@ public class QPlayer : NetworkBehaviour
                 ChangeAnimation("rail gun");
                 ChangeFinishSkillCamera(4);
                 break;
+            case 5:
+                stateMachine.ChangeState(finishSkillRush,false);
+                break;
         }
     }
     public void OnFinishSkillEffect(int idx) 
@@ -523,12 +540,12 @@ public class QPlayer : NetworkBehaviour
 	}
     private IEnumerator FinishSkillRailRunDamage() 
     {
-		for (int i = 0; i < 30; i++)
+		for (int i = 0; i < 50; i++)
 		{
             
             yield return new WaitForSeconds(0.1f);
-		}
-        ResetState();
+        }
+        FinishSkillCutSceneControl(5);
     }
     private IEnumerator FinishSkillEffect()
 	{
