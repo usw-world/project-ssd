@@ -274,11 +274,11 @@ public class QPlayer : NetworkBehaviour
 			usingSkill = skills[5];
 			QPlayerSkillLightning lightning = usingSkill as QPlayerSkillLightning;
 
-			string animationParameter = "1H Casting";
+			string animationParameter = "2H Casting";
 
 			if (lightning.options[7].active)
 			{
-				animationParameter = "1H Stay"; // 임시로 1H로 해둠
+				animationParameter = "2H Stay"; 
 			}
 			if (lightning.options[1].active)
 			{
@@ -431,6 +431,7 @@ public class QPlayer : NetworkBehaviour
 
 		#region FinishSkillState State
 		finishSkillState.onActive = (State prevState) =>{
+            print("asd");
 			canAttack = false;
 			stateMachine.enabled = false;
 			ChangeFinishSkillCamera(0);
@@ -454,7 +455,7 @@ public class QPlayer : NetworkBehaviour
 	}
 	public void ChangeFinishSkillCamera(int idx)
 	{
-		if (SSDNetworkManager.instance.isHost) return;
+		//if (SSDNetworkManager.instance.isHost) return;
 
 		for (int i = 0; i<finishSkillCamera.Count; i++)
 			finishSkillCamera[i].SetActive(false);
@@ -503,7 +504,7 @@ public class QPlayer : NetworkBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 150f, 1<<6)) {
             movingDestination = new Vector3(hit.point.x, transform.position.y, hit.point.z);
-            movement.MoveToPoint(movingDestination, movingSpeed);
+            movement.MoveToPoint(movingDestination, 5f);
             transform.LookAt(movingDestination);
             ChangeState(moveState, false);
         }
@@ -573,15 +574,12 @@ public class QPlayer : NetworkBehaviour
         if (!canAttack) return;
 
         Skill selectedSkill = skills[index]; // 사용하고자 하는 스킬 가져오기
-        if (!selectedSkill.CanUse())
-            return;
+        if (!selectedSkill.CanUse()) return;
 
-        if(!selectedSkill.property.ready // if | skill type is instant-using
-        ||                               // or
-        (  isAiming                      // if | currently player is aiming with skill
-        && aimingSkillIndex == index)) { // and| pressed skill is same to currently aiming skill
+        if (!selectedSkill.property.ready ||(  isAiming && aimingSkillIndex == index)) {
             CmdUseAmingSkill(index, GetAimingPoint());
-        } else {
+        } 
+        else {
             aimingSkillIndex = index;
             EnableAim();
         }
