@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 using Mirror;
 using UnityEngine.Rendering.Universal;
@@ -48,6 +49,7 @@ public class QPlayer : NetworkBehaviour
     State fightGhostFistState = new State("fightGhostFistState");
     State fightGhostFistStayState = new State("fightGhostFistStayState");
 	State finishSkillState = new State("finishSkillState");
+	State finishSkillRailgun = new State("finishSkillRailgun");
 
 	State prevState;
     string currentAnimationTrigger = "";
@@ -68,6 +70,7 @@ public class QPlayer : NetworkBehaviour
     [SerializeField] private GameObject qPlayerCamera;
     [SerializeField] private CollisionEventHandler fightGhostFistZone;
 	[SerializeField] private List<GameObject> finishSkillCamera = new List<GameObject>();
+	[SerializeField] private List<GameObject> finishSkillEffect = new List<GameObject>();
 	private Coroutine fightGhostFistCoroutine;
 
 	#region Skill
@@ -131,6 +134,7 @@ public class QPlayer : NetworkBehaviour
         statesMap.Add(fightGhostFistState.stateName, fightGhostFistState);
         statesMap.Add(fightGhostFistStayState.stateName, fightGhostFistStayState);
         statesMap.Add(finishSkillState.stateName, finishSkillState);
+        statesMap.Add(finishSkillRailgun.stateName, finishSkillRailgun);
 
         #endregion Register States
 
@@ -431,20 +435,40 @@ public class QPlayer : NetworkBehaviour
 
 		#region FinishSkillState State
 		finishSkillState.onActive = (State prevState) =>{
-            print("asd");
 			canAttack = false;
-			stateMachine.enabled = false;
-			ChangeFinishSkillCamera(0);
+            isCanMove = false;
+            movement.enabled = false;
+            GetComponent<NavMeshAgent>().enabled = false;
+            ChangeAnimation("rise");
+            FinishSkillCutSceneControl(0);
 		};
 		finishSkillState.onStay = () => { };
-		finishSkillState.onInactive = (State nextState) => {
-			canAttack = true;
-			stateMachine.enabled = true;
-			ChangeFinishSkillCamera(-1);
-		};
-		#endregion FinishSkillState State
+		finishSkillState.onInactive = (State nextState) => { };
+        #endregion FinishSkillState State
 
-		statesSkillMap.Add(skills[0], unityBallState);
+        #region FinishSkillRailgun State
+        finishSkillRailgun.onActive = (State prevState) => {
+            transform.LookAt(targetPoint);
+            StartCoroutine(FinishSkillRailRunDamage());
+        };
+        finishSkillRailgun.onStay = () => {
+            Quaternion currRot = transform.rotation;
+			transform.LookAt(GetAimingPoint());
+			Quaternion targetRot = transform.rotation;
+            transform.rotation = currRot;
+            transform.rotation = Quaternion.Lerp(currRot, targetRot, Time.deltaTime);
+		};
+        finishSkillRailgun.onInactive = (State nextState) => {
+            canAttack = true;
+            isCanMove = true;
+            movement.enabled = true;
+            GetComponent<NavMeshAgent>().enabled = true;
+            ChangeFinishSkillCamera(-1);
+            OnFinishSkillEffect(-1);
+        };
+        #endregion FinishSkillRailgun State
+
+        statesSkillMap.Add(skills[0], unityBallState);
         statesSkillMap.Add(skills[1], aoeState); 
 
 		statesSkillMap.Add(skills[3], shieldState);
@@ -453,6 +477,105 @@ public class QPlayer : NetworkBehaviour
 		statesSkillMap.Add(skills[6], fightGhostFistState);
 		statesSkillMap.Add(skills[7], finishSkillState);
 	}
+    public void FinishSkillCutSceneControl(int idx)
+    {
+        switch (idx)
+		{
+            case 0:
+                StartCoroutine(FinishSkillRise()); 
+                break;
+            case 1:
+                StartCoroutine(FinishSkillSpell());
+                break;
+            case 2:
+                StartCoroutine(FinishSkillEffect());
+                break;
+            case 3:
+                StartCoroutine(FinishSkillBeforeAttack());
+                break; 
+            case 4:
+                ChangeAnimation("rail gun");
+                ChangeFinishSkillCamera(4);
+                break;
+        }
+    }
+    public void OnFinishSkillEffect(int idx) 
+    {
+		switch (idx)
+		{
+            case -1:
+                finishSkillEffect[2].SetActive(false);
+                break;
+            case 0:
+                finishSkillEffect[0].SetActive(true);
+                break;
+            case 1:
+                finishSkillEffect[1].SetActive(true);
+                FinishSkillCutSceneControl(3);
+                break;
+            case 2:
+                finishSkillEffect[0].SetActive(false);
+                finishSkillEffect[1].SetActive(false); 
+                finishSkillEffect[2].SetActive(true);
+                stateMachine.ChangeState(finishSkillRailgun, false);
+                break;
+		}
+	}
+    private IEnumerator FinishSkillRailRunDamage() 
+    {
+		for (int i = 0; i < 30; i++)
+		{
+            
+            yield return new WaitForSeconds(0.1f);
+		}
+        ResetState();
+    }
+    private IEnumerator FinishSkillEffect()
+	{
+        ChangeFinishSkillCamera(2);
+        yield return new WaitForSeconds(0.3f);
+        ChangeAnimation("effect on");
+    }
+    private IEnumerator FinishSkillBeforeAttack() 
+    {
+        yield return new WaitForSeconds(1f);
+        ChangeAnimation("face_eyes_open");
+        ChangeFinishSkillCamera(3);
+        yield return new WaitForSeconds(1f);
+        FinishSkillCutSceneControl(4);
+    }
+    private IEnumerator FinishSkillSpell()
+    {
+        ChangeAnimation("face_eyes_close");
+        yield return new WaitForSeconds(1f);
+        ChangeFinishSkillCamera(1);
+        int currRandom = 1;
+        for (int i = 0; i < 15; i++)
+		{
+            string animatorTrgger = "face_speak_" + currRandom;
+            int tempRandom = Random.Range(0, 3);
+			while (tempRandom == currRandom)
+			{
+                tempRandom = Random.Range(0, 3);
+            }
+            currRandom = tempRandom;
+            animator.SetTrigger(animatorTrgger);
+            yield return new WaitForSeconds(0.1f);
+        }
+        FinishSkillCutSceneControl(2);
+    }
+    private IEnumerator FinishSkillRise()
+    {
+        ChangeFinishSkillCamera(0);
+        float time = 0;
+		while (time < 2f)
+		{
+            transform.position += Vector3.up * Time.deltaTime * 5f;
+            time += Time.deltaTime;
+            yield return null;
+        }
+        FinishSkillCutSceneControl(1);
+    }
 	public void ChangeFinishSkillCamera(int idx)
 	{
 		//if (SSDNetworkManager.instance.isHost) return;
@@ -478,13 +601,6 @@ public class QPlayer : NetworkBehaviour
     }
     void Update() {
         UpdateTargetArea();
-        SeparatedUpdate();
-    }
-    public void SeparatedUpdate() {
-
-    }
-    public void DecreaseStamina() {
-
     }
     public void ReturnToTPlayer() {
         if (!isCanMove) return;
