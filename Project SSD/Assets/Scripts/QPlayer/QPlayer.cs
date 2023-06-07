@@ -530,17 +530,19 @@ public class QPlayer : NetworkBehaviour
 				break; 
             case 4: // 애너지파 발사 직전
 				ChangeFinishSkillCamera(3);
+                finishSkillCamera[3].transform.LookAt(targetPoint);
 				break;
             case 5: // 애너지파 발사
-				finishSkillEffect[0].SetActive(false);
-				finishSkillEffect[1].SetActive(false);
-				finishSkillEffect[2].SetActive(true);
-				StartCoroutine(FinishSkillRailRunDamage());
+                finishSkillEffect[0].SetActive(false);
+                finishSkillEffect[1].SetActive(false);
+                finishSkillEffect[2].SetActive(true);
+                finishSkillEffect[2].transform.LookAt(targetPoint);
+                StartCoroutine(FinishSkillRailRunDamage());
 				break;
 			case 6: // 파워업
 				ChangeFinishSkillCamera(2);
 				finishSkillEffect[2].SetActive(false);
-				break;
+                break;
 			case 7: // 파워업 이펙트
 				//finishSkillEffect[3].SetActive(true);
 				break;
@@ -552,7 +554,8 @@ public class QPlayer : NetworkBehaviour
 			case 10: // 돌진 종료
 				ChangeFinishSkillCamera(-1);
 				ResetState();
-				break;
+                ChangeAnimation("face_idle");
+                break;
 		}
     }
 	public void ChangeFinishSkillCamera(int idx)
