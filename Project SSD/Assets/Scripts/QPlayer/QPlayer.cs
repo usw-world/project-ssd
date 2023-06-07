@@ -51,6 +51,7 @@ public class QPlayer : NetworkBehaviour
 	State finishSkillState = new State("finishSkillState");
 	State finishSkillRailgun = new State("finishSkillRailgun");
 	State finishSkillRush = new State("finishSkillRush");
+	State finishSkillRushStay = new State("finishSkillRushStay");
 
 	State prevState;
     string currentAnimationTrigger = "";
@@ -113,6 +114,7 @@ public class QPlayer : NetworkBehaviour
         //Cursor.lockState = CursorLockMode.Locked;
 
         stateMachine.SetIntialState(attachedState);
+		Application.targetFrameRate = 60;
     }
     void Start() {
         tPlayerGobj = TPlayer.instance?.gameObject ?? GameObject.FindGameObjectWithTag("TPlayer");
@@ -137,6 +139,7 @@ public class QPlayer : NetworkBehaviour
         statesMap.Add(finishSkillState.stateName, finishSkillState);
         statesMap.Add(finishSkillRailgun.stateName, finishSkillRailgun);
         statesMap.Add(finishSkillRush.stateName, finishSkillRush);
+        statesMap.Add(finishSkillRushStay.stateName, finishSkillRushStay);
         #endregion Register States
 
         #region Attached State
@@ -436,15 +439,25 @@ public class QPlayer : NetworkBehaviour
 
 		#region FinishSkillState State
 		finishSkillState.onActive = (State prevState) =>{
+			transform.LookAt(targetPoint);
+			Vector3 qPlayerRot = transform.eulerAngles;
+			qPlayerRot.x = 0;
+			qPlayerRot.z = 0;
+			transform.eulerAngles = qPlayerRot;
 			canAttack = false;
             isCanMove = false;
-            movement.enabled = false;
-            GetComponent<NavMeshAgent>().enabled = false;
-            ChangeAnimation("rise");
-            FinishSkillCutSceneControl(0);
+            ChangeAnimation("finish attack");
+   //         movement.enabled = false;
+   //         GetComponent<NavMeshAgent>().enabled = false;
+   //         ChangeAnimation("rise");
+   //         FinishSkillCutSceneControl(0);
+
 		};
 		finishSkillState.onStay = () => { };
-		finishSkillState.onInactive = (State nextState) => { };
+		finishSkillState.onInactive = (State nextState) => {
+			canAttack = true;
+			isCanMove = true;
+		};
         #endregion FinishSkillState State
 
         #region FinishSkillRailgun State
@@ -461,7 +474,6 @@ public class QPlayer : NetworkBehaviour
             transform.rotation = Quaternion.Lerp(currRot, targetRot, Time.deltaTime);
 		};
         finishSkillRailgun.onInactive = (State nextState) => {
-            OnFinishSkillEffect(-1);
             transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
         };
         #endregion FinishSkillRailgun State
@@ -472,17 +484,23 @@ public class QPlayer : NetworkBehaviour
             ChangeFinishSkillCamera(2);
         };
         finishSkillRush.onStay = () => { };
-        finishSkillRush.onInactive = (State nextState) => {
-            canAttack = true;
-            isCanMove = true;
-            movement.enabled = true;
-            GetComponent<NavMeshAgent>().enabled = true;
-            ChangeFinishSkillCamera(-1);
-            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-        };
-        #endregion FinishSkillRush State
+        finishSkillRush.onInactive = (State nextState) => { };
+		#endregion FinishSkillRush State
 
-        statesSkillMap.Add(skills[0], unityBallState);
+		#region FinishSkillRushStay State
+		finishSkillRushStay.onActive = (State prevState) => { };
+		finishSkillRush.onStay = () => { };
+		finishSkillRush.onInactive = (State nextState) => {
+			canAttack = true;
+			isCanMove = true;
+			movement.enabled = true;
+			GetComponent<NavMeshAgent>().enabled = true;
+			ChangeFinishSkillCamera(-1);
+			transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+		};
+		#endregion FinishSkillRushStay State
+
+		statesSkillMap.Add(skills[0], unityBallState);
         statesSkillMap.Add(skills[1], aoeState); 
 
 		statesSkillMap.Add(skills[3], shieldState);
@@ -495,114 +513,68 @@ public class QPlayer : NetworkBehaviour
     {
         switch (idx)
 		{
-            case 0:
-                StartCoroutine(FinishSkillRise()); 
-                break;
-            case 1:
-                StartCoroutine(FinishSkillSpell());
-                break;
-            case 2:
-                StartCoroutine(FinishSkillEffect());
-                break;
-            case 3:
-                StartCoroutine(FinishSkillBeforeAttack());
-                break; 
-            case 4:
-                ChangeAnimation("rail gun");
-                ChangeFinishSkillCamera(4);
-                break;
-            case 5:
-                stateMachine.ChangeState(finishSkillRush,false);
-                break;
-        }
-    }
-    public void OnFinishSkillEffect(int idx) 
-    {
-		switch (idx)
-		{
-            case -1:
-                finishSkillEffect[2].SetActive(false);
-                break;
-            case 0:
-                finishSkillEffect[0].SetActive(true);
-                break;
-            case 1:
-                finishSkillEffect[1].SetActive(true);
-                FinishSkillCutSceneControl(3);
-                break;
-            case 2:
-                finishSkillEffect[0].SetActive(false);
-                finishSkillEffect[1].SetActive(false); 
-                finishSkillEffect[2].SetActive(true);
-                stateMachine.ChangeState(finishSkillRailgun, false);
-                break;
+            case 0:	// 상승
+				ChangeFinishSkillCamera(0);
+				ChangeAnimation("face_eyes_close");
+				break;
+            case 1: // 눈 부릅
+				ChangeFinishSkillCamera(1);
+				ChangeAnimation("face_eyes_open");
+				break;
+            case 2: // 카메라 앞으로
+				ChangeFinishSkillCamera(2);
+				break;
+            case 3: // 양손 이펙트 활성화
+				finishSkillEffect[0].SetActive(true);
+				finishSkillEffect[1].SetActive(true);
+				break; 
+            case 4: // 애너지파 발사 직전
+				ChangeFinishSkillCamera(3);
+				break;
+            case 5: // 애너지파 발사
+				finishSkillEffect[0].SetActive(false);
+				finishSkillEffect[1].SetActive(false);
+				finishSkillEffect[2].SetActive(true);
+				StartCoroutine(FinishSkillRailRunDamage());
+				break;
+			case 6: // 파워업
+				ChangeFinishSkillCamera(2);
+				finishSkillEffect[2].SetActive(false);
+				break;
+			case 7: // 파워업 이펙트
+				//finishSkillEffect[3].SetActive(true);
+				break;
+			case 8: // 돌진 직전
+				ChangeFinishSkillCamera(4);
+				break;
+			case 9: // 돌진 시작
+				break;
+			case 10: // 돌진 종료
+				ChangeFinishSkillCamera(-1);
+				ResetState();
+				break;
 		}
-	}
-    private IEnumerator FinishSkillRailRunDamage() 
-    {
-		for (int i = 0; i < 50; i++)
-		{
-            
-            yield return new WaitForSeconds(0.1f);
-        }
-        FinishSkillCutSceneControl(5);
-    }
-    private IEnumerator FinishSkillEffect()
-	{
-        ChangeFinishSkillCamera(2);
-        yield return new WaitForSeconds(0.3f);
-        ChangeAnimation("effect on");
-    }
-    private IEnumerator FinishSkillBeforeAttack() 
-    {
-        yield return new WaitForSeconds(1f);
-        ChangeAnimation("face_eyes_open");
-        ChangeFinishSkillCamera(3);
-        yield return new WaitForSeconds(1f);
-        FinishSkillCutSceneControl(4);
-    }
-    private IEnumerator FinishSkillSpell()
-    {
-        ChangeAnimation("face_eyes_close");
-        yield return new WaitForSeconds(1f);
-        ChangeFinishSkillCamera(1);
-        int currRandom = 1;
-        for (int i = 0; i < 15; i++)
-		{
-            string animatorTrgger = "face_speak_" + currRandom;
-            int tempRandom = Random.Range(0, 3);
-			while (tempRandom == currRandom)
-			{
-                tempRandom = Random.Range(0, 3);
-            }
-            currRandom = tempRandom;
-            animator.SetTrigger(animatorTrgger);
-            yield return new WaitForSeconds(0.1f);
-        }
-        FinishSkillCutSceneControl(2);
-    }
-    private IEnumerator FinishSkillRise()
-    {
-        ChangeFinishSkillCamera(0);
-        float time = 0;
-		while (time < 2f)
-		{
-            transform.position += Vector3.up * Time.deltaTime * 5f;
-            time += Time.deltaTime;
-            yield return null;
-        }
-        FinishSkillCutSceneControl(1);
     }
 	public void ChangeFinishSkillCamera(int idx)
 	{
 		//if (SSDNetworkManager.instance.isHost) return;
 
-		for (int i = 0; i<finishSkillCamera.Count; i++)
+		for (int i = 0; i < finishSkillCamera.Count; i++)
 			finishSkillCamera[i].SetActive(false);
 
 		if (idx != -1)
 			finishSkillCamera[idx].SetActive(true);
 	}
+    private IEnumerator FinishSkillRailRunDamage() 
+    {
+		print("시작");
+		for (int i = 0; i < 35; i++)
+		{
+            yield return new WaitForSeconds(0.1f);
+        }
+		print("종료");
+	}
+	
 	private IEnumerator TimeOutFightGhostFist()
 	{
 		yield return new WaitForSeconds(.25f);
