@@ -523,6 +523,7 @@ public class QPlayer : NetworkBehaviour
 				break;
             case 2: // 카메라 앞으로
 				ChangeFinishSkillCamera(2);
+				finishSkillEffect[3].SetActive(true);
 				break;
             case 3: // 양손 이펙트 활성화
 				finishSkillEffect[0].SetActive(true);
@@ -535,6 +536,7 @@ public class QPlayer : NetworkBehaviour
             case 5: // 애너지파 발사
                 finishSkillEffect[0].SetActive(false);
                 finishSkillEffect[1].SetActive(false);
+                finishSkillEffect[3].SetActive(false);
                 finishSkillEffect[2].SetActive(true);
                 finishSkillEffect[2].transform.LookAt(targetPoint);
                 StartCoroutine(FinishSkillRailRunDamage());
