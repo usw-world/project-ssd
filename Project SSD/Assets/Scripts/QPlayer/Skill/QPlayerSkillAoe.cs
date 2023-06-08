@@ -51,37 +51,17 @@ public class QPlayerSkillAoe : Skill
 
     public override bool CanUse()
     {
-        return true;
+        if (property.nowCoolTime >= property.coolTime)
+        {
+            return true;
+        }
+        return false;
     }
+
 
     public override void Use(Vector3 target)
     {
-        SkillCoolDown(target);
-    }
-
-    private void SkillCoolDown(Vector3 target)
-    {
-        if (property.isUseSkill == false)
-        {
-            property.isUseSkill = true;
-            SummonAoe(target);
-            StartCoroutine(SkillCoolDownCoroutine(property.coolTime + 100f));
-        }
-        else
-        {
-            Debug.Log(name + "스킬이 " + (100f + property.coolTime - property.nowCoolTime) + "초 남았습니다.");
-        }
-    }
-
-    IEnumerator SkillCoolDownCoroutine(float coolDown)
-    {
-        while (property.nowCoolTime < coolDown)
-        {
-            property.nowCoolTime += Time.deltaTime;
-            yield return null;
-        }
-        property.nowCoolTime = 100f;
-        property.isUseSkill = false;
+        SummonAoe(target);
     }
 
     private void SummonAoe(Vector3 target)
@@ -89,6 +69,7 @@ public class QPlayerSkillAoe : Skill
         AoeAttackDamage aoeAttack = AoeAttackDamage.GetInstance();
         AoeBuffer aoeBuffer = AoeBuffer.GetInstance();
 
+        property.nowCoolTime = 0;
         if (options[0].active)
         {
             aoeBuffer.onEnter += ActiveOption00;
