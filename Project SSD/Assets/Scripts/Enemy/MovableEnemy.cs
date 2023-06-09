@@ -52,5 +52,5 @@ public abstract class MovableEnemy : Enemy {
     /// <paramref name="point"/> : The point where target is located.
     /// </summary>
     protected abstract void ChaseTarget(Vector3 point);
-    protected abstract void OnLostTarget();
+    protected abstract void OnLostTarget(); 
 }

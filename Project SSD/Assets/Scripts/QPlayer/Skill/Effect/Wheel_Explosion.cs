@@ -20,6 +20,8 @@ public class Wheel_Explosion : MonoBehaviour, IPoolableObject
     private void OnTriggerEnter(Collider other)
     {
         other.TryGetComponent(out IDamageable enemy);
+        if (enemy == null)
+            return;
         Vector3 force = transform.forward * 15f;
         Damage damage = new Damage(10, .5f, force, Damage.DamageType.Normal);
         enemy.OnDamage(damage);

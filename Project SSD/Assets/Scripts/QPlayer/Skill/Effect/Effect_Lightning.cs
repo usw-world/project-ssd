@@ -75,7 +75,8 @@ public class Effect_Lightning : MonoBehaviour, IPoolableObject
 		float flinching = 1f;
 
 		hit = Physics.OverlapBox(transform.position + transform.forward * 5f, size * 0.5f, QPlayer.instance.transform.rotation, 1 << 8);
-		for (int i = 0; i < hit.Length; i++)
+
+        for (int i = 0; i < hit.Length; i++)
 		{
 			IDamageable target = hit[i].GetComponent<IDamageable>();
 			Damage damage = new Damage(

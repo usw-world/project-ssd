@@ -52,7 +52,7 @@ public class QPlayer : NetworkBehaviour
 	State finishSkillRailgun = new State("finishSkillRailgun");
 	State finishSkillRush = new State("finishSkillRush");
 	State finishSkillRushStay = new State("finishSkillRushStay");
-
+	State BufferingState = new State("BufferingState");
 	State prevState;
     string currentAnimationTrigger = "";
     #endregion State Machine
@@ -125,6 +125,8 @@ public class QPlayer : NetworkBehaviour
     }
     private void InitializedState() {
         #region Register States
+        
+        statesMap.Add(BufferingState.stateName, BufferingState);
         statesMap.Add(attachedState.stateName, attachedState);
         statesMap.Add(separatedState.stateName, separatedState);
         statesMap.Add(returnState.stateName, returnState);
@@ -436,6 +438,29 @@ public class QPlayer : NetworkBehaviour
             //fightGhostFistZone.gameObject.SetActive(false);
         };
 		#endregion FightGhostFistStay State
+		
+		#region Buffering State
+		
+		 BufferingState.onActive = prevState =>
+		{
+			transform.LookAt(targetPoint);
+			Vector3 qPlayerRot = transform.eulerAngles;
+			qPlayerRot.x = 0;
+			qPlayerRot.z = 0;
+			transform.eulerAngles = qPlayerRot;
+			canAttack = false;
+			isAiming = false;
+			usingSkill = skills[2];
+			string animationParameter = "1H Casting";
+			ChangeAnimation(animationParameter);
+			
+		};
+		BufferingState.onStay = () => { };
+		BufferingState.onInactive = (nextState) => { canAttack = true; };
+		
+		#endregion
+		
+	    // 
 
 		#region FinishSkillState State
 		finishSkillState.onActive = (State prevState) =>{
@@ -502,7 +527,7 @@ public class QPlayer : NetworkBehaviour
 
 		statesSkillMap.Add(skills[0], unityBallState);
         statesSkillMap.Add(skills[1], aoeState); 
-
+        statesSkillMap.Add(skills[2], BufferingState);
 		statesSkillMap.Add(skills[3], shieldState);
 		statesSkillMap.Add(skills[4], flagitState);
 		statesSkillMap.Add(skills[5], lightningState);
@@ -523,6 +548,7 @@ public class QPlayer : NetworkBehaviour
 				break;
             case 2: // 카메라 앞으로
 				ChangeFinishSkillCamera(2);
+				finishSkillEffect[3].SetActive(true);
 				break;
             case 3: // 양손 이펙트 활성화
 				finishSkillEffect[0].SetActive(true);
@@ -535,6 +561,7 @@ public class QPlayer : NetworkBehaviour
             case 5: // 애너지파 발사
                 finishSkillEffect[0].SetActive(false);
                 finishSkillEffect[1].SetActive(false);
+                finishSkillEffect[3].SetActive(false);
                 finishSkillEffect[2].SetActive(true);
                 finishSkillEffect[2].transform.LookAt(targetPoint);
                 StartCoroutine(FinishSkillRailRunDamage());

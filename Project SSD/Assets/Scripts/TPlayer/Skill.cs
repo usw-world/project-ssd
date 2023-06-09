@@ -45,7 +45,6 @@ public class SkillProperty
 	public float coolTime;
 	public float skillAP = 1;
 	[HideInInspector] public float nowCoolTime = 100f;
-    [HideInInspector] public bool isUseSkill = false;
     public bool ready;
 	public bool quickUse;
 }

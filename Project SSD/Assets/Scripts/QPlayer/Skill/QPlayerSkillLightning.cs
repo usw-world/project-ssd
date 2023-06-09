@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class QPlayerSkillLightning : Skill
@@ -51,8 +52,8 @@ public class QPlayerSkillLightning : Skill
 		//options[3].active = true;
 		//options[4].active = true;
 		//options[5].active = true;
-		//options[6].active = true;
-		options[7].active = true;
+		options[6].active = true;
+		//options[7].active = true;
 	}
 	private void Start()
 	{
@@ -138,9 +139,12 @@ public class QPlayerSkillLightning : Skill
 			for (int i = 0; i < Effect_Flagit.inSceneObj.Count; i++)
 			{
 				GameObject subLightningObj = PoolerManager.instance.OutPool(effectKey);
-				Effect_Lightning subLightning = lightningObj.GetComponent<Effect_Lightning>();
+				Effect_Lightning subLightning = subLightningObj.GetComponent<Effect_Lightning>();
 				subLightningObj.transform.position = Effect_Flagit.inSceneObj[i].lightningMuzzle.position;
-				subLightningObj.transform.LookAt(target);
+
+				subLightningObj.transform.position = new Vector3(subLightningObj.transform.position.x, lightning.transform.position.y, subLightningObj.transform.position.z);
+
+                subLightningObj.transform.LookAt(target);
 				Vector3 subLightningRot = subLightningObj.transform.eulerAngles;
 				subLightningRot.x = 0;
 				subLightningRot.z = 0;

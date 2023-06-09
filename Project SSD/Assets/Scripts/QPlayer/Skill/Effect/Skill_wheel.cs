@@ -27,6 +27,7 @@ public class Skill_wheel : MonoBehaviour, IPoolableObject
 
     private GameObject[] wheelArray;
     private float degree;
+    private bool wheelDestroyed = false;
     private bool isSpin = true;
     private bool lastSpin = true;
     [SerializeField] private bool option06IsActive;
@@ -99,7 +100,7 @@ public class Skill_wheel : MonoBehaviour, IPoolableObject
                 }
                 foreach (var wheel in wheelArray)
                 {
-                    wheel.transform.localPosition += wheel.transform.forward * Time.deltaTime * speed/3;
+                    if(!wheelDestroyed) wheel.transform.localPosition += wheel.transform.forward * Time.deltaTime * speed/3;
                 }
             }
         }
@@ -138,7 +139,15 @@ public class Skill_wheel : MonoBehaviour, IPoolableObject
     public void CreateWheel()
     {
         wheelArray = new GameObject[quantity];
-        target = TPlayer.instance.transform;
+        try
+        {
+            target = TPlayer.instance.transform;
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Tplayer is null set QPlayer instead");
+            target = QPlayer.instance.transform;
+        }
         
         transform.position = target.position + new Vector3(0, 1, 0);
         transform.rotation = target.rotation;
@@ -217,16 +226,17 @@ public class Skill_wheel : MonoBehaviour, IPoolableObject
 
     IEnumerator Boom(float time)
     {
+        wheelDestroyed = true;
         var boomList = new List<GameObject>();
         foreach (var wheel in wheelArray)
         {
             var boom = PoolerManager.instance.OutPool(explosionEffectPrefabKey);
             boomList.Add(boom);
             boom.transform.SetParent(wheel.transform);
+            boom.transform.localPosition = Vector3.zero;
             boom.SetActive(true);
-            Destroy(wheel);
         }
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
         foreach (var boom in boomList)
         {
             Destroy(boom);
