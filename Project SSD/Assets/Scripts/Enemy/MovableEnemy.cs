@@ -27,7 +27,7 @@ public abstract class MovableEnemy : Enemy {
         get {
             Vector3 point1 = Vector3.Scale(new Vector3(1, 0, 1), transform.position);
             Vector3 point2 = Vector3.Scale(new Vector3(1, 0, 1), targetPoint);
-            return (point2 - point2).normalized;
+            return (point1 - point2).normalized;
         }
     }
 

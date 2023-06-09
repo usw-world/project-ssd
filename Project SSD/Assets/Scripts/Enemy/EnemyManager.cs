@@ -30,7 +30,7 @@ public class EnemyManager : MonoBehaviour {
         RegisterMessageHandlers();
     }
     private void CollectEnemies() {
-        List<Enemy> enemies = new List<Enemy>(transform.GetComponentsInChildren<Enemy>());
+        List<Enemy> enemies = new List<Enemy>(transform.GetComponentsInChildren<Enemy>(true));
         enemies.Sort((Enemy a, Enemy b) => {
             return a.transform.GetSiblingIndex() - b.transform.GetSiblingIndex();
         });
