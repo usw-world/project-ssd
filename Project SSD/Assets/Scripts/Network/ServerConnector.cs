@@ -50,18 +50,14 @@ public class ServerConnector : MonoBehaviour
         UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/login", "POST");
         // POST 요청 생성
 
-        request.uploadHandler.Dispose();
-        // 메모리 누수 관련 요거 스캐너 쓸때처럼 dispose 해줘야함
-        request.uploadHandler = (UploadHandler)new UploadHandlerRaw(postDataBytes); 
-        // 요청 바디에 JSON 데이터 추가
-        request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer(); 
-        // 응답 수신 방식 지정
+        request.uploadHandler.Dispose(); // 메모리 누수 관련 >> dispose 해줘야함
+        request.uploadHandler = (UploadHandler) new UploadHandlerRaw(postDataBytes); 
+        request.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer(); 
+        
         yield return request.SendWebRequest(); 
-        // 요청 보내기
 
         string json = request.downloadHandler.text;
         if(request.responseCode == 200) {
-
             SaveDataVO saveData = new SaveDataVO(json);
             GameManager.instance?.SetSaveData(saveData);
 
@@ -75,30 +71,20 @@ public class ServerConnector : MonoBehaviour
         }
         request.Dispose();
     }
-    private void OnGUI() {
-        if(showNetworkStatus)
-            GUI.Label(Rect.zero, networkStatusText);
-    }
-
     public void Register(string id, string password, Action callback=null, Action<string> errorCallback=null) {
         string json = $"{{\"user_id\":\"{id}\",\"user_pw\":\"{password}\"}}";
+        print(json);
         StartCoroutine(RegisterCoroutine(json, callback, errorCallback));
     }
     private IEnumerator RegisterCoroutine(string postData, Action callback=null, Action<string> errorCallback=null) {
-        // string postData = "{\"status\": \"test\" }"; 
-        // // POST로 보낼 JSON 데이터
-        Debug.Log(postData);
         byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
         UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/register", "POST");
-        // POST 요청 생성
-        request.uploadHandler.Dispose();
-        // 메모리 누수 관련 요거 스캐너 쓸때처럼 dispose 해줘야함
-        request.uploadHandler = (UploadHandler)new UploadHandlerRaw(postDataBytes); 
-        // 요청 바디에 JSON 데이터 추가
-        request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer(); 
-        // 응답 수신 방식 지정
+        
+        request.uploadHandler.Dispose(); // 메모리 누수 관련 >> dispose 해줘야함
+        request.uploadHandler = (UploadHandler) new UploadHandlerRaw(postDataBytes); 
+        request.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer(); 
+        
         yield return request.SendWebRequest(); 
-        // 요청 보내기
 
         if (request.responseCode == 200) {
             string jsonResponse = request.downloadHandler.text;
@@ -109,15 +95,15 @@ public class ServerConnector : MonoBehaviour
 
             Debug.Log(saveData.ToString());
             callback?.Invoke();
-            print("Success Register.");
+        } else {
+            try {
+                ErrorMessage error = JsonUtility.FromJson<ErrorMessage>(request.downloadHandler.text);
+                errorCallback?.Invoke(error.message);
+            } catch {
+                errorCallback?.Invoke("우리의 힘과 능력으로도 감지할 수 없는 에러가 발생하였습니다.");
+            }
         }
-        else
-        {
-            Debug.LogError(request.responseCode);
-        }
-
         request.Dispose();
-        // 위와 동일
     }
     
     private IEnumerator SendIngameDataCoroutine(string postData) {

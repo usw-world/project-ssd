@@ -39,7 +39,7 @@ Material:
     - _QueueOffset: 0
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 0}
-    - _Fresnel_Color: {r: 18.393677, g: 18.393677, b: 18.393677, a: 0}
+    - _Fresnel_Color: {r: 17.375237, g: 16.145857, b: 16.145857, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &8802233131523170948
 MonoBehaviour:

@@ -22,61 +22,7 @@ namespace uwu_webServer
                     });
                     #endregion
                     #region 회원가입
-                    endpoints.MapPost("/register", async context =>
-                    {
-                        JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
-                        string user_id = requestBody.RootElement.GetProperty("user_id").GetString();
-                        string user_pw = requestBody.RootElement.GetProperty("user_pw").GetString();
-                        var sql = $"select * from user where user_id = '{user_id}'";
-                        var value = new JsonObject(); 
-                        // dbc.SearchTable(sql, "user", value);
-                        Console.WriteLine(value.ToString());
-                        
-                        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                        
-                        if (value.ToString().Equals("{}"))
-                        {
-                            context.Response.StatusCode = StatusCodes.Status200OK;
-                            int status;
-                            sql = $"insert into user(user_id, user_pw) values ('{user_id}', '{user_pw}');";
-                            dbc.UpdateData(sql);
-                            sql = $"insert into skill(id) value('{user_id}');";
-                            status = dbc.UpdateData(sql);
-                            if (status != 1)
-                                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                        }
-                        context.Response.Headers["Content-Type"] = "application/json";
-                        await context.Response.WriteAsync(value.ToString());
-                    });
-                    #endregion
-                    
-                    endpoints.MapPost("/user", async context =>
-                    {
-                        var sql = "select * from user";
-                        var value = new JsonObject();
-                        // dbc.SearchTable(sql, "user", value);
-                        if (value == null)
-                            return;
-                        context.Response.Headers["Content-Type"] = "application/json";
-                        await context.Response.WriteAsync(value.ToString());
-                    });
-                    // endpoints.Map("/", HandlePostRequest);
-                    endpoints.MapPost("/skill", async context =>
-                    {
-                        var sql = "select * from skill";
-
-                        JsonObject value = new JsonObject();
-                        // dbc.SearchTable(sql, "skill", value);
-                        if (value == null)
-                            return;
-                        context.Response.Headers["Content-Type"] = "application/json";
-                        await context.Response.WriteAsync(value.ToString());
-                    });
-                    
-                    #region 로그인 
-                    endpoints.MapPost("/login", async context =>
-                    {
-                        // 요청 바디 파싱
+                    endpoints.MapPost("/register", async (context) => {
                         using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8)) {
                             JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
 
@@ -90,7 +36,58 @@ namespace uwu_webServer
                                 context.Response.Headers["Content-Type"] = "application/json";
                                 
                                 string? requestId = idJson.GetString();
-                                string? requestPwd = pwdJson.GetString();
+                                string? requestPwd = ConvertKR2EN(pwdJson.GetString());
+                                if(requestId == null
+                                || requestPwd == null
+                                || requestId == ""
+                                || requestPwd == "") {
+                                    answer["message"] = "아이디와 패스워드는 공백일 수 없습니다.";
+                                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                    await context.Response.WriteAsync(answer.ToString());
+                                    return;
+                                }
+                                bool alreadyExitId = dbc.SearchUser(requestId);
+                                if(!alreadyExitId) {
+                                    dbc.InsertUser(requestId, requestPwd);
+
+                                    string token = GenerateToken() + requestId;
+                                    dbc.SetToken(token, requestId);
+
+                                    answer["token"] = token;
+                                    answer["userId"] = requestId;
+                                    context.Response.StatusCode = StatusCodes.Status200OK;
+                                    await context.Response.WriteAsync(answer.ToString());
+                                } else {
+                                    answer["message"] = "이미 사용 중인 아이디입니다.";
+                                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                    await context.Response.WriteAsync(answer.ToString());
+                                }
+                            } else {
+                                answer["message"] = "올바르지 않은 요청을 수신하였습니다.";
+                                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                                
+                                await context.Response.WriteAsync(answer.ToString());
+                                return;
+                            }
+                        }
+                    });
+                    #endregion
+                    #region 로그인 
+                    endpoints.MapPost("/login", async (context) => {
+                        using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8)) {
+                            JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
+
+                            JsonObject answer = new JsonObject();
+
+                            JsonElement idJson;
+                            JsonElement pwdJson;
+
+                            if(requestBody.RootElement.TryGetProperty("user_id", out idJson)
+                            && requestBody.RootElement.TryGetProperty("user_pw", out pwdJson)) {
+                                context.Response.Headers["Content-Type"] = "application/json";
+                                
+                                string? requestId = idJson.GetString();
+                                string? requestPwd = ConvertKR2EN(pwdJson.GetString());
                                 if(requestId == null
                                 || requestPwd == null
                                 || requestId == ""
@@ -116,6 +113,7 @@ namespace uwu_webServer
                                 if(successSearchUser) {
                                     dbc.SetToken(token, requestId);
                                     answer["token"] = token;
+                                    answer["userId"] = requestId;
                                     context.Response.StatusCode = StatusCodes.Status200OK;
                                     await context.Response.WriteAsync(answer.ToString());
                                 }
@@ -131,37 +129,66 @@ namespace uwu_webServer
                     #endregion
                     
                     #region 업데이트
-                    endpoints.MapPost("/update", async context =>
-                    {
-                        using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
-                        {
-                            var sql = "";
-                            JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
-                            var token = requestBody.RootElement.GetProperty("token").GetString();
-                            var user_id = dbc.FindId(token);
-                            var skillPoint = requestBody.RootElement.GetProperty("skillPoint").GetString();
-                            var skill_UnityBall = requestBody.RootElement.GetProperty("skill_UnityBall");
-                            Console.WriteLine(token+" / "+user_id+" / "+skillPoint+" / "+skill_UnityBall);
-                            sql = $"update skill set skillPoint = '{skillPoint}' where id = '{user_id}'";
-                            dbc.UpdateData(sql);
-                            sql = $"update skill set skill_UnityBall = '{skill_UnityBall}' where id = '{user_id}'";
-                            int result = dbc.UpdateData(sql);
-                            if (result == 1)
-                            {
+                    endpoints.MapPost("/update", async (context) => {
+                        using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8)) {
+                            // user_id	        varchar(16)         ||       id       	    varchar(255)
+                            // user_pw	        varchar(255)	    ||       t_sklil_data     varchar(255)
+                            // user_token	    varchar(255)        ||       q_sklil_data     varchar(255)
+                            // t_experience	    int	                ||
+                            // t_level	        int	                ||
+                            // q_experience	    int 	            ||
+                            // q_level	        int	                ||
+                            try {
+                                string sql = "";
+                                JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
+                                JsonElement json = requestBody.RootElement;
+
+                                string? token = json.GetProperty("token").GetString();
+                                if(token == null)
+                                    throw new Exception("Invalid request exception.");
+                                string user_id = dbc.FindId(token);
+
+                                int tExp = json.GetProperty("tExp").GetInt16();
+                                int qExp = json.GetProperty("qExp").GetInt16();
+                                int tLevel = json.GetProperty("tLevel").GetInt16();
+                                int qLevel = json.GetProperty("qLevel").GetInt16();
+                                sql = @$"
+                                    UPDATE user SET 
+                                        t_exp='{tExp}', 
+                                        q_exp='{qExp}', 
+                                        t_level='{tLevel}',
+                                        q_level='{qLevel}'
+                                    WHERE 
+                                        user_id='{user_id}'
+                                ";
+                                int result = dbc.UpdateData(sql);
+                                if(result < 0)
+                                    throw new Exception("Failed update user data.");
+                                
+                                string tSkillData = GetHexFromEnumerator(json.GetProperty("tSkillData").EnumerateArray());
+                                string qSkillData = GetHexFromEnumerator(json.GetProperty("qSkillData").EnumerateArray());
+                                sql = @$"
+                                    UPDATE skill SET 
+                                        t_sklil_data='{tSkillData}',
+                                        q_sklil_data='{qSkillData}'
+                                    WHERE 
+                                        id='{user_id}'
+                                ";
+                                result = dbc.UpdateData(sql);
+                                if(result < 0)
+                                    throw new Exception("Failed update skill data.");
+
                                 context.Response.Headers["Content-Type"] = "application/json";
                                 context.Response.StatusCode = StatusCodes.Status200OK;
-                            }
-                            else
-                            {
-                                Console.WriteLine("DB Update Error");
+                            } catch(Exception e) {
+                                Console.Error.WriteLine(e);
                                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                             }
                         }
                     });
                     #endregion
                     
-                    endpoints.MapPost("/get-data", async context =>
-                    {
+                    endpoints.MapPost("/get-data", async (context) => {
                         using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
                         {
                             var sql = "";
@@ -179,45 +206,55 @@ namespace uwu_webServer
                         }
                     });
                 });
-            }
-            catch (Exception e)
-            {
-                
+            } catch (Exception e) {
+                Console.Error.WriteLine(e);
             }
         }
-        
-        // private Task HandlePostRequest(HttpContext context)
-        // {
-        //     if (context.Request.Method == HttpMethods.Post)
-        //     {
-        //         string requestBody;
-        //         using (var reader = new StreamReader(context.Request.Body, Encoding.UTF8))
-        //         {
-        //             requestBody = reader.ReadToEnd();
-        //         }
-        //
-        //         // TODO: 요청 데이터 처리 로직 작성
-        //
-        //         context.Response.StatusCode = StatusCodes.Status200OK;
-        //         return context.Response.WriteAsync("POST 요청이 성공적으로 처리되었습니다.");
-        //     }
-        //
-        //     context.Response.StatusCode = StatusCodes.Status405MethodNotAllowed;
-        //     return Task.CompletedTask;
-        // }
         public string GenerateToken() {
             var bytes = new byte[4];
             System.Security.Cryptography.RandomNumberGenerator.Create().GetBytes(bytes);
             return Convert.ToHexString(bytes);
         }
+        private string GetHexFromEnumerator(IEnumerator<JsonElement> enumerator) {
+            List<string> result = new List<string>();
+            if(enumerator.MoveNext()) {
+                result.Add(enumerator.Current.GetInt16().ToString("X"));
+            }
+            string.Join(" ", result.ToArray());
+            return string.Join(" ", result);
+        }
+        private string? ConvertKR2EN(string? kr) {
+            return kr?.Replace('ㅂ', 'q')
+            .Replace('ㅈ', 'w')
+            .Replace('ㄷ', 'e')
+            .Replace('ㄱ', 'r')
+            .Replace('ㅅ', 't')
+            .Replace('ㅛ', 'y')
+            .Replace('ㅕ', 'u')
+            .Replace('ㅑ', 'i')
+            .Replace('ㅐ', 'o')
+            .Replace('ㅔ', 'p')
+            .Replace('ㅁ', 'a')
+            .Replace('ㄴ', 's')
+            .Replace('ㅇ', 'd')
+            .Replace('ㄹ', 'f')
+            .Replace('ㅎ', 'g')
+            .Replace('ㅗ', 'h')
+            .Replace('ㅓ', 'j')
+            .Replace('ㅏ', 'k')
+            .Replace('ㅣ', 'l')
+            .Replace('ㅋ', 'z')
+            .Replace('ㅌ', 'x')
+            .Replace('ㅊ', 'c')
+            .Replace('ㅍ', 'v')
+            .Replace('ㅠ', 'b')
+            .Replace('ㅜ', 'n')
+            .Replace('ㅡ', 'm');
+        }
     }
     
-
-
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
+    public class Program {
+        public static void Main(string[] args){
             CreateHostBuilder(args).Build().Run();
         }
 

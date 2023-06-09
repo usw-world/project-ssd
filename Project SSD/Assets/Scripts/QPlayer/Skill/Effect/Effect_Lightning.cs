@@ -58,24 +58,25 @@ public class Effect_Lightning : MonoBehaviour, IPoolableObject
 	}
 	#endregion 옵션 5 폭 증가
 
-	public void Run()
+	public virtual void Run()
 	{
 		Collider[] hit = null;
 		Vector3 size;
 		if (isBroadAttack)
 		{
-			size = new Vector3(2f, 1f, 10f);
+			size = new Vector3(2f, 3f, 10f);
 			transform.localScale = Vector3.one * 2f;
 		}
 		else
 		{
-			size = new Vector3(1f, 1f, 10f);
+			size = new Vector3(1f, 3f, 10f);
 			transform.localScale = Vector3.one;
 		}
 		float flinching = 1f;
 
 		hit = Physics.OverlapBox(transform.position + transform.forward * 5f, size * 0.5f, QPlayer.instance.transform.rotation, 1 << 8);
-		for (int i = 0; i < hit.Length; i++)
+
+        for (int i = 0; i < hit.Length; i++)
 		{
 			IDamageable target = hit[i].GetComponent<IDamageable>();
 			Damage damage = new Damage(
@@ -88,6 +89,7 @@ public class Effect_Lightning : MonoBehaviour, IPoolableObject
 			Enemy enemy;
 			if (TryGetComponent<Enemy>(out enemy))
 			{
+				enemy.OnDamage(damage);
 				if (isAttachmentDamage) enemy.AddAttachment(this.damage);
 				if (isAttachmentInability) enemy.AddAttachment(inability);
 			}
@@ -101,7 +103,7 @@ public class Effect_Lightning : MonoBehaviour, IPoolableObject
 			Destroy(previewBox, 2f);
 		}
 	}
-	IEnumerator InPool()
+	protected virtual IEnumerator InPool()
 	{
 		yield return new WaitForSeconds(5f);
 		PoolerManager.instance.InPool(GetKey(), gameObject);

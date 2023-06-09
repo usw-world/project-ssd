@@ -2218,7 +2218,7 @@
         "x"
     ],
     "m_Precision": 0,
-    "m_PreviewExpanded": false,
+    "m_PreviewExpanded": true,
     "m_PreviewMode": 0,
     "m_CustomColors": {
         "m_SerializableColors": []
@@ -5677,9 +5677,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": 116.00011444091797,
-            "y": 784.0000610351563,
-            "width": 117.99999237060547,
+            "x": 88.0,
+            "y": 784.0,
+            "width": 118.00001525878906,
             "height": 94.0
         }
     },

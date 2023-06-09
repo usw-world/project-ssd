@@ -79,7 +79,7 @@ public partial class SSDNetworkManager : NetworkManager {
         NetworkClient.OnDisconnectedEvent += OnCloseRoom;
 
         /* temporary >> */
-        string playerName = isHost ? "host" : "guest";
+        string playerName = GameManager.instance.saveData?.userId ?? (isHost ? "host" : "guest");
         /* << temporary */
 
         LobbyManager.instance.hostName = playerName;
@@ -87,9 +87,6 @@ public partial class SSDNetworkManager : NetworkManager {
         LobbyManager.instance.OnJoinRoom();
         C2SMessage.JoinRoomMessage message = new C2SMessage.JoinRoomMessage(isHost, playerName);
         NetworkClient.Send(message);
-    }
-    public void StartGame() {
-        LoadScene("usoock_duo_test");
     }
     #region Message Handlers
     protected void InitilizeHandler() {

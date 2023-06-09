@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class QPlayerSkillLightning : Skill
 {
 	public SkillOptionInformation[] options = new SkillOptionInformation[8];
-	private GameObject lightningStrikePrefab;
+	[SerializeField] private GameObject lightningStrikePrefab;
 	private string effectKey;
 	private string lightningStrikePrefabKey;
 	private float usingSp = 50f;
@@ -45,17 +46,26 @@ public class QPlayerSkillLightning : Skill
 		options[6].info = "근처의 Flagit에서 목표지점으로 추가 공격을 가합니다";
 		options[7].name = "레일건";
 		options[7].info = "아주 강한 공격으로 바뀝니다";
+		//options[0].active = true;
+		//options[1].active = true;
+		//options[2].active = true;
+		//options[3].active = true;
+		//options[4].active = true;
+		//options[5].active = true;
 		options[6].active = true;
+		//options[7].active = true;
 	}
 	private void Start()
 	{
 		effectKey = info.effect.GetComponent<IPoolableObject>().GetKey();
-		PoolerManager.instance.InsertPooler(effectKey, info.effect, false);
 		lightningStrikePrefabKey = lightningStrikePrefab.GetComponent<IPoolableObject>().GetKey();
+
+		PoolerManager.instance.InsertPooler(effectKey, info.effect, false);
 		PoolerManager.instance.InsertPooler(lightningStrikePrefabKey, lightningStrikePrefab, false);
 	}
 	public override void Use(Vector3 target)
 	{
+		target += Vector3.up;
 		float lastDamage = QPlayer.instance.GetAP() * property.skillAP;
 
 		GameObject lightningObj = null;
@@ -73,7 +83,7 @@ public class QPlayerSkillLightning : Skill
 			lightning = lightningObj.GetComponent<Effect_Lightning>();
 		}
 
-		lightningObj.transform.position = QPlayer.instance.transform.position;
+		lightningObj.transform.position = QPlayer.instance.transform.position + Vector3.up;
 		lightningObj.transform.LookAt(target);
 
 		if (options[0].active){
@@ -129,9 +139,12 @@ public class QPlayerSkillLightning : Skill
 			for (int i = 0; i < Effect_Flagit.inSceneObj.Count; i++)
 			{
 				GameObject subLightningObj = PoolerManager.instance.OutPool(effectKey);
-				Effect_Lightning subLightning = lightningObj.GetComponent<Effect_Lightning>();
+				Effect_Lightning subLightning = subLightningObj.GetComponent<Effect_Lightning>();
 				subLightningObj.transform.position = Effect_Flagit.inSceneObj[i].lightningMuzzle.position;
-				subLightningObj.transform.LookAt(target);
+
+				subLightningObj.transform.position = new Vector3(subLightningObj.transform.position.x, lightning.transform.position.y, subLightningObj.transform.position.z);
+
+                subLightningObj.transform.LookAt(target);
 				Vector3 subLightningRot = subLightningObj.transform.eulerAngles;
 				subLightningRot.x = 0;
 				subLightningRot.z = 0;

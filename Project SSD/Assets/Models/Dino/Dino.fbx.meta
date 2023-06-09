@@ -1,18 +1,26 @@
 fileFormatVersion: 2
-guid: 3268c91fd02a57943a798852b7a1dda6
+guid: b079174ca7166ff439e7a5ac00004106
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
   - first:
-      74: 1801127987050704286
-    second: "\uC544\uB9C8\uD29C\uC5B4|Dino Idle"
+      74: 7464979582949347148
+    second: Dino|Dino Breath
   - first:
-      74: 5226285721043763516
-    second: "\uC544\uB9C8\uD29C\uC5B4|Dino Jump"
+      74: -5913108328972734123
+    second: Dino|Dino Idle
   - first:
-      74: -2927939059510658862
-    second: "\uC544\uB9C8\uD29C\uC5B4|Dino Run"
-  externalObjects: {}
+      74: 1014497666642824526
+    second: Dino|Dino Jump
+  - first:
+      74: -3654318044418167227
+    second: Dino|Dino Run
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Dino Material
+    second: {fileID: 2100000, guid: 3ab8e089c2c1a9a47863a0cedecc37ca, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

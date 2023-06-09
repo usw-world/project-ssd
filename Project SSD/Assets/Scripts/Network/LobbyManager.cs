@@ -17,13 +17,17 @@ public class LobbyManager : MonoBehaviour {
     [SerializeField] private NetworkEvent onErrorConnectServer;
     [SerializeField] private NetworkEvent onStartWithoutSaveData;
 
+    [SerializeField] private TMP_Text startText;
+
     #region Room UI
     [SerializeField] private GameObject lobbyUis;
     [SerializeField] private GameObject roomUis;
     [HideInInspector] public string hostName = null;
     [HideInInspector] public string guestName = null;
-    [SerializeField] private Text hostNameText;
-    [SerializeField] private Text guestNameText;
+    [SerializeField] private TMP_Text hostNameText;
+    [SerializeField] private TMP_Text guestNameText;
+    [SerializeField] private Image roomTPlayerImage;
+    [SerializeField] private Image roomQPlayerImage;
     [SerializeField] private InputField addressField;
     [SerializeField] private Button startButton;
     #endregion Room UI
@@ -31,12 +35,13 @@ public class LobbyManager : MonoBehaviour {
     #region Login UI
     [SerializeField] private TMP_InputField idField;
     [SerializeField] private TMP_InputField passwordField;
-    [SerializeField] private NetworkEvent onLoginSuccess;
+    [SerializeField] private NetworkEvent onSuccessLogin;
     #endregion Login UI
 
     #region Join UI
     [SerializeField] private TMP_InputField joinIdField;
     [SerializeField] private TMP_InputField joinPasswordField;
+    [SerializeField] private NetworkEvent onSuccessJoin;
     #endregion Join UI
 
     private void Awake() {
@@ -44,7 +49,11 @@ public class LobbyManager : MonoBehaviour {
             instance = this;
         else
             Destroy(this.gameObject);
-        
+    }
+    private void Start() {
+        UIManager.instance.FadeIn(2, 2, () => {
+            startText.gameObject.SetActive(true);
+        });
     }
     public void OnClickConnectServer() {
         loadingUI.OnStartLoading();
@@ -77,6 +86,8 @@ public class LobbyManager : MonoBehaviour {
     public void RefreshRoom() {
         hostNameText.text = hostName ?? "_";
         guestNameText.text = guestName ?? "_";
+        roomTPlayerImage.color = hostName==null ? Color.black : Color.white;
+        roomQPlayerImage.color = guestName==null ? Color.black : Color.white;
         startButton.gameObject.SetActive(SSDNetworkManager.instance.isHost);
     }
     public void OpenLobbyUi() {
@@ -87,9 +98,9 @@ public class LobbyManager : MonoBehaviour {
         lobbyUis.SetActive(false);
         roomUis.SetActive(true);
     }
-    public void OnClickStartButton() {
-        SSDNetworkManager.instance.StartGame();
-    } 
+    public void OnClickStartButton(string sceneName) {
+        SSDNetworkManager.instance.LoadScene(sceneName);
+    }
 
     public void Login() {
         ServerConnector connector = ServerConnector.instance;
@@ -97,13 +108,8 @@ public class LobbyManager : MonoBehaviour {
             connector.Login(
                 idField.text,
                 passwordField.text,
-                () => {
-                    print("Login Success.");
-                    onLoginSuccess?.Invoke();
-                },
-                (string error) => {
-                    UIManager.instance.AlertMessage(error);
-                }
+                ()             => { this.onSuccessLogin?.Invoke(); },
+                (string error) => { UIManager.instance.AlertMessage(error); }
             );
         }
     }
@@ -113,13 +119,16 @@ public class LobbyManager : MonoBehaviour {
             connector.Register(
                 joinIdField.text,
                 joinPasswordField.text,
-                () => {
-                    print("Join Success.\n");
-                },
-                (string error) => {
-                    UIManager.instance.AlertMessage(error);
-                }
+                ()             => { onSuccessJoin?.Invoke(); },
+                (string error) => { UIManager.instance.AlertMessage(error); }
             );
         }
+    }
+    public void SetIMECompositionMode(bool next) {
+        StartCoroutine(SetIMECompositionModeDelay(next));
+    }
+    private System.Collections.IEnumerator SetIMECompositionModeDelay(bool next) {
+        yield return null;
+        Input.imeCompositionMode = next ? IMECompositionMode.Auto : IMECompositionMode.Off;
     }
 }

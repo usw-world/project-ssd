@@ -5,18 +5,20 @@ using UnityEngine;
 
 [Serializable]
 public class SaveDataVO {
+    public string userId = "";
     public string token = "";
-    public string skillPoint = "";
-    public int currentStage = 0;
 
-    public int skill_unityBall = 0;
-    public int skill_aoe = 0;
+    public int tExp = 0;
+    public int qExp = 0;
+    public int tLevel = 1;
+    public int qLevel = 1;
+    public int[] tSkillData = new int[6] { 0, 0, 0, 0, 0, 0 };
+    public int[] qSkillData = new int[7] { 0, 0, 0, 0, 0, 0, 0 };
 
     public SaveDataVO() {}
     public SaveDataVO(string json) {
         JsonUtility.FromJsonOverwrite(json, this);
     }
-
     public void Write(string saveData) {
         JsonUtility.FromJsonOverwrite(saveData, this);
     }
