@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QPlayerSkillWheel : Skill
+public class QPlayerSkillBuffering : Skill
 {
     public SkillOptionInformation[] options = new SkillOptionInformation[8];
     // SkillInfo 수정 예정
@@ -18,48 +18,50 @@ public class QPlayerSkillWheel : Skill
     public float option06_rolling;
     public float option07_stack;
     private string wheelCreatorKey;
+    
 
 
     private void Awake()
     {
         wheelCreatorKey = wheelCreator.GetComponent<IPoolableObject>().GetKey();
         PoolerManager.instance.InsertPooler(wheelCreatorKey, wheelCreator, false);
+        property.nowCoolTime = 0;
+        property.ready = false;
     }
 
-    public override void Update()
+    public override void Use(Vector3 tmp)
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-            Use();
+        Use();
     }
-
     public override void Use()
     {
+        Debug.Log("buffer use");
         OptionValueInitialize();
         var obj = PoolerManager.instance.OutPool(wheelCreatorKey);
-        var test = obj.GetComponent<Skill_wheel>();
+        var BufferCreator = obj.GetComponent<Skill_wheel>();
 
         obj.SetActive(true);
-        test.target = this.transform;
+        BufferCreator.target = this.transform;
 
         if (options[7].active)
-            test.Active_stack();
+            BufferCreator.Active_stack();
         if (options[0].active)
-            test.speed += option00_increaseSpeed;
+            BufferCreator.speed += option00_increaseSpeed;
         if (options[1].active)
-            test.distance += option01_increaseRadius;
+            BufferCreator.distance += option01_increaseRadius;
         if (options[2].active)
-            test.maxDegree += option02_increaseDurationTime;
+            BufferCreator.maxDegree += option02_increaseDurationTime;
         if (options[3].active)
-            test.quantity += option03_addQuantity;
+            BufferCreator.quantity += option03_addQuantity;
         if (options[4].active)
-            test.strength += option04_increaseStrength;
+            BufferCreator.strength += option04_increaseStrength;
         if (options[5].active)
-            test.scale += option05_increaseScale;
+            BufferCreator.scale += option05_increaseScale;
         if (options[6].active)
-            test.Active_rolling();
+            BufferCreator.Active_rolling();
         for(int i=0; i < options.Length; i++)
             Debug.Log(options[i].active);
-        test.OnActive();
+        BufferCreator.OnActive();
     }
 
     private void OptionValueInitialize()
@@ -77,6 +79,13 @@ public class QPlayerSkillWheel : Skill
 
     public override bool CanUse()
     {
-        throw new System.NotImplementedException();
+        if (property.nowCoolTime >= property.coolTime)
+        {
+            Debug.Log("buffer active");
+            return true;
+        }
+
+        Debug.Log("buffer in cooldown");
+        return false;
     }
 }

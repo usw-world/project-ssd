@@ -46,6 +46,7 @@ public class QPlayer : NetworkBehaviour
     State shieldState = new State("shieldState");
     State fightGhostFistState = new State("fightGhostFistState");
     State fightGhostFistStayState = new State("fightGhostFistStayState");
+    State BufferingState = new State("BufferingState");
     State prevState;
     string currentAnimationTrigger = "";
     #endregion State Machine
@@ -115,6 +116,8 @@ public class QPlayer : NetworkBehaviour
     }
     private void InitializedState() {
         #region Register States
+        
+        statesMap.Add(BufferingState.stateName, BufferingState);
         statesMap.Add(attachedState.stateName, attachedState);
         statesMap.Add(separatedState.stateName, separatedState);
         statesMap.Add(returnState.stateName, returnState);
@@ -405,9 +408,32 @@ public class QPlayer : NetworkBehaviour
 		};
 		fightGhostFistStayState.onInactive = (State nextState) => { canAttack = true; };
 		#endregion FightGhostFistStay State
-		// 
+		
+		#region Buffering State
+		
+		 BufferingState.onActive = prevState =>
+		{
+			transform.LookAt(targetPoint);
+			Vector3 qPlayerRot = transform.eulerAngles;
+			qPlayerRot.x = 0;
+			qPlayerRot.z = 0;
+			transform.eulerAngles = qPlayerRot;
+			canAttack = false;
+			isAiming = false;
+			usingSkill = skills[2];
+			string animationParameter = "1H Casting";
+			ChangeAnimation(animationParameter);
+			
+		};
+		BufferingState.onStay = () => { };
+		BufferingState.onInactive = (nextState) => { canAttack = true; };
+		
+		#endregion
+		
+	    // 
 		statesSkillMap.Add(skills[0], unityBallState);
         statesSkillMap.Add(skills[1], aoeState); 
+        statesSkillMap.Add(skills[2], BufferingState);
 		statesSkillMap.Add(skills[3], shieldState);
 		statesSkillMap.Add(skills[4], flagitState);
 		statesSkillMap.Add(skills[5], lightningState);
@@ -538,12 +564,12 @@ public class QPlayer : NetworkBehaviour
         Skill selectedSkill = skills[index]; // 사용하고자 하는 스킬 가져오기
         if (!selectedSkill.CanUse())
             return;
-
+        Debug.Log(selectedSkill.name+" // "+selectedSkill.property.ready);
         if(!selectedSkill.property.ready // if | skill type is instant-using
         ||                               // or
         (  isAiming                      // if | currently player is aiming with skill
         && aimingSkillIndex == index)) { // and| pressed skill is same to currently aiming skill
-            CmdUseAmingSkill(index, GetAimingPoint());
+	        CmdUseAmingSkill(index, GetAimingPoint());
         } else {
             aimingSkillIndex = index;
             EnableAim();

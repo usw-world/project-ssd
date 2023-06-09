@@ -209,6 +209,7 @@ Transform:
   - {fileID: 1938260947175486813}
   - {fileID: 8793967351446171706}
   - {fileID: 1629201569845882494}
+  - {fileID: 370222973646348888}
   m_Father: {fileID: 2136718358471914663}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2580,7 +2581,7 @@ MonoBehaviour:
   skills:
   - {fileID: 815916524}
   - {fileID: 7393513717579459165}
-  - {fileID: 0}
+  - {fileID: 7604951567101786444}
   - {fileID: 8961894095574113727}
   - {fileID: 4642750732663670702}
   - {fileID: 5595377120989333443}
@@ -5742,6 +5743,110 @@ MonoBehaviour:
     active: 0
   explosionPrefab: {fileID: 6795033730232503878, guid: c1bfe936601913a42b8fa6d55f64503f,
     type: 3}
+--- !u!1 &8085174191161984583
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 370222973646348888}
+  - component: {fileID: 7604951567101786444}
+  m_Layer: 0
+  m_Name: Buffering
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &370222973646348888
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8085174191161984583}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1539545108}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7604951567101786444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8085174191161984583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d037bcf6fd2bd4f53bb66e7dbaa6b430, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aimType: 0
+  info:
+    effect: {fileID: 0}
+    skillImage: {fileID: 0}
+    skillText: 
+    name: 
+  area:
+    distance: 1
+    range: 1
+  property:
+    coolTime: 0
+    skillAP: 1
+    nowCoolTime: 100
+    isUseSkill: 0
+    ready: 0
+    quickUse: 0
+  options:
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  wheelCreator: {fileID: 7864665305693748439, guid: 49d93214a8733480885e79cc3d7bca67,
+    type: 3}
+  speed: 0
+  option00_increaseSpeed: 0
+  option01_increaseRadius: 0
+  option02_increaseDurationTime: 0
+  option03_addQuantity: 0
+  option04_increaseStrength: 0
+  option05_increaseScale: 0
+  option06_rolling: 0
+  option07_stack: 0
 --- !u!1 &9047360050862676591
 GameObject:
   m_ObjectHideFlags: 0
