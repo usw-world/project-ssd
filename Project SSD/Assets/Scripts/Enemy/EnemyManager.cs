@@ -61,8 +61,15 @@ public class EnemyManager : MonoBehaviour {
     public void SyncEnemy(int index, Position position, Rotation rotation) {
         if(!isHost) {
             Enemy target = enemiesInScene[index];
-            target.transform.position = new Vector3(position.x, position.y, position.z);
-            target.transform.rotation = new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
+            if(target.networkId < 0) {
+                Debug.LogWarning("Network ID of one enemy is undefineded.");
+                return;
+            }
+
+            target.nextPosition = new Vector3(position.x, position.y, position.z);
+            target.nextRotation = new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
+            // target.transform.position = new Vector3(position.x, position.y, position.z);
+            // target.transform.rotation = new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
         }
     }
     public void ChangeEnemyState(int networkId, string stateName) {

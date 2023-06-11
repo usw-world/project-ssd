@@ -70,8 +70,7 @@ namespace S2CMessage {
             this.damage = damage;
         }
     }
-	public struct UnityBallSetTargetMessage : NetworkMessage
-	{
+	public struct UnityBallSetTargetMessage : NetworkMessage {
 		public int networkId;
 		public int targetNetworkId;
 		public UnityBallSetTargetMessage(int networkId, int targetNetworkId)

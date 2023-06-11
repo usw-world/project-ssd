@@ -26,8 +26,7 @@ public partial class SSDNetworkManager : NetworkManager {
     private void OnSyncEnemyState(SyncEnemyStateMessage message) {
         EnemyManager.instance.ChangeEnemyState(message.networkId, message.stateName);
     }
-	private void OnUnityBallSetTarget(UnityBallSetTargetMessage message)
-	{
+	private void OnUnityBallSetTarget(UnityBallSetTargetMessage message) {
 		UnityBall ub = UnityBall.unityBallInScene[message.networkId];
 		ub.AddTarget(message.targetNetworkId);
 	}

@@ -5062,7 +5062,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  explosionRadius: 3
+  explosionRadius: 2
   explosionDelay: 1
   setUpDelay: 1
   damageAmount: 35

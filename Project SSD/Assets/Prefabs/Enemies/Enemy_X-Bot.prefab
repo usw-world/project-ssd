@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 965079969}
   - component: {fileID: 2392146542080336555}
   m_Layer: 8
-  m_Name: Enemy _ X-Bot
+  m_Name: Enemy_X-Bot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
