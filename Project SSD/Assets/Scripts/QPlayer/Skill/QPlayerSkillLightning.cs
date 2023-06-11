@@ -13,7 +13,6 @@ public class QPlayerSkillLightning : Skill
 
 	/*
 		작업 목록
-		7 - 애너지 파
 
 		작업 대기
 
@@ -27,6 +26,7 @@ public class QPlayerSkillLightning : Skill
 		4 - 지속 피해	- 5초, 최종데미지 50%
 		5 - 넓이 증가 - 30% 증가
 		6 - 집중 공격 - 활성화된 flagit 에서 타겟방향으로 같은 공격을 함
+		7 - 애너지 파
 	*/
 	private void Awake()
 	{
@@ -52,8 +52,8 @@ public class QPlayerSkillLightning : Skill
 		//options[3].active = true;
 		//options[4].active = true;
 		//options[5].active = true;
-		options[6].active = true;
-		//options[7].active = true;
+		//options[6].active = true;
+		options[7].active = true;
 	}
 	private void Start()
 	{

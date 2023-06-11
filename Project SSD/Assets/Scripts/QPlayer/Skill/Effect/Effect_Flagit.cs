@@ -98,7 +98,7 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 	}
 	IEnumerator InPool()
 	{
-		yield return new WaitForSeconds(5f);
+		yield return new WaitForSeconds(5.2f);
 		PoolerManager.instance.InPool(GetKey(), gameObject);
 		inSceneObj.Remove(this);
 	}
@@ -113,7 +113,7 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 			GameObject dotDamageObj = PoolerManager.instance.OutPool(dotDamageEffectKey);
 			dotDamageObj.transform.position = transform.position;
 			dotDamageObj.transform.position += new Vector3(0, 0.25f, 0);
-			StartCoroutine(InPoolEffect(dotDamageObj, dotDamageEffectKey, 2f));
+			StartCoroutine(InPoolEffect(dotDamageObj, dotDamageEffectKey, 1.1f));
 			float size = 2f;
 			if (isAreaTwice)
 			{
