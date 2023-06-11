@@ -49,7 +49,6 @@ public class QPlayer : NetworkBehaviour
     State fightGhostFistState = new State("fightGhostFistState");
     State fightGhostFistStayState = new State("fightGhostFistStayState");
 	State finishSkillState = new State("finishSkillState");
-	State finishSkillRailgun = new State("finishSkillRailgun");
 	State finishSkillRush = new State("finishSkillRush");
 	State finishSkillRushStay = new State("finishSkillRushStay");
 	State BufferingState = new State("BufferingState");
@@ -139,7 +138,6 @@ public class QPlayer : NetworkBehaviour
         statesMap.Add(fightGhostFistState.stateName, fightGhostFistState);
         statesMap.Add(fightGhostFistStayState.stateName, fightGhostFistStayState);
         statesMap.Add(finishSkillState.stateName, finishSkillState);
-        statesMap.Add(finishSkillRailgun.stateName, finishSkillRailgun);
         statesMap.Add(finishSkillRush.stateName, finishSkillRush);
         statesMap.Add(finishSkillRushStay.stateName, finishSkillRushStay);
         #endregion Register States
@@ -460,8 +458,6 @@ public class QPlayer : NetworkBehaviour
 		
 		#endregion
 		
-	    // 
-
 		#region FinishSkillState State
 		finishSkillState.onActive = (State prevState) =>{
 			transform.LookAt(targetPoint);
@@ -472,57 +468,29 @@ public class QPlayer : NetworkBehaviour
 			canAttack = false;
             isCanMove = false;
             ChangeAnimation("finish attack");
-   //         movement.enabled = false;
-   //         GetComponent<NavMeshAgent>().enabled = false;
-   //         ChangeAnimation("rise");
-   //         FinishSkillCutSceneControl(0);
-
 		};
 		finishSkillState.onStay = () => { };
 		finishSkillState.onInactive = (State nextState) => {
-			canAttack = true;
-			isCanMove = true;
 		};
         #endregion FinishSkillState State
 
-        #region FinishSkillRailgun State
-        finishSkillRailgun.onActive = (State prevState) => {
-            transform.LookAt(targetPoint);
-            StartCoroutine(FinishSkillRailRunDamage());
-        };
-        finishSkillRailgun.onStay = () => {
-            targetPoint = GetAimingPoint();
-            Quaternion currRot = transform.rotation;
-			transform.LookAt(targetPoint);
-			Quaternion targetRot = transform.rotation;
-            transform.rotation = currRot;
-            transform.rotation = Quaternion.Lerp(currRot, targetRot, Time.deltaTime);
-		};
-        finishSkillRailgun.onInactive = (State nextState) => {
-            transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-        };
-        #endregion FinishSkillRailgun State
-
         #region FinishSkillRush State
         finishSkillRush.onActive = (State prevState) => {
-            ChangeAnimation("power up");
-            ChangeFinishSkillCamera(2);
+            StartCoroutine(Cut3CameraPosContrl());
         };
-        finishSkillRush.onStay = () => { };
-        finishSkillRush.onInactive = (State nextState) => { };
-		#endregion FinishSkillRush State
+        finishSkillRush.onStay = () => {  };
+        finishSkillRush.onInactive = (State nextState) => {  };
+        #endregion FinishSkillRush State
 
-		#region FinishSkillRushStay State
-		finishSkillRushStay.onActive = (State prevState) => { };
-		finishSkillRush.onStay = () => { };
-		finishSkillRush.onInactive = (State nextState) => {
-			canAttack = true;
-			isCanMove = true;
-			movement.enabled = true;
-			GetComponent<NavMeshAgent>().enabled = true;
-			ChangeFinishSkillCamera(-1);
-			transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-		};
+        #region FinishSkillRushStay State
+        finishSkillRushStay.onActive = (State prevState) => { 
+            movement.MoveToPoint(targetPoint, 15f);
+        };
+        finishSkillRushStay.onStay = () => { };
+        finishSkillRushStay.onInactive = (State nextState) => {
+            canAttack = true;
+            isCanMove = true;
+        };
 		#endregion FinishSkillRushStay State
 
 		statesSkillMap.Add(skills[0], unityBallState);
@@ -548,12 +516,13 @@ public class QPlayer : NetworkBehaviour
 				break;
             case 2: // 카메라 앞으로
 				ChangeFinishSkillCamera(2);
-				finishSkillEffect[3].SetActive(true);
+                finishSkillEffect[3].SetActive(true);
 				break;
             case 3: // 양손 이펙트 활성화
 				finishSkillEffect[0].SetActive(true);
 				finishSkillEffect[1].SetActive(true);
-				break; 
+                CameraManager.instance.ShakeCamera(finishSkillCamera[2], 0.3f, 0.05f);
+                break; 
             case 4: // 애너지파 발사 직전
 				ChangeFinishSkillCamera(3);
                 finishSkillCamera[3].transform.LookAt(targetPoint);
@@ -564,26 +533,70 @@ public class QPlayer : NetworkBehaviour
                 finishSkillEffect[3].SetActive(false);
                 finishSkillEffect[2].SetActive(true);
                 finishSkillEffect[2].transform.LookAt(targetPoint);
+                CameraManager.instance.ShakeCamera(finishSkillCamera[3], 3.8f, 0.03f);
                 StartCoroutine(FinishSkillRailRunDamage());
 				break;
 			case 6: // 파워업
 				ChangeFinishSkillCamera(2);
 				finishSkillEffect[2].SetActive(false);
+                finishSkillEffect[4].SetActive(true);
+                finishSkillEffect[5].SetActive(true);
                 break;
 			case 7: // 파워업 이펙트
-				//finishSkillEffect[3].SetActive(true);
-				break;
+			    finishSkillEffect[6].SetActive(true);
+                CameraManager.instance.ShakeCamera(finishSkillCamera[2], 0.3f, 0.05f);
+                break;
 			case 8: // 돌진 직전
-				ChangeFinishSkillCamera(4);
-				break;
+                stateMachine.ChangeState(finishSkillRush);
+                finishSkillEffect[5].SetActive(false);
+                finishSkillEffect[4].SetActive(false);
+                break;
 			case 9: // 돌진 시작
-				break;
+                stateMachine.ChangeState(finishSkillRushStay);
+                break;
 			case 10: // 돌진 종료
-				ChangeFinishSkillCamera(-1);
-				ResetState();
-                ChangeAnimation("face_idle");
+                StartCoroutine(ResetDelay());
+                CameraManager.instance.ShakeCamera(finishSkillCamera[3], 0.75f, 0.13f);
                 break;
 		}
+    }
+    private IEnumerator ResetDelay()
+    {
+        float overlabSize = 5f;
+
+        //GameObject preveiwOverlab = Instantiate(Resources.Load<GameObject>("previewSpherePrefab"));
+        //preveiwOverlab.transform.position = transform.position;
+        //preveiwOverlab.transform.localScale = Vector3.one * overlabSize * 2f;
+        //Destroy(preveiwOverlab , 2f);
+
+        Collider[] hit;
+        hit = Physics.OverlapSphere(targetPoint, overlabSize, 1 << 8);
+        foreach (var item in hit)
+        {
+            Damage damage = new Damage(GetAP() * 30f,
+               1f,
+               (item.transform.position - transform.position) * 5f,
+               Damage.DamageType.Down
+            );
+            item.GetComponent<IDamageable>().OnDamage(damage);
+        }
+        finishSkillEffect[7].SetActive(true);
+        ChangeAnimation("face_idle");
+        yield return new WaitForSeconds(1f);
+        finishSkillEffect[6].SetActive(false);
+        finishSkillEffect[7].SetActive(false);
+        ChangeFinishSkillCamera(-1);
+        ResetState();
+    }
+    private IEnumerator Cut3CameraPosContrl() 
+    {
+        Vector3 currPos = finishSkillCamera[3].transform.localPosition;
+        Transform currParent = finishSkillCamera[3].transform.parent;
+        finishSkillCamera[3].transform.SetParent(null);
+        ChangeFinishSkillCamera(3);
+        yield return new WaitForSeconds(3f);
+        finishSkillCamera[3].transform.SetParent(currParent);
+        finishSkillCamera[3].transform.localPosition = currPos;
     }
 	public void ChangeFinishSkillCamera(int idx)
 	{
@@ -597,12 +610,26 @@ public class QPlayer : NetworkBehaviour
 	}
     private IEnumerator FinishSkillRailRunDamage() 
     {
-		print("시작");
+        float damageAountAll = GetAP() * 60f;
+        float dotDamage = damageAountAll / 35f;
+        float overlabSize = 1.25f;
+        Collider[] hit;
+        Damage damage = new Damage(dotDamage,1f, Vector3.zero, Damage.DamageType.Normal);
+
+		//GameObject preveiwOverlab = Instantiate(Resources.Load<GameObject>("previewSpherePrefab"));
+		//preveiwOverlab.transform.position = targetPoint;
+		//preveiwOverlab.transform.localScale = Vector3.one * overlabSize * 2f;
+		//Destroy(preveiwOverlab, 2f);
+
 		for (int i = 0; i < 35; i++)
 		{
+            hit = Physics.OverlapSphere(targetPoint, overlabSize, 1 << 8);
+			foreach (var item in hit)
+			{
+                item.GetComponent<IDamageable>().OnDamage(damage);
+            }
             yield return new WaitForSeconds(0.1f);
         }
-		print("종료");
 	}
 	
 	private IEnumerator TimeOutFightGhostFist()

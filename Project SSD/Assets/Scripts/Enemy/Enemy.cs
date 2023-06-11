@@ -9,6 +9,9 @@ using Mirror;
 public abstract class Enemy : MonoBehaviour, IDamageable {
     public int networkId = -1;
 
+    public Vector3 nextPosition;
+    public Quaternion nextRotation;
+
     [SerializeField] private float detectRange = 5f;
     [SerializeField] private float detectInterval = .05f;
 
@@ -32,15 +35,14 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     protected Action updateTargetEvent;
     protected Action lostTargetEvent;
 
-    private bool onHost = false;
+    protected bool onHost = false;
 
     protected virtual void Awake() {
         enemyStateMachine = GetComponent<StateMachine>();
         enemyAnimator = enemyAnimator==null ? GetComponent<Animator>() : enemyAnimator;
         target = FindObjectOfType<TPlayer>()?.gameObject;
         attachmentManager = GetComponent<AttachmentManager>(); // 버프/디버프 메니저
-		if (attachmentManager == null)
-		{
+		if (attachmentManager == null) {
             attachmentManager = gameObject.AddComponent<AttachmentManager>();
         }
     }
@@ -55,12 +57,14 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     protected virtual void OnEnable() {
         Initialize();
     }
-    protected virtual void Update() {}
-
+    protected virtual void Update() {
+        InterpolateTransform();
+    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawSphere(transform.position, detectRange);
     }
+
 
     private void Initialize() {
         StartCoroutine(UpdateTargetCoroutine());
@@ -98,7 +102,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         if(enemyStatesMap.TryGetValue(stateName, out nextState)) {
             enemyStateMachine.ChangeState(nextState);
         } else {
-            Debug.LogWarning("Wrong state is called.");
+            Debug.LogWarning($"Wrong state is called. Called state is '{stateName}'");
         }
     }
     public virtual void OnDamage(Damage damage) {
@@ -120,13 +124,20 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         // 버프/디버프 추가하는 함수!
         attachmentManager.AddAttachment(attachment);
     }
+    private void InterpolateTransform() {
+        if(!onHost) {
+            transform.position = Vector3.Lerp(transform.position, nextPosition, Time.deltaTime * 16);
+            transform.rotation = nextRotation;
+        }
+    }
 
     #region Status UI Controll
     // protected virtual void RefreshStatusUI() {
     //     SetHPSlider(hp / maxHp);
     // }
     protected virtual void RefreshHPSlider() {
-        hpSlider.value = hp / maxHp;
+        if(hpSlider != null)
+            hpSlider.value = hp / maxHp;
     }
     #endregion Status UI Controll
 }

@@ -32,7 +32,7 @@ public abstract class MovableEnemy : Enemy {
     }
 
     protected NavigateableMovement enemyMovement;
-    private Vector3 targetPoint;
+    protected Vector3 targetPoint;
 
     protected override void Awake() {
         base.Awake();

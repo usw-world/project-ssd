@@ -42,8 +42,6 @@ public class CameraManager : MonoBehaviour
     {
         StartCoroutine(SetNoise(value, time));
     }
-
-    // noise 사용
     IEnumerator SetNoise(float value, float time)
     {
         mainCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = value;
@@ -52,6 +50,23 @@ public class CameraManager : MonoBehaviour
         StopCoroutine("SetNoise");
     }
 
+    public void ShakeCamera(GameObject camera, float time, float power) 
+    {
+        StartCoroutine(ShakeCameraCo(camera, time, power));
+    }
+    private IEnumerator ShakeCameraCo(GameObject camera, float time, float power) 
+    {
+        Vector3 currPos = camera.transform.localPosition;
+        for (float i = 0; i < time; i += Time.deltaTime)
+		{
+            float x = currPos.x + Random.Range(-power, power);
+            float y = currPos.y + Random.Range(-power, power);
+            float z = currPos.z + Random.Range(-power, power);
+            camera.transform.localPosition = new Vector3(x, y, z);
+            yield return null;
+		}
+        camera.transform.localPosition = currPos;
+    }
     #region SwitchCam
     // 카메라 전환 커스텀 할 경우 CinemachineBrain에 커스텀 블랜드 항목 만들어서 사용
     // PostProcessing 적용시 카메라가 가진 CinemachineVolume도 전환시 똑같은 방식으로 블랜딩

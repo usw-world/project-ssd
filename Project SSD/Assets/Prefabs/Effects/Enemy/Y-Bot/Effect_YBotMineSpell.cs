@@ -4,6 +4,13 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
+	#region Network
+	private static int nextNetworkId = 0;
+
+	private bool onHost;
+	private int networkId = -1;
+	#endregion Network
+
 	public bool isActive = false;
 	[SerializeField] private float explosionRadius = 3f;
 	[SerializeField] private float explosionDelay = .25f;
@@ -32,6 +39,10 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
         return GetType().ToString();
     }
 
+	private void Awake() {
+		onHost = SSDNetworkManager.instance.isHost;
+		networkId = nextNetworkId++;
+	}
 	private void OnEnable() {
 		if(inPoolCoroutine != null)
 			StopCoroutine(inPoolCoroutine);
@@ -49,6 +60,11 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 
 		capsuleCollider.radius = explosionRadius;
 		capsuleCollider.height = explosionRadius*2 + 5;
+
+		Mirror.NetworkClient.RegisterHandler<TriggerEventMessage>(TriggerMine);
+	}
+	private void OnDisable() {
+		Mirror.NetworkClient.UnregisterHandler<TriggerEventMessage>();
 	}
 	private void Update() {
 		if(hasExplosion)
@@ -81,14 +97,18 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 	}
 	private void OnTriggerStay(Collider other) {
         if(isActive
+		&& onHost
 		&& !hasTriggered
 		&& other.gameObject.layer == 7) { // Player Layer
-			TriggerMine();
-			Disapear();
+			var message = new TriggerEventMessage(this.networkId);
+			Mirror.NetworkServer.SendToAll<TriggerEventMessage>(message);
         }
     }
-	private void TriggerMine() {
-		hasTriggered = true;
+	private void TriggerMine(TriggerEventMessage message) {
+		if(this.networkId == message.networkId) {
+			Disapear();
+			hasTriggered = true;
+		}
 	}
 	private void Disapear() {
 		idleParticle.Stop();
@@ -125,5 +145,12 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 		delayProjector.enabled = false;
 		explosionParticle.Stop();
 		PoolerManager.instance.InPool(this.GetKey(), this.gameObject);
+	}
+
+	private struct TriggerEventMessage : Mirror.NetworkMessage {
+		public int networkId;
+		public TriggerEventMessage(int networkId) {
+			this.networkId = networkId;
+		}
 	}
 }

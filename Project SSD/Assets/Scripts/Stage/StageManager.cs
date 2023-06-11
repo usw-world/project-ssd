@@ -10,6 +10,9 @@ public class StageManager : MonoBehaviour {
 
     Transform spawnPoint;
 
+    #region Synchronization Effects
+    #endregion Synchronization Effects
+
     private void Awake() {
         if(instance == null)
             instance = this;

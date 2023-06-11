@@ -7,6 +7,8 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 	public static List<Effect_Flagit> inSceneObj = new List<Effect_Flagit>();
 	[SerializeField] private GameObject dotDamagePrefab;
 	public Transform lightningMuzzle;
+	[SerializeField] private GameObject lightningEffect;
+	[SerializeField] private GameObject chargingEffect;
 
 	[SerializeField] private bool previewDamageZone = false;
 	[SerializeField] private bool previewDotDamageZone = false;
@@ -39,9 +41,13 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 		animator.SetTrigger(animationTrigger);
 		if (isBig) transform.localScale = Vector3.one * 3f;
 		else transform.localScale = Vector3.one;
+		lightningEffect.SetActive(false);
+		chargingEffect.SetActive(true);
 	}
 	public void ActiveDamageZone() // 데미지 시작할때 함수
 	{
+		lightningEffect.SetActive(true);
+		chargingEffect.SetActive(false);
 		activeDamageZone = true;
 		Collider[] hit = null;
 		float size = 1f;
@@ -92,7 +98,7 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 	}
 	IEnumerator InPool()
 	{
-		yield return new WaitForSeconds(5f);
+		yield return new WaitForSeconds(5.2f);
 		PoolerManager.instance.InPool(GetKey(), gameObject);
 		inSceneObj.Remove(this);
 	}
@@ -107,7 +113,7 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 			GameObject dotDamageObj = PoolerManager.instance.OutPool(dotDamageEffectKey);
 			dotDamageObj.transform.position = transform.position;
 			dotDamageObj.transform.position += new Vector3(0, 0.25f, 0);
-			StartCoroutine(InPoolEffect(dotDamageObj, dotDamageEffectKey, 2f));
+			StartCoroutine(InPoolEffect(dotDamageObj, dotDamageEffectKey, 1.1f));
 			float size = 2f;
 			if (isAreaTwice)
 			{
