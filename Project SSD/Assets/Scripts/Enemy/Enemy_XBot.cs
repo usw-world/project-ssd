@@ -20,6 +20,7 @@ class Enemy_XBot : MovableEnemy {
     private State dieState = new State("Die");
     #endregion States
 
+    
     private Vector3 targetPosition;
 
     #region Jump Attack

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using Mirror;
-
+[RequireComponent(typeof(StateMachine))]
 public abstract class Enemy : MonoBehaviour, IDamageable {
     public int networkId = -1;
 
@@ -56,9 +56,16 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
         Initialize();
     }
     protected virtual void Update() {}
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawSphere(transform.position, detectRange);
+    }
+
     private void Initialize() {
         StartCoroutine(UpdateTargetCoroutine());
     }
+    
     
     private IEnumerator UpdateTargetCoroutine() {
         while(!isDead) {
