@@ -145,7 +145,7 @@ public class Skill_wheel : MonoBehaviour, IPoolableObject
         }
         catch (Exception e)
         {
-            Debug.Log("Tplayer is null set QPlayer instead");
+            Debug.Log("Tplayer is null set QPlayer instead " + e.Message);
             target = QPlayer.instance.transform;
         }
         

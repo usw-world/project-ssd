@@ -19,7 +19,6 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 	private string dotDamageEffectKey;
 	private float damageAmount;
 	private float dotDamageAmount;
-	private bool activeDamageZone = false;
 	private bool isDotDamage = false;
 	private bool isShield = false;
 	private bool isFlinching4s = false;
@@ -46,9 +45,9 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 	}
 	public void ActiveDamageZone() // 데미지 시작할때 함수
 	{
+		if (isBig) CameraManager.instance.MakeNoise(2f, 0.3f);
 		lightningEffect.SetActive(true);
 		chargingEffect.SetActive(false);
-		activeDamageZone = true;
 		Collider[] hit = null;
 		float size = 1f;
 		float flinching = 1f;
@@ -82,7 +81,6 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 	public void Initialize(float damageAmount)
 	{
 		this.damageAmount = damageAmount;
-		activeDamageZone = false;
 		isDotDamage = false;
 		isShield = false;
 		isFlinching4s = false;

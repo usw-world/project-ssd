@@ -8,7 +8,9 @@ public class AoeBlackHole : MonoBehaviour, IPoolableObject
     private HashSet<Collider> attackedEnemies = new HashSet<Collider>();
 
     public GameObject explosion;
-    private void Start()
+
+	[System.Obsolete]
+	private void Start()
     {
         particle = GetComponent<ParticleSystem>();
         StartCoroutine(DestoryTimer());
@@ -54,7 +56,9 @@ public class AoeBlackHole : MonoBehaviour, IPoolableObject
     {
         AoeBuffer.GetInstance().onEnter.Invoke();
     }
-    IEnumerator DestoryTimer()
+
+	[System.Obsolete]
+	IEnumerator DestoryTimer()
     {
         yield return new WaitForSeconds(particle.startLifetime);
         PoolerManager.instance.InPool(GetType().ToString(), gameObject);

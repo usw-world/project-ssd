@@ -189,7 +189,8 @@ namespace Unity.Animations.SpringBones
 
         private void OnDrawGizmos()
         {
-			return;
+			int x = 1;
+			if (x == 1) return; 
             if (collideWithGround)
             {
                 if (groundPoints == null)

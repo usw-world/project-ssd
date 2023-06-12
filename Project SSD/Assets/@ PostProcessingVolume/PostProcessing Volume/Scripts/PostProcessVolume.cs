@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -117,23 +117,18 @@ public class PostProcessVolume : MonoBehaviour
 
         switch (ShapeOfVolume)
         {
-
-
                 case VolumeShape.BOX:
                 distanceVec = Quaternion.Inverse(this.transform.rotation)*distanceVec;
                 float distanceXPerc = Mathf.Clamp01((Mathf.Abs(distanceVec.x) - InnerBoxSize.x * 0.5f) / ((_boxCollider.size.x - InnerBoxSize.x) * 0.5f));
                 float distanceYPerc = Mathf.Clamp01((Mathf.Abs(distanceVec.y) - InnerBoxSize.y * 0.5f) / ((_boxCollider.size.y - InnerBoxSize.y) * 0.5f));
                 float distanceZPerc = Mathf.Clamp01((Mathf.Abs(distanceVec.z) - InnerBoxSize.z * 0.5f) / ((_boxCollider.size.z - InnerBoxSize.z) * 0.5f));
-
                 float max = Mathf.Max(distanceXPerc, distanceYPerc, distanceZPerc);
                 return Mathf.Clamp01(1 - max);
-                break;
+
                 case VolumeShape.SPHERE:
                 float percentage= (distanceVec.magnitude-InnerSphereRadius)/ (_sphereCollider.radius-InnerSphereRadius);
                 return Mathf.Clamp01(1 - percentage);
-                break;
         }
-
         return 0;
     }
 

@@ -21,14 +21,12 @@ public class QPlayer : NetworkBehaviour
     #region Q-Player Status
     public PlayerStatus status;
     private float qPlayerSp;
-    bool isAttached = true;
     bool canAttack = true;
     bool isCanMove = true;
     #endregion Q-Player Status
 
     #region Movement
     NavigateableMovement movement;
-    [SerializeField] private float movingSpeed = 10.0f;
     Vector3 movingDestination;
     #endregion Movement
     
@@ -68,7 +66,7 @@ public class QPlayer : NetworkBehaviour
     const string OneHandCasting_ANIMATION_PARAMETER = "1H Casting";
     #endregion Animation
 
-    [SerializeField] private GameObject qPlayerCamera;
+    public GameObject qPlayerCamera;
     [SerializeField] private CollisionEventHandler fightGhostFistZone;
 	[SerializeField] private List<GameObject> finishSkillCamera = new List<GameObject>();
 	[SerializeField] private List<GameObject> finishSkillEffect = new List<GameObject>();
@@ -643,7 +641,9 @@ public class QPlayer : NetworkBehaviour
             GameObject camera = Instantiate(qPlayerCamera);
             CameraManager.instance.playerCam = camera.GetComponent<CinemachineVirtualCamera>();
 			camera.GetComponent<PlayerCamera>().SetTarget(this.transform);
-        }
+			qPlayerCamera = camera;
+			CameraManager.instance.SetPlayerCamera();
+		}
     }
     void Update() {
         UpdateTargetArea();
