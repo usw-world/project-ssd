@@ -62,16 +62,16 @@ public class AoeHold : MonoBehaviour, IPoolableObject
 	[Obsolete]
 	IEnumerator DestoryTimer()
     {
-        yield return new WaitForSeconds(particle.startLifetime);
-        PoolerManager.instance.InPool(GetType().ToString(), gameObject);
-
+        yield return new WaitForSeconds(particle.startLifetime - 0.2f);
         if (AoeAttackDamage.GetInstance().isExplosion)
         {
-            GameObject obj = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
+			CameraManager.instance.MakeNoise(2f, 0.3f);
+			GameObject obj = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
             AoeAttackDamage.GetInstance().DoExplosionDamageAttack(attackedEnemies, transform);
             Destroy(obj, obj.GetComponent<ParticleSystem>().startLifetime);
         }
-    }
+		PoolerManager.instance.InPool(GetType().ToString(), gameObject);
+	}
 
     public string GetKey()
     {
