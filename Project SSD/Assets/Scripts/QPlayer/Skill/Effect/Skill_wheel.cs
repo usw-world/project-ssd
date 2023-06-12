@@ -161,7 +161,6 @@ public class Skill_wheel : MonoBehaviour, IPoolableObject
             }
             else
                 wheelArray[i] = PoolerManager.instance.OutPool(wheelPrefabKey);
-            wheelArray[i].transform.SetParent(transform);
             wheelArray[i].transform.localScale = new Vector3(scale, 0.1f, scale);
             wheelArray[i].GetComponent<Wheel>().strength = strength;
             var rot = wheelArray[i].transform.rotation.eulerAngles;
@@ -170,8 +169,10 @@ public class Skill_wheel : MonoBehaviour, IPoolableObject
             var rad = Mathf.Deg2Rad * (degree+(i*(360/wheelArray.Length)));
             var x = distance * Mathf.Sin(rad);
             var y = distance * Mathf.Cos(rad);
+            wheelArray[i].SetActive(false);
+            wheelArray[i].transform.SetParent(transform);
             wheelArray[i].transform.position = transform.position + new Vector3(x, 0, y);
-            
+            StartCoroutine(Delay(wheelArray[i]));
         }
         
 
@@ -242,5 +243,11 @@ public class Skill_wheel : MonoBehaviour, IPoolableObject
             Destroy(boom);
         }
         Destroy(this.gameObject);
+    }
+
+    IEnumerator Delay(GameObject obj)
+    {
+        yield return new WaitForSeconds(.1f);
+        obj.SetActive(true);
     }
 }
