@@ -90,23 +90,13 @@ public class CameraManager : MonoBehaviour
     // 카메라 기존 설정 사용해서 전환
     public void SwitchCameara(CinemachineVirtualCamera target)
     {
-        prevCam = mainCam;
-        if (prevCam != null)
-            prevCam.m_Priority--;
+        if (mainCam != null)
+            mainCam.m_Priority = 0;
         mainCam = target;
-        mainCam.m_Priority++;
+        mainCam.m_Priority = 12;
     }
 
-    // 되돌리기(카메라 여러개 전환하면 저장된거 날아가서 향후 수정 예정)
-    public void RevertCamera()
-    {
-        if (prevCam == null)
-            return;
-        mainCam.m_Priority--;
-        prevCam.m_Priority++;
-        mainCam = prevCam;
-        prevCam = null;
-    }
+
 
     #endregion
 
@@ -125,10 +115,11 @@ public class CameraManager : MonoBehaviour
 
     public void SetPlayerCamera()
     {
-        if(mainCam != null)
-            mainCam.m_Priority--;
+
+        if (mainCam != null)
+            mainCam.m_Priority = 0;
         mainCam = playerCam;
-        playerCam.m_Priority++;
+        mainCam.m_Priority = 11;
     }
     #endregion
 
