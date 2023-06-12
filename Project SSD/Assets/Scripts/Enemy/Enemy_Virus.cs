@@ -10,9 +10,10 @@ public class Enemy_Virus : MovableEnemy
     public GameObject check;
     public GameObject idleGameObject;
     public GameObject chaseGameObject;
-    public GameObject inspectionObject;
-    public GameObject inspectionImage;
+    public GameObject Canvas;
     public Vector3 targetPos;
+    
+
     
     private State idleState;
     private State chaseState;
@@ -21,8 +22,8 @@ public class Enemy_Virus : MovableEnemy
 
     private Coroutine hitCoroutine;
     private Vector3 rotation;
+    [SerializeField] private Transform[] imageList;
     private Transform tmpTPlayerTransform;
-    private string inspectionImagePoolerKey = "inspectionImage";
     private float rotSpeed;
     private float chaseTimer;
     private bool isSpin = false;
@@ -31,6 +32,7 @@ public class Enemy_Virus : MovableEnemy
     protected override void Awake()
     {
         base.Awake();
+        
         Debug.Log("Med awake");
     }
 
@@ -39,7 +41,6 @@ public class Enemy_Virus : MovableEnemy
         base.Start();
         Initialize();
         enemyStateMachine.SetIntialState(idleState);
-        PoolerManager.instance.InsertPooler("inspectionImage", inspectionImage, true);
         Debug.Log("Med start");
         
     }
@@ -96,25 +97,19 @@ public class Enemy_Virus : MovableEnemy
             isSpin = false;
             idleGameObject.SetActive(false);
             chaseGameObject.SetActive(true);
+            transform.LookAt(targetPos);
+            enemyMovement.MoveToPoint(targetPos, moveSpeed); 
+            // 이거 호출 계속되는데 이렇게 쓰는거 아닌거 같음
         };
 
         chaseState.onStay += () =>
         {
-            
-            transform.LookAt(targetPos);
-            if (chaseTimer > 0.3f)
-            {
-                chaseTimer = 0;
-                enemyMovement.MoveToPoint(targetPos, moveSpeed);   
-            }
-            else
-            {
-                chaseTimer += Time.deltaTime;
-            }
+
         };
 
         chaseState.onInactive += prevState =>
         {
+            Debug.Log("Chase State onInactive");
             enemyMovement.Stop();
         };
 
@@ -139,14 +134,13 @@ public class Enemy_Virus : MovableEnemy
     protected override void ChaseTarget(Vector3 point)
     {
         targetPos = point;
-        if (enemyStateMachine.currentState != chaseState && enemyStateMachine.currentState != attackState)
+        if (enemyStateMachine.currentState != attackState)
             SendChangeState(chaseState);
         float distance = Vector3.Distance(point, transform.position);
         if (distance <= 2 && enemyStateMachine.currentState != attackState)
         {
             SendChangeState(attackState);
         }
-        
     }
 
     protected override void OnLostTarget()
@@ -158,30 +152,18 @@ public class Enemy_Virus : MovableEnemy
     IEnumerator CreateImage()
     {
         chaseGameObject.SetActive(false);
-        List<GameObject> imageList = new List<GameObject>();
-        for (int i = 0; i < 2; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                var image = PoolerManager.instance.OutPool(inspectionImagePoolerKey);
-                var imageTr = image.GetComponent<RectTransform>();
-                image.transform.SetParent(inspectionObject.transform);
-                imageList.Add(image);
-                Vector3 pos = imageTr.position;
-                pos.x += (i * 350)+(j * 20)+300f;
-                pos.y -= (j*12)-200f+(i*40);
-                imageTr.position = pos;
-                yield return new WaitForSeconds(0.1f);
-                Debug.Log("Image Add");
-            }
-        }
-        yield return new WaitForSeconds(1);
+        imageList = Canvas.GetComponentsInChildren<Transform>(true);
         foreach (var image in imageList)
         {
-            Destroy(image);
+            image.gameObject.SetActive(true);
             yield return new WaitForSeconds(0.05f);
         }
-        Debug.Log("Destroy virus self");
+        yield return new WaitForSeconds(1f);
+        foreach (var image in imageList)
+        {
+            image.gameObject.SetActive(false);
+        }
         this.gameObject.SetActive(false);
     }
+    
 }

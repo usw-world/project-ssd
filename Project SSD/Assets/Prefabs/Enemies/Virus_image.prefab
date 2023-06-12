@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7744166137587285890}
   - component: {fileID: 1651136472327159076}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Virus_image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -180, y: 100}
-  m_SizeDelta: {x: 400, y: 240}
+  m_SizeDelta: {x: 970, y: 388}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7744166137587285890
 CanvasRenderer:
@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4f03d44651751784b8b230f99eaa8352, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e463620e226fb5448a48546b52822c32, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

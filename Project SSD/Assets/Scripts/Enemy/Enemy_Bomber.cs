@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Enemy_Bomber : MovableEnemy
 {
-
+    [FormerlySerializedAs("Explosion")] public GameObject explosion;
+    
     private State idleState;
     private State chaseState;
-
     private float moveTimer = 0;
     private Vector3 targetPos;
     private Coroutine explode;
@@ -21,10 +22,12 @@ public class Enemy_Bomber : MovableEnemy
     protected override void Start()
     {
         base.Start();
+        explosion.GetComponent<Enemy_Boomber_Explosion>().parent = this;
     }
     
     private void Initialize()
     {
+        
         idleState = new State("idle");
         chaseState = new State("chase");
         enemyStatesMap.Add(idleState.stateName, idleState);
@@ -62,10 +65,10 @@ public class Enemy_Bomber : MovableEnemy
 
     }
 
-    private void Explode()
+    public void Explode()
     {
-        var damage = new Damage(1, 0.5f, transform.forward, Damage.DamageType.Normal);
-        base.OnDamage(damage);
+        explosion.SetActive(false);
+        this.gameObject.SetActive(false);
     }
 
     protected override void ChaseTarget(Vector3 point)
@@ -89,6 +92,6 @@ public class Enemy_Bomber : MovableEnemy
             Debug.Log($"{2-i*0.2f}초 후 터짐");
             yield return new WaitForSeconds(0.2f);
         }
-        Explode();
+        explosion.SetActive(true);
     }
 }
