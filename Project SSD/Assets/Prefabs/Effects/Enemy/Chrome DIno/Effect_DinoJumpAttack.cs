@@ -2,12 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Effect_XBotJumpAttack : MonoBehaviour, IPoolableObject {
-    [SerializeField] private float radius = 2.5f;
-	[SerializeField] private float amount = 10f;
+public class Effect_DinoJumpAttack : MonoBehaviour, IPoolableObject {
+    [SerializeField] public float radius = 5f;
+	[SerializeField] public float amount = 30f;
+    [SerializeField] private ParticleSystem piecesParticle;
+    [SerializeField] private ParticleSystem crackParticle;
 
 	public string GetKey() {
         return this.GetType().ToString();
+    }
+
+    private void Awake() {
+
+    }
+    private void OnEnable() {
+        ParticleSystem.ShapeModule shape = piecesParticle.shape;
+        shape.radius = this.radius;
+        ParticleSystem.MainModule main = crackParticle.main;
+        main.startSize = this.radius*2;
     }
     
     public void AttackArea(Vector3 center) {
@@ -18,7 +30,7 @@ public class Effect_XBotJumpAttack : MonoBehaviour, IPoolableObject {
 			Damage damage = new Damage(
 				amount, 
 				1.5f,
-				Vector3.zero,
+				Vector3.zero, 
 				Damage.DamageType.Down
 			);
             inner.GetComponent<IDamageable>()?.OnDamage(damage);

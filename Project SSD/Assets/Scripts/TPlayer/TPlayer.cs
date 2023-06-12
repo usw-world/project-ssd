@@ -144,6 +144,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
             GameObject camera = Instantiate(tPlayerCameraPrefab);
 			camera.GetComponent<PlayerCamera>().SetTarget(this.transform);
 			CameraManager.instance.playerCam = camera.GetComponent <CinemachineVirtualCamera>();
+			CameraManager.instance.SetPlayerCamera();
         }
     }
 	private void InitializeStates() {

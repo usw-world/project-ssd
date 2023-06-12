@@ -8,10 +8,7 @@ public class StageManager : MonoBehaviour {
     [SerializeField] private GameObject tPlayerCamera;
     [SerializeField] private GameObject qPlayerCamera;
 
-    Transform spawnPoint;
-
-    #region Synchronization Effects
-    #endregion Synchronization Effects
+    [SerializeField] private Transform spawnPoint;
 
     private void Awake() {
         if(instance == null)

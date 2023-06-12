@@ -60,16 +60,14 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     protected virtual void Update() {
         InterpolateTransform();
     }
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawSphere(transform.position, detectRange);
+    private void OnDrawGizmosSelected() {
+        Gizmos.DrawWireSphere(transform.position, detectRange);
     }
 
 
     private void Initialize() {
         StartCoroutine(UpdateTargetCoroutine());
     }
-    
     
     private IEnumerator UpdateTargetCoroutine() {
         while(!isDead) {

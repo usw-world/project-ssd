@@ -1,56 +1,41 @@
 fileFormatVersion: 2
-guid: b079174ca7166ff439e7a5ac00004106
+guid: a703e9237f88de7468d28310110f120d
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable:
   - first:
-      74: 7464979582949347148
-    second: Dino|Dino Breath
+      74: -1607185181031593376
+    second: "\uC544\uB9C8\uD29C\uC5B4|Pteradonon Fly"
   - first:
-      74: -5913108328972734123
-    second: Dino|Dino Idle
+      74: 7441452839146459501
+    second: "\uC544\uB9C8\uD29C\uC5B4|Pteradonon Attack"
   - first:
-      74: 1014497666642824526
-    second: Dino|Dino Jump
+      74: 2981963873716979238
+    second: Armature|Pteradonon Fly
   - first:
-      74: -3654318044418167227
-    second: Dino|Dino Run
+      74: -4570202056227703773
+    second: Armature|Pteradonon Attack
   - first:
-      74: 2471504354714017805
-    second: Dino|Chrome DInoAction
+      74: 4781951162920444690
+    second: Armature|ArmatureAction
   - first:
-      74: 3620398077749894052
-    second: Armature|Dino Breath
+      74: -7050904160543548161
+    second: Armature|Pteradonon Hit
   - first:
-      74: 5004222383157856348
-    second: Armature|Dino Idle
+      74: 1142977087968446103
+    second: Armature|Pteradonon Die
   - first:
-      74: 450618498770199268
-    second: Armature|Dino Jump
-  - first:
-      74: -2051429695845622853
-    second: Armature|Dino Run
-  - first:
-      74: -2956680738012009790
-    second: Armature|Chrome DInoAction
-  - first:
-      74: 7361551479764950042
-    second: Armature|Dino Summon
-  - first:
-      74: 6310078920923687152
-    second: Armature|Dino High Jump
-  - first:
-      74: 4763358879770722700
-    second: Armature|Dino Jump (1)
+      74: -4700436261857515908
+    second: Armature|Pteradonon Fly (1)
   externalObjects:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Dino Material
-    second: {fileID: 2100000, guid: 3ab8e089c2c1a9a47863a0cedecc37ca, type: 2}
+      name: Body Material
+    second: {fileID: 2100000, guid: 198f8f0e108094747b030bc1a78ca777, type: 2}
   materials:
     materialImportMode: 2
-    materialName: 0
+    materialName: 1
     materialSearch: 1
     materialLocation: 1
   animations:
@@ -77,11 +62,40 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Armature|Dino Idle
-      takeName: Armature|Dino Idle
+      name: Armature|Pteradonon Die
+      takeName: Armature|Pteradonon Die
       internalID: 0
       firstFrame: 0
-      lastFrame: 39
+      lastFrame: 24
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Armature|Pteradonon Fly
+      takeName: Armature|Pteradonon Fly
+      internalID: 0
+      firstFrame: 0
+      lastFrame: 20
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -106,11 +120,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Dino Jump
-      takeName: Armature|Dino Jump
+      name: Armature|Pteradonon Attack
+      takeName: Armature|Pteradonon Attack
       internalID: 0
       firstFrame: 0
-      lastFrame: 90
+      lastFrame: 40
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -130,15 +144,15 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.32947975
-        functionName: AnimationEvent_FlyJumpAttack
+      - time: 0.6531792
+        functionName: AnimationEvent_OnAttackAction
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.8323699
-        functionName: AnimationEvent_LandJumpAttack
+      - time: 1
+        functionName: AnimationEvent_OnEndAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
@@ -149,40 +163,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Dino Run
-      takeName: Armature|Dino Run
+      name: Armature|Pteradonon Hit
+      takeName: Armature|Pteradonon Hit
       internalID: 0
       firstFrame: 0
-      lastFrame: 120
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Armature|Dino Summon
-      takeName: Armature|Dino Summon
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 90
+      lastFrame: 1
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
