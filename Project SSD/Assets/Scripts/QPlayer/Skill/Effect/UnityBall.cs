@@ -6,24 +6,29 @@ using UnityEngine;
 
 public class UnityBall : MonoBehaviour, IPoolableObject
 {
+	private static int unityBallCount = 0;
+	public static Dictionary<int, UnityBall> unityBallInScene = new Dictionary<int, UnityBall>();
+
 	[SerializeField] protected CollisionEventHandler homingArea;
+	[SerializeField] protected GameObject baceEffect;
+	public bool isHoming = false;
+	public string lastExplosionKey;
+	public int networkId = -1;
+
 	protected List<Attachment> attachments = new List<Attachment>();
 	protected List<Transform> targets = new List<Transform>();
+	protected Coroutine hideCoroutine = null;
 	protected float runTime = 2f;
 	protected float damageAmount;
 	protected float speed;
 	protected float homingPerformance = .1f;
 	protected float lastExplosionDamage;
 	protected bool isLastExplosion = false;
-	public bool isHoming = false;
-	protected Coroutine hideCoroutine = null;
-	public string lastExplosionKey;
-	public int networkId = -1;
-	private static int unityBallCount = 0;
-	public static Dictionary<int, UnityBall> unityBallInScene = new Dictionary<int, UnityBall>();
+	protected bool isRun = true;
+
 	public virtual void OnActive(float damage, float speed)
 	{
-		hideCoroutine = StartCoroutine(Hide());
+		hideCoroutine = StartCoroutine(Hide(runTime));
 		this.damageAmount = damage;
 		this.speed = speed;
 	}
@@ -40,6 +45,7 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 	}
 	protected void Update()
 	{
+		if (!isRun) return;
 		if (isHoming)
 		{
 			if (targets.Count > 0)
@@ -66,8 +72,16 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 		}
 		transform.Translate(Vector3.forward * Time.deltaTime * speed);
 	}
-	protected IEnumerator Hide() {
-		yield return new WaitForSeconds(runTime);
+	protected IEnumerator Hide(float time) {
+		yield return new WaitForSeconds(time);
+		Collider collider = GetComponent<Collider>();
+		if (collider != null) collider.enabled = false;
+		isRun = false;
+		baceEffect.SetActive(false); 
+		yield return new WaitForSeconds(2.5f);
+		if (collider != null) collider.enabled = true;
+		isRun = true;
+		baceEffect.SetActive(true);
 		PoolerManager.instance.InPool(GetKey(), gameObject);
 	}
 	public virtual void AddDebuff(Attachment attachment) {
@@ -83,13 +97,6 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 	}
 	protected virtual void OnDisable()
 	{
-		if (isLastExplosion)
-		{
-			GameObject obj = PoolerManager.instance.OutPool(lastExplosionKey);
-			obj.transform.position = transform.position;
-			obj.transform.localScale = transform.localScale;
-			obj.GetComponent<UnityBallLastExplosion>().OnActive(lastExplosionDamage);
-		}
 		if (hideCoroutine != null) StopCoroutine(hideCoroutine);
 		hideCoroutine = null;
 		isLastExplosion = false;
@@ -116,7 +123,14 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 				Enemy enemy = other.gameObject.GetComponent<Enemy>();
 				enemy?.AddAttachment(attachments[i]);
 			}
-			PoolerManager.instance.InPool(GetKey(), gameObject);
+			if (isLastExplosion)
+			{
+				GameObject obj = PoolerManager.instance.OutPool(lastExplosionKey);
+				obj.transform.position = transform.position;
+				obj.transform.localScale = transform.localScale;
+				obj.GetComponent<UnityBallLastExplosion>().OnActive(lastExplosionDamage);
+			}
+			StartCoroutine(Hide(0));
 		}
 	}
 	protected void OnDetectHomingTarget(Collider other) {

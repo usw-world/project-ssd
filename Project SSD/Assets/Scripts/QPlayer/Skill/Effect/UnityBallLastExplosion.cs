@@ -11,7 +11,7 @@ public class UnityBallLastExplosion : MonoBehaviour, IPoolableObject
 
 	public void OnActive(float damageAmount) {
 		Collider[] hit = null;
-		hit = Physics.OverlapSphere(transform.position, transform.localScale.x, 1 << 8);
+		hit = Physics.OverlapSphere(transform.position, transform.localScale.x * 0.5f, 1 << 8);
 		for (int i = 0; i < hit.Length; i++)
 		{
 			IDamageable target = hit[i].GetComponent<IDamageable>();

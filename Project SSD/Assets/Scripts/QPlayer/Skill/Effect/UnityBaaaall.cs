@@ -4,28 +4,39 @@ using UnityEngine;
 
 public class UnityBaaaall : UnityBall
 {
+	[SerializeField] private GameObject explosionEfect;
 	public override void OnActive(float damage, float speed)
 	{
 		speed = speed * 0.5f;
 		base.OnActive(damage, speed);
+		isRun = false;
 	}
-	protected override void OnTriggerEnter(Collider other)
+	public void Explosion()
 	{
-		if (other.gameObject.layer == 8)
+		CameraManager.instance.MakeNoise(2f, 0.3f);
+		Collider[] hit = Physics.OverlapSphere(transform.position, 2.5f, 1 << 8);
+		for (int i = 0; i < hit.Length; i++)
 		{
-			IDamageable target = other.gameObject.GetComponent<IDamageable>();
+			IDamageable target = hit[i].gameObject.GetComponent<IDamageable>();
 			Damage damage = new Damage(
 				damageAmount,
-				.5f,
-				(other.transform.position - transform.position).normalized * 10f,
-				Damage.DamageType.Normal
+				2f,
+				(hit[i].transform.position - transform.position).normalized * 10f,
+				Damage.DamageType.Down
 			);
 			target.OnDamage(damage);
-			for (int i = 0; i < attachments.Count; i++)
+			for (int j = 0; j < attachments.Count; j++)
 			{
-				Enemy enemy = other.gameObject.GetComponent<Enemy>();
-				enemy.AddAttachment(attachments[i]);
+				Enemy enemy = hit[i].gameObject.GetComponent<Enemy>();
+				enemy?.AddAttachment(attachments[j]);
 			}
 		}
+		StartCoroutine(ExplosionCo());
+	}
+	private IEnumerator ExplosionCo()
+	{
+		explosionEfect.SetActive(true);
+		yield return new WaitForSeconds(1.5f);
+		explosionEfect.SetActive(false);
 	}
 }

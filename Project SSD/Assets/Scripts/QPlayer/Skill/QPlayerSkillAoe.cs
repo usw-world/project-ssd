@@ -40,16 +40,26 @@ public class QPlayerSkillAoe : Skill
 
     private void Awake()
     {
-        infoEffectKey = info.effect.GetComponent<IPoolableObject>().GetKey();
-        option04_effectKey = option04_effect.GetComponent<IPoolableObject>().GetKey();
-        option05_effectKey = option05_effect.GetComponent<IPoolableObject>().GetKey();
+		options[0].active = false;	 // 
+		options[1].active = false;	 // 
+		options[2].active = false;	 // 
+		options[3].active = false;	 // 
+		options[4].active = true;	 // 가두기
+		options[5].active = false;	 // 모으기
+		options[6].active = false;	 // 
+		options[7].active = false;	 // 폭발
+	}
+	private void Start()
+	{
+		infoEffectKey = info.effect.GetComponent<IPoolableObject>().GetKey();
+		option04_effectKey = option04_effect.GetComponent<IPoolableObject>().GetKey();
+		option05_effectKey = option05_effect.GetComponent<IPoolableObject>().GetKey();
 
-        PoolerManager.instance.InsertPooler(infoEffectKey, info.effect, false);
-        PoolerManager.instance.InsertPooler(option04_effectKey, option04_effect, false);
-        PoolerManager.instance.InsertPooler(option05_effectKey, option05_effect, false);
-    }
-
-    public override bool CanUse()
+		PoolerManager.instance.InsertPooler(infoEffectKey, info.effect, false);
+		PoolerManager.instance.InsertPooler(option04_effectKey, option04_effect, false);
+		PoolerManager.instance.InsertPooler(option05_effectKey, option05_effect, false);
+	}
+	public override bool CanUse()
     {
         if (property.nowCoolTime >= property.coolTime)
         {

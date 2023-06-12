@@ -11,7 +11,8 @@ public class Aoe : MonoBehaviour, IPoolableObject
     private ParticleSystem particle;
     private HashSet<Collider> attackedEnemies = new HashSet<Collider>();
 
-    private void Start()
+	[Obsolete]
+	private void Start()
     {
         particle = GetComponent<ParticleSystem>();
         StartCoroutine(DestoryTimer());
@@ -44,7 +45,8 @@ public class Aoe : MonoBehaviour, IPoolableObject
         AoeBuffer.GetInstance()?.onEnter?.Invoke();
     }
 
-    IEnumerator DestoryTimer()
+	[Obsolete]
+	IEnumerator DestoryTimer()
     {
         yield return new WaitForSeconds(particle.startLifetime);
         PoolerManager.instance.InPool(GetType().ToString(), gameObject);

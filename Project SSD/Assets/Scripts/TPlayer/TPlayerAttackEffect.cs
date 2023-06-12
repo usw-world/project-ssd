@@ -16,8 +16,11 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 	private void Awake()
 	{
 		previewBoxPrefab = Resources.Load("previewBoxPrefab") as GameObject;
-		hitEffectKey = hitEffect.GetComponent<IPoolableObject>().GetKey();
-		PoolerManager.instance.InsertPooler(hitEffectKey, hitEffect, false);
+		if (hitEffect != null)
+		{
+			hitEffectKey = hitEffect.GetComponent<IPoolableObject>().GetKey();
+			PoolerManager.instance.InsertPooler(hitEffectKey, hitEffect, false);
+		}
 	}
 	public void OnActive(float damageAmount)
 	{

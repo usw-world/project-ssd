@@ -15,7 +15,9 @@ public class AoeHold : MonoBehaviour, IPoolableObject
     private HashSet<Collider> attackedEnemies = new HashSet<Collider>();
 
     public GameObject explosion;
-    private void Start()
+
+	[Obsolete]
+	private void Start()
     {
         particle = GetComponent<ParticleSystem>();
         StartCoroutine(DestoryTimer());
@@ -56,18 +58,20 @@ public class AoeHold : MonoBehaviour, IPoolableObject
     {
         AoeBuffer.GetInstance().onEnter.Invoke();
     }
-    IEnumerator DestoryTimer()
-    {
-        yield return new WaitForSeconds(particle.startLifetime);
-        PoolerManager.instance.InPool(GetType().ToString(), gameObject);
 
+	[Obsolete]
+	IEnumerator DestoryTimer()
+    {
+        yield return new WaitForSeconds(particle.startLifetime - 0.2f);
         if (AoeAttackDamage.GetInstance().isExplosion)
         {
-            GameObject obj = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
+			CameraManager.instance.MakeNoise(2f, 0.3f);
+			GameObject obj = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
             AoeAttackDamage.GetInstance().DoExplosionDamageAttack(attackedEnemies, transform);
             Destroy(obj, obj.GetComponent<ParticleSystem>().startLifetime);
         }
-    }
+		PoolerManager.instance.InPool(GetType().ToString(), gameObject);
+	}
 
     public string GetKey()
     {

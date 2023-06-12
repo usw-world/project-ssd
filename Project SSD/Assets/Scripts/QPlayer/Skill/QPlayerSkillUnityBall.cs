@@ -62,6 +62,33 @@ public class QPlayerSkillUnityBall : Skill
 			return Vector3.one * size;
 		}
 	}
+	private void Awake()
+	{
+		options[0].name = "강력한 일격";
+		options[0].info = "데미지를 증가한다";
+		options[1].name = "빠른 일격";
+		options[1].info = "파이어볼의 속도가 증가한다";
+		options[2].name = "피닉스의 날개";
+		options[2].info = "파트너의 HP를 회복 시킨다";
+		options[3].name = "영겁의 불꽃";
+		options[3].info = "적에게 5초간 지속피해를 준다";
+		options[4].name = "꺼진 불도 다시 보자";
+		options[4].info = "파이어볼이 사라질때 폭발하며 추가 피해를 준다";
+		options[5].name = "LookAt";
+		options[5].info = "유도 기능을 활성화 한다";
+		options[6].name = "";
+		options[6].info = "";
+		options[7].name = "메테오";
+		options[7].info = "강력한 공격으로 변경된다";
+		//options[0].active = true;
+		//options[1].active = true;
+		//options[2].active = true;
+		//options[3].active = true;
+		//options[4].active = true;
+		//options[5].active = true;
+		//options[6].active = true;
+		options[7].active = true;
+	}
 	private void Start()
 	{
 		infoEffectKey = info.effect.GetComponent<IPoolableObject>().GetKey();
@@ -90,20 +117,23 @@ public class QPlayerSkillUnityBall : Skill
 		{
 			obj = PoolerManager.instance.OutPool(option06_effectKey);
 			temp = obj.GetComponent<UnityHubBall>();
+			obj.transform.position = sponPos;
+			obj.transform.LookAt(target + Vector3.up);
 		}
 		else if (options[7].active)
 		{
 			obj = PoolerManager.instance.OutPool(option07_effectKey);
 			temp = obj.GetComponent<UnityBaaaall>();
+			obj.transform.position = target + new Vector3(0, 0.1f, 0);
+			obj.transform.eulerAngles = Vector3.zero;
 		}
 		else
 		{
 			obj = PoolerManager.instance.OutPool(infoEffectKey);
 			temp = obj.GetComponent<UnityBall>();
+			obj.transform.position = sponPos;
+			obj.transform.LookAt(target + Vector3.up);
 		}
-		obj.transform.position = sponPos;
-		obj.transform.LookAt(target + Vector3.up);
-		obj.transform.localScale = LastSize;
 		temp.OnActive(DamageAmout, LastSpeed);
 
 		if (options[2].active)
