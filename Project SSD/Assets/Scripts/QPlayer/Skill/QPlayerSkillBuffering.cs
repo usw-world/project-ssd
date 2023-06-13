@@ -18,10 +18,19 @@ public class QPlayerSkillBuffering : Skill
     public float option06_rolling;
     public float option07_stack;
     private string wheelCreatorKey;
-    
 
+	// 기본 - 1개, 2바퀴
 
-    private void Awake()
+	// 1. 속도 증가
+	// 2. 반경 증가
+	// 3. 체인스킬로 변경 - 발사됨
+	// 4. 쿨타임 감소
+	// 5. 지속 시간 2배
+	// 6. 4개
+	// 7. 공격 명중시 실드 
+	// 8. 공격력 증가 100 % 3초
+
+	private void Awake()
     {
         wheelCreatorKey = wheelCreator.GetComponent<IPoolableObject>().GetKey();
         PoolerManager.instance.InsertPooler(wheelCreatorKey, wheelCreator, false);
@@ -42,7 +51,6 @@ public class QPlayerSkillBuffering : Skill
 
         obj.SetActive(true);
         BufferCreator.target = this.transform;
-
         if (options[7].active)
             BufferCreator.Active_stack();
         if (options[0].active)
