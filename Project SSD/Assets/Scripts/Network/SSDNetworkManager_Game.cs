@@ -8,6 +8,37 @@ using C2SMessage;
 using S2CMessage;
 
 public partial class SSDNetworkManager : NetworkManager {
+    public Dictionary<System.Type, List<System.Action<NetworkMessage>>> messageHandlerMap = new Dictionary<System.Type, List<System.Action<NetworkMessage>>>();
+
+    public void RegisterHandler<T>(System.Action<NetworkMessage> action) where T : struct, NetworkMessage {
+        System.Type type = typeof(T);
+        List<System.Action<NetworkMessage>> list;
+        
+        if(!messageHandlerMap.ContainsKey(type)) {
+            list = new List<System.Action<NetworkMessage>>();
+            messageHandlerMap.Add(type, list);
+
+            print(typeof(T));
+            NetworkClient.RegisterHandler<T>((message) => {
+                for(int i=0; i<list.Count; i++) {
+                    list[i]?.Invoke(message);
+                }
+            });
+        } else {
+            list = messageHandlerMap[type];
+        }
+        list.Add(action as System.Action<NetworkMessage>);
+    }
+    public void UnregisterHandler<T>(System.Action<NetworkMessage> action) where T : struct, NetworkMessage {
+        System.Type type = typeof(T);
+        var list = messageHandlerMap[type];
+        list.Remove(action as System.Action<NetworkMessage>);
+        if(list.Count <= 0) {
+            messageHandlerMap.Remove(type);
+            NetworkClient.UnregisterHandler<T>();
+        }
+    }
+
     #region Message Handlers
     private void OnCreateTPlayerPrefab(NetworkConnectionToClient conn, CreateTPlayerPrefabMessage message) {
         player = Instantiate(tPlayerObject);

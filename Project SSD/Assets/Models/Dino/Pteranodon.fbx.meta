@@ -11,19 +11,19 @@ ModelImporter:
     second: "\uC544\uB9C8\uD29C\uC5B4|Pteradonon Attack"
   - first:
       74: 2981963873716979238
-    second: Armature|Pteradonon Fly
+    second: Armature|Pteranodon Fly
   - first:
       74: -4570202056227703773
-    second: Armature|Pteradonon Attack
+    second: Armature|Pteranodon Attack
   - first:
       74: 4781951162920444690
     second: Armature|ArmatureAction
   - first:
       74: -7050904160543548161
-    second: Armature|Pteradonon Hit
+    second: Armature|Pteranodon Hit
   - first:
       74: 1142977087968446103
-    second: Armature|Pteradonon Die
+    second: Armature|Pteranodon Die
   - first:
       74: -4700436261857515908
     second: Armature|Pteradonon Fly (1)
@@ -62,7 +62,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Armature|Pteradonon Die
+      name: Armature|Pteranodon Die
       takeName: Armature|Pteradonon Die
       internalID: 0
       firstFrame: 0
@@ -91,7 +91,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Pteradonon Fly
+      name: Armature|Pteranodon Fly
       takeName: Armature|Pteradonon Fly
       internalID: 0
       firstFrame: 0
@@ -120,7 +120,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Pteradonon Attack
+      name: Armature|Pteranodon Attack
       takeName: Armature|Pteradonon Attack
       internalID: 0
       firstFrame: 0
@@ -163,7 +163,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Pteradonon Hit
+      name: Armature|Pteranodon Hit
       takeName: Armature|Pteradonon Hit
       internalID: 0
       firstFrame: 0

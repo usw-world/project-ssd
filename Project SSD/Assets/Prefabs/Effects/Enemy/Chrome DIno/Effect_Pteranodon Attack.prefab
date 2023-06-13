@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8786273388314773372}
   - component: {fileID: -1714581873862434133}
   m_Layer: 0
-  m_Name: Effect_Pteradonon Attack
+  m_Name: Effect_Pteranodon Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

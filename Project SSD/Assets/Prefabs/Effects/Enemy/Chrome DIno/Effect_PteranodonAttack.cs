@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Effect_PteradononAttack : MonoBehaviour, IPoolableObject {
+public class Effect_PteranodonAttack : MonoBehaviour, IPoolableObject {
 	[SerializeField] private float damageAmount = 16f;
 	[SerializeField] private float flyingSpeed = 2f;
 	[SerializeField] private float hittingDuration = .45f;

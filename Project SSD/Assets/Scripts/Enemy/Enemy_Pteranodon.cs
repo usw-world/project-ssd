@@ -1,11 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
-class Enemy_Pteradonon : MovableEnemy {
+class Enemy_Pteranodon : MovableEnemy {
     #region States
     private State idleState = new State("Idle");
     private State chaseState = new State("Chase");
     private State attackState = new State("Attack");
+    private State assaultState = new State("Assault");
     private State stunnedState = new State("Stunned");
     private State hitState = new State("Hit");
     private State dieState = new State("Die");
@@ -14,7 +15,7 @@ class Enemy_Pteradonon : MovableEnemy {
     private Vector3 targetPosition;
 
     #region Attack
-    [SerializeField] private Effect_PteradononAttack attackEffect;
+    [SerializeField] private Effect_PteranodonAttack attackEffect;
     #endregion Attack
 
     #region Hit
@@ -54,7 +55,7 @@ class Enemy_Pteradonon : MovableEnemy {
                 SendChangeState(idleState);
             }
         };
-        chaseState.onInactive += (State prevState) => {
+        chaseState.onInactive += (State nextState) => {
             enemyAnimator.SetBool("Chase", false);
             enemyMovement.Stop();
         };
@@ -63,8 +64,14 @@ class Enemy_Pteradonon : MovableEnemy {
             enemyAnimator.SetBool("Attack", true);
             transform.LookAt(Vector3.Scale(new Vector3(1,0,1), targetPosition));
 		};
-        attackState.onInactive += (State prevState) => {
+        attackState.onInactive += (State nextState) => {
             enemyAnimator.SetBool("Attack", false);
+        };
+        assaultState.onActive += (State prevstate) => {
+            enemyAnimator.SetBool("Assault", true);
+        };
+        assaultState.onInactive += (State nextState) => {
+            enemyAnimator.SetBool("Assault", false);
         };
         stunnedState.onActive = (State prevState) => {
             enemyAnimator.SetBool("Stunned", false);
@@ -89,7 +96,7 @@ class Enemy_Pteradonon : MovableEnemy {
             enemyStateMachine.isMuted = true;
             hpSlider.gameObject.SetActive(false);
         };
-        dieState.onInactive += (State prevState) => {
+        dieState.onInactive += (State nextState) => {
             enemyAnimator.SetBool("Die", false);
             enemyStateMachine.isMuted = false;
             hpSlider.gameObject.SetActive(true);
@@ -97,6 +104,7 @@ class Enemy_Pteradonon : MovableEnemy {
         enemyStatesMap.Add(idleState.stateName, idleState);
         enemyStatesMap.Add(chaseState.stateName, chaseState);
         enemyStatesMap.Add(attackState.stateName, attackState);
+        enemyStatesMap.Add(assaultState.stateName, assaultState);
         enemyStatesMap.Add(stunnedState.stateName, stunnedState);
         enemyStatesMap.Add(hitState.stateName, hitState);
         enemyStatesMap.Add(dieState.stateName, dieState);

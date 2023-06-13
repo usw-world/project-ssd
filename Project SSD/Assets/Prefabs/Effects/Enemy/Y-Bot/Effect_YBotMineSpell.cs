@@ -14,7 +14,7 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 	public bool isActive = false;
 	[SerializeField] private float explosionRadius = 3f;
 	[SerializeField] private float explosionDelay = .25f;
-	[SerializeField] private float setUpDelay = 1f;
+	[SerializeField] private float setUpDelay = 1.5f;
 	private float currentSetUpDelay = 0;
 	private float triggerTime = 0;
 
@@ -28,7 +28,7 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 	private float duration = 15f;
 	private float lifetime = 0;
 	private bool hasTriggered = false;
-	private bool hasExplosion = false;
+	private bool hasExploded = false;
 	
 	[SerializeField] private ParticleSystem apearParticle;
 	[SerializeField] private ParticleSystem idleParticle;
@@ -44,13 +44,16 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 		networkId = nextNetworkId++;
 	}
 	private void OnEnable() {
+		print("usoock is good.");
 		if(inPoolCoroutine != null)
 			StopCoroutine(inPoolCoroutine);
 		apearParticle.Play();
 		idleParticle.Play();
-		lifetime = 0;
+		currentSetUpDelay = 0;
 		triggerTime = 0;
+		lifetime = 0;
 		hasTriggered = false;
+		hasExploded = false;
 
 		rangeProjector.enabled = true;
 		delayProjector.enabled = true;
@@ -61,13 +64,13 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 		capsuleCollider.radius = explosionRadius;
 		capsuleCollider.height = explosionRadius*2 + 5;
 
-		Mirror.NetworkClient.RegisterHandler<TriggerEventMessage>(TriggerMine);
+		SSDNetworkManager.instance.RegisterHandler<TriggerEventMessage>(TriggerMine);
 	}
 	private void OnDisable() {
-		Mirror.NetworkClient.UnregisterHandler<TriggerEventMessage>();
+		SSDNetworkManager.instance.UnregisterHandler<TriggerEventMessage>(TriggerMine);
 	}
 	private void Update() {
-		if(hasExplosion)
+		if(hasExploded)
 			return;
 			
 		if(!isActive) {
@@ -78,7 +81,6 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 				isActive = true;
 			return;
 		}
-			
 		lifetime += Time.deltaTime;
 		if(lifetime >= duration) {
 			rangeProjector.enabled = false;
@@ -104,10 +106,15 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 			Mirror.NetworkServer.SendToAll<TriggerEventMessage>(message);
         }
     }
-	private void TriggerMine(TriggerEventMessage message) {
-		if(this.networkId == message.networkId) {
-			Disapear();
-			hasTriggered = true;
+	private void TriggerMine(Mirror.NetworkMessage message) {
+		try {
+			TriggerEventMessage tMsg = (TriggerEventMessage)message;
+			if(this.networkId == tMsg.networkId) {
+				Disapear();
+				hasTriggered = true;
+			}
+		} catch(System.InvalidCastException e) {
+			Debug.LogError(e);
 		}
 	}
 	private void Disapear() {
@@ -117,7 +124,7 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 		inPoolCoroutine = StartCoroutine(InPoolCoroutine());
 	}
 	private void Explosion() {
-		hasExplosion = true;
+		hasExploded = true;
 		Vector3 point1 = transform.position + Vector3.up*5;
 		Vector3 point2 = transform.position - Vector3.up*5;
 		Collider[] inners = Physics.OverlapCapsule(point1, point2, explosionRadius, 1<<7);
@@ -141,8 +148,7 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 	}
 	private IEnumerator InPoolCoroutine() {
 		yield return new WaitForSeconds(5f);
-		rangeProjector.enabled = false;
-		delayProjector.enabled = false;
+		isActive = false;
 		explosionParticle.Stop();
 		PoolerManager.instance.InPool(this.GetKey(), this.gameObject);
 	}

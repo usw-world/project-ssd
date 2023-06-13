@@ -40,7 +40,8 @@ class Enemy_YBot : MovableEnemy {
     #endregion Shoot Spell
 
     #region Mine Spell
-    private const float MINE_COOLTIME = 10f;
+    // private const float MINE_COOLTIME = 10f;
+    private const float MINE_COOLTIME = 0f;
     [SerializeField] private Effect_YBotMineSpell ybotMineSpell;
     private float currentMineCooltime = 0;
     #endregion Mine Spell
@@ -72,7 +73,7 @@ class Enemy_YBot : MovableEnemy {
     private void InitializePoolers() {
         PoolerManager.instance.InsertPooler(ybotBomb.GetKey(), ybotBomb.gameObject, true);
         PoolerManager.instance.InsertPooler(ybotShootingSpell.GetKey(), ybotShootingSpell.gameObject, true);
-        PoolerManager.instance.InsertPooler(ybotMineSpell.GetKey(), ybotMineSpell.gameObject, true);
+        PoolerManager.instance.InsertPooler(ybotMineSpell.GetKey(), ybotMineSpell.gameObject, true, 1, 1);
     }
     private void InitializeState() {
         idleState.onActive += (State prevState) => {
