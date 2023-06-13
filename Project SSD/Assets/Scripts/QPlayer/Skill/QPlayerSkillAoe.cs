@@ -102,6 +102,7 @@ public class QPlayerSkillAoe : Skill
         {
             GameObject aoeHoldObj = PoolerManager.instance.OutPool(option04_effectKey);
             AoeHold aoeHold = aoeHoldObj.GetComponent<AoeHold>();
+            aoeHold.Run();
 
             aoeHold.transform.position = target;
             if (options[6].active)
@@ -120,6 +121,7 @@ public class QPlayerSkillAoe : Skill
         {
             GameObject aoeBlackHoleObj = PoolerManager.instance.OutPool(option05_effectKey);
             AoeBlackHole aoeBlackHole = aoeBlackHoleObj.GetComponent<AoeBlackHole>();
+            aoeBlackHole.Run();
 
             aoeBlackHole.transform.position = target;
             
@@ -139,6 +141,7 @@ public class QPlayerSkillAoe : Skill
         {
             GameObject aoeObj = PoolerManager.instance.OutPool(infoEffectKey);
             Aoe aoe = aoeObj.GetComponent<Aoe>();
+            aoe.Run();
 
             aoe.transform.position = target;
         }

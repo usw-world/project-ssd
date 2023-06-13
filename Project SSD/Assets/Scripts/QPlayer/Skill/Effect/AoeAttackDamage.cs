@@ -53,6 +53,5 @@ public class AoeAttackDamage
            
             target.OnDamage(damage);
         }
-        isExplosion = false;
     }
 }

@@ -12,7 +12,7 @@ public class Aoe : MonoBehaviour, IPoolableObject
     private HashSet<Collider> attackedEnemies = new HashSet<Collider>();
 
 	[Obsolete]
-	private void Start()
+    public void Run()
     {
         particle = GetComponent<ParticleSystem>();
         StartCoroutine(DestoryTimer());

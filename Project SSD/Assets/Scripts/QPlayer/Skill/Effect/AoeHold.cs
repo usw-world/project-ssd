@@ -16,8 +16,8 @@ public class AoeHold : MonoBehaviour, IPoolableObject
 
     public GameObject explosion;
 
-	[Obsolete]
-	private void Start()
+    [Obsolete]
+    public void Run()
     {
         particle = GetComponent<ParticleSystem>();
         StartCoroutine(DestoryTimer());

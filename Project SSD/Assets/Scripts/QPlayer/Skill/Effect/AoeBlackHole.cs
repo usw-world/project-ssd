@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,8 +10,8 @@ public class AoeBlackHole : MonoBehaviour, IPoolableObject
 
     public GameObject explosion;
 
-	[System.Obsolete]
-	private void Start()
+    [Obsolete]
+    public void Run()
     {
         particle = GetComponent<ParticleSystem>();
         StartCoroutine(DestoryTimer());
