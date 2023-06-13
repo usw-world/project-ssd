@@ -112,4 +112,17 @@ public class QPlayerSkillFightGhostFist : Skill
 		}
 		return false;
 	}
+
+	public override AimType GetAimType()
+	{
+		return AimType.Arrow;
+	}
+
+	public override SkillSize GetAreaAmout()
+	{
+		float amout = 6f;
+		if (options[2].active) amout = 18f;
+		SkillSize size = new SkillSize(20f, amout);
+		return size;
+	}
 }

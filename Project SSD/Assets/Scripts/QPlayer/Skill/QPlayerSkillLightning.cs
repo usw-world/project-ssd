@@ -52,7 +52,7 @@ public class QPlayerSkillLightning : Skill
 		//options[3].active = true;
 		//options[4].active = true;
 		//options[5].active = true;
-		options[6].active = true;
+		//options[6].active = true;
 		//options[7].active = true;
 	}
 	private void Start()
@@ -167,5 +167,19 @@ public class QPlayerSkillLightning : Skill
 			return true;
 		}
 		return false;
+	}
+
+	public override AimType GetAimType()
+	{
+		return AimType.Arrow;
+	}
+
+	public override SkillSize GetAreaAmout()
+	{
+		float amout = 4f;
+		if (options[5].active) amout *= 2f;
+		if (options[7].active) amout *= 1.5f;
+		SkillSize size = new SkillSize(20f, amout);
+		return size;
 	}
 }

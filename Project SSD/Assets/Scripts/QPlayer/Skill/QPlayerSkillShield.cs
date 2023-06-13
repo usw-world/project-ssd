@@ -147,4 +147,14 @@ public class QPlayerSkillShield : Skill
 		}
 		return false;
 	}
+
+	public override AimType GetAimType()
+	{
+		return AimType.None;
+	}
+
+	public override SkillSize GetAreaAmout()
+	{
+		return new SkillSize();
+	}
 }

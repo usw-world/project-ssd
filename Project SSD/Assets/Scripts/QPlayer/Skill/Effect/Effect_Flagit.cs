@@ -49,8 +49,8 @@ public class Effect_Flagit : MonoBehaviour, IPoolableObject
 		lightningEffect.SetActive(true);
 		chargingEffect.SetActive(false);
 		Collider[] hit = null;
-		float size = 1f;
 		float flinching = 1f;
+		float size = 1f;
 		if (isAreaTwice) size = 2f;
 		if (isBig) size += 1f;
 		if (isFlinching4s) flinching = 4f;

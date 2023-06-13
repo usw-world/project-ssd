@@ -4885,7 +4885,7 @@ GameObject:
   - component: {fileID: 1585156578769063}
   - component: {fileID: 1372121812033796919}
   m_Layer: 0
-  m_Name: AoeBlackHole
+  m_Name: "AoeBlackHole \uC548\uC4F0\uB294\uAC70"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

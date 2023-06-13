@@ -59,4 +59,7 @@ public class TPlayerSkill : Skill
 			return true; ;
 		return false;
 	}
+
+	public override AimType GetAimType() => throw new System.NotImplementedException(); 
+	public override SkillSize GetAreaAmout() => throw new System.NotImplementedException(); 
 }

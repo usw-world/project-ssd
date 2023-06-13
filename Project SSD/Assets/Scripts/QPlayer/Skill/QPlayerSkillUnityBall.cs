@@ -76,8 +76,8 @@ public class QPlayerSkillUnityBall : Skill
 		options[4].info = "파이어볼이 사라질때 폭발하며 추가 피해를 준다";
 		options[5].name = "LookAt";
 		options[5].info = "유도 기능을 활성화 한다";
-		options[6].name = "";
-		options[6].info = "";
+		options[6].name = "염화";
+		options[6].info = "파이어볼이 사라질때 8개의 파이어볼을 추가로 생성한다";
 		options[7].name = "메테오";
 		options[7].info = "강력한 공격으로 변경된다";
 		//options[0].active = true;
@@ -87,7 +87,7 @@ public class QPlayerSkillUnityBall : Skill
 		//options[4].active = true;
 		//options[5].active = true;
 		//options[6].active = true;
-		options[7].active = true;
+		//options[7].active = true;
 	}
 	private void Start()
 	{
@@ -173,6 +173,24 @@ public class QPlayerSkillUnityBall : Skill
 			return true;
 		}
 		return false;
+	}
+	public override AimType GetAimType()
+	{
+		if (options[7].active)
+		{
+			return AimType.Area;
+		}
+		return AimType.Arrow;
+	}
+	public override SkillSize GetAreaAmout()
+	{
+		SkillSize size = new SkillSize(20f, 2f);
+		if (options[7].active)
+		{
+			size = new SkillSize(5, 5f);
+			return size;
+		}
+		return size;
 	}
 }
 

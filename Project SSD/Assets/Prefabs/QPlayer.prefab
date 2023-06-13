@@ -169,7 +169,7 @@ GameObject:
   - component: {fileID: 133424474}
   - component: {fileID: 133424475}
   m_Layer: 0
-  m_Name: Skill Distance Decal Projector
+  m_Name: Skill Decal Projector Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -182,13 +182,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 133424473}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 4.063, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2136718358471914663}
-  m_RootOrder: 2
+  m_Father: {fileID: 1641777941675522028}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &133424475
 MonoBehaviour:
@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0777d029ed3dffa4692f417d4aba19ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 3523bd4a8fd76f243bc7f1e42db43392, type: 2}
+  m_Material: {fileID: 2100000, guid: 0d8e17bbfb2cb4c4081d31edb762de4a, type: 2}
   m_DrawDistance: 1000
   m_FadeScale: 0.9
   m_StartAngleFade: 180
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_UVBias: {x: 0, y: 0}
   m_ScaleMode: 0
   m_Offset: {x: 0, y: 0, z: 50}
-  m_Size: {x: 12, y: 12, z: 100}
+  m_Size: {x: 10, y: 4, z: 100}
   m_FadeFactor: 0.321
 --- !u!1 &149183884
 GameObject:
@@ -5122,21 +5122,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6cd62be8a9433c4d8196b3e7f79eae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 2032450023845943245, guid: 5724183b7f2bfe14ab7f01e3ec1ce8db,
       type: 3}
     skillImage: {fileID: 21300000, guid: f9161c6c9e06dc445ada3ee16d991f90, type: 3}
     skillText: "\uC720\uB2C8\uD2F0\uBCFC\uC744 \uBC1C\uC0AC\uD55C\uB2E4"
     name: "\uC720\uB2C8\uD2F0\uBCFC"
-  area:
-    distance: 10
-    range: 33
+  areaAmout: 3
   property:
     coolTime: 3
     skillAP: 100
     nowCoolTime: 100
-    ready: 0
+    ready: 1
     quickUse: 0
   options:
   - name: "\uAC15\uB825\uD55C \uC77C\uACA9"
@@ -19940,7 +19937,7 @@ GameObject:
   - component: {fileID: 1915510281}
   - component: {fileID: 1915510282}
   m_Layer: 0
-  m_Name: Skill Target Area Decal Projector
+  m_Name: Skill Decal Projector Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20064,21 +20061,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25ab26d8e91192249a1e17b8ed0a32ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 1098564023588801211, guid: bbb85fc32bb49c04c8c74f5a4e1b3f03,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 1
     nowCoolTime: 100
-    ready: 0
+    ready: 1
     quickUse: 0
   options:
   - name: 
@@ -22371,7 +22365,7 @@ Transform:
   m_Children:
   - {fileID: 2136718358471914985}
   - {fileID: 2136718358471914665}
-  - {fileID: 133424474}
+  - {fileID: 1641777941675522028}
   - {fileID: 1915510281}
   - {fileID: 1539545108}
   - {fileID: 1269420965855130253}
@@ -22527,8 +22521,8 @@ MonoBehaviour:
   - {fileID: 5595377120989333443}
   - {fileID: 2380773717807197779}
   - {fileID: 923198906}
-  skillDistanceDecal: {fileID: 133424475}
-  skillTargetAreaDecal: {fileID: 1915510282}
+  skillDecalArrow: {fileID: 133424475}
+  skillDecalArea: {fileID: 1915510282}
 --- !u!114 &2136718357887273198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30142,20 +30136,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98f6cf4f342828e43a95680481b005f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 0}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 20
     skillAP: 1
     nowCoolTime: 100
-    ready: 0
+    ready: 1
     quickUse: 0
   options:
   - name: 
@@ -45007,20 +44998,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 293a7bb2995ebfa438d2d5a2c44b4d0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 0}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 1
     nowCoolTime: 100
-    ready: 0
+    ready: 1
     quickUse: 0
 --- !u!1 &3434505044858206273
 GameObject:
@@ -79796,15 +79784,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd47a548eba0df748ba1dbaa7736d8b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 580516407111906339, guid: 70777ead813a1be4fa9f7fd6bf30282f, type: 3}
     skillImage: {fileID: 0}
     skillText: "\uC7A5\uD310\uC744 \uC18C\uD658"
     name: "\uC7A5\uD310"
-  area:
-    distance: 5
-    range: 3
+  areaAmout: 3
   property:
     coolTime: 5
     skillAP: 1
@@ -99382,6 +99367,38 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &7178404933672109975
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1641777941675522028}
+  m_Layer: 0
+  m_Name: Skill Decal Projector Arrow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1641777941675522028
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7178404933672109975}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 133424474}
+  m_Father: {fileID: 2136718358471914663}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7450948513753060822
 GameObject:
   m_ObjectHideFlags: 0
@@ -99470,15 +99487,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7031e1a085357ce4faa0b96e56afd318, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 0}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 30
     skillAP: 1
@@ -104571,15 +104585,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d037bcf6fd2bd4f53bb66e7dbaa6b430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 0}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 1
@@ -104674,21 +104685,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c66d1953f7229834ea2bf5a52725a870, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 6021731790126890362, guid: a6783bc9d7ca38e428d9aa3496884b11,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 20
     skillAP: 1
     nowCoolTime: 100
-    ready: 0
+    ready: 1
     quickUse: 0
   options:
   - name: 

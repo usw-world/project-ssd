@@ -78,15 +78,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 0}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 2
     skillAP: 0.8
@@ -5231,16 +5228,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 5972315631096841491, guid: e1ce5302969721348984076d343df1bb,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -10210,16 +10204,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 6540478355613462979, guid: 86303eabf9daf9a45ae84b97745c4b8d,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -10444,16 +10435,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 5972315631096841491, guid: e1ce5302969721348984076d343df1bb,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -10875,16 +10863,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 6540478355613462979, guid: 86303eabf9daf9a45ae84b97745c4b8d,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -11026,16 +11011,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 3977108052114549723, guid: 2dbd00d220fa08e4eab410ea6ada9bea,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -11087,16 +11069,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 1994277406731294138, guid: c3ac296d90aed7b4a8b92aeedba058c7,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -11357,16 +11336,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 4905749066253766965, guid: 98cf41dfed77aa04e8e8db8295cb9760,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -13055,16 +13031,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 8858624474728388485, guid: eb4fdc04c45709a478aa25e7388fe899,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -13436,15 +13409,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 434862450589315040, guid: e5771bee601c45b4e84e961fddf2400f, type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -14447,16 +14417,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 4057926583407869420, guid: 7884ed998dcd10b40b0d8493caad48f6,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0
@@ -14545,16 +14512,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 8213394304429169181, guid: cf9451135631b9b4f99b8f4c8d216dce,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -14606,16 +14570,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 1010635183871577458, guid: 440820735e94fee46bfd26043f5bd621,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -15260,16 +15221,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 6540478355613462979, guid: 86303eabf9daf9a45ae84b97745c4b8d,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -15920,15 +15878,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 316706470686222772, guid: b01c355b609bfe94a8eed3df96380490, type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -16042,16 +15997,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 4905749066253766965, guid: 98cf41dfed77aa04e8e8db8295cb9760,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -16652,16 +16604,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 6540478355613462979, guid: 86303eabf9daf9a45ae84b97745c4b8d,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -17784,16 +17733,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 4905749066253766965, guid: 98cf41dfed77aa04e8e8db8295cb9760,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -23406,16 +23352,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 6540478355613462979, guid: 86303eabf9daf9a45ae84b97745c4b8d,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -28671,16 +28614,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 4905749066253766965, guid: 98cf41dfed77aa04e8e8db8295cb9760,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -28793,9 +28733,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.25
-  m_Height: 0.7
+  m_Height: 1.0787406
   m_Direction: 1
-  m_Center: {x: 0, y: 1.34, z: 0}
+  m_Center: {x: 0, y: 1.1506298, z: 0}
 --- !u!114 &1580547243
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29555,15 +29495,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 434862450589315040, guid: e5771bee601c45b4e84e961fddf2400f, type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -38152,16 +38089,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 8213394304429169181, guid: cf9451135631b9b4f99b8f4c8d216dce,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8
@@ -38403,16 +38337,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aimType: 0
   info:
     effect: {fileID: 4905749066253766965, guid: 98cf41dfed77aa04e8e8db8295cb9760,
       type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
-  area:
-    distance: 1
-    range: 1
+  areaAmout: 3
   property:
     coolTime: 0
     skillAP: 0.8

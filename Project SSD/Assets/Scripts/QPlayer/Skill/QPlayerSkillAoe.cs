@@ -67,13 +67,10 @@ public class QPlayerSkillAoe : Skill
         }
         return false;
     }
-
-
     public override void Use(Vector3 target)
     {
         SummonAoe(target);
     }
-
     private void SummonAoe(Vector3 target)
     {
         AoeAttackDamage aoeAttack = AoeAttackDamage.GetInstance();
@@ -172,7 +169,6 @@ public class QPlayerSkillAoe : Skill
         property.coolTime = property.coolTime - (property.coolTime / option01_decreaseSkillCoolDown);
         isUseDecreaseCoolDown = true;
     }
-
     private void ActiveOption02()   // TPlayer 쉴드 최대 체력의 10%
     {
         float shieldAmount = TPlayer.instance.status.maxHp / option02_generateTPlayerShield;
@@ -207,7 +203,6 @@ public class QPlayerSkillAoe : Skill
         };
         TPlayer.instance?.AddAttachment(attachment);
     }
-
     private void ActiveOption03()   // TPlayer SP 회복 속도 10% 증가
     {
         AoeBuffer aoeBuffer = AoeBuffer.GetInstance();
@@ -228,5 +223,16 @@ public class QPlayerSkillAoe : Skill
             isGiveRecoverySpBuff = false;
         };
         TPlayer.instance?.AddAttachment(attachment);
+    }
+
+	public override AimType GetAimType()
+	{
+        return AimType.Area;
+	}
+
+	public override SkillSize GetAreaAmout()
+	{
+        //if (options[5].active || options[4].active) return new SkillSize(8f, 8f);
+        return new SkillSize(6f, 6f);
     }
 }

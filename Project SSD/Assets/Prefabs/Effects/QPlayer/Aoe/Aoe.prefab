@@ -29313,7 +29313,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 5
+  m_Radius: 3
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1735435621773492679
 MonoBehaviour:
@@ -29327,8 +29327,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58344a36b5e27d344bc2d85b71b04ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particle: {fileID: 0}
-  isTPlayerOnAoe: 0
 --- !u!1 &580516407774239762
 GameObject:
   m_ObjectHideFlags: 0

@@ -150,4 +150,19 @@ public class QPlayerSkillFlagit : Skill
 		}
 		return false;
 	}
+
+	public override AimType GetAimType()
+	{
+		return AimType.Area;
+	}
+
+	public override SkillSize GetAreaAmout()
+	{
+		float amout = 1;
+		if (options[4].active) amout = 2f; 
+		if (options[6].active) amout += 1f;
+		amout *= 2f;
+		SkillSize size = new SkillSize(amout, amout);
+		return size;
+	}
 }

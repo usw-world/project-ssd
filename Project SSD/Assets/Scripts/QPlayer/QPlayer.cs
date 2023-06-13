@@ -87,8 +87,8 @@ public class QPlayer : NetworkBehaviour
         }
     }
 
-    public DecalProjector skillDistanceDecal;
-    public DecalProjector skillTargetAreaDecal;
+    public DecalProjector skillDecalArrow;
+    public DecalProjector skillDecalArea;
     bool isAiming = false;
     #endregion Skill
 
@@ -750,35 +750,61 @@ public class QPlayer : NetworkBehaviour
         return status.ap;
     }
     void EnableAim() {
-        float distance = AimingSkill.area.distance * 2f;
-        float range = AimingSkill.area.range;
+        int aimingSkillIndexTemp = aimingSkillIndex;
+        DisableAim();
+        aimingSkillIndex = aimingSkillIndexTemp;
         isAiming = true;
-        skillDistanceDecal.size = new Vector3(distance, distance, 100f);
-        skillTargetAreaDecal.size = new Vector3(range, range, 100f);
-        skillDistanceDecal.enabled = true;
-        skillTargetAreaDecal.enabled = true;
+        SkillSize size = AimingSkill.GetAreaAmout();
+        AimingSkill.GetAimType();
+		switch (AimingSkill.GetAimType())
+		{
+			case AimType.Arrow:
+		        skillDecalArrow.size = new Vector3(size.x, size.y, 100f);
+                skillDecalArrow.enabled = true;
+				break;
+			case AimType.Area:
+                skillDecalArea.size = new Vector3(size.x, size.y, 100f);
+                skillDecalArea.enabled = true;
+				break;
+            case AimType.None:
+                print("스킬 조준 타입 함수 오버라이드 안댐!");
+                break;
+		}
     }
     void DisableAim() {
         aimingSkillIndex = -1;
         isAiming = false;
-        skillDistanceDecal.enabled = false;
-        skillTargetAreaDecal.enabled = false;
+        skillDecalArrow.enabled = false;
+        skillDecalArea.enabled = false;
     }
     void UpdateTargetArea() {
         if (isAiming) {
             Vector3 targetPoint = GetAimingPoint();
-            Vector3 ylessPosition = new Vector3(transform.position.x, targetPoint.y, transform.position.z);
-            Vector3 nextProjectorPosition;
-            if(Vector3.Distance(targetPoint, ylessPosition) > AimingSkill.area.distance) {
-                Vector3 direction = (targetPoint - transform.position).normalized;
-                targetPoint = ylessPosition + (direction * AimingSkill.area.distance);
-            }
-            nextProjectorPosition = skillTargetAreaDecal.transform.position;
-            nextProjectorPosition.x = targetPoint.x;
-            nextProjectorPosition.z = targetPoint.z;
 
-            skillTargetAreaDecal.transform.position = nextProjectorPosition;
-            return;
+			switch (AimingSkill.GetAimType())
+			{
+				case AimType.Arrow:
+                    skillDecalArrow.transform.parent.LookAt(targetPoint);
+                    Vector3 arrowRot = skillDecalArrow.transform.parent.eulerAngles;
+                    arrowRot = new Vector3(0, arrowRot.y + 90f, 0);
+                    skillDecalArrow.transform.parent.eulerAngles = arrowRot;
+                    break;
+				case AimType.Area:
+                    skillDecalArea.transform.position = targetPoint + Vector3.up * 3f;
+                    break;
+			}
+			//Vector3 ylessPosition = new Vector3(transform.position.x, targetPoint.y, transform.position.z);
+			//Vector3 nextProjectorPosition;
+			//if(Vector3.Distance(targetPoint, ylessPosition) > AimingSkill.area.distance) {
+			//    Vector3 direction = (targetPoint - transform.position).normalized;
+			//    targetPoint = ylessPosition + (direction * AimingSkill.area.distance);
+			//}
+			//nextProjectorPosition = skillTargetAreaDecal.transform.position;
+			//nextProjectorPosition.x = targetPoint.x;
+			//nextProjectorPosition.z = targetPoint.z;
+
+			//skillTargetAreaDecal.transform.position = nextProjectorPosition;
+			return;
         }
     }
     private Vector3 GetAimingPoint() {
