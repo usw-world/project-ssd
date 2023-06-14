@@ -2,22 +2,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class QPlayerSkillBuffering : Skill
 {
     public SkillOptionInformation[] options = new SkillOptionInformation[8];
     // SkillInfo 수정 예정
     public GameObject wheelCreator;
-    public float speed;
-    public float option00_increaseSpeed;
-    public float option01_increaseRadius;
-    public float option02_increaseDurationTime;
-    public int option03_addQuantity;
-    public float option04_increaseStrength;
-    public float option05_increaseScale;
-    public float option06_rolling;
-    public float option07_stack;
+    public bool canUseChain = false;
+    
+    
+    private float option00_increaseSpeed;
+    private float option01_increaseRadius;
+    private int option02_Throwable;
+    private float option03_ReduceCooldown;
+    private int option05_increaseQuantity;
+    private float option06_rolling;
+    private float option07_stack;
     private string wheelCreatorKey;
+    private Skill_Buffering bufferingCreator;
+
 
 	// 기본 - 1개, 2바퀴
 
@@ -30,12 +34,25 @@ public class QPlayerSkillBuffering : Skill
 	// 7. 공격 명중시 실드 
 	// 8. 공격력 증가 100 % 3초
 
+    private void InitializeOptionInfo()
+    {
+        options[0].name = "속도 증가";
+        options[1].name = "거리 증가";
+        options[2].name = "체인 활성화";
+        options[3].name = "쿨타임 감소";
+        options[4].name = "지속시간 증가";
+        options[5].name = "수량 증가";
+        options[6].name = "실드 부여";
+        options[7].name = "공증 수정중";
+    }
 	private void Awake()
     {
         wheelCreatorKey = wheelCreator.GetComponent<IPoolableObject>().GetKey();
         PoolerManager.instance.InsertPooler(wheelCreatorKey, wheelCreator, false);
-        property.nowCoolTime = 0;
+        property.nowCoolTime = 15;
+        property.coolTime = 15;
         property.ready = false;
+        InitializeOptionInfo();
     }
 
     public override void Use(Vector3 tmp)
@@ -47,53 +64,58 @@ public class QPlayerSkillBuffering : Skill
         Debug.Log("buffer use");
         OptionValueInitialize();
         var obj = PoolerManager.instance.OutPool(wheelCreatorKey);
-        var BufferCreator = obj.GetComponent<Skill_wheel>();
-
+        bufferingCreator = obj.GetComponent<Skill_Buffering>();
+        bufferingCreator.parent = this;
         obj.SetActive(true);
-        BufferCreator.target = this.transform;
-        if (options[7].active)
-            BufferCreator.Active_stack();
+        bufferingCreator.target = this.transform;
+        
         if (options[0].active)
-            BufferCreator.speed += option00_increaseSpeed;
+            bufferingCreator.speed += option00_increaseSpeed;
         if (options[1].active)
-            BufferCreator.distance += option01_increaseRadius;
+            bufferingCreator.IncreaseDistance();
         if (options[2].active)
-            BufferCreator.maxDegree += option02_increaseDurationTime;
+            canUseChain = true;
         if (options[3].active)
-            BufferCreator.quantity += option03_addQuantity;
+            property.coolTime = 1;
+        else
+            property.coolTime = 15;
         if (options[4].active)
-            BufferCreator.strength += option04_increaseStrength;
+            bufferingCreator.maxDegree *= 2;
         if (options[5].active)
-            BufferCreator.scale += option05_increaseScale;
-        if (options[6].active)
-            BufferCreator.Active_rolling();
+            bufferingCreator.quantity += option05_increaseQuantity;
+        if(options[6].active)
+            bufferingCreator.AddHitShield();
         for(int i=0; i < options.Length; i++)
             Debug.Log(options[i].active);
-        BufferCreator.OnActive();
+        bufferingCreator.OnActive();
+        
     }
 
     private void OptionValueInitialize()
     {
-        option00_increaseSpeed = 100f;
-        option01_increaseRadius = 0.5f;
-        option02_increaseDurationTime = 180f;
-        option03_addQuantity = 1;
-        option04_increaseStrength = 0.5f;
-        option05_increaseScale = 0.8f;
-
+        option00_increaseSpeed = 1.25f;
+        option01_increaseRadius = 2f;
+        option05_increaseQuantity = 3;
     }
 
     
 
     public override bool CanUse()
     {
+        if (canUseChain)
+        {
+            bufferingCreator.throwable = true;
+            return false;
+        }
+        
         if (property.nowCoolTime >= property.coolTime)
         {
             Debug.Log("buffer active");
+            property.nowCoolTime = 0;
             return true;
         }
 
-        Debug.Log("buffer in cooldown");
+        Debug.Log("buffer in cooldown :"+ (property.coolTime-property.nowCoolTime));
         return false;
     }
 
