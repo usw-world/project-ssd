@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 // 플레이어 카메라 까지 사용할지는 모르겠는데 일단 환경 오브젝트 용으로 설계
 public class CameraManager : MonoBehaviour
@@ -11,6 +14,7 @@ public class CameraManager : MonoBehaviour
     [HideInInspector] public CinemachineVirtualCamera mainCam;
     private CinemachineVirtualCamera prevCam;
     private CinemachineBrain cinemachineBrain;
+    [SerializeField] private NoiseSettings defaultNoise;
 
     
     private void Awake()
@@ -40,13 +44,24 @@ public class CameraManager : MonoBehaviour
 
     public virtual void MakeNoise(float value, float time)
     {
+        
         StartCoroutine(SetNoise(value, time));
     }
     IEnumerator SetNoise(float value, float time)
     {
-        mainCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = value;
+        try
+        {
+            mainCam.AddCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.StackTrace);
+        }
+        var noise = mainCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        noise.m_NoiseProfile = defaultNoise;
+        noise.m_AmplitudeGain = value;
         yield return new WaitForSeconds(time);
-        mainCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 0;
+        noise.m_AmplitudeGain = 0;
         StopCoroutine("SetNoise");
     }
 

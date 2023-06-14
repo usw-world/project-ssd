@@ -104602,17 +104602,9 @@ MonoBehaviour:
     info: 
     image: {fileID: 0}
     active: 0
-  wheelCreator: {fileID: 7864665305693748439, guid: 49d93214a8733480885e79cc3d7bca67,
+  wheelCreator: {fileID: 1990019497426902526, guid: 9bafdbb4b1a29324a977f1f3a31e40fb,
     type: 3}
-  speed: 0
-  option00_increaseSpeed: 0
-  option01_increaseRadius: 0
-  option02_increaseDurationTime: 0
-  option03_addQuantity: 0
-  option04_increaseStrength: 0
-  option05_increaseScale: 0
-  option06_rolling: 0
-  option07_stack: 0
+  canUseChain: 0
 --- !u!1 &9047360050862676591
 GameObject:
   m_ObjectHideFlags: 0

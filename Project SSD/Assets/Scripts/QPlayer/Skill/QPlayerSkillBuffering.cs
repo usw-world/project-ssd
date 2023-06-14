@@ -10,6 +10,7 @@ public class QPlayerSkillBuffering : Skill
     // SkillInfo 수정 예정
     public GameObject wheelCreator;
     public bool canUseChain = false;
+    public SkillInfo info;
     
     
     private float option00_increaseSpeed;
@@ -21,6 +22,7 @@ public class QPlayerSkillBuffering : Skill
     private float option07_stack;
     private string wheelCreatorKey;
     private Skill_Buffering bufferingCreator;
+    private Attachment boostAttachment;
 
 
 	// 기본 - 1개, 2바퀴
@@ -52,6 +54,7 @@ public class QPlayerSkillBuffering : Skill
         property.nowCoolTime = 15;
         property.coolTime = 15;
         property.ready = false;
+        info = new SkillInfo();
         InitializeOptionInfo();
     }
 
@@ -85,6 +88,8 @@ public class QPlayerSkillBuffering : Skill
             bufferingCreator.quantity += option05_increaseQuantity;
         if(options[6].active)
             bufferingCreator.AddHitShield();
+        if (options[7].active)
+            bufferingCreator.BoostDamage(boostAttachment);
         for(int i=0; i < options.Length; i++)
             Debug.Log(options[i].active);
         bufferingCreator.OnActive();
@@ -96,6 +101,7 @@ public class QPlayerSkillBuffering : Skill
         option00_increaseSpeed = 1.25f;
         option01_increaseRadius = 2f;
         option05_increaseQuantity = 3;
+        boostAttachment = new Attachment(.5f, .5f, info.skillImage, EAttachmentType.boost);
     }
 
     
@@ -105,6 +111,8 @@ public class QPlayerSkillBuffering : Skill
         if (canUseChain)
         {
             bufferingCreator.throwable = true;
+            bufferingCreator.degree = 0;
+            bufferingCreator.maxDegree = 180;
             return false;
         }
         

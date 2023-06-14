@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -23,7 +24,7 @@ public class Skill_Buffering : MonoBehaviour, IPoolableObject
     public int quantity;
     public bool usingSkill = false;
     public bool throwable = false;
-    private float degree;
+    public float degree;
     private bool wheelDestroyed = false;
     private bool isSpin = true;
     private bool lastSpin = true;
@@ -47,6 +48,10 @@ public class Skill_Buffering : MonoBehaviour, IPoolableObject
         initalize();
     }
 
+    public void BoostDamage(Attachment attachment)
+    {
+        TPlayer.instance.AddAttachment(attachment);
+    }
     public void IncreaseDistance()
     {
         foreach (var obj in bufferingList)
@@ -67,7 +72,7 @@ public class Skill_Buffering : MonoBehaviour, IPoolableObject
         // default value
         degree = 0f;
         strength = 5f;
-        scale = 2f;
+        scale = 1f;
         speed = 5f;
         quantity = 1;
         distance = 4f;
@@ -91,7 +96,7 @@ public class Skill_Buffering : MonoBehaviour, IPoolableObject
             foreach (var buffering in bufferingList)
             {
                 Debug.Log(buffering.transform.forward);
-                buffering.transform.position += buffering.transform.forward * (speed * Time.deltaTime);
+                buffering.transform.position += buffering.transform.forward * 3 * (speed * Time.deltaTime);
             }
         if(degree > maxDegree)
             StartCoroutine(DestroySelf(0));
