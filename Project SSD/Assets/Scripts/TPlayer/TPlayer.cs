@@ -19,12 +19,14 @@ public class TPlayer : NetworkBehaviour, IDamageable
 
 	#region Show Parameters
 	public PlayerStatus status;
-	[SerializeField] private TPlayerAudioClipPlayer clipPlayer;
 	[SerializeField] private TPlayerWeaponTransform sword;
 	[SerializeField] private TPlayerSkillManager skill;
 	[SerializeField] private TPlayerTrackEffect trackEffect;
 	[SerializeField] private SkinnedMeshRenderer[] motionTrailedMeshRenderers;
 	[SerializeField] private TPlayerCutSceneCam cutSceneCam;
+	[SerializeField] private AudioSource audioSourceEffect;
+	[SerializeField] private AudioSource audioSourceVoice;
+	[SerializeField] private AudioSource audioSourceBgm;
 	[SerializeField] private GameObject tPlayerCameraPrefab;
 	[SerializeField] private GameObject tPlayerMesh;
 	[SerializeField] private TPayerUI ui;
@@ -62,7 +64,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private int chargingLevel = 0;
 	private int idleActionIdx = 0;
 	private int attackCount = 0;
-	// private int hitCount = 0;
 	#endregion Hide Parameters
 
 	#region Component
@@ -111,7 +112,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		attachmentManager = GetComponent<AttachmentManager>();
         ani = GetComponent<Animator>();
         movement = GetComponent<Movement>();
-		clipPlayer.Initialize();
 		stateMachine = GetComponent<StateMachine>();
 		lateDamageCntl = GetComponent<LateDamageCntl>();
 	}
@@ -220,7 +220,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		};
 		dodgeState.onActive = (State prev) => {
 			ChangeAnimation("Dodge");
-			// isImmune = true;
 			dodgeCoroutine = StartCoroutine(DodgeCoroutine());
 			trackEffect.dodgeMaehwa.Enable();
 
@@ -228,7 +227,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			&& !prev.Compare(moveState)) {
 				trackEffect.motionTrailEffect.GenerateTrail(motionTrailedMeshRenderers);
 			}
-			clipPlayer.effect.dodge.Play();
+			SoundManager.instance.tPlayer.effect.dodge.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		};
         downState.onActive = (State prev) => {
 			ChangeAnimation("Down");
@@ -251,7 +250,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		chargingStay.onActive = (State prev) => {
 			ui.sliderCharging.gameObject.SetActive(true);
 			ui.SetChargingValue(0);
-			//clipPlayer.voice.chargingStart.Play(); ;
 		}; 
 		chargingDrawSwordAttack.onActive = (State prev) => {
 			ChangeAnimation("DrawSwordAttack");
@@ -259,15 +257,17 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		chargingDrawSwordAttack_7time.onActive = (State prev) => {
 			DrawSword(true);
 			ChangeAnimation("Draw Sword Attack 7time");
+			SoundManager.instance.tPlayer.voice.attack_combo_7.Play(audioSourceVoice, ESoundType.voice);
 		};
 		comboAttack_1.onActive = (State prev) => {
 			DrawSword(true);
 			ChangeAnimation("Combo Attack 01");
+			SoundManager.instance.tPlayer.voice.attack_combo_6.Play(audioSourceVoice, ESoundType.voice);
+			print("Q");
 		};
 		chargingDrawSwordAttack_nonCharging.onActive = (State prev) => {
 			DrawSword(true);
 			ChangeAnimation("Draw Sword Attack Non Charging");
-			clipPlayer.voice.attack_01.Play();
 		}; 
 		chargingDrawSwordAttack_2time.onActive = (State prev) => {
 			DrawSword(true);
@@ -280,8 +280,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			lateDamageTarget.Clear();
 			if(isLocalPlayer)
 				CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[0]);
-			clipPlayer.voice.drawAttackSpecialReady.Play();
-			clipPlayer.effect.drawAttackSpecial_start.PlayOneShot();
+			SoundManager.instance.tPlayer.voice.drawAttackSpecialReady.Play(audioSourceVoice, ESoundType.voice);
+			SoundManager.instance.tPlayer.effect.drawAttackSpecial_start.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		};
 		chargingDrawSwordAttack_specialStay.onActive = (State prev) => {
 			tPlayerMesh.SetActive(false);
@@ -289,8 +289,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			StartCoroutine(DrawAttackSpecialCutScene());
 			if (isLocalPlayer)
 				CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[1]);
-			clipPlayer.voice.drawAttackSpecialStart.Play();
-			clipPlayer.effect.drawAttackSpecial_stay.PlayOneShot();
+			SoundManager.instance.tPlayer.voice.drawAttackSpecialStart.Play(audioSourceVoice, ESoundType.voice);
+			SoundManager.instance.tPlayer.effect.drawAttackSpecial_stay.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		};
 		chargingDrawSwordAttack_specialEnd.onActive = (State prev) => {
             ChangeAnimation("Draw Sword Attack Special End");
@@ -358,7 +358,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 						ui.SetChargingLevel(chargingLevel, chargingMaxTime[chargingLevel]);
 					else {
 						ui.SetChargingLevel(chargingLevel, 0); ;
-						//clipPlayer.voice.chargingFull.Play();
 					}
 				}
 				ui.SetChargingValue(chargingTime);
@@ -546,14 +545,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			OnDodgeAttack();
 			return;
 		}
-		//if (stateMachine.currentState == moveState && isRush)
-		//{
-		//	if (skill.dodgeAttack.CanUse()) 
-		//	{
-		//		OnDodgeAttack();
-		//		return;
-		//	}
-		//}
         if (stateMachine.currentState == damageState
 		|| stateMachine.currentState == dodgeState
 		|| stateMachine.currentState == dodgeAttackState
@@ -571,19 +562,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		|| stateMachine.currentState == comboAttack_1)
 			return;
 
-		// if(stateMachine.Compare(basicAttackState)) {
-		// Case that Playr is basic attacking >>
-		// 	if(isAfterBasicAttack)
-		// 		ChangeAnimation("Basic Attack");
-		// 	else
-		// 		ChangeAnimation("Buffered Input Basic Attack");
-		// }
-
 		nextAttackDirection = lookVector;
 
 		extraMovingPoint = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
 		ChangeState(basicAttackState, true);
-		// ChangeState(attackStateGroup[attackCount], false);
     }
 	public void OnMoveSpeedConvert()
 	{
@@ -668,7 +650,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		if (skill.combo_1[0].CanUse())
 		{
 			ChangeState(comboAttack_1, false);
-			clipPlayer.voice.chargingStart.Play();
 		}
 	}
 	public void OnDrawSwordAttack7time()
@@ -692,7 +673,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		if (skill.charging_DrawSwordAttack_7time[0].CanUse())
 		{
 			ChangeState(chargingDrawSwordAttack_7time, false);
-			clipPlayer.voice.chargingStart.Play();
 		}
 	}
 	#endregion Input Event
@@ -733,8 +713,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		}
 		attackCount++;
 		attackCount = (attackCount >= skill.basicAttacks.Length) ? 0 : attackCount;
-		clipPlayer.effect.slash_01.PlayOneShot();
-		if (attackCount == 0) clipPlayer.voice.attack_01.Play();
+		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
+		SoundManager.instance.tPlayer.voice.AttackRandom(audioSourceVoice, 60f);
 		if (attackCoroutine != null)
 			StopCoroutine(attackCoroutine);
 		attackCoroutine = StartCoroutine(AttackCoroutine());
@@ -742,15 +722,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	public void CheckDrawSwordAttack_7time(int idx) 
 	{
 		skill.charging_DrawSwordAttack_7time[idx].Use();
-		if (skill.charging_DrawSwordAttack_7time.Length - 1 == idx) 
-		{
-			clipPlayer.voice.attack_02.Play(); 
-			clipPlayer.effect.slash_01.Play();
-		}
-		else
-		{
-			clipPlayer.effect.slash_03.Play();
-		}
+		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		if (idx != 0) return;
 		if (attackCoroutine != null)
 			StopCoroutine(attackCoroutine);
@@ -760,20 +732,21 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		skill.dodgeAttack.Use();
 		trackEffect.dodgeMaehwa.Disable();
-		clipPlayer.effect.slash_03.PlayOneShot();
+		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
+		SoundManager.instance.tPlayer.voice.AttackRandom(audioSourceVoice, 60f);
 	}
 	public void CheckDownAttackZone()
 	{
 		skill.downAttack.Use();
 		trackEffect.dodgeMaehwa.Disable();
-		clipPlayer.effect.slash_03.PlayOneShot();
+		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
+		SoundManager.instance.tPlayer.voice.AttackRandom(audioSourceVoice, 60f);
 	}
 	public void ChackDrawSwordAttack(int sound)
 	{
 		skill.charging_DrawSwordAttack.Use();
-		clipPlayer.effect.slash_03.PlayOneShot();
-		if(sound == 1)
-			clipPlayer.voice.attack_02.Play();
+		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
+		SoundManager.instance.tPlayer.voice.AttackRandom(audioSourceVoice, 70f);
 		if (attackCoroutine != null)
 			StopCoroutine(attackCoroutine);
 		attackCoroutine = StartCoroutine(AttackCoroutine(3f));
@@ -781,20 +754,12 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	public void ChackDrawSwordAttackNonCharging()
 	{
 		skill.charging_DrawSwordAttack_nonCharging.Use();
-		clipPlayer.effect.slash_02.PlayOneShot();
+		SoundManager.instance.tPlayer.effect.slash_02.PlayOneShot(audioSourceEffect, ESoundType.effect);
 	}
 	public void CheckComboAttack_1(int idx)
 	{
 		skill.combo_1[idx].Use();
-		if (skill.combo_1.Length - 1 == idx) 
-		{
-			clipPlayer.voice.attack_02.Play();
-			clipPlayer.effect.slash_01.Play();
-		}
-		else
-		{
-			clipPlayer.effect.slash_03.Play();
-		}
+		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		if (attackCoroutine != null)
 			StopCoroutine(attackCoroutine);
 		attackCoroutine = StartCoroutine(AttackCoroutine(1.5f));
@@ -809,7 +774,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	public void OnFootStepClip() 
 	{
-		clipPlayer.effect.footStep.PlayOneShot();
+		SoundManager.instance.tPlayer.effect.footStep.PlayOneShot(audioSourceEffect, ESoundType.effect);
 	}
 	public void PutSword() 
 	{
@@ -1068,7 +1033,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	private IEnumerator DrawAttackDamage()
 	{
-		clipPlayer.effect.drawAttackSpecial_end.PlayOneShot();
+		SoundManager.instance.tPlayer.effect.drawAttackSpecial_end.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		for (int i = 0; i < 10; i++)
 		{
 			Damage damage = new Damage(
@@ -1097,10 +1062,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			lateDamageCntl.OnDamage(lateDamageTarget, damage, EHitEffectType.slash_1);
 			yield return new WaitForSeconds(0.5f);
 			ChangeAnimation("Draw Sword Attack Special End");
-			clipPlayer.voice.drawAttackSpecialEnd.Play();
+			SoundManager.instance.tPlayer.voice.drawAttackSpecialEnd.Play(audioSourceVoice, ESoundType.voice);
 		} 
 		else{
-			clipPlayer.voice.drawAttackSpecialEnd_Miss.Play();
+			SoundManager.instance.tPlayer.voice.drawAttackSpecialEnd_Miss.Play(audioSourceVoice, ESoundType.voice);
 			yield return new WaitForSeconds(1f);
 			ResetState();
 		}
@@ -1264,105 +1229,6 @@ class TPayerUI
 	public void ReFreshStamina(float value)
 	{
 		sliderSP.value = value;
-	}
-}
-[Serializable]
-class TPlayerAudioClip
-{
-	[SerializeField] private AudioClip clip;
-	private AudioSource audioSource;
-	public TPlayerAudioClip(TPlayerAudioClip origin, AudioSource audioSource) 
-	{
-		clip = origin.clip;
-		this.audioSource = audioSource;
-	}
-	public void Play() 
-	{
-		audioSource.clip = clip;
-		audioSource.Play();
-	}
-	public void PlayOneShot()
-	{
-		audioSource.PlayOneShot(clip);
-	}
-}
-[Serializable]
-class TPlayerSoundBGM
-{
-	public TPlayerAudioClip test_01;
-	public void Initialize(AudioSource audioSource)
-	{
-		test_01 = new TPlayerAudioClip(test_01, audioSource);
-	}
-}
-[Serializable]
-class TPlayerSoundEffect
-{
-	public TPlayerAudioClip footStep;
-	public TPlayerAudioClip drawAttackSpecial_start;
-	public TPlayerAudioClip drawAttackSpecial_stay;
-	public TPlayerAudioClip drawAttackSpecial_end;
-	public TPlayerAudioClip slash_01;
-	public TPlayerAudioClip slash_02;
-	public TPlayerAudioClip slash_03;
-	public TPlayerAudioClip dodge;
-	public void Initialize(AudioSource audioSource)
-	{
-		footStep = new TPlayerAudioClip(footStep, audioSource);
-		drawAttackSpecial_start = new TPlayerAudioClip(drawAttackSpecial_start, audioSource);
-		drawAttackSpecial_stay = new TPlayerAudioClip(drawAttackSpecial_stay, audioSource);
-		drawAttackSpecial_end = new TPlayerAudioClip(drawAttackSpecial_end, audioSource);
-		slash_01 = new TPlayerAudioClip(slash_01, audioSource);
-		slash_02 = new TPlayerAudioClip(slash_02, audioSource);
-		slash_03 = new TPlayerAudioClip(slash_03, audioSource);
-		dodge = new TPlayerAudioClip(dodge, audioSource);
-	}
-}
-[Serializable]
-class TPlayerSoundVoice
-{
-	public TPlayerAudioClip dodge;
-	public TPlayerAudioClip attack_01;
-	public TPlayerAudioClip attack_02;
-	public TPlayerAudioClip attack_03;
-	public TPlayerAudioClip attack_04;
-	public TPlayerAudioClip nonCharging;
-	public TPlayerAudioClip chargingFull;
-	public TPlayerAudioClip chargingStart;
-	public TPlayerAudioClip drawAttackSpecialEnd;
-	public TPlayerAudioClip drawAttackSpecialEnd_Miss;
-	public TPlayerAudioClip drawAttackSpecialReady;
-	public TPlayerAudioClip drawAttackSpecialStart;
-	public void Initialize(AudioSource audioSource)
-	{
-		dodge = new TPlayerAudioClip(dodge, audioSource);
-		attack_01 = new TPlayerAudioClip(attack_01, audioSource);
-		attack_02 = new TPlayerAudioClip(attack_02, audioSource);
-		attack_03 = new TPlayerAudioClip(attack_03, audioSource);
-		attack_04 = new TPlayerAudioClip(attack_04, audioSource);
-		nonCharging = new TPlayerAudioClip(nonCharging, audioSource);
-		chargingFull = new TPlayerAudioClip(chargingFull, audioSource);
-		chargingStart = new TPlayerAudioClip(chargingStart, audioSource);
-		drawAttackSpecialEnd = new TPlayerAudioClip(drawAttackSpecialEnd, audioSource);
-		drawAttackSpecialReady = new TPlayerAudioClip(drawAttackSpecialReady, audioSource);
-		drawAttackSpecialStart = new TPlayerAudioClip(drawAttackSpecialStart, audioSource);
-		drawAttackSpecialEnd_Miss = new TPlayerAudioClip(drawAttackSpecialEnd_Miss, audioSource);
-	}
-}
-[Serializable]
-class TPlayerAudioClipPlayer
-{
-	[SerializeField] private AudioSource audioSourceEffect;
-	[SerializeField] private AudioSource audioSourceVoice;
-	[SerializeField] private AudioSource audioSourceBGM;
-	public TPlayerSoundEffect effect;
-	public TPlayerSoundVoice voice;
-	public TPlayerSoundBGM bgm;
-	public void Initialize()
-	{
-		effect.Initialize(audioSourceEffect);
-		voice.Initialize(audioSourceVoice);
-		bgm.Initialize(audioSourceBGM);
 	}
 }
 class TPlayerShieldManager

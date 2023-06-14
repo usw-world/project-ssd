@@ -4,26 +4,24 @@ using UnityEngine;
 
 public class TrackEffect : MonoBehaviour
 {
-    [SerializeField] Transform target;
-    [SerializeField] Vector3 offset;
-	[SerializeField] bool enable = false;
-	 
-	private void Update() 
+    [SerializeField] protected Transform target;
+    [SerializeField] protected Vector3 offset;
+	protected virtual void Start()
 	{
-		if(enable)
-			transform.position = target.position + offset; 
+		transform.SetParent(null);
 	}
-	public void Enable()
+	protected virtual void Update() 
 	{
-		gameObject.SetActive(true);
-		transform.parent = null;
-		enable = true;
+		transform.position = target.position + offset; 
 	}
-	public void Disable() 
+	public virtual void Enable()
 	{
-		gameObject.SetActive(false);
-		transform.position = target.position + offset;
-		transform.parent = target;
-		enable = false; 
+		ParticleSystem.EmissionModule emission = GetComponent<ParticleSystem>().emission;
+		emission.rateOverDistance = 5f;
+	}
+	public virtual void Disable() 
+	{
+		ParticleSystem.EmissionModule emission = GetComponent<ParticleSystem>().emission;
+		emission.rateOverDistance = 0f;
 	}
 }

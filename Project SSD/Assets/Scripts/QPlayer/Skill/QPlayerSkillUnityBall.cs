@@ -87,7 +87,7 @@ public class QPlayerSkillUnityBall : Skill
 		//options[4].active = true;
 		//options[5].active = true;
 		//options[6].active = true;
-		//options[7].active = true;
+		options[7].active = true;
 	}
 	private void Start()
 	{

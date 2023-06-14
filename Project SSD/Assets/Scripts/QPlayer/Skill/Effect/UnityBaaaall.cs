@@ -5,8 +5,10 @@ using UnityEngine;
 public class UnityBaaaall : UnityBall
 {
 	[SerializeField] private GameObject explosionEfect;
+	[SerializeField] private AudioSource audioSource;
 	public override void OnActive(float damage, float speed)
 	{
+		SoundManager.instance.qPlayer.effect.Q_meteo.PlayOneShotDelay(audioSource, ESoundType.voice, 1f);
 		speed = speed * 0.5f;
 		base.OnActive(damage, speed);
 		isRun = false;

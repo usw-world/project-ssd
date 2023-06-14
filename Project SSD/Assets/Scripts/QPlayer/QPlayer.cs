@@ -74,9 +74,11 @@ public class QPlayer : NetworkBehaviour
     [SerializeField] private GameObject mesh;
     [SerializeField] private GameObject mesh2;
     [SerializeField] private GameObject rushTril;
-
-	#region Skill
-	public List<Skill> skills;
+    [SerializeField] private AudioSource audioSourceEffect;
+    [SerializeField] private AudioSource audioSourceVoice;
+    [SerializeField] private AudioSource audioSourceBgm;
+    #region Skill
+    public List<Skill> skills;
     private Skill usingSkill;
     private Vector3 targetPoint;
 
@@ -526,6 +528,7 @@ public class QPlayer : NetworkBehaviour
 				finishSkillEffect[0].SetActive(true);
 				finishSkillEffect[1].SetActive(true);
                 CameraManager.instance.ShakeCamera(finishSkillCamera[2], 0.3f, 0.05f);
+                SoundManager.instance.qPlayer.effect.finishEffectBlue.PlayOneShot(audioSourceEffect, ESoundType.effect);
                 break; 
             case 4: // 애너지파 발사 직전
 				ChangeFinishSkillCamera(3);
@@ -540,7 +543,9 @@ public class QPlayer : NetworkBehaviour
                 CameraManager.instance.ShakeCamera(finishSkillCamera[3], 3.8f, 0.03f);
                 StartCoroutine(FinishSkillRailRunDamage());
                 StartCoroutine(UpdateTargetPoint());
-				break;
+                SoundManager.instance.qPlayer.effect.finishEffectRed.PlayOneShot(audioSourceEffect, ESoundType.effect);
+                SoundManager.instance.qPlayer.effect.finishLaser.PlayOneShot(audioSourceEffect, ESoundType.effect);
+                break;
 			case 6: // 파워업
 				ChangeFinishSkillCamera(2);
 				finishSkillEffect[2].SetActive(false);
@@ -550,6 +555,7 @@ public class QPlayer : NetworkBehaviour
 			case 7: // 파워업 이펙트
 			    finishSkillEffect[6].SetActive(true);
                 CameraManager.instance.ShakeCamera(finishSkillCamera[2], 0.3f, 0.05f);
+                SoundManager.instance.qPlayer.effect.finishEffectRed.PlayOneShot(audioSourceEffect, ESoundType.effect);
                 break;
 			case 8: // 돌진 직전
                 stateMachine.ChangeState(finishSkillRush);
@@ -559,13 +565,11 @@ public class QPlayer : NetworkBehaviour
 			case 9: // 돌진 시작
                 mesh.SetActive(false);
                 mesh2.SetActive(false);
-
                 GameObject obj = Instantiate(rushTril);
                 obj.transform.position = Vector3.Lerp(mesh2.transform.position, targetPoint, 0.5f);
                 obj.transform.LookAt(targetPoint);
                 float dist = Vector3.Distance(mesh2.transform.position, targetPoint);
                 obj.transform.localScale = new Vector3(1f, 1f, dist * 1.5f);
-
                 transform.position = targetPoint;
                 finishSkillEffect[6].SetActive(false);
                 stateMachine.ChangeState(finishSkillRushStay);
@@ -575,6 +579,7 @@ public class QPlayer : NetworkBehaviour
                 mesh2.SetActive(true);
                 StartCoroutine(ResetDelay());
                 CameraManager.instance.ShakeCamera(finishSkillCamera[3], 1f, 0.15f);
+                SoundManager.instance.qPlayer.effect.finishExplosion.PlayOneShot(audioSourceEffect, ESoundType.effect);
                 break;
 		}
     } 
