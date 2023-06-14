@@ -71,6 +71,9 @@ public class QPlayer : NetworkBehaviour
 	[SerializeField] private List<GameObject> finishSkillCamera = new List<GameObject>();
 	[SerializeField] private List<GameObject> finishSkillEffect = new List<GameObject>();
 	private Coroutine fightGhostFistCoroutine;
+    [SerializeField] private GameObject mesh;
+    [SerializeField] private GameObject mesh2;
+    [SerializeField] private GameObject rushTril;
 
 	#region Skill
 	public List<Skill> skills;
@@ -481,10 +484,13 @@ public class QPlayer : NetworkBehaviour
         #endregion FinishSkillRush State
 
         #region FinishSkillRushStay State
-        finishSkillRushStay.onActive = (State prevState) => { 
-            movement.MoveToPoint(targetPoint, 15f);
+        finishSkillRushStay.onActive = (State prevState) => {
+            //movement.MoveToPoint(targetPoint, 15f);
+            //StartCoroutine(FinishSkillRushMove());
+            ChangeAnimation("last rush");
         };
-        finishSkillRushStay.onStay = () => { };
+        finishSkillRushStay.onStay = () => {
+        };
         finishSkillRushStay.onInactive = (State nextState) => {
             canAttack = true;
             isCanMove = true;
@@ -533,6 +539,7 @@ public class QPlayer : NetworkBehaviour
                 finishSkillEffect[2].transform.LookAt(targetPoint);
                 CameraManager.instance.ShakeCamera(finishSkillCamera[3], 3.8f, 0.03f);
                 StartCoroutine(FinishSkillRailRunDamage());
+                StartCoroutine(UpdateTargetPoint());
 				break;
 			case 6: // 파워업
 				ChangeFinishSkillCamera(2);
@@ -550,23 +557,30 @@ public class QPlayer : NetworkBehaviour
                 finishSkillEffect[4].SetActive(false);
                 break;
 			case 9: // 돌진 시작
+                mesh.SetActive(false);
+                mesh2.SetActive(false);
+
+                GameObject obj = Instantiate(rushTril);
+                obj.transform.position = Vector3.Lerp(mesh2.transform.position, targetPoint, 0.5f);
+                obj.transform.LookAt(targetPoint);
+                float dist = Vector3.Distance(mesh2.transform.position, targetPoint);
+                obj.transform.localScale = new Vector3(1f, 1f, dist * 1.5f);
+
+                transform.position = targetPoint;
+                finishSkillEffect[6].SetActive(false);
                 stateMachine.ChangeState(finishSkillRushStay);
                 break;
 			case 10: // 돌진 종료
+                mesh.SetActive(true);
+                mesh2.SetActive(true);
                 StartCoroutine(ResetDelay());
-                CameraManager.instance.ShakeCamera(finishSkillCamera[3], 0.75f, 0.13f);
+                CameraManager.instance.ShakeCamera(finishSkillCamera[3], 1f, 0.15f);
                 break;
 		}
-    }
+    } 
     private IEnumerator ResetDelay()
     {
         float overlabSize = 5f;
-
-        //GameObject preveiwOverlab = Instantiate(Resources.Load<GameObject>("previewSpherePrefab"));
-        //preveiwOverlab.transform.position = transform.position;
-        //preveiwOverlab.transform.localScale = Vector3.one * overlabSize * 2f;
-        //Destroy(preveiwOverlab , 2f);
-
         Collider[] hit;
         hit = Physics.OverlapSphere(targetPoint, overlabSize, 1 << 8);
         foreach (var item in hit)
@@ -580,7 +594,7 @@ public class QPlayer : NetworkBehaviour
         }
         finishSkillEffect[7].SetActive(true);
         ChangeAnimation("face_idle");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         finishSkillEffect[6].SetActive(false);
         finishSkillEffect[7].SetActive(false);
         ChangeFinishSkillCamera(-1);
@@ -614,11 +628,6 @@ public class QPlayer : NetworkBehaviour
         Collider[] hit;
         Damage damage = new Damage(dotDamage,1f, Vector3.zero, Damage.DamageType.Normal);
 
-		//GameObject preveiwOverlab = Instantiate(Resources.Load<GameObject>("previewSpherePrefab"));
-		//preveiwOverlab.transform.position = targetPoint;
-		//preveiwOverlab.transform.localScale = Vector3.one * overlabSize * 2f;
-		//Destroy(preveiwOverlab, 2f);
-
 		for (int i = 0; i < 35; i++)
 		{
             hit = Physics.OverlapSphere(targetPoint, overlabSize, 1 << 8);
@@ -629,8 +638,24 @@ public class QPlayer : NetworkBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 	}
-	
-	private IEnumerator TimeOutFightGhostFist()
+    private IEnumerator UpdateTargetPoint()
+    {
+		for (float time = 0; time < 3.5f; time += Time.deltaTime)
+		{
+            Vector3 nextPoint = GetAimingPoint();
+			if (Vector3.Distance(transform.position, nextPoint) < 20f)
+			{
+                targetPoint = GetAimingPoint();
+                //finishSkillCamera[3].transform.LookAt(targetPoint);
+                Quaternion currRot = finishSkillEffect[2].transform.rotation;
+                finishSkillEffect[2].transform.LookAt(targetPoint);
+                Quaternion nextRot = finishSkillEffect[2].transform.rotation;
+                finishSkillEffect[2].transform.rotation = Quaternion.Slerp(currRot, nextRot, 4f * Time.deltaTime);
+            }
+            yield return null;
+		}
+    }
+    private IEnumerator TimeOutFightGhostFist()
 	{
 		yield return new WaitForSeconds(.25f);
 		OnFightGhostFist(false);

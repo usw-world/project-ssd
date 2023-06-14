@@ -22512,6 +22512,10 @@ MonoBehaviour:
   - {fileID: 1148506666}
   - {fileID: 1388630092}
   - {fileID: 6823430833812125909}
+  mesh: {fileID: 2136718358471616649}
+  mesh2: {fileID: 2136718358471616907}
+  rushTril: {fileID: 2230616877241217582, guid: 8eb42633f98363d4599bd8bb37f5910a,
+    type: 3}
   skills:
   - {fileID: 815916524}
   - {fileID: 7393513717579459165}
@@ -94613,8 +94617,8 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1
-      minScalar: 0.1
+      scalar: 1.5
+      minScalar: 0.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
