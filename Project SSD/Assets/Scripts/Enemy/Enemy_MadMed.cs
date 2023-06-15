@@ -7,6 +7,7 @@ using UnityEditor.Experimental;
 using UnityEngine;
 using Random = System.Random;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Enemy_MadMed : MovableEnemy
 {
 

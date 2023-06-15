@@ -4,6 +4,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
+
+[RequireComponent(typeof(Rigidbody))]
 public class Enemy_Bomber : MovableEnemy
 {
     private State idleState;
@@ -74,6 +76,10 @@ public class Enemy_Bomber : MovableEnemy
 
     }
 
+    public override void OnDamage(Damage damage) {
+        base.OnDamage(damage);
+    }
+
     public override void TakeDamage(Damage damage) {
         base.TakeDamage(damage);
         if(!isDead) {
@@ -88,7 +94,7 @@ public class Enemy_Bomber : MovableEnemy
     public void Explode()
     {
         Damage damage = new Damage(5, 2.0f, Vector3.forward * 5, Damage.DamageType.Normal);
-        var targets = Physics.OverlapSphere(transform.position, 5);
+        var targets = Physics.OverlapSphere(transform.position, 5, 1<<7);
         foreach (var obj in targets)
         {
             obj.TryGetComponent(out IDamageable damageable);

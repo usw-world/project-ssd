@@ -67,7 +67,7 @@ public class Movement : MonoBehaviour {
         } else {
             transform.Translate(direction, Space.World);
         }
-    }
+    } 
 
     public RaycastHit[] CheckDirection(Vector3 dir, float distance, int layerMask=~0) {
         (Vector3 point1, Vector3 point2, float radius) = colliderBounds.RaycastComponent;
