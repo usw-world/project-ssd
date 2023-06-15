@@ -64,7 +64,7 @@ public class CameraManager : MonoBehaviour
         noise.m_AmplitudeGain = 0;
         StopCoroutine("SetNoise");
     }
-
+ 
     public void ShakeCamera(GameObject camera, float time, float power) 
     {
         StartCoroutine(ShakeCameraCo(camera, time, power));

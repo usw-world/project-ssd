@@ -16,7 +16,7 @@ public class Buffering : MonoBehaviour, IPoolableObject
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent(out IDamageable enemy)) {
+        if(other.TryGetComponent(out IDamageable enemy) && !other.gameObject.layer.Equals(1 << 7)) {
             Vector3 force = transform.forward * 15f;
             Damage damage = new Damage(
                 10,
@@ -40,4 +40,5 @@ public class Buffering : MonoBehaviour, IPoolableObject
     {
         return GetType().ToString();
     }
+    
 }

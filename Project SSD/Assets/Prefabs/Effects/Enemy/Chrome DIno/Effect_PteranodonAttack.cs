@@ -30,10 +30,9 @@ public class Effect_PteranodonAttack : MonoBehaviour, IPoolableObject {
 	}
 	private void Update() {
 		transform.Translate(Vector3.forward * flyingSpeed * Time.deltaTime);
-
 		lifetime += Time.deltaTime;
 		if(lifetime >= duration) {
-			Disapear();
+			Disappear();
 		}
 	}
 	private void OnTriggerEnter(Collider other) {
@@ -51,7 +50,7 @@ public class Effect_PteranodonAttack : MonoBehaviour, IPoolableObject {
 			other.GetComponent<TPlayer>()?.OnDamage(damage);
         }
     }
-	private void Disapear() {
+	private void Disappear() {
 		isActive = false;
 		particle.Stop();
 		inPoolCoroutine = StartCoroutine(InPoolCoroutine());

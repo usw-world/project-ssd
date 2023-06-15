@@ -61,7 +61,7 @@ namespace uwu_webServer {
         
         
         private MySqlConnection conn;
-        private const string ConnectionContext = "Server=pjr-uwu.mysql.database.azure.com;UserID = hwan;Password=truelove08!;Database=uwu;";
+        private string _connectionContext = DB_URL.url;
 
         public bool SetToken(string token, string userId) {
             try {

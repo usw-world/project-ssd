@@ -626,8 +626,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_NoiseProfile: {fileID: 0}
   m_PivotOffset: {x: 0, y: 0, z: 0}
-  m_AmplitudeGain: 3
-  m_FrequencyGain: 3
+  m_AmplitudeGain: 1
+  m_FrequencyGain: 1
   mNoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1001 &1397588086
 PrefabInstance:
@@ -728,7 +728,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 436aa0d3e99ec5a4c84105059f443f82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCam: {fileID: 0}
+  mainCam: {fileID: 1741516494}
+  test: {fileID: 11400000, guid: 69ce8388f6785dd4c8c39915efece2f4, type: 2}
 --- !u!114 &1741516494
 MonoBehaviour:
   m_ObjectHideFlags: 0

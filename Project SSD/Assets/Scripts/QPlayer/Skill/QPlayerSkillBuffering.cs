@@ -10,7 +10,7 @@ public class QPlayerSkillBuffering : Skill
     // SkillInfo 수정 예정
     public GameObject wheelCreator;
     public bool canUseChain = false;
-    public SkillInfo info;
+    
     
     
     private float option00_increaseSpeed;
@@ -58,6 +58,8 @@ public class QPlayerSkillBuffering : Skill
         InitializeOptionInfo();
     }
 
+    
+    
     public override void Use(Vector3 tmp)
     {
         Use();
@@ -103,6 +105,8 @@ public class QPlayerSkillBuffering : Skill
         option05_increaseQuantity = 3;
         boostAttachment = new Attachment(.5f, .5f, info.skillImage, EAttachmentType.boost);
     }
+
+
 
     
 
