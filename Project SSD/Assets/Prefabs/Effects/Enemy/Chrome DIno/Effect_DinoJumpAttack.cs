@@ -9,7 +9,7 @@ public class Effect_DinoJumpAttack : MonoBehaviour, IPoolableObject {
     [SerializeField] private ParticleSystem crackParticle;
 
 	public string GetKey() {
-        return this.GetType().ToString();
+        return this.GetType().ToString()+radius;
     }
 
     private void Awake() {
@@ -30,7 +30,7 @@ public class Effect_DinoJumpAttack : MonoBehaviour, IPoolableObject {
 			Damage damage = new Damage(
 				amount, 
 				1.5f,
-				Vector3.zero, 
+				(inner.transform.position - transform.position).normalized * 5f, 
 				Damage.DamageType.Down
 			);
             inner.GetComponent<IDamageable>()?.OnDamage(damage);

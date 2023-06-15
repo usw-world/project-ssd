@@ -79,4 +79,8 @@ public class EnemyManager : MonoBehaviour {
         int targetIndex = message.networkId;
         enemiesInScene[targetIndex].TakeDamage(message.damage);
     }
+    public void AddEnemy(Enemy enemy) {
+        enemiesInScene.Add(enemy);
+        enemy.transform.SetParent(this.transform);
+    }
 }

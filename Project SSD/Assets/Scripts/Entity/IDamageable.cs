@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
 using UnityEngine;
 
 public interface IDamageable {
@@ -8,12 +10,12 @@ public interface IDamageable {
     public abstract void OnDamage(Damage damage);
 }
 [System.Serializable]
+[System.Runtime.InteropServices.StructLayout(LayoutKind.Sequential)]
 public struct Damage {
     public float amount;
     public float hittingDuration;
     public Vector3 forceVector;
     public DamageType damageType;
-
     public enum DamageType {
         Normal,
         Down

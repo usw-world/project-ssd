@@ -48,7 +48,7 @@ ParticleSystem:
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
-  looping: 0
+  looping: 1
   prewarm: 0
   playOnAwake: 1
   useUnscaledTime: 0
@@ -285,7 +285,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 4
+      scalar: 6
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -4881,12 +4881,12 @@ GameObject:
   - component: {fileID: 5318896249418389939}
   - component: {fileID: 3485602157569680392}
   m_Layer: 0
-  m_Name: Effect_Dino Jump Attack
+  m_Name: Effect_Dino High Jump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5318896249418389939
 Transform:
   m_ObjectHideFlags: 0
@@ -4916,8 +4916,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b2d68e4207140948a2b27443440f943, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 4
-  amount: 30
+  radius: 6
+  amount: 65
   piecesParticle: {fileID: 5186689876341318258}
   crackParticle: {fileID: 9222091767781612973}
 --- !u!1 &8836918850882435785
@@ -5089,8 +5089,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 5
-      minScalar: 1
+      scalar: 1.5
+      minScalar: 0.2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5586,7 +5586,7 @@ ParticleSystem:
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
-    donutRadius: 0.2
+    donutRadius: 0.1
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 90, y: 0, z: 0}
     m_Scale: {x: 1, y: 1, z: 1}
@@ -5668,7 +5668,7 @@ ParticleSystem:
     sphericalDirectionAmount: 1
     randomPositionAmount: 0
     radius:
-      value: 2
+      value: 3
       mode: 0
       spread: 0
       speed:
@@ -5897,7 +5897,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 150
+        scalar: 200
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -6521,8 +6521,8 @@ ParticleSystem:
     y:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 4
-      minScalar: 8
+      scalar: 16
+      minScalar: 4
       maxCurve:
         serializedVersion: 2
         m_Curve:

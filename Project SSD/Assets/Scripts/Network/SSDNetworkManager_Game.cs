@@ -9,7 +9,6 @@ using S2CMessage;
 
 public partial class SSDNetworkManager : NetworkManager {
     public Dictionary<System.Type, List<System.Action<NetworkMessage>>> messageHandlerMap = new Dictionary<System.Type, List<System.Action<NetworkMessage>>>();
-
     public void RegisterHandler<T>(System.Action<NetworkMessage> action) where T : struct, NetworkMessage {
         System.Type type = typeof(T);
         List<System.Action<NetworkMessage>> list;

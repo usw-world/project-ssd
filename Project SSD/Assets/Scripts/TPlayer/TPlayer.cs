@@ -41,6 +41,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private Coroutine rushCoroutine;
 	private Coroutine WalkCoroutine;
 	private Coroutine damageCoroutine;
+    private Coroutine downCoroutine;
 	private Vector3 lookVector; // 기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다
 	private Vector3 nextAttackDirection; // 기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다
 	private Vector3 extraMovingPoint;
@@ -99,10 +100,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	
 	private List<State> attackStateGroup = new List<State>();
     private List<State> idleStateGroup = new List<State>();
-	#endregion States
+    #endregion States
 
-	#region Initialize
-	private void Awake()
+    #region Initialize
+    private void Awake()
     {
         if(instance == null)
             instance = this;
@@ -263,7 +264,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			DrawSword(true);
 			ChangeAnimation("Combo Attack 01");
 			SoundManager.instance.tPlayer.voice.attack_combo_6.Play(audioSourceVoice, ESoundType.voice);
-			print("Q");
 		};
 		chargingDrawSwordAttack_nonCharging.onActive = (State prev) => {
 			DrawSword(true);
@@ -479,8 +479,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		status.hp -= damage.amount;
 		ui.RefreshHp(status.hp / status.maxHp);
 
-		if (damage.forceVector != Vector3.zero && damage.amount > 0)
-		{
+		if (damage.forceVector != Vector3.zero && damage.amount > 0) {
 			LookDirection(-damage.forceVector);
 		}
 
@@ -492,24 +491,39 @@ public class TPlayer : NetworkBehaviour, IDamageable
 
 		if (damageCoroutine != null)
 			StopCoroutine(damageCoroutine);
-		damageCoroutine = StartCoroutine(DamageCoroutine(damage));
+		if(damage.damageType == Damage.DamageType.Normal)
+			damageCoroutine = StartCoroutine(DamageCoroutine(damage));
+		else
+			OnDown(damage);
 	}
 	private IEnumerator DamageCoroutine(Damage damage) {
 		float offset = 0f;
-        Vector3 pushedDestination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
+        Vector3 pusingDestination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
 		if(damage.hittingDuration > 0)
 			ChangeState(damageState);
 		while(offset < damage.hittingDuration) {
-            movement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, offset*2) * Time.deltaTime, Space.World);
+            movement.MoveToward(Vector3.Lerp(pusingDestination, Vector3.zero, offset*2) * Time.deltaTime, Space.World);
 			offset += Time.deltaTime;
 			yield return null;
 		}
 		ResetState();
 	}
-	public void OnDown()
-	{
-		if (isImmune) return;    // 무적이면 실행 안함
+	public void OnDown(Damage damage) {
 		ChangeState(downState, false); 
+		if(downCoroutine != null)
+			StopCoroutine(downCoroutine);
+		downCoroutine = StartCoroutine(DownCoroutine(damage.forceVector));
+	}
+	private IEnumerator DownCoroutine(Vector3 forceVector) {
+		if(forceVector != Vector3.zero) {
+			float offset = 0;
+			Vector3 pusingDestination = Vector3.Scale(new Vector3(1, 0, 1), forceVector);
+			while(offset < 1) {
+            	movement.MoveToward(Vector3.Lerp(pusingDestination, Vector3.zero, offset*2) * Time.deltaTime, Space.World);
+				offset += Time.deltaTime;
+				yield return null;
+			}
+		}
 	}
     public void OnSlide()
     {

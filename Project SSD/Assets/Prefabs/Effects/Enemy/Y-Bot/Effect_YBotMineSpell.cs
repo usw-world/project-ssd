@@ -44,7 +44,6 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 		networkId = nextNetworkId++;
 	}
 	private void OnEnable() {
-		print("usoock is good.");
 		if(inPoolCoroutine != null)
 			StopCoroutine(inPoolCoroutine);
 		apearParticle.Play();
