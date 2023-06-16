@@ -787,14 +787,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	public void OnFootStepClip() 
 	{
 		SoundManager.instance.tPlayer.effect.footStep.PlayOneShot(audioSourceEffect, ESoundType.effect);
-		trackEffect.footprint.GetComponent<ParticleSystem>().Play();
-		//StartCoroutine(CreateFootprint());
-	}
-	private IEnumerator CreateFootprint() 
-	{
 		trackEffect.footprint.Enable();
-		yield return null;
-		trackEffect.footprint.Disable();
+		//StartCoroutine(CreateFootprint());
 	}
 	public void PutSword() 
 	{
@@ -947,6 +941,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 
 		if (fade)
 		{
+			trackEffect.rush.Disable();
 			while (now > target)
 			{
 				now -= Time.deltaTime * 2f;
@@ -956,6 +951,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		}
 		else
 		{
+			trackEffect.rush.Disable();
 			while (now < target)
 			{
 				now += Time.deltaTime * 2f;
@@ -973,6 +969,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		
 		if (fade)
 		{
+			trackEffect.rush.Enable();
 			isRush = true;
 			while (now < target)
 			{
@@ -983,6 +980,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		}
 		else
 		{
+			trackEffect.rush.Disable();
 			while (now > target)
 			{
 				now -= Time.deltaTime * 2f;
@@ -1172,6 +1170,7 @@ class TPlayerTrackEffect
 	public TrackEffect dodgeMaehwa;
 	public TrackEffect footprint;
 	public TrackEffect shield;
+	public TrackEffect rush;
 	public GameObject motionTrailPrefab;
 	[HideInInspector] public string motionTrailKey;
 	public void Set() 
@@ -1180,6 +1179,8 @@ class TPlayerTrackEffect
 		dodgeMaehwa.Disable();
 		shield.Enable();
 		shield.Disable();
+		rush.Enable();
+		rush.Disable();
 		motionTrailKey = motionTrailPrefab.GetComponent<IPoolableObject>().GetKey();
 		PoolerManager.instance.InsertPooler(motionTrailKey, motionTrailPrefab, false);
 	}

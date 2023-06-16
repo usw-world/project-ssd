@@ -12,8 +12,10 @@ public class TrackEffect : MonoBehaviour
 	}
 	protected virtual void Update() 
 	{
-		transform.position = target.position + offset;
-		transform.rotation = target.rotation;
+		transform.SetParent(target);
+		transform.localPosition = offset;
+		transform.localEulerAngles = Vector3.zero;
+		transform.SetParent(null);
 	}
 	public virtual void Enable()
 	{
