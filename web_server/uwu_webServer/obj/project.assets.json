@@ -1706,24 +1706,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\xx\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\Usoock\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Side\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
+      "projectUniqueName": "C:\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
       "projectName": "uwu_webServer",
-      "projectPath": "D:\\Side\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
-      "packagesPath": "C:\\Users\\xx\\.nuget\\packages\\",
-      "outputPath": "D:\\Side\\project-ssd\\web_server\\uwu_webServer\\obj\\",
+      "projectPath": "C:\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
+      "packagesPath": "C:\\Users\\Usoock\\.nuget\\packages\\",
+      "outputPath": "C:\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\xx\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\Usoock\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
