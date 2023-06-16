@@ -42,23 +42,18 @@ public class CameraManager : MonoBehaviour
         this.cinemachineBrain = cinemachineBrain;
     }
 
-    public virtual void MakeNoise(float value, float time)
-    {
-        
+    public virtual void MakeNoise(float value, float time) {
         StartCoroutine(SetNoise(value, time));
     }
     IEnumerator SetNoise(float value, float time)
     {
-        try
-        {
-            mainCam.AddCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.StackTrace);
+        try {
+            // mainCam.AddCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        } catch (Exception e) {
+            Debug.LogError(e);
         }
         var noise = mainCam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        noise.m_NoiseProfile = defaultNoise;
+        // noise.m_NoiseProfile = defaultNoise;
         noise.m_AmplitudeGain = value;
         yield return new WaitForSeconds(time);
         noise.m_AmplitudeGain = 0;

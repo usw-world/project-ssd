@@ -111,8 +111,10 @@ class Enemy_XBot : MovableEnemy {
             enemyAnimator.SetBool("Stunned", false);
         };
         hitState.onActive += (State prevState) => {
-            if(prevState.Compare(hitState))
+            if(prevState.Compare(hitState)) {
+                enemyAnimator.SetBool("Hit", true);
                 enemyAnimator.SetTrigger("Hit Trigger");
+            }
             else
                 enemyAnimator.SetBool("Hit", true);
         };
@@ -231,7 +233,8 @@ class Enemy_XBot : MovableEnemy {
     }
     public override void TakeDamage(Damage damage) {
         base.TakeDamage(damage);
-        if(!isDead) {
+        if(!isDead
+        && !enemyStateMachine.Compare(jumpAttackState)) {
             if(hitCoroutine != null)
                 StopCoroutine(hitCoroutine);
             hitCoroutine = StartCoroutine(HitCoroutine(damage));
@@ -242,7 +245,7 @@ class Enemy_XBot : MovableEnemy {
         float pushedOffset = 0;
         Vector3 pushedDestination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
         if(damage.hittingDuration > 0)
-            SendChangeState(hitState);
+            SendChangeState(hitState);  
         while(offset < damage.hittingDuration) {
             enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World, moveLayerMask);
             pushedOffset += Time.deltaTime * 2;

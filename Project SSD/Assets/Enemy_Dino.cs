@@ -8,8 +8,11 @@ public class Enemy_Dino : MovableEnemy {
     private CapsuleCollider dinoCollider;
     [SerializeField] private Transform modelBornRoot;
     
+    #region Visual
     [SerializeField] private SkinnedMeshRenderer skinnedRenderer;
     private Material material;
+    [SerializeField] private Effect_MotionTrail motionTrail;
+    #endregion Visual
 
     #region States
     State idleState = new State("Idle");
@@ -17,6 +20,7 @@ public class Enemy_Dino : MovableEnemy {
     State jumpAttackState = new State("Jump Attack");
     State highJumpState = new State("High Jump");
     State breathState = new State("Breath");
+    State readyAssaultState = new State("Ready Assault");
     State assaultState = new State("Assault");
     State summonState = new State("Summon");
     State stunnedState = new State("Stunned");
@@ -39,6 +43,9 @@ public class Enemy_Dino : MovableEnemy {
     [SerializeField] private float assaultRotateSpeed = 1f;
     [SerializeField] private ParticleSystem assaultParticle;
     [SerializeField] private CollisionEventHandler assaultCollisionHandler;
+
+    private const int ASSAULT_MOTION_TRAIL_INTERVAL = 16;
+    private int assaultMotionTrailCount = 0;
     #endregion Assault
 
     #region Breath
@@ -65,6 +72,8 @@ public class Enemy_Dino : MovableEnemy {
     #endregion High Jump
 
     #region Stunned
+    [SerializeField] private ParticleSystem stunnedParticle;
+    [SerializeField] private float currentStunnedTime = 0;
     #endregion Stunned
 
     #region Damage
@@ -97,6 +106,7 @@ public class Enemy_Dino : MovableEnemy {
         enemyStatesMap.Add(jumpAttackState.stateName, jumpAttackState);
         enemyStatesMap.Add(highJumpState.stateName, highJumpState);
         enemyStatesMap.Add(breathState.stateName, breathState);
+        enemyStatesMap.Add(readyAssaultState.stateName, readyAssaultState);
         enemyStatesMap.Add(assaultState.stateName, assaultState);
         enemyStatesMap.Add(summonState.stateName, summonState);
         enemyStatesMap.Add(stunnedState.stateName, stunnedState);
@@ -154,8 +164,13 @@ public class Enemy_Dino : MovableEnemy {
         breathState.onInactive += (State nextState) => {
             enemyAnimator.SetBool("Breath", false);
         };
-        assaultState.onActive += (State prevState) => {
+        readyAssaultState.onActive += (State prevState) => {
             enemyAnimator.SetBool("Assault", true);
+        };
+        readyAssaultState.onInactive += (State nextState) => {
+            enemyAnimator.SetBool("Assault", false);
+        };
+        assaultState.onActive += (State prevState) => {
             assaultCollisionHandler.gameObject.SetActive(true);
             assaultParticle.Play();
         };
@@ -165,9 +180,13 @@ public class Enemy_Dino : MovableEnemy {
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(ylessTargetPoint), Time.deltaTime * assaultRotateSpeed);
                 enemyMovement.MoveToward(transform.forward * assaultSpeed * Time.deltaTime, Space.World);
             }
+            assaultMotionTrailCount ++;
+            if(assaultMotionTrailCount >= ASSAULT_MOTION_TRAIL_INTERVAL) {
+                motionTrail.GenerateTrail(new SkinnedMeshRenderer[]{ skinnedRenderer } );
+                assaultMotionTrailCount = 0;
+            }
         };
         assaultState.onInactive += (State nextState) => {
-            enemyAnimator.SetBool("Assault", false);
             assaultCollisionHandler.gameObject.SetActive(false);
             assaultParticle.Stop();
         };
@@ -179,9 +198,19 @@ public class Enemy_Dino : MovableEnemy {
         };
         stunnedState.onActive += (State prevState) => {
             enemyAnimator.SetBool("Stunned", true);
+            stunnedParticle.Play();
+        };
+        stunnedState.onStay += () => {
+            currentStunnedTime += Time.deltaTime;
+            if(currentStunnedTime >= 8) {
+                SendChangeState(idleState);
+                currentStunnedTime = 0;
+            }
         };
         stunnedState.onInactive += (State nextState) => {
             enemyAnimator.SetBool("Stunned", false);
+            stunnedParticle.Stop();
+            currentStunnedTime = 0;
         };
         dieState.onActive += (State prevState) => {
             enemyAnimator.SetBool("Die", true);
@@ -203,8 +232,10 @@ public class Enemy_Dino : MovableEnemy {
         || enemyStateMachine.Compare(jumpAttackState)
         || enemyStateMachine.Compare(highJumpState)
         || enemyStateMachine.Compare(breathState)
+        || enemyStateMachine.Compare(readyAssaultState)
         || enemyStateMachine.Compare(assaultState)
-        || enemyStateMachine.Compare(summonState))
+        || enemyStateMachine.Compare(summonState)
+        || enemyStateMachine.Compare(stunnedState))
             return;
 
         if(!DecideAction()) {
@@ -273,7 +304,8 @@ public class Enemy_Dino : MovableEnemy {
             offset += Time.deltaTime * .35f;
             Vector3 moveVector = (targetPoint - transform.position).normalized;
             moveVector = Vector3.Lerp(Vector3.zero, moveVector, (1-offset) * Time.deltaTime * 10f);
-            enemyMovement.MoveToward(moveVector, Space.World);
+            if(DistanceToTarget > .1f)
+                enemyMovement.MoveToward(moveVector, Space.World);
 
             Vector3 ylessTargetPoint = new Vector3(targetPoint.x, transform.position.y, targetPoint.z);
             transform.LookAt(ylessTargetPoint);
@@ -287,18 +319,29 @@ public class Enemy_Dino : MovableEnemy {
         return false;
     }
     private void OnHitAssault(Collider target) {
-        print(target);
         if(target.gameObject.layer == 7) {
             TPlayer player;
             if(target.TryGetComponent<TPlayer>(out player)) {
                 Vector3 forceVector = (target.transform.position - transform.position).normalized * assaultForceScalra;
-                Damage damage = new Damage(
+                player.OnDamage(new Damage(
                     assaultDamage,
                     1f,
                     forceVector,
                     Damage.DamageType.Down
-                );
-                player.OnDamage(damage);
+                ));
+                CameraManager.instance.MakeNoise(1.5f, 1f);
+            }
+        } else if(target.gameObject.layer == 8) {
+            DestroyableObject cactus;
+            if(target.TryGetComponent<DestroyableObject>(out cactus)) {
+                cactus.OnDamage(new Damage(
+                    100,
+                    1,
+                    (target.transform.position - transform.position).normalized * 10f,
+                    Damage.DamageType.Normal
+                ));
+                CameraManager.instance.MakeNoise(4f, .5f);
+                SendChangeState(stunnedState, false);
             }
         }
     }
@@ -362,10 +405,13 @@ public class Enemy_Dino : MovableEnemy {
         }
     }
     public void AnimationEvent_EndHighJump() {
-        SendChangeState(assaultState, false);
+        SendChangeState(readyAssaultState, false);
     }
     public void AnimationEvent_SetBasicState() {
         SendChangeState(idleState);
+    }
+    public void AnimationEvent_StartAssault() {
+        SendChangeState(assaultState, false);
     }
     #endregion Animation Events
 }

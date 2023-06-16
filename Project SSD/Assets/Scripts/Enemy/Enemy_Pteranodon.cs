@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -15,8 +16,15 @@ class Enemy_Pteranodon : MovableEnemy {
     private Vector3 targetPosition;
 
     #region Attack
+    [SerializeField] private const float ATTACK_COOLTIME = 10f;
+    [SerializeField] private float currentAttackCooltime = 0f;
     [SerializeField] private Effect_PteranodonAttack attackEffect;
     #endregion Attack
+
+    #region Assault
+    [SerializeField] private Effect_PteranodonAssault assaultEffect;
+    [SerializeField] private ParticleSystem assaultEffectParticle;
+    #endregion Assault
 
     #region Hit
     private Coroutine hitCoroutine;
@@ -31,6 +39,12 @@ class Enemy_Pteranodon : MovableEnemy {
         enemyStateMachine.SetIntialState(idleState);
         InitializeState();
         InitializePoolers();
+    }
+    protected override void Update() {
+        base.Update();
+        if(currentAttackCooltime > 0) {
+            currentAttackCooltime -= Time.deltaTime;
+        }
     }
     #endregion Unity Events
 
@@ -72,6 +86,8 @@ class Enemy_Pteranodon : MovableEnemy {
         };
         assaultState.onInactive += (State nextState) => {
             enemyAnimator.SetBool("Assault", false);
+            assaultEffectParticle.Stop();
+            assaultEffect.Inactive();
         };
         stunnedState.onActive = (State prevState) => {
             enemyAnimator.SetBool("Stunned", false);
@@ -112,12 +128,14 @@ class Enemy_Pteranodon : MovableEnemy {
     protected override void ChaseTarget(Vector3 point) {
         if(enemyStateMachine.Compare(hitState)
         || enemyStateMachine.Compare(dieState)
-        || enemyStateMachine.Compare(attackState))
+        || enemyStateMachine.Compare(attackState)
+        || enemyStateMachine.Compare(assaultState))
             return;
 
         targetPosition = point;
 
-        if(!TryAttack()) {
+        if(!TryAttack()
+        && !TryAssault()) {
             if((   enemyStateMachine.Compare(idleState)
                 || enemyStateMachine.Compare(chaseState))
             && !IsArrive) {
@@ -125,13 +143,24 @@ class Enemy_Pteranodon : MovableEnemy {
             }
         }
     }
+
+
     protected override void OnLostTarget() {
         SendChangeState(idleState);
     }
     private bool TryAttack() {
         if(DistanceToTarget < 5f
+        && currentAttackCooltime <= 0
         && !enemyStateMachine.Compare(attackState)) {
             SendChangeState(attackState);
+            currentAttackCooltime = ATTACK_COOLTIME;
+            return true;
+        }
+        return false;
+    }
+    private bool TryAssault() {
+        if(DistanceToTarget < 1.5f) {
+            SendChangeState(assaultState, false);
             return true;
         }
         return false;
@@ -144,6 +173,17 @@ class Enemy_Pteranodon : MovableEnemy {
         effect.transform.rotation = transform.rotation;
     }
     public void AnimationEvent_OnEndAttack() {
+        SendChangeState(idleState);
+    }
+    public void AnimationEent_OnAssaultStart() {
+        assaultEffectParticle.Play();
+        assaultEffect.Active();
+    }
+    public void AnimationEent_OnAssaultEnd() {
+        assaultEffectParticle.Stop();
+        assaultEffect.Inactive();
+    }
+    public void AnimationEvent_SetBasicState() {
         SendChangeState(idleState);
     }
     #endregion Animation Events

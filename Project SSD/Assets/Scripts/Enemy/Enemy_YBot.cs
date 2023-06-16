@@ -40,8 +40,8 @@ class Enemy_YBot : MovableEnemy {
     #endregion Shoot Spell
 
     #region Mine Spell
-    // private const float MINE_COOLTIME = 10f;
-    private const float MINE_COOLTIME = 0f;
+    private const float MINE_COOLTIME = 10f;
+    // private const float MINE_COOLTIME = 0f;
     [SerializeField] private Effect_YBotMineSpell ybotMineSpell;
     private float currentMineCooltime = 0;
     #endregion Mine Spell
@@ -127,8 +127,10 @@ class Enemy_YBot : MovableEnemy {
                 StopCoroutine(rollingDodgeCoroutine);
         };
         hitState.onActive += (State prevState) => {
-            if(prevState.Compare(hitState))
+            if(prevState.Compare(hitState)) {
+                enemyAnimator.SetBool("Hit", true);
                 enemyAnimator.SetTrigger("Hit Trigger");
+            }
             else
                 enemyAnimator.SetBool("Hit", true);
         };

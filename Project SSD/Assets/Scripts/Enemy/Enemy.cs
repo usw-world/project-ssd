@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 using Mirror;
 [RequireComponent(typeof(StateMachine))]
+[RequireComponent(typeof(Rigidbody))]
 public abstract class Enemy : MonoBehaviour, IDamageable {
     public int networkId = -1;
 
