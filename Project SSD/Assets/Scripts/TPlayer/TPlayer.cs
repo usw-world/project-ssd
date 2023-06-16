@@ -788,7 +788,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		SoundManager.instance.tPlayer.effect.footStep.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		trackEffect.footprint.Enable();
-		//StartCoroutine(CreateFootprint());
 	}
 	public void PutSword() 
 	{

@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
 	[SerializeField] private Canvas commonHudCanvas;
  	[SerializeField] private GameObject alertUIPrefab;
 	[SerializeField] private EscapeMenu escapeMenu;
+	[SerializeField] private TPlayerSkillUi tPlayerSkill;
 
 	[SerializeField] private Animator fadeInOutAnimator;
 	private Coroutine fadeInOutCoroutine;
@@ -24,7 +25,6 @@ public class UIManager : MonoBehaviour
 			Destroy(this.gameObject);
         DontDestroyOnLoad(gameObject);
 	}
-
 	public void FadeIn(float delay=0f, float duration=2f, System.Action callback=null) {
 		if(fadeInOutCoroutine != null)
 			StopCoroutine(fadeInOutCoroutine);
@@ -60,7 +60,10 @@ public class UIManager : MonoBehaviour
 		}
 		return alertUI;
 	}
-
+	public void OnPressTPlayerSkill()
+	{
+		tPlayerSkill.OnActive();
+	}
 	/*
 	public void StartCutScene()
     {
