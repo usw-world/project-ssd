@@ -63,7 +63,7 @@ MonoBehaviour:
       slash_02:
         clip: {fileID: 8300000, guid: d01bd0aa9e4bf4c48b8a5905a0718641, type: 3}
       dodge:
-        clip: {fileID: 8300000, guid: 9acdf8f129bc5b34a8a8a8510c0be105, type: 3}
+        clip: {fileID: 8300000, guid: 82fafa3e23a8b434f8ad66ba5f4c5636, type: 3}
     voice:
       attack:
       - clip: {fileID: 8300000, guid: 2f76bf80822544f4d8ee7a2fc174ddd1, type: 3}

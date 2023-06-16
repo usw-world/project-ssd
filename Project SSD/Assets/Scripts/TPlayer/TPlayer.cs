@@ -196,7 +196,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
         moveState.onActive = (State prev) => {
 			ChangeAnimation("Move");
 			DrawSword(false);
-			trackEffect.moveSmoke.Enable();
 			attackCount = 0;
 		};
 		dodgeAttackState.onActive = (State prev) => {
@@ -373,7 +372,6 @@ public class TPlayer : NetworkBehaviour, IDamageable
         idleState2.onInactive = (State next) => {  };
         idleState3.onInactive = (State next) => {  };
         moveState.onInactive = (State next) => {
-			trackEffect.moveSmoke.Disable();
 		};
 		basicAttackState.onInactive = (State nextState) => {
 			if(attackCoroutine != null)
@@ -789,6 +787,14 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	public void OnFootStepClip() 
 	{
 		SoundManager.instance.tPlayer.effect.footStep.PlayOneShot(audioSourceEffect, ESoundType.effect);
+		trackEffect.footprint.GetComponent<ParticleSystem>().Play();
+		//StartCoroutine(CreateFootprint());
+	}
+	private IEnumerator CreateFootprint() 
+	{
+		trackEffect.footprint.Enable();
+		yield return null;
+		trackEffect.footprint.Disable();
 	}
 	public void PutSword() 
 	{
@@ -1164,7 +1170,7 @@ class TPlayerTrackEffect
 {
 	public Effect_MotionTrail motionTrailEffect;
 	public TrackEffect dodgeMaehwa;
-	public TrackEffect moveSmoke;
+	public TrackEffect footprint;
 	public TrackEffect shield;
 	public GameObject motionTrailPrefab;
 	[HideInInspector] public string motionTrailKey;
@@ -1172,8 +1178,6 @@ class TPlayerTrackEffect
 	{
 		dodgeMaehwa.Enable();
 		dodgeMaehwa.Disable();
-		moveSmoke.Disable();
-		moveSmoke.Enable();
 		shield.Enable();
 		shield.Disable();
 		motionTrailKey = motionTrailPrefab.GetComponent<IPoolableObject>().GetKey();

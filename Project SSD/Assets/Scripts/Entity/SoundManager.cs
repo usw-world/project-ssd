@@ -49,9 +49,9 @@ public class PlayerAudioClip
 	public void PlayDelay(AudioSource audioSource, ESoundType type, float time)
 	{
 		SetVolume(audioSource, type);
-		SoundManager.instance.PlayDelay(PlayDelayCo(audioSource, type, time));
+		SoundManager.instance.PlayDelay(PlayDelayCo(audioSource, time));
 	}
-	private IEnumerator PlayDelayCo(AudioSource audioSource, ESoundType type, float time)
+	private IEnumerator PlayDelayCo(AudioSource audioSource, float time)
 	{
 		yield return new WaitForSeconds(time);
 		audioSource.clip = clip;
@@ -60,9 +60,9 @@ public class PlayerAudioClip
 	public void PlayOneShotDelay(AudioSource audioSource, ESoundType type, float time)
 	{
 		SetVolume(audioSource, type);
-		SoundManager.instance.PlayDelay(PlayOneShotDelayCo(audioSource, type, time));
+		SoundManager.instance.PlayDelay(PlayOneShotDelayCo(audioSource, time));
 	}
-	private IEnumerator PlayOneShotDelayCo(AudioSource audioSource, ESoundType type, float time) 
+	private IEnumerator PlayOneShotDelayCo(AudioSource audioSource, float time) 
 	{
 		yield return new WaitForSeconds(time);
 		audioSource.PlayOneShot(clip);

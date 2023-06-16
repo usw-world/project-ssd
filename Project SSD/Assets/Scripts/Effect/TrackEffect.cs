@@ -12,7 +12,8 @@ public class TrackEffect : MonoBehaviour
 	}
 	protected virtual void Update() 
 	{
-		transform.position = target.position + offset; 
+		transform.position = target.position + offset;
+		transform.rotation = target.rotation;
 	}
 	public virtual void Enable()
 	{
