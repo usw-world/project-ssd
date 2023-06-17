@@ -93,4 +93,8 @@ public class TPlayerSkillUi : MonoBehaviour
 	}
 	public void StartAnimation() { isPlayingAnimation = true; }
 	public void EndAnimation() { isPlayingAnimation = false; }
+	public void ActiveOption(int number)
+	{
+		print(number + " 클릭");
+	}
 }
