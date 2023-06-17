@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 public class Buffering : MonoBehaviour, IPoolableObject
 {
     public bool addShield = false;
-    [FormerlySerializedAs("skillBuffer")] [FormerlySerializedAs("skill_Wheel")] public Skill_Buffering skillBuffering = null;
+    public Skill_Buffering skillBuffering = null;
     
     public Buffering(Skill_Buffering skillBuffering)
     {
@@ -16,7 +16,7 @@ public class Buffering : MonoBehaviour, IPoolableObject
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.TryGetComponent(out IDamageable enemy) && !other.gameObject.layer.Equals(1 << 7)) {
+        if(other.TryGetComponent(out IDamageable enemy) && !other.gameObject.layer.Equals(1 << 7 | 1<<11)) {
             Vector3 force = transform.forward * 15f;
             Damage damage = new Damage(
                 10,
@@ -30,11 +30,7 @@ public class Buffering : MonoBehaviour, IPoolableObject
         }
     }
 
-    private void Update()
-    {
-        // if(rotate)
-            // transform.Rotate((new Vector3(0, 5, 0)));
-    }
+
 
     public string GetKey()
     {
