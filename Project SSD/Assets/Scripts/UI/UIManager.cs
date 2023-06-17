@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
 
 	[SerializeField] private Animator fadeInOutAnimator;
 	private Coroutine fadeInOutCoroutine;
+	private GameObject activatedUi = null;
 
     private void Awake() {
 		if(instance == null)
@@ -48,7 +49,20 @@ public class UIManager : MonoBehaviour
 		callback?.Invoke();
 	}
 	public void OnPressEscape() {
-		escapeMenu.OnPressEscape();
+		if (activatedUi == null)
+		{
+			escapeMenu.OnPressEscape();
+		}
+		else
+		{
+			if (activatedUi == tPlayerSkill.gameObject)
+			{
+				if (!tPlayerSkill.OnPressEscape())
+				{
+					activatedUi = null;
+				}
+			}
+		}
 	}
 	public AlertUI AlertMessage(string message) {
 		GameObject alertUIGobj = Instantiate(alertUIPrefab, commonHudCanvas.transform);
@@ -62,7 +76,12 @@ public class UIManager : MonoBehaviour
 	}
 	public void OnPressTPlayerSkill()
 	{
-		tPlayerSkill.OnActive();
+		if (tPlayerSkill.CanActive())
+		{
+			if (tPlayerSkill.OnActive())
+				activatedUi = tPlayerSkill.gameObject;
+			else activatedUi = null;
+		}
 	}
 	/*
 	public void StartCutScene()
