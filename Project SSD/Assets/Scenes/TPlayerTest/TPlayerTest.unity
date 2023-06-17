@@ -89169,19 +89169,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1000804894, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
-      propertyPath: m_FillAmount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1654441417, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
-      propertyPath: m_FillAmount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1648243286655922552, guid: cd64ddd3c0782d448b1c623308d3cbe7,
-        type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4294967295
-      objectReference: {fileID: 0}
     - target: {fileID: 2515598466550659337, guid: cd64ddd3c0782d448b1c623308d3cbe7,
         type: 3}
       propertyPath: m_RootOrder
@@ -89241,21 +89228,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: UI Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 3008397178743027904, guid: cd64ddd3c0782d448b1c623308d3cbe7,
-        type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4294967295
-      objectReference: {fileID: 0}
-    - target: {fileID: 3524328552305881580, guid: cd64ddd3c0782d448b1c623308d3cbe7,
-        type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4292598747
-      objectReference: {fileID: 0}
-    - target: {fileID: 6479624568292388579, guid: cd64ddd3c0782d448b1c623308d3cbe7,
-        type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
