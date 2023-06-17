@@ -119,9 +119,9 @@ public class Enemy_Bomber : MovableEnemy
 
     IEnumerator CountDown()
     {
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < 15; i++)
         {
-            Debug.Log($"{10-i*0.2f}초 후 터짐");
+            Debug.Log($"{3-i*0.2f}초 후 터짐");
             yield return new WaitForSeconds(0.2f);
         }
         Explode();

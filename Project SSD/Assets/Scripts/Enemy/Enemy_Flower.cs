@@ -9,11 +9,10 @@ public class Enemy_Flower : MovableEnemy
     private State idleState;
     private State attackState;
     private State hitState;
-    private float attackInterval = 0;
+    private float attackInterval = 1.5f;
     private float timer;
-    private Transform throwPivot;
+    public Transform throwPivot;
     private Vector3 targetPos;
-    private Coroutine explode;
     private Coroutine hitCoroutine;
     private string throwableObjKey;
     protected override void Awake()
@@ -25,42 +24,50 @@ public class Enemy_Flower : MovableEnemy
     protected override void Start()
     {
         base.Start();
+        PoolerManager.instance.InsertPooler(throwableObjKey, throwableObj, true);
     }
     
     private void Initialize()
     {
         idleState = new State("idle");
         hitState = new State("hit");
+        attackState = new State("attack");
         enemyStatesMap.Add(idleState.stateName, idleState);
         enemyStatesMap.Add(attackState.stateName, attackState);
         enemyStatesMap.Add(hitState.stateName, hitState);
         StateInitialize();
-        throwableObjKey = throwableObj.GetComponent<IPoolableObject>().GetKey();
-        PoolerManager.instance.InPool(throwableObjKey, throwableObj);
         enemyStateMachine.SetIntialState(idleState);
+        throwableObjKey = throwableObj.GetComponent<IPoolableObject>().GetKey();
     }
 
     private void StateInitialize()
     {
         idleState.onActive += prevState =>
         {
-           
+           enemyMovement.Stop();
         };
         
 
         attackState.onActive += state =>
         {
-            
+            enemyMovement.Stop();
+            Debug.Log("attackState");
         };
         
         attackState.onStay += () =>
         {
+            var rot = Vector3.Scale(new Vector3(1, 0, 1), targetPos);
+            rot.y = 1.5f;
+            transform.LookAt(rot);
+            timer += Time.deltaTime;
             if (timer > attackInterval)
             {
                 timer = 0;
-                var throwObj = PoolerManager.instance.OutPool(throwableObjKey).GetComponent<Enemy_Flower_throwObj>();
-                throwObj.targetPos = targetPos;
-                
+                var throwObj = PoolerManager.instance.OutPool(throwableObjKey);
+                throwObj.transform.position = transform.position;
+                throwObj.transform.rotation = transform.localRotation;
+                throwObj.GetComponent<Enemy_Flower_throwObj>().targetPos = targetPos;
+                throwObj.gameObject.SetActive(true);
             }
         };
 

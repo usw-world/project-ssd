@@ -78,7 +78,6 @@ public class Enemy_MadMed : MovableEnemy
     {
         idleState.onActive += prevState =>
         {
-            Debug.Log("Idle onActive");
             enemyMovement.Stop();
             chaseGameObject.SetActive(false);
             idleGameObject.SetActive(true);
@@ -90,17 +89,14 @@ public class Enemy_MadMed : MovableEnemy
             rotation = transform.rotation.eulerAngles;
             rotation.y += Time.deltaTime * rotSpeed;
             transform.rotation = Quaternion.Euler(rotation);
-            Debug.Log("idle onStay");
         };
 
         idleState.onInactive += state =>
         {
-            Debug.Log("idle inactive");
         };
 
         chaseState.onActive += prevState =>
         {
-            Debug.Log("chase onActive");
             isSpin = false;
             idleGameObject.SetActive(false);
             chaseGameObject.SetActive(true);
@@ -122,13 +118,11 @@ public class Enemy_MadMed : MovableEnemy
 
         chaseState.onInactive += prevState =>
         {
-            Debug.Log("Chase State onInactive");
             enemyMovement.Stop();
         };
 
         attackState.onActive += state =>
         {
-            Debug.Log("Attack State OnActive");
             StartCoroutine(CreateImage());
         };
 
@@ -143,11 +137,9 @@ public class Enemy_MadMed : MovableEnemy
 
         hitState.onActive += state =>
         {
-            Debug.Log("Hit");
         };
         hitState.onInactive += prevState =>
         {
-            Debug.Log("Hit InActive");
             try
             {
                 StopCoroutine(hitCoroutine);
@@ -229,7 +221,6 @@ public class Enemy_MadMed : MovableEnemy
             SendChangeState(hitState);
         while(offset < damage.hittingDuration) {
             enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World, moveLayerMask);
-            // 보간 이중?
             pushedOffset += Time.deltaTime * 2;
             offset += Time.deltaTime;
             yield return null;

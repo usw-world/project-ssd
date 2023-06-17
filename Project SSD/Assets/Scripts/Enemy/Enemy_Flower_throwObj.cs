@@ -1,20 +1,30 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Timers;
 using UnityEngine;
 
 public class Enemy_Flower_throwObj : MonoBehaviour, IPoolableObject
 {
     public Vector3 targetPos;
+    public float speed = 2;
+    private float timer = 0;
+    public Transform parent;
     public string GetKey()
     {
         return GetType().ToString();
     }
 
+    private void Start()
+    {
+        // parent = GetComponentInParent<Transform>();
+    }
+
     private void Update()
     {
-        var rot = Vector3.Scale(new Vector3(1, 0, 1), targetPos);
-        transform.LookAt();
-        transform.Translate(Vector3.Lerp(transform.position, targetPos, Time.deltaTime * 2));
+        transform.Translate(transform.forward * (10 * Time.deltaTime));
+        timer += Time.deltaTime;
+        if(timer > 5)
+            Destroy(this.gameObject);
     }
 }
