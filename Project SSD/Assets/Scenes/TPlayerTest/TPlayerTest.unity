@@ -46981,6 +46981,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1011873021}
   m_Mesh: {fileID: 3900480760133451625, guid: f2c836f3e5c029140a0cc913d7df766a, type: 3}
+--- !u!114 &1048171268 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1048171268, guid: cd64ddd3c0782d448b1c623308d3cbe7,
+    type: 3}
+  m_PrefabInstance: {fileID: 3796261437078554569}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1090825955
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -89169,6 +89181,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 809962167, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: skillPoint
+      value: 
+      objectReference: {fileID: 1048171268}
     - target: {fileID: 2515598466550659337, guid: cd64ddd3c0782d448b1c623308d3cbe7,
         type: 3}
       propertyPath: m_RootOrder
