@@ -197,6 +197,11 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			ChangeAnimation("Move");
 			DrawSword(false);
 			attackCount = 0;
+			if (isRush)
+			{
+				trackEffect.rush.Disable();
+				trackEffect.rush.Enable();
+			}
 		};
 		dodgeAttackState.onActive = (State prev) => {
 			ChangeAnimation("DodgeAttack");
@@ -760,14 +765,20 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		SoundManager.instance.tPlayer.voice.AttackRandom(audioSourceVoice, 60f);
 	}
-	public void ChackDrawSwordAttack(int sound)
+	public void ChackDrawSwordAttack(int num)
 	{
-		skill.charging_DrawSwordAttack.Use();
+		if (num == 0)
+		{
+			skill.charging_DrawSwordAttack.Use();
+			if (attackCoroutine != null)
+				StopCoroutine(attackCoroutine);
+			attackCoroutine = StartCoroutine(AttackCoroutine(2f));
+		}
+		else { 
+			skill.charging_DrawSwordAttackFlyTrail.Use();
+		}
 		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		SoundManager.instance.tPlayer.voice.AttackRandom(audioSourceVoice, 70f);
-		if (attackCoroutine != null)
-			StopCoroutine(attackCoroutine);
-		attackCoroutine = StartCoroutine(AttackCoroutine(3f));
 	}
 	public void ChackDrawSwordAttackNonCharging()
 	{
@@ -1158,6 +1169,7 @@ class TPlayerSkillManager
 	public Skill dodgeAttack;
 	public Skill downAttack;
 	public Skill charging_DrawSwordAttack;
+	public Skill charging_DrawSwordAttackFlyTrail;
 	public Skill charging_DrawSwordAttack_nonCharging;
 	public Skill[] charging_DrawSwordAttack_7time;
 	public Skill[] combo_1;

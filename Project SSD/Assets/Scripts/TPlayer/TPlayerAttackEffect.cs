@@ -22,7 +22,7 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 			PoolerManager.instance.InsertPooler(hitEffectKey, hitEffect, false);
 		}
 	}
-	public void OnActive(float damageAmount)
+	public virtual void OnActive(float damageAmount)
 	{
 		TPlayer tPlayer = TPlayer.instance;
 		transform.parent = tPlayer.transform;
@@ -52,6 +52,10 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 			case Mode.CounterAttack:
 				position = tPlayer.transform.position;
 				hit = Physics.OverlapSphere(position, 3f, 1 << 8);
+				break;
+			case Mode.Sphere:
+				position = tPlayer.transform.position + localPos;
+				hit = Physics.OverlapSphere(position, damageZoneSize.x, 1 << 8);
 				break;
 		}
 		if (hit != null)
@@ -172,9 +176,10 @@ enum ETPlayerAttackEffect
 	RT_to_LB, RT_to_LB_Big,
 	NonCgargong,
 	dodge,
-	CounterAttack
+	CounterAttack,
+	draw360
 }
 enum Mode
 {
-	Nomal, Dodge, NonCgargong, CounterAttack
+	Nomal, Dodge, NonCgargong, CounterAttack, Sphere
 }

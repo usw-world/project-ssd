@@ -20173,8 +20173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   info:
-    effect: {fileID: 6540478355613462979, guid: 86303eabf9daf9a45ae84b97745c4b8d,
-      type: 3}
+    effect: {fileID: 869522075412456150, guid: fa0360275095aad42a6359e6cd3cdae9, type: 3}
     skillImage: {fileID: 0}
     skillText: 
     name: 
@@ -20815,7 +20814,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1767405251464710321}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &506674391980960511
 MonoBehaviour:
@@ -20842,6 +20841,64 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 10
+--- !u!1 &3687386396720038392
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2415698392296753301}
+  - component: {fileID: 6879666527110668951}
+  m_Layer: 0
+  m_Name: TS_DrawSwordAttack fly trail
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2415698392296753301
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3687386396720038392}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1767405251464710321}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6879666527110668951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3687386396720038392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  info:
+    effect: {fileID: 1287056493329488226, guid: 065f571c2e724f24a82e6e7998c5da9b,
+      type: 3}
+    skillImage: {fileID: 0}
+    skillText: 
+    name: 
+  areaAmout: 3
+  property:
+    coolTime: 0
+    skillAP: 0.8
+    nowCoolTime: 100
+    ready: 0
+    quickUse: 0
+  usingSP: 50
 --- !u!1 &3718127337461090363
 GameObject:
   m_ObjectHideFlags: 0
@@ -22638,7 +22695,7 @@ Transform:
   - {fileID: 6980953865617797699}
   - {fileID: 8467040568623351335}
   m_Father: {fileID: 1767405251464710321}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5049015897319885510
 GameObject:
@@ -38544,6 +38601,7 @@ MonoBehaviour:
     dodgeAttack: {fileID: 1733597684}
     downAttack: {fileID: 896612880}
     charging_DrawSwordAttack: {fileID: 5865126614075264091}
+    charging_DrawSwordAttackFlyTrail: {fileID: 6879666527110668951}
     charging_DrawSwordAttack_nonCharging: {fileID: 506674391980960511}
     charging_DrawSwordAttack_7time:
     - {fileID: 6971493886384524127}
@@ -45849,6 +45907,7 @@ Transform:
   - {fileID: 1733597685}
   - {fileID: 896612879}
   - {fileID: 3796498425108454187}
+  - {fileID: 2415698392296753301}
   - {fileID: 6489930288179634999}
   - {fileID: 1993733963465828547}
   - {fileID: 438464808382390490}
@@ -47625,7 +47684,7 @@ Transform:
   - {fileID: 6536705409014425876}
   - {fileID: 3191915298215050521}
   m_Father: {fileID: 1767405251464710321}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8837900898438668407
 GameObject:

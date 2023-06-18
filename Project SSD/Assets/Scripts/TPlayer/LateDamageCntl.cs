@@ -9,7 +9,7 @@ public class LateDamageCntl : MonoBehaviour
 	private string hitEffectBoom01PoolerKey;
 	private string hitEffectSlash01PoolerKey;
 	private string currentHitEffectPoolerKey;
-	private void Awake()
+	private void Start()
 	{
 		hitEffectBoom01PoolerKey = hitEffectBoom01_prefab.GetComponent<IPoolableObject>().GetKey();
 		PoolerManager.instance.InsertPooler(hitEffectBoom01PoolerKey, hitEffectBoom01_prefab, false);
