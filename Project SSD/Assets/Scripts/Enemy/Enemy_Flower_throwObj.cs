@@ -33,7 +33,7 @@ public class Enemy_Flower_throwObj : MonoBehaviour, IPoolableObject
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer.Equals(1 << 7))
+        if (other.gameObject.layer.Equals(7))
         {
             other.GetComponent<IDamageable>().OnDamage(damage);
             Destroy(gameObject);

@@ -76,9 +76,9 @@ public class Enemy_Bomber : MovableEnemy
 
         chaseState.onInactive += prevState =>
         {
-            StopCoroutine(explode);
-            delayProjector.gameObject.SetActive(false);
-            rangeProjector.gameObject.SetActive(false);
+            // StopCoroutine(explode);
+            // delayProjector.gameObject.SetActive(false);
+            // rangeProjector.gameObject.SetActive(false);
         };
         hitState.onActive += state =>
         {
@@ -99,8 +99,10 @@ public class Enemy_Bomber : MovableEnemy
                 StopCoroutine(hitCoroutine);
             hitCoroutine = StartCoroutine(HitCoroutine(damage));
         }
-        else
+        else{
             this.gameObject.SetActive(false);
+            Debug.Log(this.gameObject.name+" is dead");
+        }
     }
     
     public void Explode()
