@@ -37,4 +37,5 @@ public class TPlayerInput : MonoBehaviour
 
 	void OnEscape() => UIManager.instance.OnPressEscape();
 	void OnSkillUi() => UIManager.instance.OnPressTPlayerSkill();
+	void OnFinish() => player.StartFinish();
 }

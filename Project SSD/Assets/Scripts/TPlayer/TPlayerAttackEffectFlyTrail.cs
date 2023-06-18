@@ -20,7 +20,7 @@ public class TPlayerAttackEffectFlyTrail : TPlayerAttackEffect
 	{
 		foreach (var item in particles){
 			ParticleSystem.EmissionModule emission = item.emission;
-			emission.rateOverDistance = 10;
+			emission.rateOverDistance = 15;
 		}
 		foreach (var item in trails){
 			item.localPosition = Vector3.zero;

@@ -7,15 +7,15 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
 
-	[SerializeField] private TPlayerUI tPlayerUI;
-	[SerializeField] private QPlayerUI qPlayerUI;
+	public TPlayerUI tPlayerHUD;
+	[SerializeField] private TPlayerSkillUi tPlayerSkill;
 
 	[SerializeField] private Canvas commonHudCanvas;
- 	[SerializeField] private GameObject alertUIPrefab;
 	[SerializeField] private EscapeMenu escapeMenu;
-	[SerializeField] private TPlayerSkillUi tPlayerSkill;
+
 	[SerializeField] private QPlayerSkillUi qPlayerSkill;
 
+ 	[SerializeField] private GameObject alertUIPrefab;
 	[SerializeField] private Animator fadeInOutAnimator;
 	private Coroutine fadeInOutCoroutine;
 	private GameObject activatedUi = null;
@@ -26,6 +26,16 @@ public class UIManager : MonoBehaviour
 		else
 			Destroy(this.gameObject);
         DontDestroyOnLoad(gameObject);
+		if (!SSDNetworkManager.instance.isHost)
+		{
+			tPlayerSkill.gameObject.SetActive(true);
+			tPlayerHUD.gameObject.SetActive(true);
+		}
+		else
+		{
+			qPlayerSkill.gameObject.SetActive(true);
+		}
+		commonHudCanvas.gameObject.SetActive(true);
 	}
 	public void FadeIn(float delay=0f, float duration=2f, System.Action callback=null) {
 		if(fadeInOutCoroutine != null)

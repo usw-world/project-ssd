@@ -55,7 +55,7 @@ public class AoeBlackHole : MonoBehaviour, IPoolableObject
     }
     private void EnterTPlayerInAoe()
     {
-        AoeBuffer.GetInstance().onEnter.Invoke();
+        AoeBuffer.GetInstance()?.onEnter?.Invoke();
     }
 
 	[System.Obsolete]

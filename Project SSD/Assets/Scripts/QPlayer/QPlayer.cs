@@ -519,6 +519,7 @@ public class QPlayer : NetworkBehaviour
             case 1: // 눈 부릅
 				ChangeFinishSkillCamera(1);
 				ChangeAnimation("face_eyes_open");
+                SoundManager.instance.tPlayer.voice.drawAttackSpecialReady.Play(audioSourceVoice, ESoundType.voice);
 				break;
             case 2: // 카메라 앞으로
 				ChangeFinishSkillCamera(2);
@@ -545,12 +546,14 @@ public class QPlayer : NetworkBehaviour
                 StartCoroutine(UpdateTargetPoint());
                 SoundManager.instance.qPlayer.effect.finishEffectRed.PlayOneShot(audioSourceEffect, ESoundType.effect);
                 SoundManager.instance.qPlayer.effect.finishLaser.PlayOneShot(audioSourceEffect, ESoundType.effect);
+                SoundManager.instance.tPlayer.voice.drawAttackSpecialStart.Play(audioSourceVoice, ESoundType.voice);
                 break;
 			case 6: // 파워업
 				ChangeFinishSkillCamera(2);
 				finishSkillEffect[2].SetActive(false);
                 finishSkillEffect[4].SetActive(true);
                 finishSkillEffect[5].SetActive(true);
+                SoundManager.instance.tPlayer.voice.powerUp.Play(audioSourceVoice, ESoundType.voice);
                 break;
 			case 7: // 파워업 이펙트
 			    finishSkillEffect[6].SetActive(true);
@@ -561,6 +564,7 @@ public class QPlayer : NetworkBehaviour
                 stateMachine.ChangeState(finishSkillRush);
                 finishSkillEffect[5].SetActive(false);
                 finishSkillEffect[4].SetActive(false);
+                SoundManager.instance.tPlayer.voice.drawAttackSpecialStart2.Play(audioSourceVoice, ESoundType.voice);
                 break;
 			case 9: // 돌진 시작
                 mesh.SetActive(false);

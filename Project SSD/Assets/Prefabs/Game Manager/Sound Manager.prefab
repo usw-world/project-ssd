@@ -90,6 +90,10 @@ MonoBehaviour:
         clip: {fileID: 8300000, guid: 77c2df1daaf61ee4396ee3746e6ccda1, type: 3}
       drawAttackSpecialStart:
         clip: {fileID: 8300000, guid: 0f501253b3d315045bfcb1412afb1402, type: 3}
+      drawAttackSpecialStart2:
+        clip: {fileID: 8300000, guid: 1dfc38cecc7b3724f88c1e70c32240c1, type: 3}
+      powerUp:
+        clip: {fileID: 8300000, guid: 50f71116d6d3eb74a84a0366b753d01d, type: 3}
   qPlayer:
     effect:
       finishEffectBlue:

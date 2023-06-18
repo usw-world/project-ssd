@@ -112,6 +112,8 @@ public class TPlayerSoundVoice
 	public PlayerAudioClip drawAttackSpecialEnd_Miss;
 	public PlayerAudioClip drawAttackSpecialReady;
 	public PlayerAudioClip drawAttackSpecialStart;
+	public PlayerAudioClip drawAttackSpecialStart2;
+	public PlayerAudioClip powerUp;
 	private bool isPlayAttack = false;
 	private bool isPlayHit = false;
 	private int playedAttackIdx = 0;
