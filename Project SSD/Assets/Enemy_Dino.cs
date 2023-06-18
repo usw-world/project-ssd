@@ -15,6 +15,7 @@ public class Enemy_Dino : MovableEnemy {
     #endregion Visual
 
     #region States
+    [Header("States")]
     State idleState = new State("Idle");
     State chaseState = new State("Chase");
     State jumpAttackState = new State("Jump Attack");
@@ -28,15 +29,17 @@ public class Enemy_Dino : MovableEnemy {
     #endregion States
 
     #region Jump Attack
+    [Header("JumpAttack")]
     private Coroutine jumpAttackCoroutine;
-    [SerializeField] private const float JUMP_ATTACK_COOLTIME = 5f;
-    private float currentJumpAttackCooltime = 5f;
+    [SerializeField] private const float JUMP_ATTACK_COOLTIME = 3f;
+    private float currentJumpAttackCooltime = 3f;
     [SerializeField] private float jumpAttackDistance = 10f;
     [SerializeField] private float jumpAttackRangeRadius = 3f;
     [SerializeField] private Effect_DinoJumpAttack jumpAttackEffect;
     #endregion Jump Attack
 
     #region Assault
+    [Header("Assault")]
     [SerializeField] private float assaultForceScalra = 100f;
     [SerializeField] private float assaultDamage = 100f;
     [SerializeField] private float assaultSpeed = 6f;
@@ -49,21 +52,33 @@ public class Enemy_Dino : MovableEnemy {
     #endregion Assault
 
     #region Breath
+    [Header("Breath")]
+    [SerializeField] private float breathPointMoveSpeed = 3f;
+    private const float BREATH_PROBABILITY = .3f;
+    [SerializeField] private Effect_DinoBeamHit dinoBeamHitEffect;
+    [SerializeField] private UnityEngine.VFX.VisualEffect breathVfx;
+    [SerializeField] private UnityEngine.VFX.VisualEffect breathHitVfx;
+    [SerializeField] private Transform breathPoint;
+    [SerializeField] private float breathDuration = 5f;
+    private Coroutine breathCoroutine;
+    [SerializeField] private UnityEngine.Animations.Rigging.Rig animationRig;
     #endregion Breath
 
     #region Summon
-    private const float SUMMON_COOLTIME = 30f;
     private float currentSummonCooltime = 0;
-    [SerializeField] private GameObject pteranodonGobj;
-    [SerializeField] private float summonCount = 4f;
+    private const float SUMMON_COOLTIME = 30f;
+    [Header("Summon")]
+    [SerializeField] private Enemy_Pteranodon[] ownPteranodons;
+    [SerializeField] private float minPteranodonCount = 2f;
     #endregion Summon
 
     #region High Jump
-    // [SerializeField] private const float HIGH_JUMP_COOLTIME = 23f;
-    // private float currentHighJumpCooltim = 15f;
-    [SerializeField] private const float HIGH_JUMP_COOLTIME = 2f;
-    private float currentHighJumpCooltime = 0f;
+    [Header(" HighJump")]
+    [SerializeField] private const float HIGH_JUMP_COOLTIME = 23f;
+    private float currentHighJumpCooltime = 15f;
     [SerializeField] private float highJumpRangeRadius = 5f;
+    // private float currentHighJumpCooltime = 0f;
+    // [SerializeField] private const float HIGH_JUMP_COOLTIME = 2f;
     [SerializeField] private DecalProjector highJumpProjector;
     [SerializeField] private Effect_DinoJumpAttack highJumpEffect;
     private Coroutine highJumpCoroutine;
@@ -72,18 +87,34 @@ public class Enemy_Dino : MovableEnemy {
     #endregion High Jump
 
     #region Stunned
+    [Header("Stunned")]
     [SerializeField] private ParticleSystem stunnedParticle;
     [SerializeField] private float currentStunnedTime = 0;
     #endregion Stunned
 
     #region Damage
+    [Header("Damage")]
     private Coroutine damageCoroutine;
     #endregion Damage
+
+    #region Audio
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource breathHitAudioSource;
+    [SerializeField] private AudioClip[] walkClips;
+    [SerializeField] private AudioClip[] assaultClips;
+    [SerializeField] private AudioClip roarClip;
+    [SerializeField] private AudioClip landingClip;
+    [SerializeField] private AudioClip highJumpLandingClip;
+    [SerializeField] private AudioClip breathChargeClip;
+    [SerializeField] private AudioClip breathHitClip;
+    #endregion Audio
 
     #region Unity Events
     protected override void Awake() {
         base.Awake();
         dinoCollider = GetComponent<CapsuleCollider>();
+        audioSource = audioSource ?? GetComponent<AudioSource>();
     }
     protected override void Start() {
         base.Start();
@@ -159,10 +190,32 @@ public class Enemy_Dino : MovableEnemy {
                 StopCoroutine(highJumpCoroutine);
         };
         breathState.onActive += (State prevState) => {
+            breathVfx.SetFloat("Duration", breathDuration);
+            breathPoint.transform.position = transform.position + (transform.forward*5);
+            
+            breathHitVfx.SetFloat("Duration", breathDuration);
+
             enemyAnimator.SetBool("Breath", true);
+
+            breathPoint.SetParent(null);
+            animationRig.weight = 1;
+            breathVfx.gameObject.SetActive(true);
+            breathHitVfx.gameObject.SetActive(true);
+
+            audioSource.volume = SoundManager.instance.GetEffectVolume();
+            audioSource.PlayOneShot(breathChargeClip);
         };
         breathState.onInactive += (State nextState) => {
+            dinoBeamHitEffect.isActive = false;
             enemyAnimator.SetBool("Breath", false);
+
+            breathPoint.SetParent(this.transform);
+            animationRig.weight = 0;
+            breathVfx.gameObject.SetActive(false);
+            breathHitVfx.gameObject.SetActive(false);
+            
+            if(breathCoroutine != null)
+                StopCoroutine(breathCoroutine);
         };
         readyAssaultState.onActive += (State prevState) => {
             enemyAnimator.SetBool("Assault", true);
@@ -252,20 +305,22 @@ public class Enemy_Dino : MovableEnemy {
             currentJumpAttackCooltime -= Time.deltaTime;
         if(currentHighJumpCooltime > 0)
             currentHighJumpCooltime -= Time.deltaTime;
+        if(currentSummonCooltime > 0)
+            currentSummonCooltime -= Time.deltaTime;
     }
     protected bool DecideAction() {
         if(TrySummon()) {
             return true;
-        } else if(DistanceToTarget < 6) {
-            return TryBreath() || TryJumpAttack();
         } else if(DistanceToTarget < 11) {
+            return TryBreath() || TryJumpAttack();
+        } else if(DistanceToTarget < 20) {
             return TryHighJump();
         }
         return false;
     }
 
     private bool TryJumpAttack() {
-        return false;
+        // return false;
         if(currentJumpAttackCooltime <= 0
         && DistanceToTarget < jumpAttackDistance) {
             currentJumpAttackCooltime = JUMP_ATTACK_COOLTIME;
@@ -290,6 +345,7 @@ public class Enemy_Dino : MovableEnemy {
         SendChangeState(idleState, false);
     }
     private bool TryHighJump() {
+        // return false;
         if(currentHighJumpCooltime <= 0
         /* && maxHp*.5f > hp */) {
             currentHighJumpCooltime = HIGH_JUMP_COOLTIME;
@@ -313,9 +369,27 @@ public class Enemy_Dino : MovableEnemy {
         }
     }
     private bool TryBreath() {
+        // return false;
+        if(UnityEngine.Random.Range(0, 1f) < BREATH_PROBABILITY) {
+            SendChangeState(breathState, false);
+            return true;
+        }
         return false;
     }
     private bool TrySummon() {
+        if(currentSummonCooltime > 0) 
+            return false;
+
+        int livingCount = 0;
+        for(int i=0; i<ownPteranodons.Length; i++) {
+            if(!ownPteranodons[i].isDead)
+                livingCount ++;
+        }
+        if(minPteranodonCount >= livingCount) {
+            currentSummonCooltime = SUMMON_COOLTIME;
+            SendChangeState(summonState, false);
+            return true;
+        }
         return false;
     }
     private void OnHitAssault(Collider target) {
@@ -329,7 +403,10 @@ public class Enemy_Dino : MovableEnemy {
                     forceVector,
                     Damage.DamageType.Down
                 ));
-                CameraManager.instance.MakeNoise(1.5f, 1f);
+                CameraManager.instance.MakeNoise(2.5f, 1f);
+                audioSource.volume = SoundManager.instance.effectVolume;
+                audioSource.PlayOneShot(landingClip);
+                SendChangeState(jumpAttackState, false);
             }
         } else if(target.gameObject.layer == 8) {
             DestroyableObject cactus;
@@ -341,6 +418,8 @@ public class Enemy_Dino : MovableEnemy {
                     Damage.DamageType.Normal
                 ));
                 CameraManager.instance.MakeNoise(4f, .5f);
+                audioSource.volume = SoundManager.instance.effectVolume;
+                audioSource.PlayOneShot(landingClip);
                 SendChangeState(stunnedState, false);
             }
         }
@@ -350,6 +429,7 @@ public class Enemy_Dino : MovableEnemy {
     /* Noting. Because he is boss monster. ^^ */
 
     public override void TakeDamage(Damage damage) {
+        base.TakeDamage(damage);
         if(damageCoroutine != null)
             StopCoroutine(damageCoroutine);
         damageCoroutine = StartCoroutine(DamageCoroutine(damage));
@@ -374,25 +454,85 @@ public class Enemy_Dino : MovableEnemy {
         enemyAnimator.SetFloat("Animation Speed", coef);
         enemyMovement.SetSpeed(moveSpeed * coef);
     }
+    private IEnumerator BreathCoroutine() {
+        dinoBeamHitEffect.isActive = true;
+        breathHitAudioSource.volume = SoundManager.instance.GetEffectVolume();
+        breathHitAudioSource.clip = breathHitClip;
+        breathHitAudioSource.Play();
+
+        breathVfx.Play();
+        breathHitVfx.Play();
+        float offset = 0;
+        while(offset < breathDuration) {
+            offset += Time.deltaTime;
+            
+            breathPoint.Translate((targetPoint - breathPoint.position).normalized * breathPointMoveSpeed * Time.deltaTime, Space.World);
+            breathVfx.transform.LookAt(breathPoint);
+
+            Vector3 ylessBreathPoint = new Vector3(breathPoint.position.x, transform.position.y, breathPoint.position.z);
+            if(Vector3.Angle(transform.forward, ylessBreathPoint - transform.position) > 60) {
+                Quaternion ylessNextRotation = Quaternion.LookRotation(ylessBreathPoint - transform.position);
+                transform.rotation = Quaternion.Slerp(transform.rotation, ylessNextRotation, Time.deltaTime * 7f);
+            }
+
+            RaycastHit hit;
+            if( Physics.Raycast(
+                breathVfx.transform.position,
+                breathPoint.position - breathVfx.transform.position,
+                out hit,
+                50f,
+                1<<6 | 1<<11
+            )) {
+                breathVfx.SetFloat("Distance", hit.distance*.25f);
+            }
+            yield return null;
+        }
+        dinoBeamHitEffect.isActive = false;
+        SoundManager.instance.FadeOutVolume(breathHitAudioSource);
+        enemyAnimator.SetBool("Breath", false);
+    }
+
+    protected override void OnDie() {
+        base.OnDie();
+        SendChangeState(dieState);
+        StageManager.instance?.OnClearStage();
+    }
 
     #region Animation Events
+    public void AnimationEvent_WalkStep() {
+        audioSource.volume = SoundManager.instance.effectVolume;
+        audioSource.PlayOneShot(walkClips[0]);
+    }
+    public void AnimationEvent_AssaultStep() {
+        audioSource.volume = SoundManager.instance.effectVolume;
+        audioSource.PlayOneShot(assaultClips[UnityEngine.Random.Range(0, 3)]);
+    }
     public void AnimationEvent_FlyJumpAttack() {
         if(jumpAttackCoroutine != null)
             StopCoroutine(jumpAttackCoroutine);
         jumpAttackCoroutine = StartCoroutine(JumpAttackCoroutine(targetPoint));
     }
     public void AnimationEvent_LandJumpAttack() {
+        audioSource.volume = SoundManager.instance.effectVolume;
+        audioSource.PlayOneShot(landingClip);
+
         CameraManager.instance.MakeNoise(1, .5f);
         var effect = PoolerManager.instance.OutPool(jumpAttackEffect.GetKey()).GetComponent<Effect_DinoJumpAttack>();
         effect.AttackArea(transform.position);
     }
     public void AnimationEvent_HighJumpStart() {
+        audioSource.volume = SoundManager.instance.effectVolume;
+        audioSource.PlayOneShot(landingClip);
+
         highJumpProjector.enabled = true;
         if(highJumpCoroutine != null)
             StopCoroutine(highJumpCoroutine);
         highJumpCoroutine = StartCoroutine(HighJumpCoroutine());
     }
     public void AnimationEvent_LandHighJump() {
+        audioSource.volume = SoundManager.instance.effectVolume;
+        audioSource.PlayOneShot(landingClip);
+
         highJumpProjector.enabled = false;
         CameraManager.instance.MakeNoise(1, 1.5f);
         var effect = PoolerManager.instance.OutPool(highJumpEffect.GetKey()).GetComponent<Effect_DinoJumpAttack>();
@@ -412,6 +552,19 @@ public class Enemy_Dino : MovableEnemy {
     }
     public void AnimationEvent_StartAssault() {
         SendChangeState(assaultState, false);
+    }
+    public void AnimationEvent_BreathStart() {
+        breathCoroutine = StartCoroutine(BreathCoroutine());
+    }
+    public void AnimationEvent_OnSummon() {
+        audioSource.volume = SoundManager.instance.effectVolume;
+        audioSource.PlayOneShot(roarClip);
+        for(int i=0; i<ownPteranodons.Length; i++) {
+            var pteranodon = ownPteranodons[i];
+            if(pteranodon.isDead) {
+                pteranodon.Recovery();
+            }
+        }
     }
     #endregion Animation Events
 }

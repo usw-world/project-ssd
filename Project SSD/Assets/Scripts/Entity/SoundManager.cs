@@ -25,6 +25,19 @@ public class SoundManager : MonoBehaviour
 	public float GetEffectVolume() { return masterVolume * effectVolume; }
 	public float GetVoiceVolume() { return voiceVolume * effectVolume; }
 	public float GetBgmVolume() { return bgmVolume * effectVolume; }
+
+	public void FadeOutVolume(AudioSource source) {
+		StartCoroutine(FadeOutVolumeCoroutine(source));
+	}
+	private IEnumerator FadeOutVolumeCoroutine(AudioSource source) {
+		float origin = source.volume;
+		float offset = 1;
+		while(offset > 0) {
+			offset -= Time.deltaTime;
+			source.volume = origin * offset;
+			yield return null;
+		}
+	}
 }
 [Serializable]
 public class SoundBGM

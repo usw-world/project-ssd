@@ -24,7 +24,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     #region Status
     [SerializeField] protected float maxHp;
     [SerializeField] protected float hp;
-    protected bool isDead;
+    public bool isDead { get; protected set; }
 
     [SerializeField] protected Slider hpSlider;
     #endregion Status
@@ -64,9 +64,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     private void OnDrawGizmosSelected() {
         Gizmos.DrawWireSphere(transform.position, detectRange);
     }
-
-
-    private void Initialize() {
+    protected void Initialize() {
         StartCoroutine(UpdateTargetCoroutine());
     }
     

@@ -37,7 +37,7 @@ public class Effect_PteranodonAttack : MonoBehaviour, IPoolableObject {
 	}
 	private void OnTriggerEnter(Collider other) {
         if(isActive
-		&& lastHitTime+hittingDuration < Time.time
+		&& lastHitTime+hitInterval < Time.time
 		&& other.gameObject.layer == 7) { // Player Layer
 			lastHitTime = Time.time;
 			Vector3 forceVector = (other.transform.position - this.transform.position).normalized * forceScalar;

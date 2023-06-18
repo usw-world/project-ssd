@@ -15,7 +15,7 @@ public class Effect_PteranodonAssault : MonoBehaviour {
     public void Inactive() {
         isActive = false;
     }
-	private void OnTriggerEnter(Collider other) {
+	private void OnTriggerStay(Collider other) {
         if(!hasHit
         && isActive
 		&& other.gameObject.layer == 7) {

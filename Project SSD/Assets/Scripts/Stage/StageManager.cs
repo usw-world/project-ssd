@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,16 @@ public class StageManager : MonoBehaviour {
     [SerializeField] private GameObject qPlayerCamera;
 
     [SerializeField] private Transform spawnPoint;
+    
+    [SerializeField] public AudioSource bgmAudioSource;
+    
+    [System.Serializable]
+    public class UnityEvent : UnityEngine.Events.UnityEvent{}
+    public UnityEvent onClearStage;
+    
+    public void OnClearStage() {
+        onClearStage?.Invoke();
+    }
 
     private void Awake() {
         if(instance == null)

@@ -206,7 +206,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		};
 		basicAttackState.onActive = (State prevState) => {
 			if(prevState.Compare(basicAttackState))
-				ChangeAnimation("Buffered Input Basic Attack");
+				// ChangeAnimation("Buffered Input Basic Attack");
+				ani.SetBool("Buffered Input Basic Attack", true);
 			else {
 				DrawSword(true);
 				ChangeAnimation("Basic Attack");
@@ -319,7 +320,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			ChangeSp(status.GetRecoverySp());
 		};
         moveState.onStay = () => {
-			RotateWithCamera();
+			RotateWithCamera(lookVector);
 			if (isRush)
 			{
 				if (status.sp > 0)
@@ -545,7 +546,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			stateMachine.currentState == chargingDrawSwordAttack_specialStart ||
 			stateMachine.currentState == chargingDrawSwordAttack_specialEnd ||
 			stateMachine.currentState == comboAttack_1) return;
-		if (lookVector != Vector3.zero) RotateWithCamera(10f); 
+		if (lookVector != Vector3.zero) RotateWithCamera(lookVector, 10f); 
 		ChangeState(dodgeState, false);
 		skill.dodge.Use();
 	}
@@ -576,7 +577,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		|| stateMachine.currentState == comboAttack_1)
 			return;
 
-		nextAttackDirection = lookVector;
+		if(lookVector != Vector3.zero) {
+			nextAttackDirection = lookVector;
+		}
 
 		extraMovingPoint = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
 		ChangeState(basicAttackState, true);
@@ -627,12 +630,12 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		isPressingMRB = false;
 		if (stateMachine.currentState == chargingStart)
 		{
-			if (lookVector != Vector3.zero) RotateWithCamera(15f);
+			if (lookVector != Vector3.zero) RotateWithCamera(lookVector, 15f);
 			ChangeState(chargingDrawSwordAttack_nonCharging);
 			return;
 		}
 		if (stateMachine.currentState != chargingStay) return;
-		if (lookVector != Vector3.zero) RotateWithCamera(15f);
+		if (lookVector != Vector3.zero) RotateWithCamera(lookVector, 15f);
 		switch (chargingLevel)
 		{
 			case 0: 
@@ -710,8 +713,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		}
 	}
 	public void AnimationEvent_StartAttack() {
-        if (nextAttackDirection != Vector3.zero)
-			RotateWithCamera(15f);
+        if(nextAttackDirection != Vector3.zero)
+			RotateWithCamera(nextAttackDirection, 15f);
+		ani.SetBool("Buffered Input Basic Attack", false);
 	}
 	public void CheckAttackZone()
 	{
@@ -868,9 +872,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	#endregion public method
 
 	#region private method
-	private void RotateWithCamera(float rotateSpeed = 1f)
+	private void RotateWithCamera(Vector3 dir, float rotateSpeed = 1f)
 	{
-		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * lookVector;
+		Vector3 lookTarget = Quaternion.AngleAxis(Camera.main.transform.eulerAngles.y, Vector3.up) * dir;
         Vector3 look = Vector3.Slerp(transform.forward, lookTarget.normalized, this.rotateSpeed * rotateSpeed * Time.deltaTime);
 		transform.eulerAngles = new Vector3(0, Quaternion.LookRotation(look).eulerAngles.y, 0);
 	}
