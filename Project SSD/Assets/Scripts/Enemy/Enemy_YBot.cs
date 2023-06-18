@@ -16,6 +16,8 @@ class Enemy_YBot : MovableEnemy {
     private State rollState = new State("Roll");
     private State shootState = new State("Shoot");
     private State castState = new State("Cast");
+    private State airState = new State("Air");
+    private State kipUpState = new State("Kip Up");
     private State hitState = new State("Hit");
     private State dieState = new State("Die");
     #endregion States

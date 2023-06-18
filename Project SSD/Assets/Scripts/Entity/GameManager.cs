@@ -17,4 +17,9 @@ public class GameManager : MonoBehaviour {
     public void SetSaveData(SaveDataVO saveData) {
         this.saveData = saveData;
     }
+    public void SetActiveInput(bool active) {
+        var inputSystem = FindObjectOfType<UnityEngine.InputSystem.PlayerInput>();
+        if(inputSystem != null)
+            inputSystem.enabled = active;
+    }
 }

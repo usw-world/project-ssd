@@ -15,7 +15,8 @@ class Enemy_XBot : MovableEnemy {
     }
     private State assaultState = new State("Assault");
     private State jumpAttackState = new State("Jump Attack");
-    private State stunnedState = new State("Stunned");
+    private State airState = new State("Air");
+    private State kipUpState = new State("Kip Up");
     private State hitState = new State("Hit");
     private State dieState = new State("Die");
     #endregion States
@@ -38,12 +39,12 @@ class Enemy_XBot : MovableEnemy {
 
     #region Hit
     private Coroutine hitCoroutine;
+    private Coroutine airCoroutine;
     #endregion Hit
 
     #region Unity Events
     protected override void Awake() {
         base.Awake();
-        
     }
     protected override void Start() {
         base.Start();
@@ -104,12 +105,20 @@ class Enemy_XBot : MovableEnemy {
             enemyAnimator.SetBool("Jump Attack", false);
             StopCoroutine(jumpAttackCoroutine);
         };
-        stunnedState.onActive = (State prevState) => {
-            enemyAnimator.SetBool("Stunned", false);
+        airState.onActive += (State prevState) => {
+            if(prevState.Compare(airState))
+                enemyAnimator.SetBool("Rise", true);
+            else
+                enemyAnimator.SetBool("Air", true);
         };
-        stunnedState.onInactive = (State nextState) => {
-            enemyAnimator.SetBool("Stunned", false);
+        airState.onInactive += (State nextState) => {
+            enemyAnimator.SetBool("Air", false);
+            if(nextState != airState
+            && airCoroutine != null)
+                StopCoroutine(airCoroutine);
         };
+        // kipUpState.onActive += (State prevState) => {};
+        // kipUpState.onInactive += (State nextState) => {};
         hitState.onActive += (State prevState) => {
             if(prevState.Compare(hitState)) {
                 enemyAnimator.SetBool("Hit", true);
@@ -138,12 +147,15 @@ class Enemy_XBot : MovableEnemy {
         enemyStatesMap.Add(chaseState.stateName, chaseState);
         enemyStatesMap.Add(assaultState.stateName, assaultState);
         enemyStatesMap.Add(jumpAttackState.stateName, jumpAttackState);
-        enemyStatesMap.Add(stunnedState.stateName, stunnedState);
+        enemyStatesMap.Add(airState.stateName, airState);
+        enemyStatesMap.Add(kipUpState.stateName, kipUpState);
         enemyStatesMap.Add(hitState.stateName, hitState);
         enemyStatesMap.Add(dieState.stateName, dieState);
     }
     protected override void ChaseTarget(Vector3 point) {
         if(enemyStateMachine.Compare(hitState)
+        || enemyStateMachine.Compare(airState)
+        || enemyStateMachine.Compare(kipUpState)
         || enemyStateMachine.Compare(dieState))
             return;
 
@@ -166,7 +178,6 @@ class Enemy_XBot : MovableEnemy {
         && DistanceToTarget < 8f
         && !enemyStateMachine.Compare(jumpAttackState)
         && !enemyStateMachine.Compare(assaultState)
-        && !enemyStateMachine.Compare(hitState)
         && currentJumpAttackCooltime <= 0) {
             SendChangeState(jumpAttackState);
             return true;
@@ -226,6 +237,12 @@ class Enemy_XBot : MovableEnemy {
             assaultCoroutine = StartCoroutine(AssaultCoroutine());
         }
     }
+    public void AnimationEvent_EndAir() {
+        SendChangeState(kipUpState);
+    }
+    public void AnimationEvent_EndKipUp() {
+        SendChangeState(idleState);
+    }
     #endregion Animation Events
 
     public override void OnDamage(Damage damage) {
@@ -235,9 +252,17 @@ class Enemy_XBot : MovableEnemy {
         base.TakeDamage(damage);
         if(!isDead
         && !enemyStateMachine.Compare(jumpAttackState)) {
-            if(hitCoroutine != null)
-                StopCoroutine(hitCoroutine);
-            hitCoroutine = StartCoroutine(HitCoroutine(damage));
+            if(damage.damageType == Damage.DamageType.Down
+            || enemyStateMachine.Compare(airState)) {
+                if(airCoroutine != null)
+                    StopCoroutine(airCoroutine);
+                airCoroutine = StartCoroutine(AirCoroutine(damage));
+                SendChangeState(airState);
+            } else {
+                if(hitCoroutine != null)
+                    StopCoroutine(hitCoroutine);
+                hitCoroutine = StartCoroutine(HitCoroutine(damage));
+            }
         }
     }
     private IEnumerator HitCoroutine(Damage damage) {
@@ -253,6 +278,16 @@ class Enemy_XBot : MovableEnemy {
             yield return null;
         }
         SendChangeState(BasicState);
+    }
+    private IEnumerator AirCoroutine(Damage damage) {
+        float offset = 0;
+        Vector3 destination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
+        while(damage.hittingDuration > 0
+        && offset < 1) {
+            enemyMovement.MoveToward(Vector3.Lerp(destination, Vector3.zero, offset) * Time.deltaTime, Space.World, moveLayerMask);
+            offset += Time.deltaTime;
+            yield return null;
+        }
     }
     protected override void OnDie() {
         base.OnDie();

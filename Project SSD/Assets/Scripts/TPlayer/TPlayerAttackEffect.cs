@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 {
+	[SerializeField] private Damage.DamageType damageType = Damage.DamageType.Normal;
 	[SerializeField] private Mode mode;
 	[SerializeField] private ETPlayerAttackEffect attackType;
 	[SerializeField] private GameObject hitEffect;
@@ -70,7 +71,7 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 						damageAmount,
 						.75f,
 						(hit[i].transform.position - transform.position).normalized * 5f,
-						Damage.DamageType.Normal
+						damageType
 					);
 					target.OnDamage(damage);
 

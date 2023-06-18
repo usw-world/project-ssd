@@ -63,6 +63,9 @@ ModelImporter:
   - first:
       74: 6667066542923968980
     second: Armature|Dino Ready Assault (1)
+  - first:
+      74: 8066724245877245114
+    second: Armature|Dino Appear
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -461,7 +464,7 @@ ModelImporter:
       takeName: Armature|Dino Breath End
       internalID: 0
       firstFrame: 0
-      lastFrame: 20
+      lastFrame: 47
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -522,11 +525,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Armature|Dino Ready Assault (1)
-      takeName: Armature|Dino Ready Assault
+      name: Armature|Dino Appear
+      takeName: Armature|Dino Appear
       internalID: 0
       firstFrame: 0
-      lastFrame: 33
+      lastFrame: 445
       wrapMode: 0
       orientationOffsetY: 0
       level: 0

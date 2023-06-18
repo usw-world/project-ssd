@@ -16,8 +16,7 @@ public partial class SSDNetworkManager : NetworkManager {
         if(!messageHandlerMap.ContainsKey(type)) {
             list = new List<System.Action<NetworkMessage>>();
             messageHandlerMap.Add(type, list);
-
-            print(typeof(T));
+            
             NetworkClient.RegisterHandler<T>((message) => {
                 for(int i=0; i<list.Count; i++) {
                     list[i]?.Invoke(message);
@@ -40,11 +39,17 @@ public partial class SSDNetworkManager : NetworkManager {
 
     #region Message Handlers
     private void OnCreateTPlayerPrefab(NetworkConnectionToClient conn, CreateTPlayerPrefabMessage message) {
-        player = Instantiate(tPlayerObject);
+        if(StageManager.instance != null)
+            player = Instantiate(tPlayerObject, StageManager.instance.spawnPoint.position, StageManager.instance.spawnPoint.rotation);
+        else
+            player = Instantiate(tPlayerObject);
         NetworkServer.AddPlayerForConnection(conn, player);
     }
     private void OnCreateQPlayerPrefab(NetworkConnectionToClient conn, CreateQPlayerPrefabMessage message) {
-        player = Instantiate(qPlayerObject);
+        if(StageManager.instance != null)
+            player = Instantiate(qPlayerObject, StageManager.instance.spawnPoint.position, StageManager.instance.spawnPoint.rotation);
+        else
+            player = Instantiate(qPlayerObject);
         NetworkServer.AddPlayerForConnection(conn, player);
     }
     private void OnSyncEnemy(SyncEnemyMessage message) {

@@ -9,7 +9,7 @@ public class StageManager : MonoBehaviour {
     [SerializeField] private GameObject tPlayerCamera;
     [SerializeField] private GameObject qPlayerCamera;
 
-    [SerializeField] private Transform spawnPoint;
+    [SerializeField] public Transform spawnPoint;
     
     [SerializeField] public AudioSource bgmAudioSource;
     

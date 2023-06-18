@@ -240,7 +240,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		};
         downState.onActive = (State prev) => {
 			ChangeAnimation("Down");
-			isSuperArmor = true;
+			// isSuperArmor = true;
 			SoundManager.instance.tPlayer.voice.HitRandom(audioSourceVoice, 100f);
 		};
         damageState.onActive = (State prev) => {
@@ -512,18 +512,17 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			LookDirection(-damage.forceVector);
 		}
 
-		if (stateMachine.Compare(downState)
-		|| isSuperArmor
+		if (isSuperArmor
 		|| damage.amount == 0
 		)
 			return;
 
 		if (damageCoroutine != null)
 			StopCoroutine(damageCoroutine);
-		if(damage.damageType == Damage.DamageType.Normal)
-			damageCoroutine = StartCoroutine(DamageCoroutine(damage));
-		else
+		if(damage.damageType == Damage.DamageType.Down)
 			OnDown(damage);
+		else if(!stateMachine.Compare(downState))
+			damageCoroutine = StartCoroutine(DamageCoroutine(damage));
 	}
 	private IEnumerator DamageCoroutine(Damage damage) {
 		float offset = 0f;
@@ -538,7 +537,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		ResetState();
 	}
 	public void OnDown(Damage damage) {
-		ChangeState(downState, false); 
+		ChangeState(downState, true); 
 		if(downCoroutine != null)
 			StopCoroutine(downCoroutine);
 		downCoroutine = StartCoroutine(DownCoroutine(damage.forceVector));
@@ -546,9 +545,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private IEnumerator DownCoroutine(Vector3 forceVector) {
 		if(forceVector != Vector3.zero) {
 			float offset = 0;
-			Vector3 pusingDestination = Vector3.Scale(new Vector3(1, 0, 1), forceVector);
+			Vector3 pushingDestination = Vector3.Scale(new Vector3(1, 0, 1), forceVector);
 			while(offset < 1) {
-            	movement.MoveToward(Vector3.Lerp(pusingDestination, Vector3.zero, offset*2) * Time.deltaTime, Space.World);
+            	movement.MoveToward(Vector3.Lerp(pushingDestination, Vector3.zero, offset*2) * Time.deltaTime, Space.World);
 				offset += Time.deltaTime;
 				yield return null;
 			}

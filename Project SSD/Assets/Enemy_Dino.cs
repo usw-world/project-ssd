@@ -54,7 +54,7 @@ public class Enemy_Dino : MovableEnemy {
     #region Breath
     [Header("Breath")]
     [SerializeField] private float breathPointMoveSpeed = 3f;
-    private const float BREATH_PROBABILITY = .3f;
+    private const float BREATH_PROBABILITY = .1f;
     [SerializeField] private Effect_DinoBeamHit dinoBeamHitEffect;
     [SerializeField] private UnityEngine.VFX.VisualEffect breathVfx;
     [SerializeField] private UnityEngine.VFX.VisualEffect breathHitVfx;
@@ -75,10 +75,9 @@ public class Enemy_Dino : MovableEnemy {
     #region High Jump
     [Header(" HighJump")]
     [SerializeField] private const float HIGH_JUMP_COOLTIME = 23f;
-    private float currentHighJumpCooltime = 15f;
+    // private float currentHighJumpCooltime = 15f;
+    private float currentHighJumpCooltime = 0f;
     [SerializeField] private float highJumpRangeRadius = 5f;
-    // private float currentHighJumpCooltime = 0f;
-    // [SerializeField] private const float HIGH_JUMP_COOLTIME = 2f;
     [SerializeField] private DecalProjector highJumpProjector;
     [SerializeField] private Effect_DinoJumpAttack highJumpEffect;
     private Coroutine highJumpCoroutine;
@@ -559,6 +558,7 @@ public class Enemy_Dino : MovableEnemy {
     public void AnimationEvent_OnSummon() {
         audioSource.volume = SoundManager.instance.effectVolume;
         audioSource.PlayOneShot(roarClip);
+        CameraManager.instance.MakeNoise(2, 2);
         for(int i=0; i<ownPteranodons.Length; i++) {
             var pteranodon = ownPteranodons[i];
             if(pteranodon.isDead) {
