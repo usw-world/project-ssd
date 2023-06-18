@@ -59,16 +59,18 @@ public class Enemy_Flower : MovableEnemy
             var rot = Vector3.Scale(new Vector3(1, 0, 1), targetPos);
             rot.y = 1.5f;
             transform.LookAt(rot);
+            throwPivot.transform.LookAt(rot);
             timer += Time.deltaTime;
             if (timer > attackInterval)
             {
                 timer = 0;
-                var throwObj = PoolerManager.instance.OutPool(throwableObjKey);
-                throwObj.transform.position = transform.position;
-                throwObj.transform.rotation = transform.localRotation;
-                throwObj.GetComponent<Enemy_Flower_throwObj>().targetPos = targetPos;
-                throwObj.gameObject.SetActive(true);
+                enemyAnimator.SetTrigger("attack");
             }
+        };
+
+        attackState.onInactive += state =>
+        {
+            enemyAnimator.SetTrigger("idle");
         };
 
 
@@ -86,8 +88,6 @@ public class Enemy_Flower : MovableEnemy
         {
             // 피격 애니메이션 설정
         }
-        
-        
     }
     
 
@@ -104,6 +104,17 @@ public class Enemy_Flower : MovableEnemy
         if(enemyStateMachine.currentState != idleState)
             enemyStateMachine.ChangeState(idleState);
     }
+
+    public void Attack()
+    {
+        var throwObj = PoolerManager.instance.OutPool(throwableObjKey);
+        throwObj.transform.position = throwPivot.position;
+        throwObj.transform.rotation = throwPivot.rotation;
+        // throwObj.transform.rotation = transform.localRotation;
+        throwObj.GetComponent<Enemy_Flower_throwObj>().targetPos = targetPos;
+        throwObj.gameObject.SetActive(true);
+    }
+    
 
 
 }

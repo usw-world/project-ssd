@@ -2,12 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Serialization;
 
 
 [RequireComponent(typeof(Rigidbody))]
 public class Enemy_Bomber : MovableEnemy
 {
+    public DecalProjector rangeProjector;
+    public DecalProjector delayProjector;
+    
+    
     private State idleState;
     private State chaseState;
     private State hitState;
@@ -15,6 +20,8 @@ public class Enemy_Bomber : MovableEnemy
     private Vector3 targetPos;
     private Coroutine explode;
     private Coroutine hitCoroutine;
+    [SerializeField] private float boomTimer;
+    [SerializeField] private float boomRange;
     protected override void Awake()
     {
         base.Awake();
@@ -24,6 +31,7 @@ public class Enemy_Bomber : MovableEnemy
     protected override void Start()
     {
         base.Start();
+        rangeProjector.size = new Vector3(boomRange, boomRange, .1f);
     }
     
     private void Initialize()
@@ -41,32 +49,36 @@ public class Enemy_Bomber : MovableEnemy
     {
         idleState.onActive += prevState =>
         {
+            enemyAnimator.SetTrigger("idle");
             enemyMovement.Stop();
         };
 
         chaseState.onActive += prevState =>
         {
+            enemyAnimator.SetTrigger("attack");
             explode = StartCoroutine(CountDown());
         };
 
         chaseState.onStay += () =>
         {
             moveTimer += Time.deltaTime;
+            var rot = Vector3.Scale(new Vector3(1, 0, 1), targetPos);
+            rot.y = transform.position.y;
+            transform.LookAt(rot);
             
             if (moveTimer < 0.5f)
                 return;
             moveTimer = 0;
-            var rot = Vector3.Scale(new Vector3(1, 0, 1), targetPos);
-            rot.y = transform.position.y;
             enemyMovement.MoveToPoint(targetPos, moveSpeed);
-            transform.LookAt(rot);
-            if(Vector3.Distance(transform.position, targetPos) < 3)
+            if(Vector3.Distance(transform.position, targetPos) < 2)
                 enemyMovement.Stop();
         };
 
         chaseState.onInactive += prevState =>
         {
             StopCoroutine(explode);
+            delayProjector.gameObject.SetActive(false);
+            rangeProjector.gameObject.SetActive(false);
         };
         hitState.onActive += state =>
         {
@@ -94,7 +106,7 @@ public class Enemy_Bomber : MovableEnemy
     public void Explode()
     {
         Damage damage = new Damage(5, 2.0f, Vector3.forward * 5, Damage.DamageType.Normal);
-        var targets = Physics.OverlapSphere(transform.position, 5, 1<<7);
+        var targets = Physics.OverlapSphere(transform.position, boomRange, 1<<7);
         foreach (var obj in targets)
         {
             obj.TryGetComponent(out IDamageable damageable);
@@ -119,10 +131,22 @@ public class Enemy_Bomber : MovableEnemy
 
     IEnumerator CountDown()
     {
-        for (int i = 0; i < 15; i++)
+        rangeProjector.gameObject.SetActive(true);
+        delayProjector.gameObject.SetActive(true);
+        float timer = 0.0f;
+        while(true)
         {
-            Debug.Log($"{3-i*0.2f}초 후 터짐");
-            yield return new WaitForSeconds(0.2f);
+            if (timer < boomTimer)
+            {
+                Debug.Log($"{boomTimer-timer}초 후 터짐");
+                delayProjector.size = new Vector3(timer*(boomRange/boomTimer), timer*(boomRange/boomTimer), .1f);
+                timer += Time.deltaTime;
+                yield return new WaitForSeconds(Time.deltaTime);
+            }
+            else
+            {
+                break;
+            }
         }
         Explode();
     }
@@ -140,4 +164,6 @@ public class Enemy_Bomber : MovableEnemy
         }
         SendChangeState(idleState);
     }
+    
+    
 }

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = System.Random;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -16,9 +17,6 @@ public class Enemy_MadMed : MovableEnemy
     public GameObject chaseGameObject;
     public GameObject Canvas;
     public Vector3 targetPos;
-    
-
-    
     private State idleState;
     private State chaseState;
     private State attackState;
@@ -37,8 +35,6 @@ public class Enemy_MadMed : MovableEnemy
     protected override void Awake()
     {
         base.Awake();
-        
-        Debug.Log("Med awake");
     }
 
     protected override void Start()
@@ -46,8 +42,6 @@ public class Enemy_MadMed : MovableEnemy
         base.Start();
         Initialize();
         enemyStateMachine.SetIntialState(idleState);
-        Debug.Log("Med start");
-        
     }
 
 
@@ -79,9 +73,6 @@ public class Enemy_MadMed : MovableEnemy
         idleState.onActive += prevState =>
         {
             enemyMovement.Stop();
-            chaseGameObject.SetActive(false);
-            idleGameObject.SetActive(true);
-            isSpin = true;
         };
 
         idleState.onStay += () =>
@@ -93,6 +84,7 @@ public class Enemy_MadMed : MovableEnemy
 
         idleState.onInactive += state =>
         {
+            
         };
 
         chaseState.onActive += prevState =>
@@ -100,6 +92,7 @@ public class Enemy_MadMed : MovableEnemy
             isSpin = false;
             idleGameObject.SetActive(false);
             chaseGameObject.SetActive(true);
+            enemyAnimator.SetTrigger("walk");
         };
 
         chaseState.onStay += () =>
@@ -119,10 +112,12 @@ public class Enemy_MadMed : MovableEnemy
         chaseState.onInactive += prevState =>
         {
             enemyMovement.Stop();
+            enemyAnimator.SetTrigger("idle");
         };
 
         attackState.onActive += state =>
         {
+            enemyAnimator.SetTrigger("idle");
             StartCoroutine(CreateImage());
         };
 
@@ -137,6 +132,7 @@ public class Enemy_MadMed : MovableEnemy
 
         hitState.onActive += state =>
         {
+            
         };
         hitState.onInactive += prevState =>
         {
