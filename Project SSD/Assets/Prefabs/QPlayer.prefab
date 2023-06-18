@@ -5163,7 +5163,7 @@ MonoBehaviour:
     info: "\uC720\uB3C4\uAE30\uB2A5\uC774 \uCD94\uAC00\uB418\uACE0 \uAD6C\uCCB4\uC758
       \uC18D\uB3C4\uAC00 \uBE68\uB77C\uC9C4\uB2E4"
     image: {fileID: 21300000, guid: 9c0d6ec706e01ce448aea81584af092b, type: 3}
-    active: 1
+    active: 0
   - name: "\uC720\uB2C8\uD2F0 \uD5C8\uBE0C \uBCFC"
     info: "\uC801\uC5D0\uAC8C \uBA85\uC911\uC2DC \uC720\uB2C8\uD2F0 \uBCFC\uC744
       8\uAC1C \uC0DD\uC131\uD558\uB294 \uC720\uB2C8\uD2F0 \uD5C8\uBE0C \uBCFC\uC744
@@ -75081,6 +75081,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c85d5d98463603498c60c13ff167890, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isActive: 1
   triggerEnterEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -80067,7 +80068,7 @@ MonoBehaviour:
     info: "TPlayer\uAC00 \uC7A5\uD310 \uC548\uC5D0 \uB4E4\uC5B4\uC624\uBA74 \uACF5\uACA9\uB825
       3\uCD08 \uB3D9\uC548 5% \uC99D\uAC00"
     image: {fileID: 21300000, guid: 788967baed2496043a4a5e3c09e2d1cb, type: 3}
-    active: 1
+    active: 0
   - name: "\uCFE8\uD0C0\uC784 \uAC10\uC18C"
     info: "\uC2A4\uD0AC \uCFE8\uD0C0\uC784 10% \uAC10\uC18C"
     image: {fileID: 21300000, guid: 0196868fb326a824bb5f8b1039a7abea, type: 3}
@@ -80075,7 +80076,7 @@ MonoBehaviour:
   - name: "\uC274\uB4DC \uC0DD"
     info: "TPlayer \uC274\uB4DC \uCD5C\uB300 \uCCB4\uB825\uC758 10%"
     image: {fileID: 21300000, guid: 788967baed2496043a4a5e3c09e2d1cb, type: 3}
-    active: 1
+    active: 0
   - name: "SP \uD68C\uBCF5 \uC99D\uAC00"
     info: "TPlayer SP \uD68C\uBCF5 \uC18D\uB3C4 10% \uC99D\uAC00"
     image: {fileID: 21300000, guid: 788967baed2496043a4a5e3c09e2d1cb, type: 3}
@@ -80083,7 +80084,7 @@ MonoBehaviour:
   - name: "\uD640\uB529"
     info: "\uC7A5\uD310 3\uCD08 \uC720\uC9C0 \uBC0F \uC548\uC5D0 \uAC00\uB450\uAE30"
     image: {fileID: 21300000, guid: 6df54b69d111be346b310c3eb909a0b2, type: 3}
-    active: 1
+    active: 0
   - name: "\uBE14\uB799\uD640"
     info: "\uBE14\uB799\uD640\uC744 \uC0DD\uC131\uD558\uC5EC \uC801\uC744 \uB04C\uC5B4\uB2F9\uAE30"
     image: {fileID: 21300000, guid: 6df54b69d111be346b310c3eb909a0b2, type: 3}
@@ -104899,11 +104900,6 @@ MonoBehaviour:
   wheelCreator: {fileID: 1990019497426902526, guid: 9bafdbb4b1a29324a977f1f3a31e40fb,
     type: 3}
   canUseChain: 0
-  info:
-    effect: {fileID: 0}
-    skillImage: {fileID: 0}
-    skillText: 
-    name: 
 --- !u!1 &9047360050862676591
 GameObject:
   m_ObjectHideFlags: 0

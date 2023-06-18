@@ -66,14 +66,22 @@ MonoBehaviour:
         clip: {fileID: 8300000, guid: 82fafa3e23a8b434f8ad66ba5f4c5636, type: 3}
     voice:
       attack:
-      - clip: {fileID: 8300000, guid: 2f76bf80822544f4d8ee7a2fc174ddd1, type: 3}
-      - clip: {fileID: 8300000, guid: 7419986b54cb37240af8c530213f0c7e, type: 3}
-      - clip: {fileID: 8300000, guid: 186ea6c54925dd848a515dec6ecbdbd1, type: 3}
-      - clip: {fileID: 8300000, guid: a480f2ddcea03a746b682ab2e39c1fcf, type: 3}
+      - clip: {fileID: 8300000, guid: 710d0d76a4a38f54d9e2cd16994df9c4, type: 3}
+      - clip: {fileID: 8300000, guid: 4085aeb92ee2644438e90e60d2db3f53, type: 3}
+      - clip: {fileID: 8300000, guid: 63eb1f316b0b7534191993f36a04a76d, type: 3}
+      - clip: {fileID: 8300000, guid: 417ad350941f6c14d83f6cedac4302b6, type: 3}
+      - clip: {fileID: 8300000, guid: 0eace4e13da90ae448925e90a5903e15, type: 3}
+      - clip: {fileID: 8300000, guid: 710d0d76a4a38f54d9e2cd16994df9c4, type: 3}
+      hit:
+      - clip: {fileID: 8300000, guid: 3d9e6180fb73e4b46bb59f6f134234f2, type: 3}
+      - clip: {fileID: 8300000, guid: 5db0df1127b101442a380067db1190fa, type: 3}
+      - clip: {fileID: 8300000, guid: 54db920af66d780449f9c9d3fa4f0b29, type: 3}
+      - clip: {fileID: 8300000, guid: 02efdc8ad7be8544f8967db974ff3a4e, type: 3}
+      - clip: {fileID: 8300000, guid: 5a813455eafff4f46adbcd5524960979, type: 3}
       attack_combo_6:
-        clip: {fileID: 8300000, guid: 0969e06d37690cf40b851ec118300212, type: 3}
+        clip: {fileID: 8300000, guid: a406fe2d815136243b9bc11afb76d6a8, type: 3}
       attack_combo_7:
-        clip: {fileID: 8300000, guid: ee338e24555b6e74a9bbe40b6a251826, type: 3}
+        clip: {fileID: 8300000, guid: a406fe2d815136243b9bc11afb76d6a8, type: 3}
       drawAttackSpecialEnd:
         clip: {fileID: 8300000, guid: 7281c092777f5014ca42f328306bd5cc, type: 3}
       drawAttackSpecialEnd_Miss:

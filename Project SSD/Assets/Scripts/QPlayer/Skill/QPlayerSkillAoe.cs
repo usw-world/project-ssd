@@ -40,14 +40,14 @@ public class QPlayerSkillAoe : Skill
 
     private void Awake()
     {
-		options[0].active = false;	 // 
-		options[1].active = false;	 // 
-		options[2].active = false;	 // 
-		options[3].active = false;	 // 
-		options[4].active = true;	 // 가두기
-		options[5].active = false;	 // 모으기
-		options[6].active = false;	 // 
-		options[7].active = false;	 // 폭발
+		//options[0].active = false;	 // 
+		//options[1].active = false;	 // 
+		//options[2].active = false;	 // 
+		//options[3].active = false;	 // 
+		//options[4].active = true;	 // 가두기
+		//options[5].active = false;	 // 모으기
+		//options[6].active = false;	 // 
+		//options[7].active = false;	 // 폭발
 	}
 	private void Start()
 	{

@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
  	[SerializeField] private GameObject alertUIPrefab;
 	[SerializeField] private EscapeMenu escapeMenu;
 	[SerializeField] private TPlayerSkillUi tPlayerSkill;
+	[SerializeField] private QPlayerSkillUi qPlayerSkill;
 
 	[SerializeField] private Animator fadeInOutAnimator;
 	private Coroutine fadeInOutCoroutine;
@@ -62,6 +63,13 @@ public class UIManager : MonoBehaviour
 					activatedUi = null;
 				}
 			}
+			else if (activatedUi == qPlayerSkill.gameObject)
+			{
+				if (!qPlayerSkill.OnPressEscape())
+				{
+					activatedUi = null;
+				}
+			}
 		}
 	}
 	public AlertUI AlertMessage(string message) {
@@ -81,6 +89,16 @@ public class UIManager : MonoBehaviour
 			if (tPlayerSkill.OnActive())
 				activatedUi = tPlayerSkill.gameObject;
 			else activatedUi = null;
+		}
+	}
+	public void OnPressQPlayerSkill()
+	{
+		if (qPlayerSkill.CanActive())
+		{
+			if (qPlayerSkill.OnActive())
+				activatedUi = qPlayerSkill.gameObject;
+			else activatedUi = null;
+			return;
 		}
 	}
 	/*

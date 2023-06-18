@@ -31,4 +31,5 @@ public class QPlayerInput : MonoBehaviour
 	void OnLB_click() => player.MouseLeftClick();
 	
 	void OnEscape() => UIManager.instance.OnPressEscape();
+	void OnSkillUi() => UIManager.instance.OnPressQPlayerSkill();
 }

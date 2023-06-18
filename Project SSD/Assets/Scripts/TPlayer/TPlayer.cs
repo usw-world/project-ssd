@@ -232,9 +232,11 @@ public class TPlayer : NetworkBehaviour, IDamageable
         downState.onActive = (State prev) => {
 			ChangeAnimation("Down");
 			isSuperArmor = true;
+			SoundManager.instance.tPlayer.voice.HitRandom(audioSourceVoice, 100f);
 		};
         damageState.onActive = (State prev) => {
 			ChangeAnimation("Damage");
+			SoundManager.instance.tPlayer.voice.HitRandom(audioSourceVoice, 60f);
 		};
 		chargingStart.onActive = (State prev) => {
 			ChangeAnimation("Charging");

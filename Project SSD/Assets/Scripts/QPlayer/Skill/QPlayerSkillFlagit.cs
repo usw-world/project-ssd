@@ -48,7 +48,7 @@ public class QPlayerSkillFlagit : Skill
 		//options[3].active = true;
 		//options[4].active = true;
 		//options[5].active = true;
-		options[6].active = true;
+		//options[6].active = true;
 		//options[7].active = true;
 	}
 	private void Start()

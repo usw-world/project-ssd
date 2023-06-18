@@ -43,7 +43,7 @@ public class QPlayerSkillLightning : Skill
 		options[5].name = "과전류";
 		options[5].info = "폭이 증가합니다";
 		options[6].name = "자성";
-		options[6].info = "근처의 Flagit에서 목표지점으로 추가 공격을 가합니다";
+		options[6].info = "근처의 뇌검에서 목표지점으로 추가 공격을 가합니다";
 		options[7].name = "레일건";
 		options[7].info = "아주 강한 공격으로 바뀝니다";
 		//options[0].active = true;
