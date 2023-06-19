@@ -44,14 +44,14 @@ public class QPlayerSkillShield : Skill
 		options[6].info = "0.5초간 파트너가 무적이 됩니다. 무적시간이 끝나면 주변 적에게 무적시간때 받은 데미지의 100%만큼의 피해를 가합니다.";
 		options[7].name = "전화위복";
 		options[7].info = "0.5초간 파트너가 무적이 됩니다. 무적시간이 끝나면 파트너의 HP를 무적시간때 받은 데미지의 100%만큼 회복합니다.";
-		//options[0].active = true;
-		//options[1].active = true;
-		//options[2].active = true;
-		//options[3].active = true;
-		//options[4].active = true;
-		//options[5].active = true;
-		//options[6].active = true;
-		//options[7].active = true;
+		foreach (var item in options)
+		{
+			item.active = false;
+		}
+		//skillImage;
+		usingSp = 30f;
+		property.skillAP = 3f;
+		property.coolTime = 30f;
 	}
 	private void Start()
 	{
@@ -60,7 +60,8 @@ public class QPlayerSkillShield : Skill
 	}
 	public override void Use(Vector3 target)
 	{
-		QPlayer.instance.status.sp -= usingSp;
+		if (!CanUse()) return;
+		QPlayer.instance.ChangeSp(-usingSp);
 
 		property.nowCoolTime = 0;
 		if (options[1].active) { property.nowCoolTime += 5; }
@@ -147,12 +148,10 @@ public class QPlayerSkillShield : Skill
 		}
 		return false;
 	}
-
 	public override AimType GetAimType()
 	{
 		return AimType.None;
 	}
-
 	public override SkillSize GetAreaAmout()
 	{
 		return new SkillSize();

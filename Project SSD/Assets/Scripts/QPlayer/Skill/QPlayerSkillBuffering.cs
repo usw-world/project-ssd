@@ -11,8 +11,6 @@ public class QPlayerSkillBuffering : Skill
     public GameObject wheelCreator;
     public bool canUseChain = false;
     
-    
-    
     private float option00_increaseSpeed;
     private float option01_increaseRadius;
     private int option02_Throwable;
@@ -23,7 +21,7 @@ public class QPlayerSkillBuffering : Skill
     private string wheelCreatorKey;
     private Skill_Buffering bufferingCreator;
     private Attachment boostAttachment;
-
+	private float usingSp = 20f;
 
 	// 기본 - 1개, 2바퀴
 
@@ -36,7 +34,7 @@ public class QPlayerSkillBuffering : Skill
 	// 7. 공격 명중시 실드 
 	// 8. 공격력 증가 100 % 3초
 
-    private void InitializeOptionInfo()
+	private void InitializeOptionInfo()
     {
         options[0].name = "속도 증가";
         options[1].name = "거리 증가";
@@ -51,22 +49,26 @@ public class QPlayerSkillBuffering : Skill
     {
         wheelCreatorKey = wheelCreator.GetComponent<IPoolableObject>().GetKey();
         PoolerManager.instance.InsertPooler(wheelCreatorKey, wheelCreator, false);
-        property.nowCoolTime = 15;
-        property.coolTime = 15;
-        property.ready = false;
         info = new SkillInfo();
-        InitializeOptionInfo();
+		foreach (var item in options)
+		{
+			item.active = false;
+		}
+		//skillImage;
+		usingSp = 30f;
+		property.skillAP = 0;
+		property.coolTime = 15f;
+		InitializeOptionInfo();
     }
-
-    
-    
     public override void Use(Vector3 tmp)
     {
-        Use();
+		Use();
     }
     public override void Use()
     {
-        Debug.Log("buffer use");
+		if (!CanUse()) return;
+		QPlayer.instance.ChangeSp(-usingSp);
+		Debug.Log("buffer use");
         OptionValueInitialize();
         var obj = PoolerManager.instance.OutPool(wheelCreatorKey);
         bufferingCreator = obj.GetComponent<Skill_Buffering>();
@@ -97,7 +99,6 @@ public class QPlayerSkillBuffering : Skill
         bufferingCreator.OnActive();
         
     }
-
     private void OptionValueInitialize()
     {
         option00_increaseSpeed = 1.25f;
@@ -105,11 +106,6 @@ public class QPlayerSkillBuffering : Skill
         option05_increaseQuantity = 3;
         boostAttachment = new Attachment(.5f, .5f, info.skillImage, EAttachmentType.boost);
     }
-
-
-
-    
-
     public override bool CanUse()
     {
         if (canUseChain)
@@ -119,15 +115,16 @@ public class QPlayerSkillBuffering : Skill
             bufferingCreator.maxDegree = 180;
             return false;
         }
-        
-        if (property.nowCoolTime >= property.coolTime)
-        {
+		if (
+			property.nowCoolTime >= property.coolTime &&
+			QPlayer.instance.status.sp >= usingSp
+			)
+		{
             Debug.Log("buffer active");
             property.nowCoolTime = 0;
-            return true;
-        }
-
-        Debug.Log("buffer in cooldown :"+ (property.coolTime-property.nowCoolTime));
+			return true;
+		}
+		Debug.Log("buffer in cooldown :"+ (property.coolTime-property.nowCoolTime));
         return false;
     }
 

@@ -16737,6 +16737,7 @@ GameObject:
   - component: {fileID: 473309852}
   - component: {fileID: 473309851}
   - component: {fileID: 473309850}
+  - component: {fileID: 3796261437078554571}
   m_Layer: 5
   m_Name: Canvas_QPlayer HUD
   m_TagString: Untagged
@@ -16827,6 +16828,19 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &3796261437078554571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 473309848}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aee7aa38a5c8c0f43ac1245e14369c94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spSlider: {fileID: 7133758227142623652}
 --- !u!1 &473902090
 GameObject:
   m_ObjectHideFlags: 0
@@ -72158,7 +72172,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -11, y: 0}
   m_SizeDelta: {x: 42.800438, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -72251,11 +72265,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e40e7aece85e334e8915778dde5a34a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tPlayerHUD: {fileID: 3796261437078554571}
+  tPlayerHUD: {fileID: 1359480813896683015}
   tPlayerSkill: {fileID: 809962167}
+  qPlayerHUD: {fileID: 3796261437078554571}
+  qPlayerSkill: {fileID: 627799213}
   commonHudCanvas: {fileID: 7603637403448727013}
   escapeMenu: {fileID: 1235858580}
-  qPlayerSkill: {fileID: 627799213}
   alertUIPrefab: {fileID: 1057589465317526947, guid: 7662a645b2e3b5d4d99f5d7c2c95916d,
     type: 3}
   fadeInOutAnimator: {fileID: 4394297114024554980}
@@ -74664,7 +74679,7 @@ GameObject:
   - component: {fileID: 5273236237130566148}
   - component: {fileID: 7233852909501669874}
   - component: {fileID: 4554185980112774989}
-  - component: {fileID: 3796261437078554571}
+  - component: {fileID: 1359480813896683015}
   m_Layer: 5
   m_Name: Canvas_TPlayer HUD
   m_TagString: Untagged
@@ -74759,7 +74774,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &3796261437078554571
+--- !u!114 &1359480813896683015
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

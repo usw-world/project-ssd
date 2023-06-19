@@ -34,6 +34,7 @@ public class QPlayerSkillUiSubTree : MonoBehaviour
 		QPlayerSkillLightning lt;
 		QPlayerSkillFightGhostFist fgf;
 		SkillOptionInformation[] options = null;
+
 		switch (skillIdx)
 		{
 			case 0: ub  = QPlayer.instance.skills[skillIdx] as QPlayerSkillUnityBall;		

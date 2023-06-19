@@ -40,14 +40,14 @@ public class QPlayerSkillFightGhostFist : Skill
 		options[6].info = "파트너와 충돌시 파트너에게 실드를 제공합니다";
 		options[7].name = "오라 오라 오라";
 		options[7].info = "체인스킬로 변경되며 연속으로 최대 3번 사용 가능하다.";
-		//options[0].active = true;
-		//options[1].active = true;
-		//options[2].active = true;
-		//options[3].active = true;
-		//options[4].active = true;
-		//options[5].active = true;
-		//options[6].active = true;
-		//options[7].active = true;
+		foreach (var item in options)
+		{
+			item.active = false;
+		}
+		//skillImage;
+		usingSp = 30f;
+		property.skillAP = 2f;
+		property.coolTime = 15f;
 	}
 	private void Start()
 	{
@@ -59,17 +59,18 @@ public class QPlayerSkillFightGhostFist : Skill
 	}
 	public override void Use(Vector3 target)
 	{
+		if (!CanUse()) return;
 		if (options[7].active)
 		{
 			chainCount++;
-			QPlayer.instance.status.sp -= usingSp * 0.5f;
+			QPlayer.instance.ChangeSp(-usingSp * 0.5f);  
 			if (chainCount == 1) StartCoroutine(ChainSkillTimeOut());
 			else if (chainCount >= 3) EndChainSkill();
 		}
 		else
 		{
 			property.nowCoolTime = 0;
-			QPlayer.instance.status.sp -= usingSp;
+			QPlayer.instance.ChangeSp(-usingSp);
 		}
 		QPlayer.instance.OnFightGhostFist(true);
 	}
@@ -112,12 +113,10 @@ public class QPlayerSkillFightGhostFist : Skill
 		}
 		return false;
 	}
-
 	public override AimType GetAimType()
 	{
 		return AimType.Arrow;
 	}
-
 	public override SkillSize GetAreaAmout()
 	{
 		float amout = 6f;

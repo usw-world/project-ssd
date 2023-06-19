@@ -42,14 +42,14 @@ public class QPlayerSkillFlagit : Skill
 		options[6].info = "범위, 대미지 증가";
 		options[7].name = "참참참";
 		options[7].info = "체인스킬로 변경, 3회 연속사용 가능";
-		//options[0].active = true;
-		//options[1].active = true;
-		//options[2].active = true;
-		//options[3].active = true;
-		//options[4].active = true;
-		//options[5].active = true;
-		//options[6].active = true;
-		//options[7].active = true;
+		foreach (var item in options)
+		{
+			item.active = false;
+		}
+		//skillImage;
+		usingSp = 10f;
+		property.skillAP = 1f;
+		property.coolTime = 8f;
 	}
 	private void Start()
 	{
@@ -73,6 +73,7 @@ public class QPlayerSkillFlagit : Skill
 	}
 	public override void Use(Vector3 target)
 	{
+		if (!CanUse()) return;
 		if (options[2].active)	{
 			property.coolTime = 5f;
 		}else{
@@ -81,14 +82,14 @@ public class QPlayerSkillFlagit : Skill
 		if (options[7].active)
 		{
 			chainCount++;
-			QPlayer.instance.status.sp -= usingSp;
+			QPlayer.instance.ChangeSp(-usingSp);
 			if (chainCount == 1) StartCoroutine(ChainSkillTimeOut());
 			else if (chainCount >= 3) EndChainSkill();
 		}
 		else
 		{
 			property.nowCoolTime = 0;
-			QPlayer.instance.status.sp -= usingSp;
+			QPlayer.instance.ChangeSp(-usingSp);
 		}
 
 		Vector3 sponPos = target;
@@ -150,12 +151,10 @@ public class QPlayerSkillFlagit : Skill
 		}
 		return false;
 	}
-
 	public override AimType GetAimType()
 	{
 		return AimType.Area;
 	}
-
 	public override SkillSize GetAreaAmout()
 	{
 		float amout = 1;

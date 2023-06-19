@@ -10,10 +10,12 @@ public class UIManager : MonoBehaviour
 	public TPlayerUI tPlayerHUD;
 	[SerializeField] private TPlayerSkillUi tPlayerSkill;
 
+	public QPlayerUI qPlayerHUD;
+	[SerializeField] private QPlayerSkillUi qPlayerSkill;
+
 	[SerializeField] private Canvas commonHudCanvas;
 	[SerializeField] private EscapeMenu escapeMenu;
 
-	[SerializeField] private QPlayerSkillUi qPlayerSkill;
 
  	[SerializeField] private GameObject alertUIPrefab;
 	[SerializeField] private Animator fadeInOutAnimator;
@@ -33,7 +35,10 @@ public class UIManager : MonoBehaviour
 			tPlayerSkill.gameObject.SetActive(true);
 			tPlayerHUD.gameObject.SetActive(true);
 			ownHud = tPlayerHUD.gameObject;
-		} else {
+		} 
+		else
+		{
+			qPlayerHUD.gameObject.SetActive(true);
 			qPlayerSkill.gameObject.SetActive(true);
 		}
 		commonHudCanvas.gameObject.SetActive(true);

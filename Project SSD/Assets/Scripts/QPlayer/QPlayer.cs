@@ -20,7 +20,6 @@ public class QPlayer : NetworkBehaviour
 
     #region Q-Player Status
     public PlayerStatus status;
-    private float qPlayerSp;
     bool canAttack = true;
     bool isCanMove = true;
     #endregion Q-Player Status
@@ -54,11 +53,6 @@ public class QPlayer : NetworkBehaviour
     string currentAnimationTrigger = "";
     #endregion State Machine
 
-    #region Stamina
-    [SerializeField] private float stamina;
-    [SerializeField] private float maxStamina = 10f;
-    #endregion Stamina
-
     #region Animation
     Animator animator;
     const string IDLE_ANIMATION_PARAMETER = "Idle";
@@ -77,8 +71,10 @@ public class QPlayer : NetworkBehaviour
     [SerializeField] private AudioSource audioSourceEffect;
     [SerializeField] private AudioSource audioSourceVoice;
     [SerializeField] private AudioSource audioSourceBgm;
-    #region Skill
-    public List<Skill> skills;
+	private bool isAttachToAttack = false;
+
+	#region Skill
+	public List<Skill> skills;
     private Skill usingSkill;
     private Vector3 targetPoint;
 
@@ -100,7 +96,6 @@ public class QPlayer : NetworkBehaviour
     public override void OnStartLocalPlayer() {
         base.OnStartLocalPlayer();
     }
-
     private void Awake() {
         if (instance == null)
             instance = this;
@@ -108,24 +103,32 @@ public class QPlayer : NetworkBehaviour
             Destroy(gameObject); 
         DontDestroyOnLoad(gameObject);
 
-        if (!isLocalPlayer)
-
         animator = GetComponent<Animator>();
         movement = GetComponent<NavigateableMovement>(); 
         stateMachine = GetComponent<StateMachine>();
-        //Cursor.lockState = CursorLockMode.Locked;
-
+        Cursor.lockState = CursorLockMode.Confined;
         stateMachine.SetIntialState(attachedState);
-		Application.targetFrameRate = 60;
+		status.maxSp = 100;
+		status.sp = 100;
+		status.recoverySp = 0.33f;
+		UIManager.instance.qPlayerHUD.Initialize(status);
     }
-    void Start() {
+	private void Start() {
         tPlayerGobj = TPlayer.instance?.gameObject ?? GameObject.FindGameObjectWithTag("TPlayer");
-        stamina = maxStamina;
 
         InitializeCamera();
         InitializedState();
     }
-    private void InitializedState() {
+	void Update()
+	{
+		UpdateTargetArea();
+		if (status.sp < 1f ){
+			status.sp = 2f;
+			stateMachine.ChangeState(returnState, false);
+			return;
+		}
+	}
+	private void InitializedState() {
         #region Register States
         
         statesMap.Add(BufferingState.stateName, BufferingState);
@@ -159,7 +162,8 @@ public class QPlayer : NetworkBehaviour
             targetPos.x -= 1;
             Vector3 temp = Vector3.zero;
             transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref temp, returnSpeed);
-        };
+			ChangeSp(status.GetRecoverySp());
+		};
         attachedState.onInactive += (State nextState) => { };
         #endregion Attached State
 
@@ -177,7 +181,12 @@ public class QPlayer : NetworkBehaviour
             targetPos.x -= 1;
             Vector3 temp = Vector3.zero;
             transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref temp, returnSpeed);
-        };
+			ChangeSp(status.GetRecoverySp() * 0.5f);
+			if (Vector3.Distance( tPlayerGobj.transform.position, transform.position) < 2f)
+			{
+				stateMachine.ChangeState(attachedState, false);
+			}
+		};
         returnState.onInactive += (State nextState) => { };
         #endregion Return State
 
@@ -190,7 +199,8 @@ public class QPlayer : NetworkBehaviour
         separatedState.onStay += () => {
             if (!movement.isArrive)
                 ChangeState(moveState, false);
-        };
+			ChangeSp(-Time.deltaTime * 5f);
+		};
         separatedState.onInactive += (State nextState) => { };
         #endregion Separated State
 
@@ -203,7 +213,8 @@ public class QPlayer : NetworkBehaviour
         moveState.onStay += () => {
             if (movement.isArrive)
                 ChangeState(separatedState, false);
-        };
+			ChangeSp(-Time.deltaTime * 5f);
+		};
         moveState.onInactive += (State nextState) => {
             movement.Stop();
         };
@@ -212,6 +223,10 @@ public class QPlayer : NetworkBehaviour
         #region UnityBall State
         unityBallState.onActive = (State prevState) =>
         {
+			if (prevState == attachedState)	{
+				unityBallState.onStay += attachedState.onStay;
+				isAttachToAttack = true;
+			}
             transform.LookAt(targetPoint);
             Vector3 qPlayerRot = transform.eulerAngles;
             qPlayerRot.x = 0;
@@ -219,16 +234,22 @@ public class QPlayer : NetworkBehaviour
             transform.eulerAngles = qPlayerRot;
             canAttack = false;
             usingSkill = skills[0];
-
             string animationParameter = "1H Casting";
-
 			QPlayerSkillUnityBall skillUnityball = usingSkill as QPlayerSkillUnityBall;
 			if (skillUnityball != null && skillUnityball.options[7].active)
 				animationParameter = "2H Casting";
 			ChangeAnimation(animationParameter);
         };
-        unityBallState.onStay = () => { };
-        unityBallState.onInactive = (State nextState) => { canAttack = true; };
+        unityBallState.onStay = () => {
+			ChangeSp(-Time.deltaTime * 2.5f);
+		};
+        unityBallState.onInactive = (State nextState) => {
+			canAttack = true;
+			if (isAttachToAttack){
+				unityBallState.onStay -= attachedState.onStay;
+				isAttachToAttack = false;
+			}
+		};
         #endregion UnityBall State
 
         #region Aoe State
@@ -243,19 +264,33 @@ public class QPlayer : NetworkBehaviour
             canAttack = false;
             usingSkill = skills[1];
             ChangeAnimation("1H Casting");
-        };
-        aoeState.onStay = () =>
-        {
-        };
+			if (prevState == attachedState)
+			{
+				aoeState.onStay += attachedState.onStay;
+				isAttachToAttack = true;
+			}
+		};
+        aoeState.onStay = () => {
+			ChangeSp(-Time.deltaTime * 2.5f);
+		};
         aoeState.onInactive = (State nextState) =>
         {
             canAttack = true;
-        };
+			if (isAttachToAttack)
+			{
+				aoeState.onStay -= attachedState.onStay;
+				isAttachToAttack = false;
+			}
+		};
 		#endregion  Aoe State
 
 		#region Flagit State
-		flagitState.onActive = (State prevState) =>
-		{
+		flagitState.onActive = (State prevState) =>{
+			if (prevState == attachedState)
+			{
+				flagitState.onStay += attachedState.onStay;
+				isAttachToAttack = true;
+			}
 			transform.LookAt(targetPoint);
 			Vector3 qPlayerRot = transform.eulerAngles;
 			qPlayerRot.x = 0;
@@ -268,8 +303,17 @@ public class QPlayer : NetworkBehaviour
 
 			ChangeAnimation(animationParameter);
 		};
-		flagitState.onStay = () => { };
-		flagitState.onInactive = (State nextState) => { canAttack = true; };
+		flagitState.onStay = () => {
+			ChangeSp(-Time.deltaTime * 2.5f);
+		};
+		flagitState.onInactive = (State nextState) => {
+			canAttack = true;
+			if (isAttachToAttack)
+			{
+				flagitState.onStay -= attachedState.onStay;
+				isAttachToAttack = false;
+			}
+		};
 		#endregion Flagit State
 
 		#region Lightning State
@@ -281,33 +325,45 @@ public class QPlayer : NetworkBehaviour
 			qPlayerRot.z = 0;
 			transform.eulerAngles = qPlayerRot;
 			canAttack = false;
-            isCanMove = false;
 			usingSkill = skills[5];
 			QPlayerSkillLightning lightning = usingSkill as QPlayerSkillLightning;
 
 			string animationParameter = "2H Casting";
-
 			if (lightning.options[7].active)
 			{
-				animationParameter = "2H Stay"; 
+				isCanMove = false;
+				animationParameter = "2H Stay";
+			}
+			else
+			{
+				if (prevState == attachedState)
+				{
+					lightningState.onStay += attachedState.onStay;
+					isAttachToAttack = true;
+				}
 			}
 			if (lightning.options[1].active)
 			{
 				animationParameter += "Fast";
 			}
-			
 			ChangeAnimation(animationParameter);
 		};
-		lightningState.onStay = () => { };
+		lightningState.onStay = () => {
+			ChangeSp(-Time.deltaTime * 2.5f);
+		};
 		lightningState.onInactive = (State nextState) => { 
             canAttack = true;
             isCanMove = true;
-        };
+			if (isAttachToAttack)
+			{
+				lightningState.onStay -= attachedState.onStay;
+				isAttachToAttack = false;
+			}
+		};
 		#endregion Lightning State
 
 		#region Shield State
-		shieldState.onActive = (State prevState) =>
-		{
+		shieldState.onActive = (State prevState) =>{
 			transform.LookAt(TPlayer.instance.transform);
 			Vector3 qPlayerRot = transform.eulerAngles;
 			qPlayerRot.x = 0;
@@ -317,9 +373,24 @@ public class QPlayer : NetworkBehaviour
 			usingSkill = skills[3];
 			string animationParameter = "1H Casting";
 			ChangeAnimation(animationParameter);
+			animationParameter = "2H Stay";
+			if (prevState == attachedState)
+			{
+				shieldState.onStay += attachedState.onStay;
+				isAttachToAttack = true;
+			}
 		};
-		shieldState.onStay = () => { };
-		shieldState.onInactive = (State nextState) => { canAttack = true; };
+		shieldState.onStay = () => {
+			ChangeSp(-Time.deltaTime * 2.5f);
+		};
+		shieldState.onInactive = (State nextState) => {
+			canAttack = true;
+			if (isAttachToAttack)
+			{
+				shieldState.onStay -= attachedState.onStay;
+				isAttachToAttack = false;
+			}
+		};
 		#endregion Shield State
 
 		#region FightGhostFist State
@@ -417,7 +488,9 @@ public class QPlayer : NetworkBehaviour
 				 @ 6. TPlayer 충돌 가능, 실드   
 			 */
 		};
-		fightGhostFistState.onStay = () => { };
+		fightGhostFistState.onStay = () => {
+			ChangeSp(-Time.deltaTime * 2.5f);
+		};
 		fightGhostFistState.onInactive = (State nextState) => { };
 		#endregion FightGhostFist State
 
@@ -429,6 +502,7 @@ public class QPlayer : NetworkBehaviour
 		};
 		fightGhostFistStayState.onStay = () => {
 			movement.MoveToward(Vector3.forward * Time.deltaTime * 30f);
+			ChangeSp(-Time.deltaTime * 2.5f);
 		};
 		fightGhostFistStayState.onInactive = (State nextState) => { 
             canAttack = true;
@@ -442,8 +516,7 @@ public class QPlayer : NetworkBehaviour
 		
 		#region Buffering State
 		
-		 BufferingState.onActive = prevState =>
-		{
+		BufferingState.onActive = prevState =>{
 			transform.LookAt(targetPoint);
 			Vector3 qPlayerRot = transform.eulerAngles;
 			qPlayerRot.x = 0;
@@ -454,10 +527,23 @@ public class QPlayer : NetworkBehaviour
 			usingSkill = skills[2];
 			string animationParameter = "1H Casting";
 			ChangeAnimation(animationParameter);
-			
+			if (prevState == attachedState)
+			{
+				BufferingState.onStay += attachedState.onStay;
+				isAttachToAttack = true;
+			}
 		};
-		BufferingState.onStay = () => { };
-		BufferingState.onInactive = (nextState) => { canAttack = true; };
+		BufferingState.onStay = () => {
+			ChangeSp(-Time.deltaTime * 2.5f);
+		};
+		BufferingState.onInactive = (nextState) => {
+			canAttack = true;
+			if (isAttachToAttack)
+			{
+				BufferingState.onStay -= attachedState.onStay;
+				isAttachToAttack = false;
+			}
+		};
 		
 		#endregion
 		
@@ -471,6 +557,7 @@ public class QPlayer : NetworkBehaviour
 			canAttack = false;
             isCanMove = false;
             ChangeAnimation("finish attack");
+			skills[7].Use();
 		};
 		finishSkillState.onStay = () => { };
 		finishSkillState.onInactive = (State nextState) => {
@@ -679,9 +766,6 @@ public class QPlayer : NetworkBehaviour
 			CameraManager.instance.SetPlayerCamera();
 		}
     }
-    void Update() {
-        UpdateTargetArea();
-    }
     public void ReturnToTPlayer() {
         if (!isCanMove) return;
         ChangeState(returnState, false);
@@ -697,6 +781,9 @@ public class QPlayer : NetworkBehaviour
             DisableAim();
             return;
         }
+		if (status.sp < 3f)	{
+			return;
+		}
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 150f, 1<<6)) {
             movingDestination = new Vector3(hit.point.x, transform.position.y, hit.point.z);
@@ -711,13 +798,14 @@ public class QPlayer : NetworkBehaviour
     }
     public void ResetState() 
     {
-		if (prevState != null)
+		if (isAttachToAttack)
 		{
-			ChangeState(prevState, false);
-			prevState = null;
+			ChangeState(attachedState, false);
 		}
 		else
+		{
 			ChangeState(separatedState, false);
+		}
     }
 	public void OnFightGhostFist(bool active)
 	{
@@ -753,9 +841,19 @@ public class QPlayer : NetworkBehaviour
 			Debug.LogError(e);
 		}
 	}
-    #endregion Change State With Network
+	#endregion Change State With Network
 
-    public void ChangeAnimation(string trigger)
+	public void ChangeSp(float amount)
+	{
+		status.sp += amount;
+		if (status.sp > status.maxSp)
+		{
+			status.sp = status.maxSp;
+		}
+		UIManager.instance.qPlayerHUD.ReFreshStamina(status.sp);
+	}
+
+	public void ChangeAnimation(string trigger)
     {
         if (currentAnimationTrigger != "")
             animator.ResetTrigger(currentAnimationTrigger);
@@ -855,7 +953,6 @@ public class QPlayer : NetworkBehaviour
     }
     [ClientRpc]
     private void UseAmingSkill(int skillIndex, Vector3 targetPoint) {
-        prevState = stateMachine.currentState;
         canAttack = false;
         this.targetPoint = targetPoint;
         stateMachine.ChangeState(statesSkillMap[skills[skillIndex]]);

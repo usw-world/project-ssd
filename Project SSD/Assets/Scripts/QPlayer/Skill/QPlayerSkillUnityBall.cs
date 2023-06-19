@@ -80,14 +80,13 @@ public class QPlayerSkillUnityBall : Skill
 		options[6].info = "파이어볼이 사라질때 8개의 파이어볼을 추가로 생성한다";
 		options[7].name = "메테오";
 		options[7].info = "강력한 공격으로 변경된다";
-		//options[0].active = true;
-		//options[1].active = true;
-		//options[2].active = true;
-		//options[3].active = true;
-		//options[4].active = true;
-		//options[5].active = true;
-		//options[6].active = true;
-		//options[7].active = true;
+		foreach (var item in options){
+			item.active = false;
+		}
+		//skillImage;
+		usingSp = 10f;
+		property.skillAP = 1f;
+		property.coolTime = 5f;
 	}
 	private void Start()
 	{
@@ -104,7 +103,8 @@ public class QPlayerSkillUnityBall : Skill
 	}
 	public override void Use(Vector3 target)
 	{
-		QPlayer.instance.status.sp -= usingSp;
+		if (!CanUse()) return;
+		QPlayer.instance.ChangeSp(-usingSp);
 		property.nowCoolTime = 0;
 
 		Vector3 sponPos = QPlayer.instance.transform.position;

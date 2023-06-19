@@ -9,7 +9,7 @@ public class QPlayerSkillLightning : Skill
 	[SerializeField] private GameObject lightningStrikePrefab;
 	private string effectKey;
 	private string lightningStrikePrefabKey;
-	private float usingSp = 50f;
+	private float usingSp = 30f;
 
 	/*
 		작업 목록
@@ -46,14 +46,14 @@ public class QPlayerSkillLightning : Skill
 		options[6].info = "근처의 뇌검에서 목표지점으로 추가 공격을 가합니다";
 		options[7].name = "레일건";
 		options[7].info = "아주 강한 공격으로 바뀝니다";
-		//options[0].active = true;
-		//options[1].active = true;
-		//options[2].active = true;
-		//options[3].active = true;
-		//options[4].active = true;
-		//options[5].active = true;
-		//options[6].active = true;
-		//options[7].active = true;
+		foreach (var item in options)
+		{
+			item.active = false;
+		}
+		//skillImage;
+		usingSp = 30f;
+		property.skillAP = 3f;
+		property.coolTime = 15f;
 	}
 	private void Start()
 	{
@@ -65,6 +65,9 @@ public class QPlayerSkillLightning : Skill
 	}
 	public override void Use(Vector3 target)
 	{
+		if (!CanUse()) return;
+		property.nowCoolTime = 0;
+		QPlayer.instance.ChangeSp(-usingSp);
 		target += Vector3.up;
 		float lastDamage = QPlayer.instance.GetAP() * property.skillAP;
 
@@ -156,7 +159,6 @@ public class QPlayerSkillLightning : Skill
 
 		lightning.Run();
 	}
-
 	public override bool CanUse()
 	{
 		if (
@@ -168,12 +170,10 @@ public class QPlayerSkillLightning : Skill
 		}
 		return false;
 	}
-
 	public override AimType GetAimType()
 	{
 		return AimType.Arrow;
 	}
-
 	public override SkillSize GetAreaAmout()
 	{
 		float amout = 4f;

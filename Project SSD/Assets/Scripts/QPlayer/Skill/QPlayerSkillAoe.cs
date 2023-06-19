@@ -37,17 +37,19 @@ public class QPlayerSkillAoe : Skill
         }
         set { }
     }
+	private float usingSp = 20f;
 
-    private void Awake()
+
+	private void Awake()
     {
-		//options[0].active = false;	 // 
-		//options[1].active = false;	 // 
-		//options[2].active = false;	 // 
-		//options[3].active = false;	 // 
-		//options[4].active = true;	 // 가두기
-		//options[5].active = false;	 // 모으기
-		//options[6].active = false;	 // 
-		//options[7].active = false;	 // 폭발
+		foreach (var item in options)
+		{
+			item.active = false;
+		}
+		//skillImage;
+		usingSp = 20f;
+		property.skillAP = 0.5f;
+		property.coolTime = 15f;
 	}
 	private void Start()
 	{
@@ -61,15 +63,20 @@ public class QPlayerSkillAoe : Skill
 	}
 	public override bool CanUse()
     {
-        if (property.nowCoolTime >= property.coolTime)
-        {
-            return true;
-        }
-        return false;
-    }
+		if (
+			 property.nowCoolTime >= property.coolTime &&
+			 QPlayer.instance.status.sp >= usingSp
+			 )
+		{
+			return true;
+		}
+		return false;
+	}
     public override void Use(Vector3 target)
     {
-        SummonAoe(target);
+		if (!CanUse()) return;
+		QPlayer.instance.ChangeSp(-usingSp);
+		SummonAoe(target);
     }
     private void SummonAoe(Vector3 target)
     {
