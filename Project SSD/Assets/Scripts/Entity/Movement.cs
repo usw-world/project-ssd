@@ -91,6 +91,9 @@ public class Movement : MonoBehaviour {
     }
     protected virtual void Update() {
         Pulldown();
+        if(transform.position.y < -15) {
+            transform.position = StageManager.instance.spawnPoint.position;
+        }
     }
     void OnDrawGizmos() {
         Gizmos.color = Color.red;

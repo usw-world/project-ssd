@@ -22,4 +22,8 @@ public class GameManager : MonoBehaviour {
         if(inputSystem != null)
             inputSystem.enabled = active;
     }
+	private void SynchronizeSaveData() {
+        if(saveData == null)
+            return;
+	}
 }

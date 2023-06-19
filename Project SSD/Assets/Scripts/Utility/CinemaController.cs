@@ -11,10 +11,12 @@ public class CinemaController : MonoBehaviour {
     }
     public void StartCinema() {
         GameManager.instance.SetActiveInput(false);
+        UIManager.instance.SetActiveHud(false);
         SetAnimationTrigger("Play");
     }
     public void EndCinema() {
         GameManager.instance.SetActiveInput(true);
+        UIManager.instance.SetActiveHud(true);
         SetAnimationTrigger("Stop");
     }
     public void SetAnimationTrigger(string parameter) {

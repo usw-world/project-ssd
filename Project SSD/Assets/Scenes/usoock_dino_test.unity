@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.48395744, g: 0.5757396, b: 0.68019843, a: 1}
+  m_IndirectSpecularColor: {r: 0.48395744, g: 0.57573867, b: 0.68019843, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -12059,8 +12059,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1144890209}
-  m_LocalRotation: {x: 0.106329404, y: -0.7625677, z: -0.12981865, w: -0.6247654}
-  m_LocalPosition: {x: -2.503416, y: -13.27938, z: 74.49455}
+  m_LocalRotation: {x: -0.38268343, y: 0, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: 0.5, z: 3.33}
   m_LocalScale: {x: 1.0000004, y: 1.0000001, z: 1.0000005}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12166,6 +12166,7 @@ MonoBehaviour:
   playerCam: {fileID: 0}
   mainCam: {fileID: 0}
   defaultNoise: {fileID: 0}
+  blocksMaterial: {fileID: 0}
 --- !u!4 &1193341198
 Transform:
   m_ObjectHideFlags: 0
@@ -34360,13 +34361,77 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 627799208, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
-      propertyPath: m_IsActive
+    - target: {fileID: 19967075, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 320
+      objectReference: {fileID: 0}
+    - target: {fileID: 19967075, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 320
+      objectReference: {fileID: 0}
+    - target: {fileID: 19967075, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -480
+      objectReference: {fileID: 0}
+    - target: {fileID: 19967076, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_Value
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 809962162, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
-      propertyPath: m_IsActive
+    - target: {fileID: 36194226, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_AnchorMax.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 36194226, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64525833, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 64525833, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 242116182, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 242116182, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 551179298, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 551179298, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053824063, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053824063, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 1053824063, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -480
+      objectReference: {fileID: 0}
+    - target: {fileID: 2087145125, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 2087145125, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 2087145125, guid: cd64ddd3c0782d448b1c623308d3cbe7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 480
       objectReference: {fileID: 0}
     - target: {fileID: 2515598466550659337, guid: cd64ddd3c0782d448b1c623308d3cbe7,
         type: 3}
@@ -34768,6 +34833,11 @@ PrefabInstance:
       propertyPath: ownPteranodons.Array.data[5]
       value: 
       objectReference: {fileID: 746148100}
+    - target: {fileID: 5501853402779593635, guid: a069cb2d84e58ba42998cb20bb068cb5,
+        type: 3}
+      propertyPath: useGravity
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5501853402790691417, guid: a069cb2d84e58ba42998cb20bb068cb5,
         type: 3}
       propertyPath: m_LocalPosition.x

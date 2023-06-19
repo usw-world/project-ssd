@@ -50,6 +50,7 @@ class Enemy_YBot : MovableEnemy {
 
     #region Hit
     private Coroutine hitCoroutine;
+    private Coroutine airCoroutine;
     #endregion Hit
 
     #region Unity Events
@@ -128,6 +129,18 @@ class Enemy_YBot : MovableEnemy {
             if(rollingDodgeCoroutine != null)
                 StopCoroutine(rollingDodgeCoroutine);
         };
+        airState.onActive += (State prevState) => {
+            if(prevState.Compare(airState))
+                enemyAnimator.SetBool("Rise", true);
+            else
+                enemyAnimator.SetBool("Air", true);
+        };
+        airState.onInactive += (State nextState) => {
+            enemyAnimator.SetBool("Air", false);
+            if(nextState != airState
+            && airCoroutine != null)
+                StopCoroutine(airCoroutine);
+        };
         hitState.onActive += (State prevState) => {
             if(prevState.Compare(hitState)) {
                 enemyAnimator.SetBool("Hit", true);
@@ -155,6 +168,8 @@ class Enemy_YBot : MovableEnemy {
         enemyStatesMap.Add(idleState.stateName, idleState);
         enemyStatesMap.Add(chaseState.stateName, chaseState);
         enemyStatesMap.Add(rollState.stateName, rollState);
+        enemyStatesMap.Add(airState.stateName, airState);
+        enemyStatesMap.Add(kipUpState.stateName, kipUpState);
         enemyStatesMap.Add(hitState.stateName, hitState);
         enemyStatesMap.Add(dieState.stateName, dieState);
         enemyStatesMap.Add(shootState.stateName, shootState);
@@ -279,6 +294,12 @@ class Enemy_YBot : MovableEnemy {
     public void AnimationEvent_ShootEnd() {
         SendChangeState(BasicState);
     }
+    public void AnimationEvent_EndAir() {
+        SendChangeState(kipUpState);
+    }
+    public void AnimationEvent_EndKipUp() {
+        SendChangeState(idleState);
+    }
     #endregion Animation Events
 
     public override void OnDamage(Damage damage) {
@@ -286,10 +307,19 @@ class Enemy_YBot : MovableEnemy {
     }
     public override void TakeDamage(Damage damage) {
         base.TakeDamage(damage);
-        if(!isDead) {
-            if(hitCoroutine != null)
-                StopCoroutine(hitCoroutine);
-            hitCoroutine = StartCoroutine(HitCoroutine(damage));
+        if(!isDead
+        && !enemyStateMachine.Compare(rollState)) {
+            if(damage.damageType == Damage.DamageType.Down
+            || enemyStateMachine.Compare(airState)) {
+                if(airCoroutine != null)
+                    StopCoroutine(airCoroutine);
+                airCoroutine = StartCoroutine(AirCoroutine(damage));
+                SendChangeState(airState);
+            } else {
+                if(hitCoroutine != null)
+                    StopCoroutine(hitCoroutine);
+                hitCoroutine = StartCoroutine(HitCoroutine(damage));
+            }
         }
     }
     private IEnumerator HitCoroutine(Damage damage) {
@@ -305,6 +335,16 @@ class Enemy_YBot : MovableEnemy {
             yield return null;
         }
         SendChangeState(BasicState);
+    }
+    private IEnumerator AirCoroutine(Damage damage) {
+        float offset = 0;
+        Vector3 destination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
+        while(damage.hittingDuration > 0
+        && offset < 1) {
+            enemyMovement.MoveToward(Vector3.Lerp(destination, Vector3.zero, offset) * Time.deltaTime, Space.World, moveLayerMask);
+            offset += Time.deltaTime;
+            yield return null;
+        }
     }
     protected override void OnDie() {
         base.OnDie();

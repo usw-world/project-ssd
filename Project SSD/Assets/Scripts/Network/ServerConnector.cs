@@ -18,8 +18,8 @@ public class ServerConnector : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
-    // private string apiUrl = "https://uwu-web.azurewebsites.net";
-    private string apiUrl = "http://localhost:5034";
+    private string apiUrl = "https://uwu-web.azurewebsites.net";
+    // private string apiUrl = "http://localhost:5034";
 
     public void Ping(Action callback=null, Action<string> errorCallback=null) {
         StartCoroutine(PingCorourine(callback, errorCallback));
@@ -73,7 +73,6 @@ public class ServerConnector : MonoBehaviour
     }
     public void Register(string id, string password, Action callback=null, Action<string> errorCallback=null) {
         string json = $"{{\"user_id\":\"{id}\",\"user_pw\":\"{password}\"}}";
-        print(json);
         StartCoroutine(RegisterCoroutine(json, callback, errorCallback));
     }
     private IEnumerator RegisterCoroutine(string postData, Action callback=null, Action<string> errorCallback=null) {
@@ -111,20 +110,15 @@ public class ServerConnector : MonoBehaviour
         byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
         UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/update", "POST");
         request.uploadHandler.Dispose();
-        request.uploadHandler = (UploadHandler)new UploadHandlerRaw(postDataBytes); 
-        request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer(); 
+        request.uploadHandler = (UploadHandler) new UploadHandlerRaw(postDataBytes); 
+        request.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer(); 
         yield return request.SendWebRequest(); 
-        if (request.responseCode == 200)
-        {
+        if (request.responseCode == 200) {
             Debug.Log("Update Success");
-        }
-        else
-        {
+        } else {
             Debug.LogError(request.responseCode);
         }
-
         request.Dispose();
-        // 위와 동일
     }
     
     private void RequestIngameData(Action<string> errorCallback=null) {

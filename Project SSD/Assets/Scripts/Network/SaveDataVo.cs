@@ -12,8 +12,8 @@ public class SaveDataVO {
     public int qExp = 0;
     public int tLevel = 1;
     public int qLevel = 1;
-    public int[] tSkillData = new int[6] { 0, 0, 0, 0, 0, 0 };
-    public int[] qSkillData = new int[7] { 0, 0, 0, 0, 0, 0, 0 };
+    public string tSkillData = "00 00 00 00 00 00";
+    public string qSkillData = "00 00 00 00 00 00 00";
 
     public SaveDataVO() {}
     public SaveDataVO(string json) {

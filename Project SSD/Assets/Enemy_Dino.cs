@@ -229,7 +229,7 @@ public class Enemy_Dino : MovableEnemy {
         assaultState.onStay += () => {
             if(onHost) {
                 Vector3 ylessTargetPoint = new Vector3(targetPoint.x - transform.position.x, transform.position.y, targetPoint.z - transform.position.z);
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(ylessTargetPoint), Time.deltaTime * assaultRotateSpeed);
+                Quaternion nextRotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(ylessTargetPoint), Time.deltaTime * assaultRotateSpeed);
                 enemyMovement.MoveToward(transform.forward * assaultSpeed * Time.deltaTime, Space.World);
             }
             assaultMotionTrailCount ++;

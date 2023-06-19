@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/usoock_duo_test.unity
     guid: 12af21339ea72734da6c664be69285ee
+  - enabled: 1
+    path: Assets/Scenes/usoock_dino_test.unity
+    guid: 56569691427d4c844895f588c890d4d0
   m_configObjects: {}

@@ -20,19 +20,20 @@ public class UIManager : MonoBehaviour
 	private Coroutine fadeInOutCoroutine;
 	private GameObject activatedUi = null;
 
+	private GameObject ownHud;
+
     private void Awake() {
 		if(instance == null)
 			instance = this;
 		else
 			Destroy(this.gameObject);
         DontDestroyOnLoad(gameObject);
-		if (!SSDNetworkManager.instance.isHost)
-		{
+
+		if (!SSDNetworkManager.instance.isHost) {
 			tPlayerSkill.gameObject.SetActive(true);
 			tPlayerHUD.gameObject.SetActive(true);
-		}
-		else
-		{
+			ownHud = tPlayerHUD.gameObject;
+		} else {
 			qPlayerSkill.gameObject.SetActive(true);
 		}
 		commonHudCanvas.gameObject.SetActive(true);
@@ -110,6 +111,9 @@ public class UIManager : MonoBehaviour
 			else activatedUi = null;
 			return;
 		}
+	}
+	public void SetActiveHud(bool active) {
+		ownHud?.SetActive(active);
 	}
 	/*
 	public void StartCutScene()
