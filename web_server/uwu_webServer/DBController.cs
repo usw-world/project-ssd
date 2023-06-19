@@ -8,7 +8,7 @@ using Org.BouncyCastle.Utilities;
 namespace uwu_webServer {
     public class DBController {
         public DBController() {
-            conn = new MySqlConnection(ConnectionContext);
+            conn = new MySqlConnection(_connectionContext);
             conn.Open();
         }
 

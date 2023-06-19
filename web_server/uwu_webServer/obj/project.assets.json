@@ -1706,26 +1706,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Usoock\\.nuget\\packages\\": {}
+    "/Users/yunjihwan/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
+      "projectUniqueName": "/Users/yunjihwan/Documents/GitHub/project-ssd/web_server/uwu_webServer/uwu_webServer.csproj",
       "projectName": "uwu_webServer",
-      "projectPath": "C:\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
-      "packagesPath": "C:\\Users\\Usoock\\.nuget\\packages\\",
-      "outputPath": "C:\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\obj\\",
+      "projectPath": "/Users/yunjihwan/Documents/GitHub/project-ssd/web_server/uwu_webServer/uwu_webServer.csproj",
+      "packagesPath": "/Users/yunjihwan/.nuget/packages/",
+      "outputPath": "/Users/yunjihwan/Documents/GitHub/project-ssd/web_server/uwu_webServer/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Usoock\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "/Users/yunjihwan/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "/usr/local/share/dotnet/sdk/7.0.302/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1768,7 +1767,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.302/RuntimeIdentifierGraph.json"
       }
     }
   }
