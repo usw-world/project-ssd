@@ -210,7 +210,9 @@ namespace uwu_webServer
                             var token = requestBody.RootElement.GetProperty("token").GetString();
                             var user_id = dbc.FindId(token);
                             sql = $"select * from skill where id = '{user_id}'";
-                            answer["token"] = token;
+                            (string t, string q) skillDatas = dbc.ReadData();
+                            answer["tSkillData"] = token;
+                            answer["qSkillData"] = token;
                             context.Response.Headers["Content-Type"] = "application/json";
                             context.Response.StatusCode = StatusCodes.Status200OK;
                             await context.Response.WriteAsync(answer.ToString());
