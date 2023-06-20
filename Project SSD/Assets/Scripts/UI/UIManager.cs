@@ -16,7 +16,6 @@ public class UIManager : MonoBehaviour
 	[SerializeField] private Canvas commonHudCanvas;
 	[SerializeField] private EscapeMenu escapeMenu;
 
-
  	[SerializeField] private GameObject alertUIPrefab;
 	[SerializeField] private Animator fadeInOutAnimator;
 	private Coroutine fadeInOutCoroutine;
@@ -64,6 +63,7 @@ public class UIManager : MonoBehaviour
 			{
 				if (!tPlayerSkill.OnPressEscape())
 				{
+					tPlayerHUD.gameObject.SetActive(true);
 					activatedUi = null;
 				}
 			}
@@ -71,6 +71,7 @@ public class UIManager : MonoBehaviour
 			{
 				if (!qPlayerSkill.OnPressEscape())
 				{
+					qPlayerHUD.gameObject.SetActive(true);
 					activatedUi = null;
 				}
 			}
@@ -91,8 +92,14 @@ public class UIManager : MonoBehaviour
 		if (tPlayerSkill.CanActive())
 		{
 			if (tPlayerSkill.OnActive())
+			{
 				activatedUi = tPlayerSkill.gameObject;
-			else activatedUi = null;
+				tPlayerHUD.gameObject.SetActive(false);
+			}
+			else { 
+				activatedUi = null; 
+				tPlayerHUD.gameObject.SetActive(true);
+			}
 		}
 	}
 	public void OnPressQPlayerSkill()
@@ -100,11 +107,17 @@ public class UIManager : MonoBehaviour
 		if (qPlayerSkill.CanActive())
 		{
 			if (qPlayerSkill.OnActive())
+			{
 				activatedUi = qPlayerSkill.gameObject;
-			else activatedUi = null;
-			return;
+				qPlayerHUD.gameObject.SetActive(false);
+			}
+			else { 
+				activatedUi = null; 
+				qPlayerHUD.gameObject.SetActive(true); 
+			}
 		}
 	}
+
 	public void SetActiveHud(bool active) {
 		if (SSDNetworkManager.instance.isHost) {
 			tPlayerSkill.gameObject.SetActive(active);

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TPlayerSkill : Skill
 {
-	[SerializeField] private float usingSP = 0f;
+	[SerializeField] public float usingSP = 0f;
 	private string effectKey;
 	private PlayerStatus status;
 	void Start()

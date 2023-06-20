@@ -19496,7 +19496,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1287056493329488232
 Transform:
   m_ObjectHideFlags: 0
@@ -19528,6 +19528,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f94e3419d7986446924f899a8efe899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageType: 0
   mode: 0
   attackType: 15
   hitEffect: {fileID: 0}
@@ -19543,7 +19544,11 @@ MonoBehaviour:
   - {fileID: 1287056493729772404}
   - {fileID: 1287056494158855760}
   - {fileID: 1287056493261369183}
-  trails: []
+  trails:
+  - {fileID: 1287056492610840393}
+  - {fileID: 1287056492970937273}
+  - {fileID: 1287056493655331328}
+  - {fileID: 1287056492593588214}
 --- !u!1 &1287056493655331358
 GameObject:
   m_ObjectHideFlags: 0

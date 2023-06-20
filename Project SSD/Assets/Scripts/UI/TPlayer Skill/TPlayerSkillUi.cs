@@ -9,6 +9,8 @@ public class TPlayerSkillUi : MonoBehaviour
 	[SerializeField] private List<TPlayerSkillBtnEvent> mainBranch;
 	[SerializeField] private List<GameObject> cantClickZone;
 	[SerializeField] private TextMeshProUGUI skillPoint;
+	[SerializeField] private List<TextMeshProUGUI> optionNames;
+	[SerializeField] private List<TextMeshProUGUI> optionInfo;
 	private Animator animator;
 	private bool isActive = false;
 	private bool isPlayingAnimation = false;
@@ -33,6 +35,7 @@ public class TPlayerSkillUi : MonoBehaviour
 			isActive = false;
 			Cursor.lockState = CursorLockMode.Locked;
 			currSubBranch = -1;
+			DisableEvent();
 			return false;
 		}
 		else
@@ -47,6 +50,7 @@ public class TPlayerSkillUi : MonoBehaviour
 			animator.SetTrigger("On");
 			isActive = true;
 			Cursor.lockState = CursorLockMode.None;
+			SetTree();
 			return true;
 		}
 	}
@@ -114,6 +118,18 @@ public class TPlayerSkillUi : MonoBehaviour
 	public void ActiveOption(int number)
 	{
 		if (isPlayingAnimation) return;
-		print(number + " 클릭");
+		SkillOptionInformation option = TPlayer.instance.options[number];
+		option.active = (option.active) ? false : true;
+	}
+	private void SetTree()
+	{
+		SkillOptionInformation[] options = TPlayer.instance.options;
+		for (int i = 0; i < options.Length; i++){
+			optionNames[i].text = options[i].name;
+			optionInfo[i].text = options[i].info;
+		}
+	}
+	private void DisableEvent() { 
+		// 여기에 추가 하든지 말들지
 	}
 }

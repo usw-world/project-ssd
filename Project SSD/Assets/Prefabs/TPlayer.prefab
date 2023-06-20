@@ -62802,7 +62802,7 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 0
     quickUse: 0
-  usingSP: 50
+  usingSP: 0
 --- !u!1 &3327967643626573486
 GameObject:
   m_ObjectHideFlags: 0
@@ -63516,7 +63516,7 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 0
     quickUse: 0
-  usingSP: 50
+  usingSP: 0
 --- !u!1 &3718127337461090363
 GameObject:
   m_ObjectHideFlags: 0
@@ -86036,6 +86036,79 @@ MonoBehaviour:
     recoveryHp: 1
     recoverySp: 1
     apBoost: 1
+  options:
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
+  - name: 
+    info: 
+    image: {fileID: 0}
+    active: 0
   sword:
     weapon: {fileID: 543450653158560035}
     unUse: {fileID: 6187742542714504873}

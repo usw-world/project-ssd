@@ -16,9 +16,10 @@ using Cinemachine;
 public class TPlayer : NetworkBehaviour, IDamageable
 {
 	static public TPlayer instance { get; private set; }
+	public PlayerStatus status;
+	public SkillOptionInformation[] options = new SkillOptionInformation[18];
 
 	#region Show Parameters
-	public PlayerStatus status;
 	[SerializeField] private TPlayerWeaponTransform sword;
 	[SerializeField] private TPlayerSkillManager skill;
 	[SerializeField] private TPlayerTrackEffect trackEffect;
@@ -46,12 +47,14 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private Vector3 nextAttackDirection; // 기본적인 이동 이외의 이동들(회피, 공격 파생 이동)의 부드러운 움직임을 위한 Target Point입니다
 	private Vector3 extraMovingPoint;
 	private string currentAnimationTrigger = "";
-	private float invincibilityAndActionAmount = 0;
 	private float[] chargingMaxTime = { 0.5f, 1f, 1.5f };
+	private float invincibilityAndActionAmount = 0;
+	private float chargingAttackUsingSp = 0;
 	private float idleActionTime = 5f;
 	private float chargingTime = 0;
 	private float rotateSpeed = 30f;
 	private float idleTime = 0;
+	private bool isChackchargingAttackUsingSp = false;
 	private bool isInvincibilityAndAction = false;
 	private bool isCheckLateDamageTarget = false;
 	private bool isMotionTrail = false;
@@ -65,6 +68,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private int chargingLevel = 0;
 	private int idleActionIdx = 0;
 	private int attackCount = 0;
+
 	#endregion Hide Parameters
 
 	#region Component
@@ -123,8 +127,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
         InitializeStateOnActive();
         InitializeStateOnStay();
         InitializeStateOnInactive();
+		InitializeOption();
 
-        stateMachine.SetIntialState(idleState1);
+		stateMachine.SetIntialState(idleState1);
         idleStateGroup.Add(idleState1);
         idleStateGroup.Add(idleState2);
         idleStateGroup.Add(idleState3);
@@ -137,7 +142,19 @@ public class TPlayer : NetworkBehaviour, IDamageable
         	Cursor.lockState = CursorLockMode.Locked;
 		}
 	}
-    private void InitializeCamera() {
+	private void InitializeOption() 
+	{
+		TextAsset data = Resources.Load("TPlayer Option Info csv") as TextAsset;
+		string[] dataLine = data.text.Split("\n");
+		string[] valus;
+		for (int i = 1; i < dataLine.Length; i++)
+		{
+			valus = dataLine[i].Split(",");
+			options[i - 1].name = valus[0];
+			options[i - 1].info = valus[1];
+		}
+	}
+	private void InitializeCamera() {
         if(isLocalPlayer &&
 		PlayerCamera.instance == null) {
             GameObject camera = Instantiate(tPlayerCameraPrefab);
@@ -267,13 +284,17 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		};
 		chargingDrawSwordAttack_7time.onActive = (State prev) => {
 			DrawSword(true);
-			ChangeAnimation("Draw Sword Attack 7time");
+			string animation = "Draw Sword Attack 7time";
+			if (options[11].active) animation += " Fast";
+			ChangeAnimation(animation);
 			SoundManager.instance.tPlayer.voice.attack_combo_7.Play(audioSourceVoice, ESoundType.voice);
+			if (options[10].active) isSuperArmor = true;
 		};
 		comboAttack_1.onActive = (State prev) => {
 			DrawSword(true);
 			ChangeAnimation("Combo Attack 01");
 			SoundManager.instance.tPlayer.voice.attack_combo_6.Play(audioSourceVoice, ESoundType.voice);
+			if (options[6].active) isSuperArmor = true;
 		};
 		chargingDrawSwordAttack_nonCharging.onActive = (State prev) => {
 			DrawSword(true);
@@ -342,7 +363,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			{
 				if (status.sp > 0)
 				{
-					ChangeSp(-Time.deltaTime * 10f);
+					float usingSp = Time.deltaTime * 10f;
+					if (options[14].active) usingSp *= 0.7f;
+					ChangeSp(-usingSp);
 					movement.MoveToward(Vector3.forward * status.GetSpeed() * 2f * Time.deltaTime);
 					return;
 				}
@@ -365,10 +388,11 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			ChangeSp(status.GetRecoverySp());
 		};
 		chargingStay.onStay = () => {
-			ChangeSp(status.GetRecoverySp() * 3f);
 			if (chargingLevel < chargingMaxTime.Length)
 			{
-				chargingTime += Time.deltaTime;
+				float chargingAmount = Time.deltaTime;
+				if (options[4].active) chargingAmount *= 0.7f;
+				 chargingTime += chargingAmount;
 				if (chargingTime >= chargingMaxTime[chargingLevel])
 				{
 					trackEffect.OnChargingEffect(chargingLevel);
@@ -387,7 +411,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			}
 		};
 		basicAttackState.onStay = () => {
-			ChangeSp(status.GetRecoverySp() * 0.5f);
+			ChangeSp(status.GetRecoverySp() * 0.2f);
 		};
 	}
 	private void InitializeStateOnInactive()
@@ -437,6 +461,14 @@ public class TPlayer : NetworkBehaviour, IDamageable
 				finishPropert.finisgCam.gameObject.SetActive(false);
 			}
 		};
+		comboAttack_1.onInactive = (State prev) => {
+			DrawSword(false);
+			if (options[6].active) isSuperArmor = false;
+		};
+		chargingDrawSwordAttack_7time.onInactive = (State prev) => {
+			DrawSword(true);
+			if (options[10].active) isSuperArmor = false;
+		};
 	}
 	#endregion Initialize
 
@@ -485,7 +517,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
     {
         isCanAttack = true;
 		isAfterBasicAttack = false;
-        if (lookVector == Vector3.zero)
+		chargingAttackUsingSp = 0;
+		isChackchargingAttackUsingSp = false;
+		if (lookVector == Vector3.zero)
             ChangeState(idleState1, false);
         else
             ChangeState(moveState, false);
@@ -500,8 +534,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		if (isInvincibilityAndAction)
 			invincibilityAndActionAmount += damage.amount;
 
-		if (isImmune) // 무적이면 실행 안함
-			return;
+		if (isImmune) return; // 무적이면 실행 안함
+
+		if (options[16].active) damage.amount = damage.amount * 0.8f;
 
 		damage.amount = shieldManager.UsingShield(damage.amount); // 실드가 있으면 데미지 차감
 
@@ -555,7 +590,16 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
     public void OnSlide()
     {
-		if (!skill.dodge.CanUse()) return;
+		if (options[13].active) skill.dodge.property.coolTime = 1.5f;
+		else skill.dodge.property.coolTime = 2f;
+
+		if (options[12].active) {
+			bool canuse = skill.dodge.CanUse();
+			TPlayerSkill dodge = skill.dodge as TPlayerSkill;
+			if (canuse) dodge.usingSP = 10f; 
+			else dodge.usingSP = 20f; 
+		}
+		else if (!skill.dodge.CanUse()) return;
 
 		if (stateMachine.currentState == dodgeAttackState) return; 
 
@@ -609,6 +653,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		if(lookVector != Vector3.zero) {
 			nextAttackDirection = lookVector;
 		}
+		if (options[1].active && status.sp < 10f) return;
 
 		extraMovingPoint = transform.forward + transform.position + (transform.forward * 1f + Vector3.up * 0.5f);
 		ChangeState(basicAttackState, true);
@@ -696,6 +741,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		{
 			return;
 		}
+		if (options[7].active) skill.combo_1[0].property.coolTime = 15f;
+		else skill.combo_1[0].property.coolTime = 30f;
+
 		if (skill.combo_1[0].CanUse())
 		{
 			ChangeState(comboAttack_1, false);
@@ -727,6 +775,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	public void StartFinish()
 	{
+		if (!options[17].active) return;
+
 		if (stateMachine.currentState == dodgeAttackState ||
 			   stateMachine.currentState == downAttackState ||
 			   stateMachine.currentState == downAttackState ||
@@ -774,7 +824,17 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	public void CheckAttackZone()
 	{
 		attackCount = (attackCount >= skill.basicAttacks.Length) ? 0 : attackCount;
-		skill.basicAttacks[attackCount].Use();
+		float damage = GetAp();
+		if (options[0].active) damage *= 1.3f;
+		if (options[1].active) { 
+			damage *= 1.7f;
+			ChangeSp( -10f );
+		}
+		if (options[2].active) { 
+			damage *= 2.5f;
+			ChangeHp( -5f );
+		}
+		skill.basicAttacks[attackCount].Use(damage);
 		if (isMotionTrail) 
 		{
 			TPlayerMotionTrail motionTrail = trackEffect.GetMotionTrail();
@@ -793,6 +853,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	public void CheckDrawSwordAttack_7time(int idx) 
 	{
+		float damage = GetAp() * 2f;
+		if (options[9].active) damage *= 1.3f;
+
 		skill.charging_DrawSwordAttack_7time[idx].Use();
 		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		if (idx != 0) return;
@@ -816,15 +879,27 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	public void ChackDrawSwordAttack(int num)
 	{
+		float damage = GetAp() * 3f;
+		if (options[3].active) damage *= 1.3f;
+		if (options[4].active) damage *= 1.7f;
+		if (options[5].active) {
+			if (!isChackchargingAttackUsingSp)
+			{
+				chargingAttackUsingSp = status.sp;
+				ChangeSp(-chargingAttackUsingSp);
+				isChackchargingAttackUsingSp = true;
+			}
+			damage *= 1f + chargingAttackUsingSp / 100; 
+		}
 		if (num == 0)
 		{
-			skill.charging_DrawSwordAttack.Use();
+			skill.charging_DrawSwordAttack.Use(damage);
 			if (attackCoroutine != null)
 				StopCoroutine(attackCoroutine);
-			attackCoroutine = StartCoroutine(AttackCoroutine(2f));
+			attackCoroutine = StartCoroutine(AttackCoroutine());
 		}
 		else { 
-			skill.charging_DrawSwordAttackFlyTrail.Use();
+			skill.charging_DrawSwordAttackFlyTrail.Use(damage);
 		}
 		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		SoundManager.instance.tPlayer.voice.AttackRandom(audioSourceVoice, 70f);
@@ -836,8 +911,12 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	public void CheckComboAttack_1(int idx)
 	{
-		skill.combo_1[idx].Use();
+		float damage = GetAp() * 2.5f;
+		if (options[7].active) damage *= 1.2f;
+		skill.combo_1[idx].Use(damage);
 		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
+
+		if (lookVector != Vector3.zero && options[8].active) RotateWithCamera(lookVector, 15f);
 		if (attackCoroutine != null)
 			StopCoroutine(attackCoroutine);
 		attackCoroutine = StartCoroutine(AttackCoroutine(1.5f));
@@ -873,15 +952,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 				StartCoroutine(LigthingBlade());
 				break;
 			case 1: // 칼 폭발
-				SoundManager.instance.qPlayer.effect.finishEffectRed.PlayOneShot(audioSourceEffect, ESoundType.effect);
 				trackEffect.bladeEffect.Enable();
 				break;
 			case 2: // 페이드 인
-				if (SSDNetworkManager.instance.isHost) {
-					StartCoroutine(FinishFadeIn());
-				}
-				break;
-			case 3: // 종료
 				break;
 		}
 	}
@@ -930,6 +1003,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		{
 			status.hp = status.maxHp;
 		}
+		else if (status.hp <= 0)
+		{
+			// 앙 쥬금
+		}
 		UIManager.instance.tPlayerHUD.RefreshHp(status.hp);
 	}
 	public void ChangeSp(float amount)
@@ -943,7 +1020,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	public float GetAp() 
 	{
-		return status.GetLastAp();
+		float ap = status.GetLastAp();
+		if (options[15].active) ap *= 1.1f;
+		return ap;
 	}
 	public void SetActiveInvincibilityAndAction(bool active, EInvincibilityAndActionType type) 
 	{
@@ -1137,10 +1216,24 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private IEnumerator DrawAttackDamage()
 	{
 		SoundManager.instance.tPlayer.effect.drawAttackSpecial_end.PlayOneShot(audioSourceEffect, ESoundType.effect);
+		float damageAmount = GetAp() * 4f;
+		if (options[3].active) damageAmount *= 1.3f;
+		if (options[4].active) damageAmount *= 1.7f;
+		if (options[5].active)
+		{
+			if (!isChackchargingAttackUsingSp)
+			{
+				chargingAttackUsingSp = status.sp;
+				ChangeSp(-chargingAttackUsingSp);
+				isChackchargingAttackUsingSp = true;
+			}
+			damageAmount *= 1f + chargingAttackUsingSp / 100;
+		}
+
 		for (int i = 0; i < 10; i++)
 		{
 			Damage damage = new Damage(
-				GetAp() * 0.15f,
+				damageAmount,
 				.5f,
 				Vector3.zero,
 				Damage.DamageType.Normal
@@ -1155,9 +1248,22 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		ChangeAnimation("Draw Sword Attack Special End Stay");
 		yield return new WaitForSeconds(0.3f);
+		float damageAmount = GetAp() * 20f;
+		if (options[3].active) damageAmount *= 1.3f;
+		if (options[4].active) damageAmount *= 1.7f;
+		if (options[5].active)
+		{
+			if (!isChackchargingAttackUsingSp)
+			{
+				chargingAttackUsingSp = status.sp;
+				ChangeSp(-chargingAttackUsingSp);
+				isChackchargingAttackUsingSp = true;
+			}
+			damageAmount *= 1f + chargingAttackUsingSp / 100;
+		}
 		if (lateDamageTarget.Count != 0) {
 			Damage damage = new Damage(
-				GetAp() * 2f,
+				damageAmount,
 				3f,
 				Vector3.zero,
 				Damage.DamageType.Normal
