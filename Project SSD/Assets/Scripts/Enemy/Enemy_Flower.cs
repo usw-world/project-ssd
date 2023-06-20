@@ -29,8 +29,9 @@ public class Enemy_Flower : MovableEnemy
         PoolerManager.instance.InsertPooler(throwableObjKey, throwableObj, true);
     }
     
-    private void Initialize()
+    protected override void Initialize()
     {
+        base.Initialize();
         idleState = new State("idle");
         hitState = new State("hit");
         attackState = new State("attack");
@@ -53,15 +54,15 @@ public class Enemy_Flower : MovableEnemy
         attackState.onActive += state =>
         {
             enemyMovement.Stop();
-            Debug.Log("attackState");
         };
         
         attackState.onStay += () =>
         {
-            var rot = Vector3.Scale(new Vector3(1, 0, 1), targetPos);
-            rot.y = 1.5f;
-            transform.LookAt(rot);
-            throwPivot.transform.LookAt(rot);
+            Vector3 targetPosition = Vector3.Scale(new Vector3(1, 0, 1), targetPos);
+            targetPosition.y = transform.position.y;
+            transform.LookAt(targetPosition);
+            targetPosition.y = throwPivot.position.y;
+            throwPivot.transform.LookAt(targetPosition);
             timer += Time.deltaTime;
             if (timer > attackInterval)
             {

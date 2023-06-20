@@ -51,7 +51,7 @@ public class LobbyManager : MonoBehaviour {
             Destroy(this.gameObject);
     }
     private void Start() {
-        UIManager.instance.FadeIn(2, 2, () => {
+        UIManager.instance.FadeIn(1, 2, () => {
             startText.gameObject.SetActive(true);
         });
     }

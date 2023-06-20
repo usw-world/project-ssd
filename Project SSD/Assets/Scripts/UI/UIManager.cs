@@ -23,6 +23,7 @@ public class UIManager : MonoBehaviour
 
 	private GameObject ownHud;
 
+	#region Unity Events
     private void Awake() {
 		if(instance == null)
 			instance = this;
@@ -30,6 +31,14 @@ public class UIManager : MonoBehaviour
 			Destroy(this.gameObject);
         DontDestroyOnLoad(gameObject);
 	}
+	private void Update() {
+		if(Input.GetKeyDown(KeyCode.Escape))
+			UIManager.instance.OnPressEscape();
+		// if(Input.GetKeyDown(KeyCode.K))
+		// 	SSDNetworkManager.instance.isHost
+	}
+	#endregion Unity Events
+
 	public void FadeIn(float delay=0f, float duration=2f, System.Action callback=null) {
 		if(fadeInOutCoroutine != null)
 			StopCoroutine(fadeInOutCoroutine);
@@ -120,11 +129,11 @@ public class UIManager : MonoBehaviour
 
 	public void SetActiveHud(bool active) {
 		if (SSDNetworkManager.instance.isHost) {
-			tPlayerSkill.gameObject.SetActive(active);
+			// tPlayerSkill.gameObject.SetActive(active);
 			tPlayerHUD.gameObject.SetActive(active);
 		} else {
+			// qPlayerSkill.gameObject.SetActive(active);
 			qPlayerHUD.gameObject.SetActive(active);
-			qPlayerSkill.gameObject.SetActive(active);
 		}
 		commonHudCanvas.gameObject.SetActive(active);
 	}

@@ -142,7 +142,7 @@ public class Enemy_Bomber : MovableEnemy
         {
             if (timer < boomTimer)
             {
-                Debug.Log($"{boomTimer-timer}초 후 터짐");
+                // Debug.Log($"{boomTimer-timer}초 후 터짐");
                 delayProjector.size = new Vector3(timer*(boomRange/boomTimer), timer*(boomRange/boomTimer), .1f);
                 timer += Time.deltaTime;
                 yield return new WaitForSeconds(Time.deltaTime);

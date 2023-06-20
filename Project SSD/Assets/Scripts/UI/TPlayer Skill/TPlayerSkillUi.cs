@@ -57,6 +57,7 @@ public class TPlayerSkillUi : MonoBehaviour
 	private void AcceptSaveData() {
 		bool[] skillData = GameManager.instance.GetTSkillData();
 		for(int i=0; i<TPlayer.instance.options.Length; i++) {
+			print(skillData[i]);
 			TPlayer.instance.options[i].active = skillData[i];
 		}
 	}

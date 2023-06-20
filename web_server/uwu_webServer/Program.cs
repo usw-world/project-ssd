@@ -15,14 +15,13 @@ namespace uwu_webServer
             {
                 app.UseEndpoints(endpoints =>
                 {
-                    #region
                     endpoints.MapPost("/ping", async (context) => {
                         context.Response.StatusCode = StatusCodes.Status200OK;
                         await context.Response.WriteAsync("pong");
                     });
-                    #endregion
                     #region 회원가입
                     endpoints.MapPost("/register", async (context) => {
+                        Console.WriteLine("회원가입");
                         using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8)) {
                             JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
 
@@ -74,6 +73,7 @@ namespace uwu_webServer
                     #endregion
                     #region 로그인 
                     endpoints.MapPost("/login", async (context) => {
+                        Console.WriteLine("로그인");
                         using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8)) {
                             JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
 
@@ -115,7 +115,7 @@ namespace uwu_webServer
                                     answer["token"] = token;
                                     answer["userId"] = requestId;
                                     context.Response.StatusCode = StatusCodes.Status200OK;
-                                    Console.WriteLine(answer);
+                                    // Console.WriteLine(answer);
                                     await context.Response.WriteAsync(answer.ToString());
                                 }
                             } else {
@@ -131,6 +131,7 @@ namespace uwu_webServer
                     
                     #region 업데이트
                     endpoints.MapPost("/update", async (context) => {
+                        Console.WriteLine("업데이트");
                         using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8)) {
                             // user_id	        varchar(16)         ||       id       	    varchar(255)
                             // user_pw	        varchar(255)	    ||       t_sklil_data     varchar(255)
@@ -189,6 +190,7 @@ namespace uwu_webServer
 
                                 context.Response.Headers["Content-Type"] = "application/json";
                                 context.Response.StatusCode = StatusCodes.Status200OK;
+                                await context.Response.WriteAsync("");
                             } catch(Exception e) {
                                 Console.Error.WriteLine(e);
                                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
@@ -197,7 +199,9 @@ namespace uwu_webServer
                     });
                     #endregion
                     
+                    #region 데이터 요청
                     endpoints.MapPost("/get-data", async (context) => {
+                        Console.WriteLine("데이터 요청");
                         using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
                         {
                             var sql = "";
@@ -206,14 +210,13 @@ namespace uwu_webServer
                             var token = requestBody.RootElement.GetProperty("token").GetString();
                             var user_id = dbc.FindId(token);
                             sql = $"select * from skill where id = '{user_id}'";
-                            // dbc.SearchTable(sql, "skill", answer);
                             answer["token"] = token;
-                            Console.WriteLine(answer.ToString());
                             context.Response.Headers["Content-Type"] = "application/json";
                             context.Response.StatusCode = StatusCodes.Status200OK;
                             await context.Response.WriteAsync(answer.ToString());
                         }
                     });
+                    #endregion 데이터 요청
                 });
             } catch (Exception e) {
                 Console.Error.WriteLine(e);

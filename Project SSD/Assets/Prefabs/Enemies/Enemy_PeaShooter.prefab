@@ -60,7 +60,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3292570990043526715}
   - {fileID: 2872932150940811155}
   m_Father: {fileID: 1418372215755056374}
   m_RootOrder: 2
@@ -135,6 +134,7 @@ Transform:
   - {fileID: 8007337813629924456}
   - {fileID: 1451755014874737336}
   - {fileID: 5508025151877773041}
+  - {fileID: 3292570990043526715}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -315,7 +315,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5508025151877773041}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!137 &6986722332359018115
 SkinnedMeshRenderer:
@@ -671,7 +671,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 5508025151877773041}
+    m_TransformParent: {fileID: 1418372215755056374}
     m_Modifications:
     - target: {fileID: 942420951181662754, guid: 7b375cf67cad0d14b97098d499b8d6f9,
         type: 3}
@@ -686,7 +686,7 @@ PrefabInstance:
     - target: {fileID: 942420951181662754, guid: 7b375cf67cad0d14b97098d499b8d6f9,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 942420951181662754, guid: 7b375cf67cad0d14b97098d499b8d6f9,
         type: 3}
@@ -731,7 +731,7 @@ PrefabInstance:
     - target: {fileID: 942420951181662754, guid: 7b375cf67cad0d14b97098d499b8d6f9,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.8946838
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 942420951181662754, guid: 7b375cf67cad0d14b97098d499b8d6f9,
         type: 3}
@@ -756,12 +756,12 @@ PrefabInstance:
     - target: {fileID: 942420951181662754, guid: 7b375cf67cad0d14b97098d499b8d6f9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1.1967664
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 942420951181662754, guid: 7b375cf67cad0d14b97098d499b8d6f9,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 942420951181662754, guid: 7b375cf67cad0d14b97098d499b8d6f9,
         type: 3}
@@ -792,6 +792,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Canvas _ Enemy Status
+      objectReference: {fileID: 0}
+    - target: {fileID: 8052912153102972219, guid: 7b375cf67cad0d14b97098d499b8d6f9,
+        type: 3}
+      propertyPath: m_Value
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b375cf67cad0d14b97098d499b8d6f9, type: 3}

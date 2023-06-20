@@ -49,14 +49,16 @@ namespace uwu_webServer {
                 data.Add("token", reader["user_token"].ToString());
             }
         }
-        private void ReadSkill(MySqlDataReader reader, JsonObject data) {
-            while (reader.Read())
-            {
+        private (string t, string q) ReadSkill(MySqlDataReader reader, JsonObject data) {
+            (string t, string q) result = ("", "");
+            if(reader.Read()) {
+                // result.t += 
                 data.Add("skillPoint", reader["skillPoint"].ToString());
                 data.Add("skill_UnityBall", reader["skill_UnityBall"].ToString());
                 // answer.Add("user_id", $"{reader["id"]}");
                 Console.WriteLine("SkillData search");
             }
+            return result;
         }
         
         

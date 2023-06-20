@@ -133,7 +133,6 @@ public class ServerConnector : MonoBehaviour
         }
     }
     private IEnumerator RequestIngameDataCoroutiune(string json) {
-        print(json);
         byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(json);
         UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/get-data", "POST");
         request.uploadHandler.Dispose();
@@ -142,6 +141,7 @@ public class ServerConnector : MonoBehaviour
         yield return request.SendWebRequest(); 
         if (request.responseCode == 200) {
             string jsonResponse = request.downloadHandler.text;
+            print(jsonResponse);
             SaveDataVO saveData = new SaveDataVO();
             saveData.Write(jsonResponse);
             saveData = JsonUtility.FromJson<SaveDataVO>(jsonResponse);
