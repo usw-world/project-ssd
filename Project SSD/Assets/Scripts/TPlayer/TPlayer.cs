@@ -120,6 +120,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
         movement = GetComponent<Movement>();
 		stateMachine = GetComponent<StateMachine>();
 		lateDamageCntl = GetComponent<LateDamageCntl>();
+		finishPropert.bladeRed.SetFloat("_power", 0);
 	}
     private void Start()
 	{
@@ -597,7 +598,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			bool canuse = skill.dodge.CanUse();
 			TPlayerSkill dodge = skill.dodge as TPlayerSkill;
 			if (canuse) dodge.usingSP = 10f; 
-			else dodge.usingSP = 20f; 
+			else dodge.usingSP = 30f;
+			if (status.sp < 30f) return; 
 		}
 		else if (!skill.dodge.CanUse()) return;
 
@@ -777,6 +779,9 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		if (!options[17].active) return;
 
+		skill.powerUp.property.coolTime = 60f;
+		if (!skill.powerUp.CanUse()) return;
+
 		if (stateMachine.currentState == dodgeAttackState ||
 			   stateMachine.currentState == downAttackState ||
 			   stateMachine.currentState == downAttackState ||
@@ -794,6 +799,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		{
 			return;
 		}
+		skill.powerUp.property.nowCoolTime = 0;
 		ChangeState(finishState, false);
 	}
 	#endregion Input Event
@@ -952,30 +958,35 @@ public class TPlayer : NetworkBehaviour, IDamageable
 				StartCoroutine(LigthingBlade());
 				break;
 			case 1: // 칼 폭발
-				trackEffect.bladeEffect.Enable();
-				break;
-			case 2: // 페이드 인
 				break;
 		}
 	}
 	private IEnumerator LigthingBlade() {
 		float time = 0;
 		float power = 0;
-		while (time < 1.4f)
+		trackEffect.powerUp.Enable();
+		while (time < 2f)
 		{
 			time += Time.deltaTime;
-			power += Time.deltaTime * 4f;
+			power += Time.deltaTime * 3f;
 			finishPropert.bladeRed.SetFloat("_power", power);
 			yield return null;
 		}
-	}
-	private IEnumerator FinishFadeIn()
-	{
-		yield return StartCoroutine(UIManager.instance.tPlayerHUD.FadeIn(0.125f));
-		yield return StartCoroutine(UIManager.instance.tPlayerHUD.FadeOut(1.5f));
+		yield return new WaitForSeconds(0.5f);
+		trackEffect.bladeEffect.Enable();
+		yield return new WaitForSeconds(1f);
+		trackEffect.powerUp.Disable();
 		trackEffect.bladeEffect.Disable();
-		finishPropert.bladeRed.SetFloat("_power", 0);
+		StartCoroutine(SelfPowerUp());
 		ResetState();
+	}
+	private IEnumerator SelfPowerUp()
+	{
+		finishPropert.bladeRed.SetFloat("_power", 3f);
+		status.ap += 3f;
+		yield return new WaitForSeconds(15f);
+		finishPropert.bladeRed.SetFloat("_power", 0);
+		status.ap -= 3f;
 	}
 	#endregion Animation Event
 
@@ -1358,6 +1369,7 @@ class TPlayerSkillManager
 	public Skill[] charging_DrawSwordAttack_7time;
 	public Skill[] combo_1;
 	public Skill counterattack;
+	public Skill powerUp;
 }
 [Serializable]
 class TPlayerCutSceneCam
@@ -1375,6 +1387,7 @@ class TPlayerTrackEffect
 	public TrackEffect[] charging;
 	public TrackEffect[] chargingblade;
 	public TrackEffect bladeEffect;
+	public TrackEffect powerUp;
 	public GameObject motionTrailPrefab;
 	[HideInInspector] public string motionTrailKey;
 	public void Set() 
@@ -1387,6 +1400,8 @@ class TPlayerTrackEffect
 		rush.Disable();
 		bladeEffect.Enable();
 		bladeEffect.Disable();
+		powerUp.Enable();
+		powerUp.Disable();
 		foreach (var item in charging)	{
 			item.Enable();
 			item.Disable();
