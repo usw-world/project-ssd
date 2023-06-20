@@ -35,7 +35,7 @@ public class Enemy_Flower_throwObj : MonoBehaviour, IPoolableObject
     {
         if (other.gameObject.layer.Equals(7))
         {
-            other.GetComponent<IDamageable>().OnDamage(damage);
+            other.GetComponent<IDamageable>()?.OnDamage(damage);
             Destroy(gameObject);
         }
         else if(other.gameObject.layer.Equals(1 << 6))

@@ -3,20 +3,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using UnityEditor.Experimental;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Quaternion = UnityEngine.Quaternion;
 using Random = System.Random;
+using Vector3 = UnityEngine.Vector3;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Enemy_MadMed : MovableEnemy
 {
 
-    public GameObject check;
     public GameObject idleGameObject;
     public GameObject chaseGameObject;
-    public GameObject Canvas;
+    [FormerlySerializedAs("Canvas")] public GameObject canvas;
+    public GameObject pill;
     public Vector3 targetPos;
+    public GameObject model;
+    public GameObject deadEffect;
     private State idleState;
     private State chaseState;
     private State attackState;
@@ -77,6 +82,8 @@ public class Enemy_MadMed : MovableEnemy
 
         idleState.onStay += () =>
         {
+            if (!isSpin)
+                return;
             rotation = transform.rotation.eulerAngles;
             rotation.y += Time.deltaTime * rotSpeed;
             transform.rotation = Quaternion.Euler(rotation);
@@ -132,13 +139,15 @@ public class Enemy_MadMed : MovableEnemy
 
         hitState.onActive += state =>
         {
-            
+            Debug.Log("hit state onactive");
         };
         hitState.onInactive += prevState =>
         {
+            Debug.Log("hit state inactive");
             try
             {
-                StopCoroutine(hitCoroutine);
+                if(enemyStateMachine.currentState != hitState)
+                    StopCoroutine(hitCoroutine);
             }
             catch (Exception e)
             {
@@ -160,7 +169,12 @@ public class Enemy_MadMed : MovableEnemy
             hitCoroutine = StartCoroutine(HitCoroutine(damage));
         }
         else
+        {
+            Quaternion rot = Quaternion.Euler(new Vector3(-135, 0, 0));
+            Instantiate(pill, transform.position, rot);
+            // model.SetActive(false);   
             this.gameObject.SetActive(false);
+        }
     }
 
 
@@ -187,7 +201,7 @@ public class Enemy_MadMed : MovableEnemy
     IEnumerator CreateImage()
     {
         chaseGameObject.SetActive(false);
-        imageList = Canvas.GetComponentsInChildren<Transform>(true);
+        imageList = canvas.GetComponentsInChildren<Transform>(true);
         var list = new List<GameObject>();
         Random random = new Random();
         foreach (var tr in imageList)
@@ -215,6 +229,7 @@ public class Enemy_MadMed : MovableEnemy
         Vector3 pushedDestination = Vector3.Scale(new Vector3(1, 0, 1), damage.forceVector);
         if(damage.hittingDuration > 0)
             SendChangeState(hitState);
+        Debug.Log(damage.hittingDuration);
         while(offset < damage.hittingDuration) {
             enemyMovement.MoveToward(Vector3.Lerp(pushedDestination, Vector3.zero, pushedOffset) * Time.deltaTime, Space.World, moveLayerMask);
             pushedOffset += Time.deltaTime * 2;
@@ -222,6 +237,7 @@ public class Enemy_MadMed : MovableEnemy
             yield return null;
         }
         SendChangeState(idleState);
+        Debug.Log("change idleState");
     }
 
 }

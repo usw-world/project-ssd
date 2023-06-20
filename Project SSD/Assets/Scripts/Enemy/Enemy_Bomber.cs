@@ -11,14 +11,14 @@ public class Enemy_Bomber : MovableEnemy
 {
     public DecalProjector rangeProjector;
     public DecalProjector delayProjector;
-    
-    
+    public GameObject effect;
+    public GameObject deadEffect;
+    public GameObject model;
     private State idleState;
     private State chaseState;
     private State hitState;
     private float moveTimer = 0;
     private Vector3 targetPos;
-    private Coroutine explode;
     private Coroutine hitCoroutine;
     [SerializeField] private float boomTimer;
     [SerializeField] private float boomRange;
@@ -55,8 +55,9 @@ public class Enemy_Bomber : MovableEnemy
 
         chaseState.onActive += prevState =>
         {
+            effect.SetActive(true);
             enemyAnimator.SetTrigger("attack");
-            explode = StartCoroutine(CountDown());
+            StartCoroutine(CountDown());
         };
 
         chaseState.onStay += () =>
@@ -101,6 +102,7 @@ public class Enemy_Bomber : MovableEnemy
         }
         else{
             this.gameObject.SetActive(false);
+            // model.gameObject.SetActive(false);
             Debug.Log(this.gameObject.name+" is dead");
         }
     }
@@ -121,13 +123,13 @@ public class Enemy_Bomber : MovableEnemy
     {
         targetPos = point;
         if(enemyStateMachine.currentState != chaseState)
-            enemyStateMachine.ChangeState(chaseState);
+            SendChangeState(chaseState);
     }
 
     protected override void OnLostTarget()
     {
         if(enemyStateMachine.currentState != idleState)
-            enemyStateMachine.ChangeState(idleState);
+            SendChangeState(idleState);
     }
 
 

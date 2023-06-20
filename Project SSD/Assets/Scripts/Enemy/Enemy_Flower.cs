@@ -6,6 +6,8 @@ public class Enemy_Flower : MovableEnemy
 
 {
     public GameObject throwableObj;
+    public GameObject deadEffect;
+    public GameObject model;
     private State idleState;
     private State attackState;
     private State hitState;
@@ -82,8 +84,11 @@ public class Enemy_Flower : MovableEnemy
 
     public override void TakeDamage(Damage damage) {
         base.TakeDamage(damage);
-        if(isDead)
+        if (isDead)
+        {
+            // model.gameObject.SetActive(false);
             gameObject.SetActive(false);
+        }
         else
         {
             // 피격 애니메이션 설정
@@ -96,13 +101,13 @@ public class Enemy_Flower : MovableEnemy
     {
         targetPos = point;
         if(enemyStateMachine.currentState != attackState)
-            enemyStateMachine.ChangeState(attackState);
+            SendChangeState(attackState);
     }
 
     protected override void OnLostTarget()
     {
         if(enemyStateMachine.currentState != idleState)
-            enemyStateMachine.ChangeState(idleState);
+            SendChangeState(idleState);
     }
 
     public void Attack()
@@ -114,6 +119,7 @@ public class Enemy_Flower : MovableEnemy
         throwObj.GetComponent<Enemy_Flower_throwObj>().targetPos = targetPos;
         throwObj.gameObject.SetActive(true);
     }
+    
     
 
 
