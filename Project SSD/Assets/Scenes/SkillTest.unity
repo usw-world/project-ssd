@@ -4095,6 +4095,12 @@ PrefabInstance:
       propertyPath: effect
       value: 
       objectReference: {fileID: 557485855}
+    - target: {fileID: 7213173119759635475, guid: 91f96f0a130a78c46a1b7d80a49e0fb9,
+        type: 3}
+      propertyPath: deadEffect
+      value: 
+      objectReference: {fileID: 8071581631949865283, guid: 74a7ac8d36bf84e2db0b283b2d784673,
+        type: 3}
     - target: {fileID: 7555702541157617271, guid: 91f96f0a130a78c46a1b7d80a49e0fb9,
         type: 3}
       propertyPath: m_Name

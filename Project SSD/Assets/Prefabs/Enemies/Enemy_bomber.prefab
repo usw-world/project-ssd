@@ -1274,7 +1274,8 @@ MonoBehaviour:
   rangeProjector: {fileID: 7213173119828923066}
   delayProjector: {fileID: 7213173120781436529}
   effect: {fileID: 1166770760633505722}
-  deadEffect: {fileID: 0}
+  deadEffect: {fileID: 8071581631949865283, guid: 74a7ac8d36bf84e2db0b283b2d784673,
+    type: 3}
   model: {fileID: 8271929090863348868}
   boomTimer: 5
   boomRange: 10
@@ -1673,17 +1674,17 @@ PrefabInstance:
     - target: {fileID: 3833098119157893296, guid: 6edfabec73e124074b9fdbf4fb0c5fcc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.0035
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 3833098119157893296, guid: 6edfabec73e124074b9fdbf4fb0c5fcc,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.06
+      value: 0.0594
       objectReference: {fileID: 0}
     - target: {fileID: 3833098119157893296, guid: 6edfabec73e124074b9fdbf4fb0c5fcc,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.0083
       objectReference: {fileID: 0}
     - target: {fileID: 3833098119157893296, guid: 6edfabec73e124074b9fdbf4fb0c5fcc,
         type: 3}
@@ -1728,8 +1729,18 @@ PrefabInstance:
     - target: {fileID: 3835766683258853288, guid: 6edfabec73e124074b9fdbf4fb0c5fcc,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4034609747528553794, guid: 6edfabec73e124074b9fdbf4fb0c5fcc,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 857ad4cf881e01848b9e0116824810be, type: 2}
+    - target: {fileID: 4034609747528553794, guid: 6edfabec73e124074b9fdbf4fb0c5fcc,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 857ad4cf881e01848b9e0116824810be, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6edfabec73e124074b9fdbf4fb0c5fcc, type: 3}
 --- !u!1 &1166770760633505722 stripped

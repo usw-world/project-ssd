@@ -17,6 +17,7 @@ public class Enemy_Bomber : MovableEnemy
     private State idleState;
     private State chaseState;
     private State hitState;
+    private bool isCounting = false;
     private float moveTimer = 0;
     private Vector3 targetPos;
     private Coroutine hitCoroutine;
@@ -55,9 +56,13 @@ public class Enemy_Bomber : MovableEnemy
 
         chaseState.onActive += prevState =>
         {
-            effect.SetActive(true);
             enemyAnimator.SetTrigger("attack");
-            StartCoroutine(CountDown());
+            if (!isCounting)
+            {
+                effect.SetActive(true);
+                StartCoroutine(CountDown());
+                isCounting = true;
+            }
         };
 
         chaseState.onStay += () =>
@@ -116,6 +121,8 @@ public class Enemy_Bomber : MovableEnemy
             obj.TryGetComponent(out IDamageable damageable);
             damageable?.OnDamage(damage);
         }
+
+        Instantiate(deadEffect, transform.position, transform.rotation);
         this.gameObject.SetActive(false);
     }
 
@@ -143,7 +150,7 @@ public class Enemy_Bomber : MovableEnemy
             if (timer < boomTimer)
             {
                 // Debug.Log($"{boomTimer-timer}초 후 터짐");
-                delayProjector.size = new Vector3(timer*(boomRange/boomTimer), timer*(boomRange/boomTimer), .1f);
+                delayProjector.size = new Vector3(timer*(boomRange/boomTimer), timer*(boomRange/boomTimer), .2f);
                 timer += Time.deltaTime;
                 yield return new WaitForSeconds(Time.deltaTime);
             }
