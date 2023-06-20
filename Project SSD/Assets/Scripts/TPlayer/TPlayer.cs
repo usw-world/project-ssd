@@ -137,6 +137,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 
 		trackEffect.Set();
 		UIManager.instance.tPlayerHUD.Initialize(status);
+		UIManager.instance.tPlayerSkill.gameObject.SetActive(true);
 
 		InitializeCamera();
 		if (isLocalPlayer) { 
@@ -1300,6 +1301,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			{
 				lateDamageTarget.Add(other.transform);
 			}
+		}
+	}
+	private void OnSynchronizeTSkill(S2CMessage.SynchronizeTSkillMessage message) {
+		bool[] attributes = message.attributeStates;
+
+		for(int i=0; i<options.Length; i++) {
+			options[i].active = attributes[i];
 		}
 	}
 	#endregion private method

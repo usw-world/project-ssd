@@ -8,10 +8,10 @@ public class UIManager : MonoBehaviour
     public static UIManager instance;
 
 	public TPlayerUI tPlayerHUD;
-	[SerializeField] private TPlayerSkillUi tPlayerSkill;
+	[SerializeField] public TPlayerSkillUi tPlayerSkill;
 
 	public QPlayerUI qPlayerHUD;
-	[SerializeField] private QPlayerSkillUi qPlayerSkill;
+	[SerializeField] public QPlayerSkillUi qPlayerSkill;
 
 	[SerializeField] private Canvas commonHudCanvas;
 	[SerializeField] private EscapeMenu escapeMenu;
@@ -34,8 +34,12 @@ public class UIManager : MonoBehaviour
 	private void Update() {
 		if(Input.GetKeyDown(KeyCode.Escape))
 			UIManager.instance.OnPressEscape();
-		// if(Input.GetKeyDown(KeyCode.K))
-		// 	SSDNetworkManager.instance.isHost
+		if(Input.GetKeyDown(KeyCode.K))
+			if(SSDNetworkManager.instance.isHost) {
+				tPlayerSkill.OnActive();
+			} else {
+				qPlayerSkill.OnActive();
+			}
 	}
 	#endregion Unity Events
 
@@ -96,8 +100,8 @@ public class UIManager : MonoBehaviour
 		}
 		return alertUI;
 	}
-	public void OnPressTPlayerSkill()
-	{
+	public void OnPressTPlayerSkill() {
+		return;
 		if (tPlayerSkill.CanActive())
 		{
 			if (tPlayerSkill.OnActive())
@@ -111,8 +115,8 @@ public class UIManager : MonoBehaviour
 			}
 		}
 	}
-	public void OnPressQPlayerSkill()
-	{
+	public void OnPressQPlayerSkill() {
+		return;
 		if (qPlayerSkill.CanActive())
 		{
 			if (qPlayerSkill.OnActive())
@@ -128,10 +132,9 @@ public class UIManager : MonoBehaviour
 	}
 
 	public void SetActiveHud(bool active) {
-		if (!SSDNetworkManager.instance.isHost) {
+		if (SSDNetworkManager.instance.isHost) {
 			tPlayerHUD.gameObject.SetActive(active);
-		}
-		else {
+		} else {
 			qPlayerHUD.gameObject.SetActive(active);
 		}
 		commonHudCanvas.gameObject.SetActive(active);

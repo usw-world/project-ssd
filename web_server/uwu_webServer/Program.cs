@@ -204,15 +204,18 @@ namespace uwu_webServer
                         Console.WriteLine("데이터 요청");
                         using (StreamReader reader = new StreamReader(context.Request.Body, Encoding.UTF8))
                         {
-                            var sql = "";
                             var answer = new JsonObject();
                             JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
                             var token = requestBody.RootElement.GetProperty("token").GetString();
-                            var user_id = dbc.FindId(token);
-                            sql = $"select * from skill where id = '{user_id}'";
-                            (string t, string q) skillDatas = dbc.ReadData();
-                            answer["tSkillData"] = token;
-                            answer["qSkillData"] = token;
+                            var userId = dbc.FindId(token);
+                            (string t, string q) skillDatas = dbc.ReadSkillData(userId);
+                            answer["tSkillData"] = skillDatas.t;
+                            answer["qSkillData"] = skillDatas.q;
+                            var userDatas = dbc.ReadUserData(userId);
+                            answer["tLevel"] = userDatas.tLevel;
+                            answer["qLevel"] = userDatas.qLevel;
+                            answer["tExp"] = userDatas.tExp;
+                            answer["qExp"] = userDatas.qExp;
                             context.Response.Headers["Content-Type"] = "application/json";
                             context.Response.StatusCode = StatusCodes.Status200OK;
                             await context.Response.WriteAsync(answer.ToString());

@@ -112,6 +112,7 @@ public class QPlayer : NetworkBehaviour
 		status.sp = 100;
 		status.recoverySp = 0.33f;
 		UIManager.instance.qPlayerHUD.Initialize(status);
+        UIManager.instance.qPlayerSkill.gameObject.SetActive(true);
     }
 	private void Start() {
         tPlayerGobj = TPlayer.instance?.gameObject ?? GameObject.FindGameObjectWithTag("TPlayer");
@@ -959,5 +960,16 @@ public class QPlayer : NetworkBehaviour
         this.targetPoint = targetPoint;
         stateMachine.ChangeState(statesSkillMap[skills[skillIndex]]);
         DisableAim();
+    }
+    private void OnSynchronizeQSkill(C2SMessage.SynchronizeQSkillMessage message) {
+        bool[][] attributes = message.attributeStates;
+
+        for(int i=0; i<8; i++) { (skills[0] as QPlayerSkillUnityBall).options[i].active = attributes[0][i]; }
+        for(int i=0; i<8; i++) { (skills[1] as QPlayerSkillAoe).options[i].active = attributes[1][i]; }
+        for(int i=0; i<8; i++) { (skills[2] as QPlayerSkillBuffering).options[i].active = attributes[2][i]; }
+        for(int i=0; i<8; i++) { (skills[3] as QPlayerSkillShield).options[i].active = attributes[3][i]; }
+        for(int i=0; i<8; i++) { (skills[4] as QPlayerSkillFlagit).options[i].active = attributes[4][i]; }
+        for(int i=0; i<8; i++) { (skills[5] as QPlayerSkillLightning).options[i].active = attributes[5][i]; }
+        for(int i=0; i<8; i++) { (skills[6] as QPlayerSkillFightGhostFist).options[i].active = attributes[6][i]; }
     }
 }

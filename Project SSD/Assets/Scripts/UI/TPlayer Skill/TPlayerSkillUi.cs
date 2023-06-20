@@ -41,7 +41,10 @@ public class TPlayerSkillUi : MonoBehaviour
 				item.MouseExit();
 			}
 			isActive = false;
+
 			Cursor.lockState = CursorLockMode.Locked;
+			GameManager.instance.SetActiveInput(true);
+
 			currSubBranch = -1;
 			DisableEvent();
 			return false;
@@ -57,7 +60,10 @@ public class TPlayerSkillUi : MonoBehaviour
 			cantClickZone[6].SetActive(true);
 			animator.SetTrigger("On");
 			isActive = true;
+
 			Cursor.lockState = CursorLockMode.None;
+			GameManager.instance.SetActiveInput(false);
+
 			SetTree();
 			return true;
 		}

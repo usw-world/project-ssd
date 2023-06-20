@@ -31,6 +31,12 @@ namespace C2SMessage {
             this.stateName = stateName;
         }
     }
+    public struct SynchronizeQSkillMessage : NetworkMessage {
+        public bool[][] attributeStates;
+        public SynchronizeQSkillMessage(bool[][] attributeStates) {
+            this.attributeStates = attributeStates;
+        }
+    }
 }
 namespace S2CMessage {
     public struct ShareUserInformationsMessage : NetworkMessage {
@@ -79,6 +85,12 @@ namespace S2CMessage {
 			this.targetNetworkId = targetNetworkId;
 		}
 	}
+    public struct SynchronizeTSkillMessage : NetworkMessage {
+        public bool[] attributeStates;
+        public SynchronizeTSkillMessage(bool[] attributeStates) {
+            this.attributeStates = attributeStates;
+        }
+    }
 }
 public struct Position {
     public float x;
