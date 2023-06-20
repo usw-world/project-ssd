@@ -25,7 +25,11 @@ public class TPlayerSkillUi : MonoBehaviour
 		foreach (var item in mainBranch)
 		{
 			item.GetComponent<Image>().color = offColor;
-		} 
+		}
+		foreach (var item in optionBtnImg)
+		{
+			item.color = offColor;
+		}
 	}
 	public bool OnActive()
 	{
@@ -141,6 +145,14 @@ public class TPlayerSkillUi : MonoBehaviour
 		if (isPlayingAnimation) return;
 		SkillOptionInformation option = TPlayer.instance.options[number];
 		option.active = (option.active) ? false : true;
+		if (option.active)
+		{
+			optionBtnImg[number].color = onColor;
+		}
+		else
+		{
+			optionBtnImg[number].color = offColor;
+		}
 	}
 	private void SetTree()
 	{
@@ -148,6 +160,10 @@ public class TPlayerSkillUi : MonoBehaviour
 		for (int i = 0; i < options.Length; i++){
 			optionNames[i].text = options[i].name;
 			optionInfo[i].text = options[i].info;
+			if (options[i].active)
+			{
+				optionBtnImg[i].color = onColor;
+			}
 		}
 	}
 	private void DisableEvent() { 
