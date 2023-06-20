@@ -37,57 +37,6 @@ public class QPlayerSkillUi : MonoBehaviour
 			
 		}
 	}
-	private void SynchronizeAttributes2SaveData() {
-		var unityBall = 		QPlayer.instance.skills[0] as QPlayerSkillUnityBall;
-		var aoe = 				QPlayer.instance.skills[1] as QPlayerSkillAoe;
-		var buffering = 		QPlayer.instance.skills[2] as QPlayerSkillBuffering;
-		var shield = 			QPlayer.instance.skills[3] as QPlayerSkillShield;
-		var flagit = 			QPlayer.instance.skills[4] as QPlayerSkillFlagit;
-		var lightning = 		QPlayer.instance.skills[5] as QPlayerSkillLightning;
-		var fightGhostFist = 	QPlayer.instance.skills[6] as QPlayerSkillFightGhostFist;
-
-		int[] skillArr = new int[7];
-		// string[] skillArr = new string[7];
-		
-		for(int i=0; i<unityBall.options.Length; i++) {
-			skillArr[0] |= (unityBall.options[i].active ? 1<<i : 0);
-			// skillArr[0] += (unityBall.options[i].active ? 1<<i : 0).ToString("X2");
-		}
-		for(int i=0; i<aoe.options.Length; i++) {
-			skillArr[1] |= (aoe.options[i].active ? 1<<i : 0);
-			// skillArr[1] += (unityBall.options[i].active ? 1<<i : 0).ToString("X2");
-		}
-		for(int i=0; i<buffering.options.Length; i++) {
-			skillArr[2] |= (buffering.options[i].active ? 1<<i : 0);
-			// skillArr[2] += (unityBall.options[i].active ? 1<<i : 0).ToString("X2");
-		}
-		for(int i=0; i<shield.options.Length; i++) {
-			skillArr[3] |= (shield.options[i].active ? 1<<i : 0);
-			// skillArr[3] += (unityBall.options[i].active ? 1<<i : 0).ToString("X2");
-		}
-		for(int i=0; i<flagit.options.Length; i++) {
-			skillArr[4] |= (flagit.options[i].active ? 1<<i : 0);
-			// skillArr[4] += (unityBall.options[i].active ? 1<<i : 0).ToString("X2");
-		}
-		for(int i=0; i<lightning.options.Length; i++) {
-			skillArr[5] |= (lightning.options[i].active ? 1<<i : 0);
-			// skillArr[5] += (unityBall.options[i].active ? 1<<i : 0).ToString("X2");
-		}
-		for(int i=0; i<fightGhostFist.options.Length; i++) {
-			skillArr[6] |= (fightGhostFist.options[i].active ? 1<<i : 0);
-			// skillArr[6] += (unityBall.options[i].active ? 1<<i : 0).ToString("X2");
-		}
-
-		string skillArrHex = "";
-		for(int i=0; i<skillArr.Length; i++) {
-			skillArrHex += skillArr[i].ToString("X2") + " ";
-		}
-		GameManager.instance.saveData.qSkillData = skillArrHex.Trim();
-
-		for(int i=0; i<skillArr.Length; i++) {
-			print(skillArr[i].ToString("X2"));
-		}
-	}
 
 	public bool OnActive()
 	{
@@ -102,8 +51,8 @@ public class QPlayerSkillUi : MonoBehaviour
 			animator.SetTrigger("Off");
 			isActive = false;
 			currSelectedMainBranch = -1;
-
-			SynchronizeAttributes2SaveData(); // usoock is good.
+			
+			GameManager.instance.SaveAllData(); // usoock is good.
 			return false;
 		}
 		else

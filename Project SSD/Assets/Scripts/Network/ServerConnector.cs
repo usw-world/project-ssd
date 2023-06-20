@@ -18,8 +18,8 @@ public class ServerConnector : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
-    private string apiUrl = "https://uwu-web.azurewebsites.net";
-    // private string apiUrl = "http://localhost:5034";
+    // private string apiUrl = "https://uwu-web.azurewebsites.net";
+    private string apiUrl = "http://localhost:5034";
 
     public void Ping(Action callback=null, Action<string> errorCallback=null) {
         StartCoroutine(PingCorourine(callback, errorCallback));
@@ -60,6 +60,7 @@ public class ServerConnector : MonoBehaviour
         if(request.responseCode == 200) {
             SaveDataVO saveData = new SaveDataVO(json);
             GameManager.instance?.SetSaveData(saveData);
+            print(saveData);
 
             callback?.Invoke();
         } else if(request.responseCode == 400) {
@@ -105,7 +106,7 @@ public class ServerConnector : MonoBehaviour
         request.Dispose();
     }
     
-    private IEnumerator SendIngameDataCoroutine(string postData) {
+    public IEnumerator SendIngameDataCoroutine(string postData) {
         Debug.Log(postData);
         byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
         UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/update", "POST");

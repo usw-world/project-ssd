@@ -22,6 +22,16 @@ public class SaveDataVO {
     public void Write(string saveData) {
         JsonUtility.FromJsonOverwrite(saveData, this);
     }
+    public override string ToString() {
+        string str = "";
+        str += "T Player Exp : " + tExp;
+        str += "\nQ Player Exp : " + qExp;
+        str += "\nT Player Level : " + tLevel;
+        str += "\nQ Player Level : " + qLevel;
+        str += "\nT Player SkillData : " + tSkillData;
+        str += "\nQ Player SkillData : " + qSkillData;
+        return str;
+    }
 }
 
 public class ErrorMessage {

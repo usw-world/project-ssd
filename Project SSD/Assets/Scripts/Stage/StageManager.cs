@@ -26,6 +26,8 @@ public class StageManager : MonoBehaviour {
             instance = this;
         else
             Destroy(this.gameObject);
+
+        UIManager.instance?.SetActiveHud(true);
     }
     private void Start() {
         if(SSDNetworkManager.instance is DebuggingNetworkManager) {

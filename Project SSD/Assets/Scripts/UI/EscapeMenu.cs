@@ -18,12 +18,21 @@ public class EscapeMenu : MonoBehaviour {
     }
     public void Open() {
         this.gameObject.SetActive(true);
+        
+        if(TPlayer.instance != null) {
+            (TPlayerCamera.instance as TPlayerCamera)?.SetActiveMouseMove(false);
+            Cursor.lockState = CursorLockMode.None;
+        }
     }
     public void Close() {
         settingUiGobj.SetActive(false);
         exitConfirmUiGobj.SetActive(false);
         this.gameObject.SetActive(false);
-
+        
+        if(TPlayer.instance != null) {
+            (TPlayerCamera.instance as TPlayerCamera)?.SetActiveMouseMove(true);
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
     public void OpenSettingMenu() {
         menuButtonWrapGobj.SetActive(false);

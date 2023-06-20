@@ -165,12 +165,20 @@ namespace uwu_webServer
                                 if(result < 0)
                                     throw new Exception("Failed update user data.");
                                 
-                                string tSkillData = GetHexFromEnumerator(json.GetProperty("tSkillData").EnumerateArray());
-                                string qSkillData = GetHexFromEnumerator(json.GetProperty("qSkillData").EnumerateArray());
+                                string tSkillData = json.GetProperty("tSkillData").GetString();
+                                string qSkillData = json.GetProperty("qSkillData").GetString();
+                                if(tSkillData == null) {
+                                    Console.Error.WriteLine("t skill data that received is null.");
+                                    tSkillData = "00 00 00 00 00 00";
+                                }
+                                if(qSkillData == null) {
+                                    Console.Error.WriteLine("q skill data that received is null.");
+                                    qSkillData = "00 00 00 00 00 00 00";
+                                }
                                 sql = @$"
                                     UPDATE skill SET 
-                                        t_sklil_data='{tSkillData}',
-                                        q_sklil_data='{qSkillData}'
+                                        t_skill_data='{tSkillData}',
+                                        q_skill_data='{qSkillData}'
                                     WHERE 
                                         id='{user_id}'
                                 ";

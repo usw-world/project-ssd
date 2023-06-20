@@ -1706,25 +1706,27 @@
     ]
   },
   "packageFolders": {
-    "/Users/yunjihwan/.nuget/packages/": {}
+    "C:\\Users\\pjun2\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/yunjihwan/Documents/GitHub/project-ssd/web_server/uwu_webServer/uwu_webServer.csproj",
+      "projectUniqueName": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
       "projectName": "uwu_webServer",
-      "projectPath": "/Users/yunjihwan/Documents/GitHub/project-ssd/web_server/uwu_webServer/uwu_webServer.csproj",
-      "packagesPath": "/Users/yunjihwan/.nuget/packages/",
-      "outputPath": "/Users/yunjihwan/Documents/GitHub/project-ssd/web_server/uwu_webServer/obj/",
+      "projectPath": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
+      "packagesPath": "C:\\Users\\pjun2\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/yunjihwan/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\pjun2\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/sdk/7.0.302/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1767,7 +1769,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.302/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }

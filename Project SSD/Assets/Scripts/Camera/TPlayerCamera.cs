@@ -5,6 +5,8 @@ public class TPlayerCamera : PlayerCamera {
     private float hidingDistance = 1f;
     private float minTransparency = -1f, maxTransparency = 0f;
 
+    private float mouseSensitivity = 300;
+
     private bool isInHidingDistance = false;
     
     protected override void Awake() {
@@ -50,5 +52,14 @@ public class TPlayerCamera : PlayerCamera {
 
     public override void SetTarget(Transform target) {
         virtualCamera.Follow = target;
+    }
+
+    public void SetActiveMouseMove(bool active) {
+        CinemachinePOV pov = virtualCamera.GetCinemachineComponent<CinemachinePOV>();
+        if(pov != null) {
+            print(pov);
+            pov.m_VerticalAxis.m_MaxSpeed = active ? mouseSensitivity : 0;
+            pov.m_HorizontalAxis.m_MaxSpeed = active ? mouseSensitivity : 0;
+        }
     }
 }

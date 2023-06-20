@@ -30,18 +30,6 @@ public class UIManager : MonoBehaviour
 		else
 			Destroy(this.gameObject);
         DontDestroyOnLoad(gameObject);
-
-		if (!SSDNetworkManager.instance.isHost) {
-			tPlayerSkill.gameObject.SetActive(true);
-			tPlayerHUD.gameObject.SetActive(true);
-			ownHud = tPlayerHUD.gameObject;
-		} 
-		else
-		{
-			qPlayerHUD.gameObject.SetActive(true);
-			qPlayerSkill.gameObject.SetActive(true);
-		}
-		commonHudCanvas.gameObject.SetActive(true);
 	}
 	public void FadeIn(float delay=0f, float duration=2f, System.Action callback=null) {
 		if(fadeInOutCoroutine != null)
@@ -118,7 +106,14 @@ public class UIManager : MonoBehaviour
 		}
 	}
 	public void SetActiveHud(bool active) {
-		ownHud?.SetActive(active);
+		if (SSDNetworkManager.instance.isHost) {
+			tPlayerSkill.gameObject.SetActive(active);
+			tPlayerHUD.gameObject.SetActive(active);
+		} else {
+			qPlayerHUD.gameObject.SetActive(active);
+			qPlayerSkill.gameObject.SetActive(active);
+		}
+		commonHudCanvas.gameObject.SetActive(active);
 	}
 	/*
 	public void StartCutScene()

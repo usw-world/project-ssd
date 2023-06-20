@@ -156,6 +156,8 @@ public class QPlayer : NetworkBehaviour
             ChangeAnimation(FLY_ANIMATION_PARAMETER);
         };
         attachedState.onStay += () => {
+            if(tPlayerGobj == null)
+                return;
             Vector3 targetPos = tPlayerGobj.transform.position;
             float returnSpeed = 10.0f * Time.deltaTime;
             targetPos.y += 2;
