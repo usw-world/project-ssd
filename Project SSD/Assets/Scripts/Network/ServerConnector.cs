@@ -122,16 +122,19 @@ public class ServerConnector : MonoBehaviour
         request.Dispose();
     }
     
-    private void RequestIngameData(Action<string> errorCallback=null) {
-        string userToken = GameManager.instance.saveData.token;
-        if(userToken != null) {
-            StartCoroutine(RequestIngameDataCoroutiune(userToken));
+    public void RequestIngameData(Action<string> errorCallback=null) {
+        string json = $"{{\"token\":\"{GameManager.instance.saveData.token}\"}}";
+        // string userToken = GameManager.instance.saveData.token;
+        // if(userToken != null) {
+        if(json != name) {
+            StartCoroutine(RequestIngameDataCoroutiune(json));
         } else {
             errorCallback?.Invoke("사용자 인증에 실패하였습니다.");
         }
     }
-    private IEnumerator RequestIngameDataCoroutiune(string userToken) {
-        byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(userToken);
+    private IEnumerator RequestIngameDataCoroutiune(string json) {
+        print(json);
+        byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(json);
         UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/get-data", "POST");
         request.uploadHandler.Dispose();
         request.uploadHandler = (UploadHandler)new UploadHandlerRaw(postDataBytes); 

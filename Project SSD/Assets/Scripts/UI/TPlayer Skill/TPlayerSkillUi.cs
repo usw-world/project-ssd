@@ -54,6 +54,12 @@ public class TPlayerSkillUi : MonoBehaviour
 			return true;
 		}
 	}
+	private void AcceptSaveData() {
+		bool[] skillData = GameManager.instance.GetTSkillData();
+		for(int i=0; i<TPlayer.instance.options.Length; i++) {
+			TPlayer.instance.options[i].active = skillData[i];
+		}
+	}
 	public bool OnPressEscape() 
 	{
 		if (isPlayingAnimation) return true;
@@ -130,6 +136,6 @@ public class TPlayerSkillUi : MonoBehaviour
 		}
 	}
 	private void DisableEvent() { 
-		// 여기에 추가 하든지 말들지
+		GameManager.instance.SynchronizeData2Server();
 	}
 }

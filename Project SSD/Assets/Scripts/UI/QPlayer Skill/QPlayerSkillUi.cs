@@ -52,7 +52,7 @@ public class QPlayerSkillUi : MonoBehaviour
 			isActive = false;
 			currSelectedMainBranch = -1;
 			
-			GameManager.instance.SaveAllData(); // usoock is good.
+			GameManager.instance.SynchronizeData2Server(); // usoock is good.
 			return false;
 		}
 		else
@@ -63,11 +63,35 @@ public class QPlayerSkillUi : MonoBehaviour
 				}
 				isSubTreeSeting = true;
 			}
-			
+			AcceptSaveData();
 			animator.SetTrigger("On");
 			isActive = true;
 			return true;
 		}
+	}
+	private void AcceptSaveData() {
+		bool[][] skillData = GameManager.instance.GetQSkillData();
+		for(int i=0; i<(QPlayer.instance.skills[0] as QPlayerSkillUnityBall).options.Length; i++) {
+			(QPlayer.instance.skills[0] as QPlayerSkillUnityBall).options[i].active = skillData[0][i];
+		} 
+		for(int i=0; i<(QPlayer.instance.skills[1] as QPlayerSkillAoe).options.Length; i++) {
+			(QPlayer.instance.skills[1] as QPlayerSkillAoe).options[i].active = skillData[1][i];
+		} 
+		for(int i=0; i<(QPlayer.instance.skills[2] as QPlayerSkillBuffering).options.Length; i++) {
+			(QPlayer.instance.skills[2] as QPlayerSkillBuffering).options[i].active = skillData[2][i];
+		} 
+		for(int i=0; i<(QPlayer.instance.skills[3] as QPlayerSkillShield).options.Length; i++) {
+			(QPlayer.instance.skills[3] as QPlayerSkillShield).options[i].active = skillData[3][i];
+		} 
+		for(int i=0; i<(QPlayer.instance.skills[4] as QPlayerSkillFlagit).options.Length; i++) {
+			(QPlayer.instance.skills[4] as QPlayerSkillFlagit).options[i].active = skillData[4][i];
+		} 
+		for(int i=0; i<(QPlayer.instance.skills[5] as QPlayerSkillLightning).options.Length; i++) {
+			(QPlayer.instance.skills[5] as QPlayerSkillLightning).options[i].active = skillData[5][i];
+		} 
+		for(int i=0; i<(QPlayer.instance.skills[6] as QPlayerSkillFightGhostFist).options.Length; i++) {
+			(QPlayer.instance.skills[6] as QPlayerSkillFightGhostFist).options[i].active = skillData[6][i];
+		} 
 	}
 	public bool OnPressEscape()
 	{

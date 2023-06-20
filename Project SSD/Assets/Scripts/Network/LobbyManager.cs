@@ -108,8 +108,13 @@ public class LobbyManager : MonoBehaviour {
             connector.Login(
                 idField.text,
                 passwordField.text,
-                ()             => { this.onSuccessLogin?.Invoke(); },
-                (string error) => { UIManager.instance.AlertMessage(error); }
+                ()             => {
+                    this.onSuccessLogin?.Invoke();
+                    ServerConnector.instance.RequestIngameData();
+                },
+                (string error) => {
+                    UIManager.instance.AlertMessage(error);
+                }
             );
         }
     }

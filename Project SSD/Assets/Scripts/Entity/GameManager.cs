@@ -11,10 +11,6 @@ public class GameManager : MonoBehaviour {
         else
             Destroy(this);
         DontDestroyOnLoad(this.gameObject);
-
-        for(int i=0; i<40; i++) {
-            print(GetNextExp(i));
-        }
     }
     public void ExitGame() {
         Application.Quit();
@@ -27,7 +23,7 @@ public class GameManager : MonoBehaviour {
         if(inputSystem != null)
             inputSystem.enabled = active;
     }
-	public void SaveAllData() {
+	private void SaveAllData() {
         if(saveData == null)
             return;
         
@@ -118,9 +114,23 @@ public class GameManager : MonoBehaviour {
         return result;
     }
 	private void SaveTPlayerSkillData() {
+        var options = TPlayer.instance.options;
+        string skillData = "";
+        for(int i=0; i<6; i++) {
+            int single = 0;
+            single += options[i*3 + 0].active ? 1<<0 : 0;
+            single += options[i*3 + 1].active ? 1<<1 : 0;
+            single += options[i*3 + 2].active ? 1<<2 : 0;
+
+            skillData += single.ToString("X") + " ";
+        }
+        saveData.tSkillData = skillData.Trim();
+
+        print(saveData);
+
 		/* Make saving data. */
         /* temporary >> */
-        saveData.tSkillData = "06 03 01 00 00 07";
+        // saveData.tSkillData = "06 03 01 00 00 07";
         /* << temporary */
 	}
 	private void SaveQPlayerSkillData() {

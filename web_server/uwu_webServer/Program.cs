@@ -115,6 +115,7 @@ namespace uwu_webServer
                                     answer["token"] = token;
                                     answer["userId"] = requestId;
                                     context.Response.StatusCode = StatusCodes.Status200OK;
+                                    Console.WriteLine(answer);
                                     await context.Response.WriteAsync(answer.ToString());
                                 }
                             } else {
