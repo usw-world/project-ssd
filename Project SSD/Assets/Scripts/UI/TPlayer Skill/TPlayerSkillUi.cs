@@ -2,15 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Animator))]
 public class TPlayerSkillUi : MonoBehaviour
 {
 	[SerializeField] private List<TPlayerSkillBtnEvent> mainBranch;
+	[SerializeField] private List<Image> optionBtnImg;
 	[SerializeField] private List<GameObject> cantClickZone;
 	[SerializeField] private TextMeshProUGUI skillPoint;
 	[SerializeField] private List<TextMeshProUGUI> optionNames;
 	[SerializeField] private List<TextMeshProUGUI> optionInfo;
+	[SerializeField] private Color offColor;
+	[SerializeField] private Color onColor;
 	private Animator animator;
 	private bool isActive = false;
 	private bool isPlayingAnimation = false;
@@ -18,6 +22,10 @@ public class TPlayerSkillUi : MonoBehaviour
 	private void Awake()
 	{
 		animator = GetComponent<Animator>();
+		foreach (var item in mainBranch)
+		{
+			item.GetComponent<Image>().color = offColor;
+		} 
 	}
 	public bool OnActive()
 	{
@@ -137,6 +145,6 @@ public class TPlayerSkillUi : MonoBehaviour
 		}
 	}
 	private void DisableEvent() { 
-		GameManager.instance.SynchronizeData2Server();
+		GameManager.instance?.SynchronizeData2Server();
 	}
 }

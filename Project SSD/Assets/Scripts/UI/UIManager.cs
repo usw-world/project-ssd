@@ -105,7 +105,7 @@ public class UIManager : MonoBehaviour
 				activatedUi = tPlayerSkill.gameObject;
 				tPlayerHUD.gameObject.SetActive(false);
 			}
-			else { 
+			else {
 				activatedUi = null; 
 				tPlayerHUD.gameObject.SetActive(true);
 			}
@@ -128,11 +128,10 @@ public class UIManager : MonoBehaviour
 	}
 
 	public void SetActiveHud(bool active) {
-		if (SSDNetworkManager.instance.isHost) {
-			// tPlayerSkill.gameObject.SetActive(active);
+		if (!SSDNetworkManager.instance.isHost) {
 			tPlayerHUD.gameObject.SetActive(active);
-		} else {
-			// qPlayerSkill.gameObject.SetActive(active);
+		}
+		else {
 			qPlayerHUD.gameObject.SetActive(active);
 		}
 		commonHudCanvas.gameObject.SetActive(active);
