@@ -119,6 +119,8 @@ public class QPlayer : NetworkBehaviour
 
         InitializeCamera();
         InitializedState();
+        if(SSDNetworkManager.instance.isHost)
+            NetworkClient.RegisterHandler<C2SMessage.SynchronizeQSkillMessage>(OnSynchronizeQSkill);
     }
 	void Update()
 	{

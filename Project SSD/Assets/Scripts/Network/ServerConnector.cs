@@ -145,6 +145,8 @@ public class ServerConnector : MonoBehaviour
             SaveDataVO saveData = new SaveDataVO();
             saveData.Write(jsonResponse);
             saveData = JsonUtility.FromJson<SaveDataVO>(jsonResponse);
+            print(saveData);
+            GameManager.instance.SetSaveData(saveData);
             Debug.Log("download Success");
         } else {
             Debug.LogError(request.responseCode);

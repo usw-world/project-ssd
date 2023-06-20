@@ -31,6 +31,9 @@ public class TPlayerSkillUi : MonoBehaviour
 			item.color = offColor;
 		}
 	}
+	private void Start() {
+		AcceptSaveData();
+	}
 	public bool OnActive()
 	{
 		if (isPlayingAnimation) return true;
@@ -55,6 +58,7 @@ public class TPlayerSkillUi : MonoBehaviour
 		}
 		else
 		{
+			print(GameManager.instance.saveData);
 			foreach (var item in mainBranch){
 				item.MouseExit();
 			}
@@ -166,7 +170,8 @@ public class TPlayerSkillUi : MonoBehaviour
 			}
 		}
 	}
-	private void DisableEvent() { 
+	private void DisableEvent() {
+		
 		GameManager.instance?.SynchronizeData2Server();
 	}
 }

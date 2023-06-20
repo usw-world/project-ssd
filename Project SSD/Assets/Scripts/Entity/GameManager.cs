@@ -34,6 +34,16 @@ public class GameManager : MonoBehaviour {
 	}
     public void SynchronizeData2Server() {
         SaveAllData();
+        if(SSDNetworkManager.instance.isHost) {
+            var tMessage = new S2CMessage.SynchronizeTSkillMessage();
+            tMessage.attributeStates = GetTSkillData();
+            Mirror.NetworkServer.SendToAll(tMessage);
+        } else {
+            var qMessage = new C2SMessage.SynchronizeQSkillMessage();
+            qMessage.attributeStates = GetQSkillData();
+            Mirror.NetworkClient.Send(qMessage);
+        }
+
         string json = JsonUtility.ToJson(saveData);
         StartCoroutine(ServerConnector.instance.SendIngameDataCoroutine(json));
     }
@@ -122,7 +132,7 @@ public class GameManager : MonoBehaviour {
             single += options[i*3 + 1].active ? 1<<1 : 0;
             single += options[i*3 + 2].active ? 1<<2 : 0;
 
-            skillData += single.ToString("X") + " ";
+            skillData += single.ToString("X2") + " ";
         }
         saveData.tSkillData = skillData.Trim();
 
@@ -186,6 +196,8 @@ public class GameManager : MonoBehaviour {
             IncreaseExp(1000);
         if(Input.GetKeyDown(KeyCode.Keypad4))
             SynchronizeData2Server();
+        if(Input.GetKeyDown(KeyCode.Keypad5))
+            print(this.saveData);
     }
     /*  */
 }

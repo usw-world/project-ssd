@@ -113,9 +113,7 @@ namespace uwu_webServer
                                 if(successSearchUser) {
                                     dbc.SetToken(token, requestId);
                                     answer["token"] = token;
-                                    answer["userId"] = requestId;
                                     context.Response.StatusCode = StatusCodes.Status200OK;
-                                    // Console.WriteLine(answer);
                                     await context.Response.WriteAsync(answer.ToString());
                                 }
                             } else {
@@ -217,6 +215,7 @@ namespace uwu_webServer
                             answer["tExp"] = userDatas.tExp;
                             answer["qExp"] = userDatas.qExp;
                             context.Response.Headers["Content-Type"] = "application/json";
+                            Console.WriteLine(answer);
                             context.Response.StatusCode = StatusCodes.Status200OK;
                             await context.Response.WriteAsync(answer.ToString());
                         }

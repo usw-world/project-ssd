@@ -44,7 +44,7 @@ namespace uwu_webServer {
             return answer;
         }
         public (int tLevel, int tExp, int qLevel, int qExp) ReadUserData(string userId) {
-            string sql = $"SELECT * FROM user WHERE id='{userId}';";
+            string sql = $"SELECT * FROM user WHERE user_id='{userId}';";
             var reader = new MySqlCommand(sql, conn).ExecuteReader();
 
             (int tLevel, int tExp, int qLevel, int qExp) result = (0, 0, 0, 0);
@@ -54,10 +54,11 @@ namespace uwu_webServer {
                 result.qLevel = reader.GetInt16("t_exp");
                 result.qExp = reader.GetInt16("q_exp");
             }
+            reader.Close();
             return result;
         }
         public (string t, string q) ReadSkillData(string userId) {
-            string sql = $"SELECT * FROM skill WHERE user_id='{userId}';";
+            string sql = $"SELECT * FROM skill WHERE id='{userId}';";
             var reader = new MySqlCommand(sql, conn).ExecuteReader();
             
             (string t, string q) result = ("", "");
@@ -65,6 +66,7 @@ namespace uwu_webServer {
                 result.t += reader["t_skill_data"].ToString();
                 result.q += reader["q_skill_data"].ToString();
             }
+            reader.Close();
             return result;
         }
         

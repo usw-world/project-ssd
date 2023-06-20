@@ -24,6 +24,7 @@ public class SaveDataVO {
     }
     public override string ToString() {
         string str = "";
+        str += "Token : " + token;
         str += "T Player Exp : " + tExp;
         str += "\nQ Player Exp : " + qExp;
         str += "\nT Player Level : " + tLevel;

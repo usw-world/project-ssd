@@ -30,6 +30,7 @@ public class QPlayerSkillUi : MonoBehaviour
 	}
 	private void Start() {
 		Refresh();
+		AcceptSaveData();
 	}
 	private void Refresh() {
 		var skillDatas = GameManager.instance.saveData.qSkillData;
@@ -63,7 +64,6 @@ public class QPlayerSkillUi : MonoBehaviour
 				}
 				isSubTreeSeting = true;
 			}
-			AcceptSaveData();
 			animator.SetTrigger("On");
 			isActive = true;
 			return true;

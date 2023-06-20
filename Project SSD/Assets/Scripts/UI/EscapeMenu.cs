@@ -19,7 +19,7 @@ public class EscapeMenu : MonoBehaviour {
     public void Open() {
         this.gameObject.SetActive(true);
         
-        if(TPlayer.instance != null) {
+        if(SSDNetworkManager.instance.isHost) {
             (TPlayerCamera.instance as TPlayerCamera)?.SetActiveMouseMove(false);
             Cursor.lockState = CursorLockMode.None;
         }
@@ -29,7 +29,7 @@ public class EscapeMenu : MonoBehaviour {
         exitConfirmUiGobj.SetActive(false);
         this.gameObject.SetActive(false);
         
-        if(TPlayer.instance != null) {
+        if(SSDNetworkManager.instance.isHost) {
             (TPlayerCamera.instance as TPlayerCamera)?.SetActiveMouseMove(true);
             Cursor.lockState = CursorLockMode.Locked;
         }
