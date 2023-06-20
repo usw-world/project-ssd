@@ -35,7 +35,7 @@ namespace uwu_webServer {
         }
         public string FindId(string token) {
             var answer = "";
-            var sql = $"select user_id from user where user_token = '{token}';";
+            var sql = $"SELECT user_id FROM user WHERE user_token = '{token}';";
             var reader = new MySqlCommand(sql, conn).ExecuteReader();
             while (reader.Read()) {
                 answer = reader["user_id"].ToString();
@@ -49,14 +49,17 @@ namespace uwu_webServer {
                 data.Add("token", reader["user_token"].ToString());
             }
         }
-        private (string t, string q) ReadSkill(MySqlDataReader reader, JsonObject data) {
+        public (int tLevel, int tExp, int qLevel, int qExp) ReadUserData(string userId) {
+            string sql = $"SELECT * FROM skill WHERE user_id='{userId}';";
+        }
+        public (string t, string q) ReadSkillData(string userId) {
+            string sql = $"SELECT * FROM skill WHERE id='{userId}';";
+            var reader = new MySqlCommand(sql, conn).ExecuteReader();
+            
             (string t, string q) result = ("", "");
             if(reader.Read()) {
-                // result.t += 
-                data.Add("skillPoint", reader["skillPoint"].ToString());
-                data.Add("skill_UnityBall", reader["skill_UnityBall"].ToString());
-                // answer.Add("user_id", $"{reader["id"]}");
-                Console.WriteLine("SkillData search");
+                result.t += reader["t_skill_data"].ToString();
+                result.q += reader["q_skill_data"].ToString();
             }
             return result;
         }
