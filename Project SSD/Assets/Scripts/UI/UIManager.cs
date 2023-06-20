@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour
 	public QPlayerUI qPlayerHUD;
 	[SerializeField] public QPlayerSkillUi qPlayerSkill;
 
-	[SerializeField] private Canvas commonHudCanvas;
+	[SerializeField] private CommonUI commonHUD;
 	[SerializeField] private EscapeMenu escapeMenu;
 
  	[SerializeField] private GameObject alertUIPrefab;
@@ -91,7 +91,7 @@ public class UIManager : MonoBehaviour
 		}
 	}
 	public AlertUI AlertMessage(string message) {
-		GameObject alertUIGobj = Instantiate(alertUIPrefab, commonHudCanvas.transform);
+		GameObject alertUIGobj = Instantiate(alertUIPrefab, commonHUD.gameObject.transform);
 		AlertUI alertUI = alertUIGobj.GetComponent<AlertUI>();
 		if(alertUI != null) {
 			alertUI.SetMessage(message);
@@ -137,37 +137,32 @@ public class UIManager : MonoBehaviour
 		} else {
 			qPlayerHUD.gameObject.SetActive(active);
 		}
-		commonHudCanvas.gameObject.SetActive(active);
+		commonHUD.gameObject.SetActive(active);
 	}
-	/*
+	
 	public void StartCutScene()
     {
-        StartCoroutine(OnBanner());
-    }
+		commonHUD.StartCutScene();
+		if (SSDNetworkManager.instance.isHost)
+		{
+			tPlayerHUD.StartCutScene();
+		}
+		else
+		{
+			qPlayerHUD.gameObject.SetActive(false);
+		}
+	}
     public void EndCutScene()
     {
-        StartCoroutine(OffBanner());
-    }
-    IEnumerator OnBanner()
-    {
-        while (cutSceneBannerTop.anchoredPosition.y >= -65f)
-        {
-            cutSceneBannerTop.anchoredPosition -= new Vector2(0, CinemaMoveSpeed * Time.deltaTime);
-            cutSceneBannerBottom.anchoredPosition += new Vector2(0, CinemaMoveSpeed * Time.deltaTime);
-            yield return null;
-        }
-        cutSceneBannerTop.anchoredPosition = new Vector2(0, -65f);
-        cutSceneBannerBottom.anchoredPosition = new Vector2(0, 65f);
-    }
-    IEnumerator OffBanner()
-    {
-        while (cutSceneBannerTop.anchoredPosition.y <= 65f)
-        {
-            cutSceneBannerTop.anchoredPosition += new Vector2(0, CinemaMoveSpeed * Time.deltaTime);
-            cutSceneBannerBottom.anchoredPosition -= new Vector2(0, CinemaMoveSpeed * Time.deltaTime);
-            yield return null;
-        }
-        cutSceneBannerTop.anchoredPosition = new Vector2(0, 65f);
-        cutSceneBannerBottom.anchoredPosition = new Vector2(0, -65f);
-    }*/
+		commonHUD.EndCutScene();
+		if (SSDNetworkManager.instance.isHost)
+		{
+			tPlayerHUD.EndCutScene();
+		}
+		else
+		{
+			qPlayerHUD.gameObject.SetActive(true);
+		}
+	}
+    
 }

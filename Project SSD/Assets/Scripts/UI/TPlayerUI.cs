@@ -8,7 +8,10 @@ public class TPlayerUI : MonoBehaviour {
     [SerializeField] private Image fadeInOutImg;
 	[SerializeField] private Slider sliderHP;
 	[SerializeField] private Slider sliderSP;
+	[SerializeField] private Slider sliderSlide;
 	[SerializeField] private Slider sliderCharging;
+	[SerializeField] private List<Image> skillFills;
+	[SerializeField] private GameObject skillTime;
 	public Image imgCharging;
 	public Image imgChargingBackground;
 	public Image imgCutSceneSwordTrail;
@@ -16,17 +19,53 @@ public class TPlayerUI : MonoBehaviour {
 	private Color orange = new Color(1f, 0.65f, 0f);
 	private Color yellow = new Color(1f, 1f, 0f);
 	private Color darkYellow = new Color(0.8f, 0.8f, 0f);
+	private TPlayerSkill[] skills = new TPlayerSkill[5];
 	private void Awake()
 	{
 		fadeInOutImg.gameObject.SetActive(false);
 		sliderCharging.gameObject.SetActive(false);
 		imgCutSceneSwordTrail.gameObject.SetActive(false);
 	}
-	public void Initialize(PlayerStatus status){
-		sliderHP.maxValue = status.maxHp;
-		sliderSP.maxValue = status.maxSp;
-		sliderHP.value = status.hp;
-		sliderSP.value = status.sp;
+	public void Initialize(){
+		sliderHP.maxValue = TPlayer.instance.status.maxHp;
+		sliderSP.maxValue = TPlayer.instance.status.maxSp;
+		sliderHP.value = TPlayer.instance.status.hp;
+		sliderSP.value = TPlayer.instance.status.sp;
+		skills[0] = TPlayer.instance.skill.combo_1[0] as TPlayerSkill;
+		skills[1] = TPlayer.instance.skill.charging_DrawSwordAttack_7time[0] as TPlayerSkill;
+		skills[2] = TPlayer.instance.skill.charging as TPlayerSkill;
+		skills[3] = TPlayer.instance.skill.powerUp as TPlayerSkill;
+		skills[4] = TPlayer.instance.skill.dodge as TPlayerSkill;
+		skillFills[3].transform.parent.gameObject.SetActive(TPlayer.instance.options[17].active);
+	}
+	private void Update()
+	{
+		if (TPlayer.instance == null) return;
+		for (int i = 0; i < skills.Length; i++)
+		{
+			if (skills[i].usingSP < TPlayer.instance.status.sp)
+			{
+				skillFills[i].fillAmount = 1f - skills[i].property.nowCoolTime / skills[i].property.coolTime;
+			}
+			else
+			{
+				skillFills[i].fillAmount = 1f;
+			}
+		}
+		sliderSlide.value = TPlayer.instance.GetAllShieldAmount();
+	}
+	public void StartCutScene() {
+		sliderHP.gameObject.SetActive(false);
+		sliderSP.gameObject.SetActive(false);
+		sliderSlide.gameObject.SetActive(false);
+		skillTime.SetActive(false);
+	}
+	public void EndCutScene()
+	{
+		sliderHP.gameObject.SetActive(true);
+		sliderSP.gameObject.SetActive(true);
+		sliderSlide.gameObject.SetActive(true);
+		skillTime.SetActive(true);
 	}
 	public void SetChargingLevel(int level, float maxValue)
 	{

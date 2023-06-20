@@ -21,7 +21,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 
 	#region Show Parameters
 	[SerializeField] private TPlayerWeaponTransform sword;
-	[SerializeField] private TPlayerSkillManager skill;
+	[SerializeField] public TPlayerSkillManager skill;
 	[SerializeField] private TPlayerTrackEffect trackEffect;
 	[SerializeField] private SkinnedMeshRenderer[] motionTrailedMeshRenderers;
 	[SerializeField] private TPlayerCutSceneCam cutSceneCam;
@@ -136,7 +136,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
         idleStateGroup.Add(idleState3);
 
 		trackEffect.Set();
-		UIManager.instance.tPlayerHUD.Initialize(status);
+		UIManager.instance.tPlayerHUD.Initialize();
 		UIManager.instance.tPlayerSkill.gameObject.SetActive(true);
 		
 		NetworkClient.RegisterHandler<S2CMessage.SynchronizeTSkillMessage>(OnSynchronizeTSkill);
@@ -315,6 +315,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			lateDamageTarget.Clear();
 			if(isLocalPlayer)
 				CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[0]);
+			UIManager.instance.StartCutScene();
 			//SoundManager.instance.tPlayer.voice.drawAttackSpecialReady.Play(audioSourceVoice, ESoundType.voice);
 			SoundManager.instance.tPlayer.effect.drawAttackSpecial_start.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		};
@@ -684,6 +685,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	public void OnChargingStart()
 	{
+		if (!skill.charging.CanUse()) return; 
 		if (stateMachine.currentState == dodgeAttackState ||
 			stateMachine.currentState == downAttackState ||
 			stateMachine.currentState == downAttackState ||
@@ -713,6 +715,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		{
 			if (lookVector != Vector3.zero) RotateWithCamera(lookVector, 15f);
 			ChangeState(chargingDrawSwordAttack_nonCharging);
+			skill.charging.Use();
+			skill.charging.property.coolTime = 2f;
 			return;
 		}
 		if (stateMachine.currentState != chargingStay) return;
@@ -721,11 +725,19 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		{
 			case 0: 
 				ChangeState(chargingDrawSwordAttack_nonCharging);
+				skill.charging.property.coolTime = 2f;
 				break;
-			case 1: ChangeState(chargingDrawSwordAttack); break;
-			case 2: ChangeState(chargingDrawSwordAttack_2time); break;
-			case 3: ChangeState(chargingDrawSwordAttack_specialStart); break;
+			case 1: ChangeState(chargingDrawSwordAttack);
+				skill.charging.property.coolTime = 4f; 
+				break;
+			case 2: ChangeState(chargingDrawSwordAttack_2time);
+				skill.charging.property.coolTime = 8f; 
+				break;
+			case 3: ChangeState(chargingDrawSwordAttack_specialStart);
+				skill.charging.property.coolTime = 15f;
+				break;
 		}
+		skill.charging.Use();
 	}
 	public void OnComboAttack()
 	{
@@ -965,6 +977,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		}
 	}
 	private IEnumerator LigthingBlade() {
+		UIManager.instance.StartCutScene();
 		float time = 0;
 		float power = 0;
 		trackEffect.powerUp.Enable();
@@ -981,6 +994,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		trackEffect.powerUp.Disable();
 		trackEffect.bladeEffect.Disable();
 		StartCoroutine(SelfPowerUp());
+		UIManager.instance.EndCutScene();
 		ResetState();
 	}
 	private IEnumerator SelfPowerUp()
@@ -1062,6 +1076,10 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	public void SetACtionMotionTrail(bool active) 
 	{
 		isMotionTrail = active;
+	}
+	public float GetAllShieldAmount() 
+	{
+		return shieldManager.GetAllAmount();
 	}
 	#endregion public method
 
@@ -1226,6 +1244,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		yield return StartCoroutine(UIManager.instance.tPlayerHUD.FaidInAndMove());
 		stateMachine.ChangeState(chargingDrawSwordAttack_specialEnd);
 		yield return StartCoroutine(UIManager.instance.tPlayerHUD.FaidOut());
+		UIManager.instance.EndCutScene();
 	}
 	private IEnumerator DrawAttackDamage()
 	{
@@ -1316,6 +1335,15 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		}
 	}
 	#endregion private method
+
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Alpha9))
+		{
+			TPlayerShield temp = new TPlayerShield(20f);
+			AddShield(temp);
+		}
+	}
 }
 [Serializable]
 struct FinishPropert {
@@ -1370,7 +1398,7 @@ class TPlayerWeaponTransform
 	}
 }
 [Serializable]
-class TPlayerSkillManager 
+public class TPlayerSkillManager 
 {
 	public Skill[] basicAttacks;
 	public Skill dodge;
@@ -1383,6 +1411,7 @@ class TPlayerSkillManager
 	public Skill[] combo_1;
 	public Skill counterattack;
 	public Skill powerUp;
+	public Skill charging;
 }
 [Serializable]
 class TPlayerCutSceneCam
@@ -1483,6 +1512,15 @@ class TPlayerShieldManager
 		return lastDamage;
 	}
 	public int GetCount() { return shields.Count; }
+	public float GetAllAmount() 
+	{
+		float amount = 0;
+		for (int i = 0; i < shields.Count; i++)
+		{
+			amount += shields[i].amount;
+		}
+		return amount;
+	}
 }
 public class TPlayerShield
 {

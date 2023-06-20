@@ -15,6 +15,8 @@ public class TPlayerSkillUi : MonoBehaviour
 	[SerializeField] private List<TextMeshProUGUI> optionInfo;
 	[SerializeField] private Color offColor;
 	[SerializeField] private Color onColor;
+	private Color offHideColor;
+	private Color onHideColor;
 	private Animator animator;
 	private bool isActive = false;
 	private bool isPlayingAnimation = false;
@@ -24,11 +26,15 @@ public class TPlayerSkillUi : MonoBehaviour
 		animator = GetComponent<Animator>();
 		foreach (var item in mainBranch)
 		{
-			item.GetComponent<Image>().color = offColor;
+			item.GetComponent<Image>().color = onColor;
 		}
+		offHideColor = offColor;
+		offHideColor.a = 0;
+		onHideColor = onColor;
+		onHideColor.a = 0;
 		foreach (var item in optionBtnImg)
 		{
-			item.color = offColor;
+			item.color = offHideColor;
 		}
 	}
 	private void Start() {
@@ -51,7 +57,7 @@ public class TPlayerSkillUi : MonoBehaviour
 
 			Cursor.lockState = CursorLockMode.Locked;
 			GameManager.instance.SetActiveInput(true);
-
+			UIManager.instance.tPlayerHUD.Initialize();
 			currSubBranch = -1;
 			DisableEvent();
 			return false;
@@ -129,6 +135,13 @@ public class TPlayerSkillUi : MonoBehaviour
 		mainBranch[idx].MouseEnter();
 		mainBranch[idx].Lock();
 		currSubBranch = idx;
+		foreach (var item in optionBtnImg)
+		{
+			item.gameObject.SetActive(false);
+		}
+		optionBtnImg[idx * 3].gameObject.SetActive(true);
+		optionBtnImg[idx * 3 + 1].gameObject.SetActive(true);
+		optionBtnImg[idx * 3 + 2].gameObject.SetActive(true);
 	}
 	public bool CanActive() 
 	{
@@ -167,6 +180,10 @@ public class TPlayerSkillUi : MonoBehaviour
 			if (options[i].active)
 			{
 				optionBtnImg[i].color = onColor;
+			}
+			else
+			{
+				optionBtnImg[i].color = offColor;
 			}
 		}
 	}
