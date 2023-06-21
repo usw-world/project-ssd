@@ -8,6 +8,7 @@ public class CinemaController : MonoBehaviour {
 
     [System.Serializable]
     public class CinemaEvent : UnityEngine.Events.UnityEvent{}
+    [SerializeField] private CinemaEvent onCinemaStart;
     [SerializeField] private CinemaEvent onCinemaEnd;
 
     private void Awake() {
@@ -17,6 +18,7 @@ public class CinemaController : MonoBehaviour {
         GameManager.instance.SetActiveInput(false);
         UIManager.instance.SetActiveHud(false);
         SetAnimationTrigger("Play");
+        onCinemaStart?.Invoke();
     }
     public void EndCinema() {
         GameManager.instance.SetActiveInput(true);

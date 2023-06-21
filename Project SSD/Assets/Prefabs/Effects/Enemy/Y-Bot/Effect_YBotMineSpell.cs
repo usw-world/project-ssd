@@ -34,6 +34,8 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 	[SerializeField] private ParticleSystem idleParticle;
 	[SerializeField] private ParticleSystem explosionParticle;
 	private Coroutine inPoolCoroutine;
+
+	[SerializeField] private AudioSource audioSource;
 	
     public string GetKey() {
         return GetType().ToString();
@@ -143,6 +145,8 @@ public class Effect_YBotMineSpell : MonoBehaviour, IPoolableObject {
 		rangeProjector.enabled = false;
 		delayProjector.enabled = false;
 		explosionParticle.Play();
+		audioSource.volume = SoundManager.instance.GetEffectVolume() * .7f;
+		audioSource.Play();
 		Disapear();
 	}
 	private IEnumerator InPoolCoroutine() {

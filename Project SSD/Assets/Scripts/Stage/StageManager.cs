@@ -12,6 +12,7 @@ public class StageManager : MonoBehaviour {
     [SerializeField] public Transform spawnPoint;
     
     [SerializeField] public AudioSource bgmAudioSource;
+    [SerializeField] private AudioClip[] bgmList;
 
     [SerializeField] private Transform cheatingPoint;
     
@@ -25,7 +26,7 @@ public class StageManager : MonoBehaviour {
     }
     public IEnumerator ClearCoroutine() {
         float offset = 0;
-        while(offset < 1) {
+        while(offset < .8f) {
             offset += Time.deltaTime;
             Time.timeScale = 1-offset;
             yield return null;
@@ -36,6 +37,18 @@ public class StageManager : MonoBehaviour {
             yield return null;
         }
         Time.timeScale = 1;
+
+        UIManager.instance.FadeOut(2, 3, () => {
+            UIManager.instance.SetActiveHud(false);
+            if(SSDNetworkManager.instance.isHost) {
+                Destroy(TPlayerCamera.instance.gameObject);
+                Destroy(TPlayer.instance.gameObject);
+            } else {
+                Destroy(QPlayerCamera.instance.gameObject);
+                Destroy(QPlayer.instance.gameObject);
+            }
+            SSDNetworkManager.instance.LoadScene("Lobby Scene");
+        });
     }
 
     private void Awake() {
@@ -74,5 +87,25 @@ public class StageManager : MonoBehaviour {
             if(TPlayer.instance!=null) TPlayer.instance.transform.position=cheatingPoint.position;
             if(QPlayer.instance!=null) QPlayer.instance.transform.position=cheatingPoint.position;
         }
+    }
+
+    public void StopBgm() {
+        StartCoroutine(StopBgmCoroutine());
+    }
+    public IEnumerator StopBgmCoroutine() {
+        float origin = bgmAudioSource.volume;
+        float offset = 0;
+        while(offset < 1) {
+            offset += Time.deltaTime;
+            bgmAudioSource.volume = origin - origin*offset;
+            yield return null;
+        }
+        bgmAudioSource.Stop();
+    }
+    public void PlayBgm(int index) {
+        bgmAudioSource.volume = 0.09f;
+        bgmAudioSource.Stop();
+        bgmAudioSource.clip = bgmList[index];
+        bgmAudioSource.Play();
     }
 }

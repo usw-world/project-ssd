@@ -57,7 +57,6 @@ class Enemy_YBot : MovableEnemy {
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip spellClip;
     [SerializeField] private AudioClip boomClip;
-    [SerializeField] private AudioClip mineClip;
     [SerializeField] private AudioClip dodgeClip;
     #endregion Audio
 
@@ -258,6 +257,10 @@ class Enemy_YBot : MovableEnemy {
         float offset = 0;
         int tick = 0;
         const int motionTrailInterval = 7;
+
+        audioSource.volume = SoundManager.instance.GetEffectVolume();
+        audioSource.PlayOneShot(dodgeClip);
+
         while(offset < 1f) {
             offset += Time.deltaTime * 1.25f;
             tick++;
@@ -279,6 +282,8 @@ class Enemy_YBot : MovableEnemy {
         effect.transform.position = minePos;
     }
     public void AnimationEvent_CastEnd() {
+        audioSource.volume = SoundManager.instance.GetEffectVolume();
+        audioSource.PlayOneShot(spellClip);
         SendChangeState(BasicState);
     }
     public void AnimationEvent_ShootAction() {

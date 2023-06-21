@@ -494,6 +494,10 @@ public class Enemy_Dino : MovableEnemy {
 
     protected override void OnDie() {
         base.OnDie();
+        
+        audioSource.volume = SoundManager.instance.effectVolume;
+        audioSource.PlayOneShot(roarClip);
+
         SendChangeState(dieState);
         StageManager.instance?.OnClearStage();
     }

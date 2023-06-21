@@ -14,6 +14,8 @@ public class Effect_YBotShootingSpell : MonoBehaviour, IPoolableObject {
 	[SerializeField] private ParticleSystem flyingParticle;
 	[SerializeField] private ParticleSystem explosionParticle;
 	private Coroutine inPoolCoroutine;
+
+	[SerializeField] AudioSource audioSource;
 	
     public string GetKey() {
         return GetType().ToString();
@@ -46,6 +48,8 @@ public class Effect_YBotShootingSpell : MonoBehaviour, IPoolableObject {
 			);
 			other.GetComponent<TPlayer>()?.OnDamage(damage);
 			Disapear();
+			audioSource.volume = SoundManager.instance.GetEffectVolume() * 3f;
+			audioSource.Play();
         }
     }
 	private void Disapear() {
