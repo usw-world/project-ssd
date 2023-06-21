@@ -18,8 +18,8 @@ public class ServerConnector : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
-    // private string apiUrl = "https://uwu-web.azurewebsites.net";
-    private string apiUrl = "http://localhost:5034";
+    private string apiUrl = "https://uwu-web.azurewebsites.net";
+    //private string apiUrl = "http://localhost:5034";
 
     public void Ping(Action callback=null, Action<string> errorCallback=null) {
         StartCoroutine(PingCorourine(callback, errorCallback));

@@ -38,12 +38,12 @@ public class GameManager : MonoBehaviour {
             var tMessage = new S2CMessage.SynchronizeTSkillMessage();
             tMessage.attributeStates = GetTSkillData();
             Mirror.NetworkServer.SendToAll(tMessage);
-        } else {
+        } else 
+        {
             var qMessage = new C2SMessage.SynchronizeQSkillMessage();
             qMessage.attributeStates = GetQSkillData();
             Mirror.NetworkClient.Send(qMessage);
         }
-
         string json = JsonUtility.ToJson(saveData);
         StartCoroutine(ServerConnector.instance.SendIngameDataCoroutine(json));
     }
@@ -97,6 +97,7 @@ public class GameManager : MonoBehaviour {
         return point;
     }
     public bool[] GetTSkillData() {
+        if (saveData == null) return null;
         string[] attributes = saveData.tSkillData.Split(" ");
         bool[] result = new bool[18];
         for(int i=0; i<attributes.Length; i++) {
@@ -107,6 +108,7 @@ public class GameManager : MonoBehaviour {
         return result;
     }
     public bool[] GetQSkillData() {
+        if (saveData == null) return null;
         print(saveData.qSkillData);
         string[] attributes = saveData.qSkillData.Split(" ");
         bool[] result = new bool[56];

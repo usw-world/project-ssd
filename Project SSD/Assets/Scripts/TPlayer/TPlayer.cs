@@ -138,7 +138,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		trackEffect.Set();
 		UIManager.instance.tPlayerHUD.Initialize();
 		UIManager.instance.tPlayerSkill.gameObject.SetActive(true);
-		
+		UIManager.instance.tPlayerSkill.AcceptSaveData();
 		NetworkClient.RegisterHandler<S2CMessage.SynchronizeTSkillMessage>(OnSynchronizeTSkill);
 
 		InitializeCamera();
@@ -261,7 +261,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		};
         downState.onActive = (State prev) => {
 			ChangeAnimation("Down");
-			// isSuperArmor = true;
+			isSuperArmor = true;
 			// SoundManager.instance.tPlayer.voice.HitRandom(audioSourceVoice, 100f);
 			if(!prev.Compare(downState))
 				SoundManager.instance.tPlayer.voice.down.PlayOneShot(audioSourceVoice, ESoundType.voice);
@@ -317,7 +317,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 			lateDamageTarget.Clear();
 			if(isLocalPlayer)
 				CameraManager.instance.SwitchCameara(cutSceneCam.drawAttack[0]);
-			UIManager.instance.StartCutScene();
+			if (isLocalPlayer)
+				UIManager.instance.StartCutScene();
 			//SoundManager.instance.tPlayer.voice.drawAttackSpecialReady.Play(audioSourceVoice, ESoundType.voice);
 			SoundManager.instance.tPlayer.effect.drawAttackSpecial_start.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		};
@@ -760,8 +761,8 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		{
 			return;
 		}
-		if (options[7].active) skill.combo_1[0].property.coolTime = 15f;
-		else skill.combo_1[0].property.coolTime = 30f;
+		if (options[7].active) skill.combo_1[0].property.coolTime = 7f;
+		else skill.combo_1[0].property.coolTime = 15f;
 
 		if (skill.combo_1[0].CanUse())
 		{
@@ -902,7 +903,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	public void ChackDrawSwordAttack(int num)
 	{
-		float damage = GetAp() * 3f;
+		float damage = GetAp() * 10f;
 		if (options[3].active) damage *= 1.3f;
 		if (options[4].active) damage *= 1.7f;
 		if (options[5].active) {
@@ -934,7 +935,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	}
 	public void CheckComboAttack_1(int idx)
 	{
-		float damage = GetAp() * 2.5f;
+		float damage = GetAp() * 3f;
 		if (options[7].active) damage *= 1.2f;
 		skill.combo_1[idx].Use(damage);
 		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
@@ -979,10 +980,11 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		}
 	}
 	private IEnumerator LigthingBlade() {
-		UIManager.instance.StartCutScene();
+		if (isLocalPlayer) UIManager.instance.StartCutScene();
 		float time = 0;
 		float power = 0;
 		trackEffect.powerUp.Enable();
+
 		while (time < 2f)
 		{
 			time += Time.deltaTime;
@@ -992,11 +994,12 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		}
 		yield return new WaitForSeconds(0.5f);
 		trackEffect.bladeEffect.Enable();
-		yield return new WaitForSeconds(1f);
+		SoundManager.instance.qPlayer.effect.finishEffectRed.PlayOneShot(audioSourceEffect, ESoundType.effect);
+		yield return new WaitForSeconds(1.5f);
 		trackEffect.powerUp.Disable();
 		trackEffect.bladeEffect.Disable();
 		StartCoroutine(SelfPowerUp());
-		UIManager.instance.EndCutScene();
+		if (isLocalPlayer) UIManager.instance.EndCutScene();
 		ResetState();
 	}
 	private IEnumerator SelfPowerUp()
@@ -1244,14 +1247,16 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	private IEnumerator DrawAttackSpecialCutScene()
 	{
 		yield return StartCoroutine(UIManager.instance.tPlayerHUD.FaidInAndMove());
+		
 		stateMachine.ChangeState(chargingDrawSwordAttack_specialEnd);
 		yield return StartCoroutine(UIManager.instance.tPlayerHUD.FaidOut());
-		UIManager.instance.EndCutScene();
+		if (isLocalPlayer)
+			UIManager.instance.EndCutScene();
 	}
 	private IEnumerator DrawAttackDamage()
 	{
 		SoundManager.instance.tPlayer.effect.drawAttackSpecial_end.PlayOneShot(audioSourceEffect, ESoundType.effect);
-		float damageAmount = GetAp() * 4f;
+		float damageAmount = GetAp() * 30f;
 		if (options[3].active) damageAmount *= 1.3f;
 		if (options[4].active) damageAmount *= 1.7f;
 		if (options[5].active)
@@ -1271,7 +1276,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 				damageAmount,
 				.5f,
 				Vector3.zero,
-				Damage.DamageType.Normal
+				Damage.DamageType.Down
 			) ;
 			lateDamageCntl.OnDamage(lateDamageTarget, damage, EHitEffectType.slash_1);
 			yield return new WaitForSeconds(0.1f);
@@ -1283,7 +1288,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 	{
 		ChangeAnimation("Draw Sword Attack Special End Stay");
 		yield return new WaitForSeconds(0.3f);
-		float damageAmount = GetAp() * 20f;
+		float damageAmount = GetAp() * 5f;
 		if (options[3].active) damageAmount *= 1.3f;
 		if (options[4].active) damageAmount *= 1.7f;
 		if (options[5].active)
@@ -1301,7 +1306,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 				damageAmount,
 				3f,
 				Vector3.zero,
-				Damage.DamageType.Normal
+				Damage.DamageType.Down
 			);
 			lateDamageCntl.OnDamage(lateDamageTarget, damage, EHitEffectType.slash_1);
 			yield return new WaitForSeconds(0.8f);

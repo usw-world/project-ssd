@@ -40,9 +40,6 @@ public class TPlayerSkillUi : MonoBehaviour
 			item.color = offHideColor;
 		}
 	}
-	private void Start() {
-		AcceptSaveData();
-	}
 	public bool OnActive()
 	{
 		if (isPlayingAnimation) return true;
@@ -85,8 +82,9 @@ public class TPlayerSkillUi : MonoBehaviour
 			return true;
 		}
 	}
-	private void AcceptSaveData() {
+	public void AcceptSaveData() {
 		bool[] skillData = GameManager.instance.GetTSkillData();
+		if (skillData == null) return;
 		for(int i=0; i<TPlayer.instance.options.Length; i++) {
 			TPlayer.instance.options[i].active = skillData[i];
 		}

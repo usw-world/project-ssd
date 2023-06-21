@@ -116,7 +116,8 @@ public class QPlayer : NetworkBehaviour
     }
 	private void Start() {
         tPlayerGobj = TPlayer.instance?.gameObject ?? GameObject.FindGameObjectWithTag("TPlayer");
-
+        UIManager.instance.qPlayerSkill.Refresh();
+        UIManager.instance.qPlayerSkill.AcceptSaveData();
         InitializeCamera();
         InitializedState();
         if(SSDNetworkManager.instance.isHost)
@@ -713,7 +714,7 @@ public class QPlayer : NetworkBehaviour
     }
 	public void ChangeFinishSkillCamera(int idx)
 	{
-		//if (SSDNetworkManager.instance.isHost) return;
+		if (SSDNetworkManager.instance.isHost) return;
 
 		for (int i = 0; i < finishSkillCamera.Count; i++)
 			finishSkillCamera[i].SetActive(false);
@@ -889,6 +890,7 @@ public class QPlayer : NetworkBehaviour
         return status.ap;
     }
     void EnableAim() {
+        if (!isLocalPlayer) return;
         int aimingSkillIndexTemp = aimingSkillIndex;
         DisableAim();
         aimingSkillIndex = aimingSkillIndexTemp;

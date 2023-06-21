@@ -25,7 +25,6 @@ public class SoundManager : MonoBehaviour
 	public float GetEffectVolume() { return masterVolume * effectVolume; }
 	public float GetVoiceVolume() { return voiceVolume * effectVolume; }
 	public float GetBgmVolume() { return bgmVolume * effectVolume; }
-
 	public void FadeOutVolume(AudioSource source) {
 		StartCoroutine(FadeOutVolumeCoroutine(source));
 	}
@@ -173,6 +172,10 @@ public class QPlayerSoundEffect
 	public PlayerAudioClip finishLaser;
 	public PlayerAudioClip finishExplosion;
 	public PlayerAudioClip Q_meteo;
+	public PlayerAudioClip flame;
+	public PlayerAudioClip fireBall;
+	public PlayerAudioClip storm;
+	public PlayerAudioClip storm2;
 }
 [Serializable]
 public class QPlayerSoundVoice

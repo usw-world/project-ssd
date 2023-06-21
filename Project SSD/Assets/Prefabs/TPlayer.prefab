@@ -57,6 +57,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &119072938
 GameObject:
   m_ObjectHideFlags: 0
@@ -59094,7 +59095,7 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 0
     quickUse: 0
-  usingSP: 50
+  usingSP: 30
   damageType: 0
 --- !u!1 &106922774982019176
 GameObject:
@@ -67043,12 +67044,12 @@ MonoBehaviour:
     name: 
   areaAmout: 3
   property:
-    coolTime: 30
+    coolTime: 15
     skillAP: 0.8
     nowCoolTime: 100
     ready: 0
     quickUse: 0
-  usingSP: 50
+  usingSP: 30
   damageType: 0
 --- !u!1 &3115816950828979281
 GameObject:
@@ -90992,11 +90993,11 @@ MonoBehaviour:
   syncInterval: 0.1
   status:
     speed: 3
-    hp: 100
-    sp: 100
+    hp: 500
+    sp: 150
     ap: 10
-    maxHp: 100
-    maxSp: 100
+    maxHp: 500
+    maxSp: 150
     speedBoost: 1
     recoveryHp: 1
     recoverySp: 1

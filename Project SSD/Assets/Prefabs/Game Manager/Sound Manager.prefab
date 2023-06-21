@@ -106,6 +106,14 @@ MonoBehaviour:
         clip: {fileID: 8300000, guid: d3f6e57a0e8ea684ca79a497644e9b36, type: 3}
       Q_meteo:
         clip: {fileID: 8300000, guid: 1f38f1b527fdacf4eb1a09cde718ff45, type: 3}
+      flame:
+        clip: {fileID: 8300000, guid: f71fa8e03c558cd44bb1de7e1c86f78f, type: 3}
+      fireBall:
+        clip: {fileID: 8300000, guid: 9a714898671f1864a9d4d64e4fb25fea, type: 3}
+      storm:
+        clip: {fileID: 8300000, guid: a9d1679cf7b8d1243bc226c2e8d4ad41, type: 3}
+      storm2:
+        clip: {fileID: 8300000, guid: e180458fdcefc4f43bf686377e6cbf11, type: 3}
   bgm:
     test_01:
       clip: {fileID: 0}

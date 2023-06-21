@@ -5,16 +5,15 @@ using UnityEngine;
 public class UnityBaaaall : UnityBall
 {
 	[SerializeField] private GameObject explosionEfect;
-	[SerializeField] private AudioSource audioSource;
 	public override void OnActive(float damage, float speed)
 	{
-		SoundManager.instance.qPlayer.effect.Q_meteo.PlayOneShotDelay(audioSource, ESoundType.voice, 1f);
 		speed = speed * 0.5f;
 		base.OnActive(damage, speed);
 		isRun = false;
 	}
 	public void Explosion()
 	{
+		SoundManager.instance.qPlayer.effect.Q_meteo.PlayOneShot(audioSource, ESoundType.effect);
 		CameraManager.instance.MakeNoise(2f, 0.3f);
 		Collider[] hit = Physics.OverlapSphere(transform.position, 2.5f, 1 << 8);
 		for (int i = 0; i < hit.Length; i++)

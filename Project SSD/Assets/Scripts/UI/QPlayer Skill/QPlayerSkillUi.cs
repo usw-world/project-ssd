@@ -30,13 +30,11 @@ public class QPlayerSkillUi : MonoBehaviour
 			mainBranchs[i].localPosition = new Vector3(x, y);
 		}
 	}
-	private void Start() {
-		Refresh();
-		AcceptSaveData();
-	}
-	private void Refresh() {
+	public void Refresh() {
+		if (GameManager.instance.saveData == null) return;
 		var skillDatas = GameManager.instance.saveData.qSkillData;
-		for(int i=0; i<skillDatas.Length; i++) {
+		if (skillDatas == null) return;
+		for (int i=0; i<skillDatas.Length; i++) {
 			
 		}
 	}
@@ -71,8 +69,9 @@ public class QPlayerSkillUi : MonoBehaviour
 			return true;
 		}
 	}
-	private void AcceptSaveData() {
+	public void AcceptSaveData() {
 		bool[] skillData = GameManager.instance.GetQSkillData();
+		if (skillData == null) return;
 		for(int i=0; i<(QPlayer.instance.skills[0] as QPlayerSkillUnityBall).options.Length; i++) {
 			(QPlayer.instance.skills[0] as QPlayerSkillUnityBall).options[i].active = skillData[8*0+i];
 		} 
@@ -153,6 +152,10 @@ public class QPlayerSkillUi : MonoBehaviour
 			Quaternion currRot = mainBranchGroub.rotation;
 			mainBranchGroub.rotation = Quaternion.Lerp(currRot, nextRot, Time.deltaTime * 5f);
 			time += Time.deltaTime;
+			for (int i = 0; i < mainBranchs.Count; i++)
+			{
+				mainBranchs[i].rotation = Quaternion.identity;
+			}
 			yield return null;
 		}
 		foreach (var item in subTrees){

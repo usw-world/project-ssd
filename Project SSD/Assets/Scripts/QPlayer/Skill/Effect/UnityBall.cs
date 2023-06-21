@@ -25,9 +25,11 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 	protected float lastExplosionDamage;
 	protected bool isLastExplosion = false;
 	protected bool isRun = true;
-
+	protected AudioSource audioSource;
 	public virtual void OnActive(float damage, float speed)
 	{
+		SoundManager.instance.qPlayer.effect.flame.PlayOneShot(audioSource, ESoundType.effect);
+		SoundManager.instance.qPlayer.effect.fireBall.PlayOneShot(audioSource, ESoundType.effect);
 		hideCoroutine = StartCoroutine(Hide(runTime));
 		this.damageAmount = damage;
 		this.speed = speed;
@@ -42,6 +44,7 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 		networkId = unityBallCount;
 		unityBallCount++;
 		unityBallInScene.Add(networkId, this);
+		audioSource = GetComponent<AudioSource>();
 	}
 	protected void Update()
 	{
@@ -110,6 +113,7 @@ public class UnityBall : MonoBehaviour, IPoolableObject
 		//print("Unity Ball hit the " + other.gameObject.name);
 		if (other.gameObject.layer == 8)
 		{
+			SoundManager.instance.qPlayer.effect.fireBall.PlayOneShot(audioSource, ESoundType.effect);
 			IDamageable target = other.gameObject.GetComponent<IDamageable>();
 			Damage damage = new Damage(
 				damageAmount,
