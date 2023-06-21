@@ -9,12 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/Release/Lobby Scene.unity
     guid: 0fa4b5e1da693304488d1770d2722fb0
   - enabled: 1
-    path: Assets/Scenes/usoock_duo_test.unity
-    guid: 12af21339ea72734da6c664be69285ee
-  - enabled: 1
-    path: Assets/Scenes/usoock_dino_test.unity
-    guid: 56569691427d4c844895f588c890d4d0
-  - enabled: 1
     path: Assets/Scenes/Map/Map1.unity
     guid: 501d0b4360b021b43b69b9c2a52c7a4a
   m_configObjects: {}

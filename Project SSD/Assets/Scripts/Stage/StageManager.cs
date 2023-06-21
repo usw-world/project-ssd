@@ -21,6 +21,9 @@ public class StageManager : MonoBehaviour {
     public UnityEvent onClearStage;
     
     public void OnClearStage() {
+        var result = new GameManager.GameResult();
+        result.exp = 1050;
+        GameManager.instance.result = result;
         onClearStage?.Invoke();
         StartCoroutine(ClearCoroutine());
     }

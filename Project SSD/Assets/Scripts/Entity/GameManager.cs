@@ -5,6 +5,8 @@ public class GameManager : MonoBehaviour {
 
     public SaveDataVO saveData { get; private set; }
 
+    public GameResult result = null;
+
     private void Awake() {
         if(instance == null)
             instance = this;
@@ -215,4 +217,8 @@ public class GameManager : MonoBehaviour {
             print(this.saveData);
     }
     /*  */
+
+    public class GameResult {
+        public int exp;
+    }
 }

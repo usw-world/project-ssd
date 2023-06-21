@@ -22346,7 +22346,7 @@ GameObject:
   - component: {fileID: 1620043255895822139}
   - component: {fileID: 1168815151919107292}
   - component: {fileID: 5823880539870547967}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: QPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -22494,8 +22494,6 @@ MonoBehaviour:
     recoveryHp: 1
     recoverySp: 1
     apBoost: 1
-  stamina: 0
-  maxStamina: 10
   qPlayerCamera: {fileID: 6535494031961247193, guid: f270e6e5bf2a2924a945647ac9f19424,
     type: 3}
   fightGhostFistZone: {fileID: 6708794032125021701}

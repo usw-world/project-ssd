@@ -30,6 +30,9 @@ public class LobbyManager : MonoBehaviour {
     [SerializeField] private Image roomQPlayerImage;
     [SerializeField] private InputField addressField;
     [SerializeField] private Button startButton;
+
+    [SerializeField] private GameObject resultUI;
+    [SerializeField] private TMP_Text[] resultText;
     #endregion Room UI
 
     #region Login UI
@@ -54,6 +57,11 @@ public class LobbyManager : MonoBehaviour {
         UIManager.instance.FadeIn(1, 2, () => {
             startText.gameObject.SetActive(true);
         });
+        if(GameManager.instance.result != null) {
+            resultUI.SetActive(true);
+            resultText[0].text = " + " + GameManager.instance.result.exp.ToString();
+            resultText[1].text = " + " + GameManager.instance.result.exp.ToString();
+        }
     }
     public void OnClickConnectServer() {
         loadingUI.OnStartLoading();
