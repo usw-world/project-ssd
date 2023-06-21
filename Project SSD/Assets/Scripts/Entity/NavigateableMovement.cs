@@ -41,18 +41,23 @@ public class NavigateableMovement : Movement
 	}
 	protected override void Update() {
 		base.Update();
+		CheckArrived();
 		if (!isArrive) {
-			nextDestination = new Vector3(navMesh.path.corners[pathIndex].x, transform.position.y, navMesh.path.corners[pathIndex].z);
+			nextDestination = new Vector3(
+				navMesh.path.corners[pathIndex].x,
+				transform.position.y,
+				navMesh.path.corners[pathIndex].z);
 			Vector3 dir = (nextDestination - transform.position).normalized;
 			MoveToward(dir * pointMoveSpeed * Time.deltaTime, Space.World, moveToPointLayerMask);
-			CheckArrived();
+			// CheckArrived();
 		}
 	}
 	private void CheckArrived() {
-		if (Vector3.Distance(nextDestination, transform.position) < .2f)
-		{
-			if (pathIndex + 1 >= navMesh.path.corners.Length) isArrive = true;
-			else pathIndex++;
+		if (Vector3.Distance(nextDestination, transform.position) < .2f) {
+			pathIndex++;
+			if (pathIndex >= navMesh.path.corners.Length){
+				isArrive = true;
+			}
 		}
 	}
 }

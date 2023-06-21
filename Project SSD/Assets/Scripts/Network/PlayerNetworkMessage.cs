@@ -32,8 +32,8 @@ namespace C2SMessage {
         }
     }
     public struct SynchronizeQSkillMessage : NetworkMessage {
-        public bool[][] attributeStates;
-        public SynchronizeQSkillMessage(bool[][] attributeStates) {
+        public bool[] attributeStates;
+        public SynchronizeQSkillMessage(bool[] attributeStates) {
             this.attributeStates = attributeStates;
         }
     }

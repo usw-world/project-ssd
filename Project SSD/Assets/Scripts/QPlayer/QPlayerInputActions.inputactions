@@ -130,24 +130,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Escape",
-                    "type": "Button",
-                    "id": "7f2fb47a-5078-4ca8-8eb5-4bc6cb6251ca",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "SkillUi",
-                    "type": "Button",
-                    "id": "837babf6-ab1a-4ace-bbf9-11287bef1885",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -296,34 +278,12 @@
                 },
                 {
                     "name": "",
-                    "id": "cd3cf899-f3dc-494a-9f8e-f2a212ce1673",
-                    "path": "<Keyboard>/escape",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Escape",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "58e0d6e5-5e96-42a1-aea4-ff4d35a237f8",
                     "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Skill08",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "3460dc4f-9ba1-44b1-af01-21d88d2cc061",
-                    "path": "<Keyboard>/k",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SkillUi",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

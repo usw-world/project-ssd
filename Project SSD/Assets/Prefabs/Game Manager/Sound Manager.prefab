@@ -61,7 +61,7 @@ MonoBehaviour:
       slash_01:
         clip: {fileID: 8300000, guid: 799b2ec7890caf744a1f6e2ca8f5fbb8, type: 3}
       slash_02:
-        clip: {fileID: 8300000, guid: d01bd0aa9e4bf4c48b8a5905a0718641, type: 3}
+        clip: {fileID: 8300000, guid: e2568c1bd1ec4604ba91ade3a6a18245, type: 3}
       dodge:
         clip: {fileID: 8300000, guid: 82fafa3e23a8b434f8ad66ba5f4c5636, type: 3}
     voice:
@@ -73,11 +73,11 @@ MonoBehaviour:
       - clip: {fileID: 8300000, guid: 0eace4e13da90ae448925e90a5903e15, type: 3}
       - clip: {fileID: 8300000, guid: 710d0d76a4a38f54d9e2cd16994df9c4, type: 3}
       hit:
-      - clip: {fileID: 8300000, guid: 3d9e6180fb73e4b46bb59f6f134234f2, type: 3}
-      - clip: {fileID: 8300000, guid: 5db0df1127b101442a380067db1190fa, type: 3}
-      - clip: {fileID: 8300000, guid: 54db920af66d780449f9c9d3fa4f0b29, type: 3}
-      - clip: {fileID: 8300000, guid: 02efdc8ad7be8544f8967db974ff3a4e, type: 3}
-      - clip: {fileID: 8300000, guid: 5a813455eafff4f46adbcd5524960979, type: 3}
+      - clip: {fileID: 8300000, guid: 1daac0ff973c97845a6a5aefc34564af, type: 3}
+      - clip: {fileID: 8300000, guid: f89ba77871da8c040b636d680b2cf85e, type: 3}
+      - clip: {fileID: 8300000, guid: 2728f62290d56944085bb6e23d87b8cf, type: 3}
+      down:
+        clip: {fileID: 8300000, guid: c017622c0d711224192f6b2b9c9c42dc, type: 3}
       attack_combo_6:
         clip: {fileID: 8300000, guid: a406fe2d815136243b9bc11afb76d6a8, type: 3}
       attack_combo_7:

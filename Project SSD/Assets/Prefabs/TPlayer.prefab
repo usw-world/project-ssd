@@ -148,6 +148,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 10
+  damageType: 0
 --- !u!1 &471938826
 GameObject:
   m_ObjectHideFlags: 0
@@ -5033,6 +5034,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &595730146
 GameObject:
   m_ObjectHideFlags: 0
@@ -19707,6 +19709,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 80
+  damageType: 0
 --- !u!1 &916169676
 GameObject:
   m_ObjectHideFlags: 0
@@ -44047,6 +44050,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 1
 --- !u!1 &1328860466
 GameObject:
   m_ObjectHideFlags: 0
@@ -49062,6 +49066,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 30
+  damageType: 0
 --- !u!1 &1821690292
 GameObject:
   m_ObjectHideFlags: 0
@@ -58818,6 +58823,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &1902763024
 GameObject:
   m_ObjectHideFlags: 0
@@ -58876,6 +58882,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &1941292915
 GameObject:
   m_ObjectHideFlags: 0
@@ -58933,6 +58940,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &1975903016
 GameObject:
   m_ObjectHideFlags: 0
@@ -59087,6 +59095,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 50
+  damageType: 0
 --- !u!1 &106922774982019176
 GameObject:
   m_ObjectHideFlags: 0
@@ -60727,6 +60736,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &1818058126214277158
 GameObject:
   m_ObjectHideFlags: 0
@@ -61104,6 +61114,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &2617498036627435297
 GameObject:
   m_ObjectHideFlags: 0
@@ -66942,6 +66953,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &3098844804988122951
 GameObject:
   m_ObjectHideFlags: 0
@@ -67037,6 +67049,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 50
+  damageType: 0
 --- !u!1 &3115816950828979281
 GameObject:
   m_ObjectHideFlags: 0
@@ -67095,6 +67108,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &3116490492908575160
 GameObject:
   m_ObjectHideFlags: 0
@@ -67745,6 +67759,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &3327967643626573486
 GameObject:
   m_ObjectHideFlags: 0
@@ -68401,6 +68416,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 10
+  damageType: 0
 --- !u!1 &3687386396720038392
 GameObject:
   m_ObjectHideFlags: 0
@@ -68459,6 +68475,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &3718127337461090363
 GameObject:
   m_ObjectHideFlags: 0
@@ -68579,6 +68596,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &3933273701738385684
 GameObject:
   m_ObjectHideFlags: 0
@@ -69186,6 +69204,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &4631806966597548536
 GameObject:
   m_ObjectHideFlags: 0
@@ -70315,6 +70334,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 1
 --- !u!1 &5057436720175463374
 GameObject:
   m_ObjectHideFlags: 0
@@ -85507,6 +85527,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &6123209108387700642
 GameObject:
   m_ObjectHideFlags: 0
@@ -90768,6 +90789,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &6410919741541939096
 GameObject:
   m_ObjectHideFlags: 0
@@ -91691,6 +91713,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &6533470572637779906
 GameObject:
   m_ObjectHideFlags: 0
@@ -100264,6 +100287,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &8875089487762569642
 GameObject:
   m_ObjectHideFlags: 0
@@ -100512,6 +100536,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &9142152650279966671
 GameObject:
   m_ObjectHideFlags: 0

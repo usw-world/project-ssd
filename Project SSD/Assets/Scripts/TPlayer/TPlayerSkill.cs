@@ -5,6 +5,7 @@ using UnityEngine;
 public class TPlayerSkill : Skill
 {
 	[SerializeField] public float usingSP = 0f;
+	[SerializeField] Damage.DamageType damageType = Damage.DamageType.Normal;
 	private string effectKey;
 	private PlayerStatus status;
 	void Start()
@@ -22,9 +23,11 @@ public class TPlayerSkill : Skill
 
 		if (info.effect != null)
 		{
-			GameObject effect = PoolerManager.instance.OutPool(effectKey);
+			GameObject effectGobj = PoolerManager.instance.OutPool(effectKey);
 			float damageAmount = TPlayer.instance.GetAp() * property.skillAP;
-			effect.GetComponent<TPlayerAttackEffect>().OnActive(damageAmount);
+			var effect = effectGobj.GetComponent<TPlayerAttackEffect>();
+			effect.damageType = this.damageType;
+			effect.OnActive(damageAmount);
 		}
 	}
 	public override void Use(float damage)
@@ -34,8 +37,10 @@ public class TPlayerSkill : Skill
 
 		if (info.effect != null)
 		{
-			GameObject effect = PoolerManager.instance.OutPool(effectKey);
-			effect.GetComponent<TPlayerAttackEffect>().OnActive(damage);
+			GameObject effectGobj = PoolerManager.instance.OutPool(effectKey);
+			var effect = effectGobj.GetComponent<TPlayerAttackEffect>();
+			effect.damageType = this.damageType;
+			effect.OnActive(damage);
 		}
 	}
 	public string GetEffectKey() { return effectKey; }

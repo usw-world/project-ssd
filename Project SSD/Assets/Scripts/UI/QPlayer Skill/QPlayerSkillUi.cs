@@ -9,13 +9,15 @@ public class QPlayerSkillUi : MonoBehaviour
 	[SerializeField] private List<QPlayerSkillUiInfo> skillInfos;
 	[SerializeField] private List<RectTransform> mainBranchs;
 	[SerializeField] private RectTransform mainBranchGroub;
-	[SerializeField] private TextMeshProUGUI skillPoint;
 	private Animator animator;
 	private static bool isPlayingAction = false;
 	private bool isPlayingAnimation = false;
 	private bool isActive = false;
 	private bool isSubTreeSeting = false;
 	private int currSelectedMainBranch = -1;
+
+	public int skillPoint = 0;
+	[SerializeField] private TextMeshProUGUI skillPointText;
 
 	private void Awake()
 	{
@@ -70,28 +72,33 @@ public class QPlayerSkillUi : MonoBehaviour
 		}
 	}
 	private void AcceptSaveData() {
-		bool[][] skillData = GameManager.instance.GetQSkillData();
+		bool[] skillData = GameManager.instance.GetQSkillData();
 		for(int i=0; i<(QPlayer.instance.skills[0] as QPlayerSkillUnityBall).options.Length; i++) {
-			(QPlayer.instance.skills[0] as QPlayerSkillUnityBall).options[i].active = skillData[0][i];
+			(QPlayer.instance.skills[0] as QPlayerSkillUnityBall).options[i].active = skillData[8*0+i];
 		} 
 		for(int i=0; i<(QPlayer.instance.skills[1] as QPlayerSkillAoe).options.Length; i++) {
-			(QPlayer.instance.skills[1] as QPlayerSkillAoe).options[i].active = skillData[1][i];
+			(QPlayer.instance.skills[1] as QPlayerSkillAoe).options[i].active = skillData[8*1+i];
 		} 
 		for(int i=0; i<(QPlayer.instance.skills[2] as QPlayerSkillBuffering).options.Length; i++) {
-			(QPlayer.instance.skills[2] as QPlayerSkillBuffering).options[i].active = skillData[2][i];
+			(QPlayer.instance.skills[2] as QPlayerSkillBuffering).options[i].active = skillData[8*2+i];
 		} 
 		for(int i=0; i<(QPlayer.instance.skills[3] as QPlayerSkillShield).options.Length; i++) {
-			(QPlayer.instance.skills[3] as QPlayerSkillShield).options[i].active = skillData[3][i];
+			(QPlayer.instance.skills[3] as QPlayerSkillShield).options[i].active = skillData[8*3+i];
 		} 
 		for(int i=0; i<(QPlayer.instance.skills[4] as QPlayerSkillFlagit).options.Length; i++) {
-			(QPlayer.instance.skills[4] as QPlayerSkillFlagit).options[i].active = skillData[4][i];
+			(QPlayer.instance.skills[4] as QPlayerSkillFlagit).options[i].active = skillData[8*4+i];
 		} 
 		for(int i=0; i<(QPlayer.instance.skills[5] as QPlayerSkillLightning).options.Length; i++) {
-			(QPlayer.instance.skills[5] as QPlayerSkillLightning).options[i].active = skillData[5][i];
+			(QPlayer.instance.skills[5] as QPlayerSkillLightning).options[i].active = skillData[8*5+i];
 		} 
 		for(int i=0; i<(QPlayer.instance.skills[6] as QPlayerSkillFightGhostFist).options.Length; i++) {
-			(QPlayer.instance.skills[6] as QPlayerSkillFightGhostFist).options[i].active = skillData[6][i];
-		} 
+			(QPlayer.instance.skills[6] as QPlayerSkillFightGhostFist).options[i].active = skillData[8*6+i];
+		}
+		SetSkillPoint(GameManager.instance.GetRemainingSkillPoint());
+	}
+	private void SetSkillPoint(int point) {
+		skillPoint = point;
+		skillPointText.text = skillPoint.ToString();
 	}
 	public bool OnPressEscape()
 	{

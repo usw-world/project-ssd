@@ -7,8 +7,11 @@ public class Effect_XBotAssault : MonoBehaviour {
 	[SerializeField] private float forceScalar = 35f;
 	private bool hasHit = false;
 
+	[SerializeField] private AudioSource audioSource;
+
 	private void OnEnable() {
 		hasHit = false;
+		audioSource.Play();
 	}
 	private void OnTriggerEnter(Collider other) {
         if(!hasHit
@@ -24,4 +27,7 @@ public class Effect_XBotAssault : MonoBehaviour {
 			hasHit = true;
         }
     }
+	private void OnDisable() {
+		audioSource.Stop();
+	}
 }

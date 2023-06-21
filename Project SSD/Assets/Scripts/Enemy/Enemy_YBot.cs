@@ -53,6 +53,14 @@ class Enemy_YBot : MovableEnemy {
     private Coroutine airCoroutine;
     #endregion Hit
 
+    #region Audio
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip spellClip;
+    [SerializeField] private AudioClip boomClip;
+    [SerializeField] private AudioClip mineClip;
+    [SerializeField] private AudioClip dodgeClip;
+    #endregion Audio
+
     #region Unity Events
     protected override void Awake() {
         base.Awake();
@@ -65,6 +73,7 @@ class Enemy_YBot : MovableEnemy {
         // skinnedRenderers = GetComponentsInChildren<SkinnedMeshRenderer>();
     }
     protected override void Update() {
+        base.Update();
         if(currentRollingDodgeCooltime > 0)
             currentRollingDodgeCooltime -= Time.deltaTime;
         if(currentMineCooltime > 0)

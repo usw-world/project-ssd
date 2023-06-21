@@ -106,20 +106,33 @@ public class GameManager : MonoBehaviour {
         }
         return result;
     }
-    public bool[][] GetQSkillData() {
+    public bool[] GetQSkillData() {
+        print(saveData.qSkillData);
         string[] attributes = saveData.qSkillData.Split(" ");
-        bool[][] result = new bool[7][];
+        bool[] result = new bool[56];
 
-        for(int i=0; i<result.Length; i++) {
-            result[i] = new bool[8];
-            if((int.Parse(attributes[i], System.Globalization.NumberStyles.HexNumber) & 1<<0) > 0) result[i][0] = true;
-            if((int.Parse(attributes[i], System.Globalization.NumberStyles.HexNumber) & 1<<1) > 0) result[i][1] = true;
-            if((int.Parse(attributes[i], System.Globalization.NumberStyles.HexNumber) & 1<<2) > 0) result[i][2] = true;
-            if((int.Parse(attributes[i], System.Globalization.NumberStyles.HexNumber) & 1<<3) > 0) result[i][3] = true;
-            if((int.Parse(attributes[i], System.Globalization.NumberStyles.HexNumber) & 1<<4) > 0) result[i][4] = true;
-            if((int.Parse(attributes[i], System.Globalization.NumberStyles.HexNumber) & 1<<5) > 0) result[i][5] = true;
-            if((int.Parse(attributes[i], System.Globalization.NumberStyles.HexNumber) & 1<<6) > 0) result[i][6] = true;
-            if((int.Parse(attributes[i], System.Globalization.NumberStyles.HexNumber) & 1<<7) > 0) result[i][7] = true;
+        for(int i=0; i<7; i++) {
+            if((int.Parse(attributes[0], System.Globalization.NumberStyles.HexNumber) & 1<<i) > 0) {
+                result[8*0+i] = true;
+            }
+            if((int.Parse(attributes[1], System.Globalization.NumberStyles.HexNumber) & 1<<i) > 0) {
+                result[8*1+i] = true;
+            }
+            if((int.Parse(attributes[2], System.Globalization.NumberStyles.HexNumber) & 1<<i) > 0) {
+                result[8*2+i] = true;
+            }
+            if((int.Parse(attributes[3], System.Globalization.NumberStyles.HexNumber) & 1<<i) > 0) {
+                result[8*3+i] = true;
+            }
+            if((int.Parse(attributes[4], System.Globalization.NumberStyles.HexNumber) & 1<<i) > 0) {
+                result[8*4+i] = true;
+            }
+            if((int.Parse(attributes[5], System.Globalization.NumberStyles.HexNumber) & 1<<i) > 0) {
+                result[8*5+i] = true;
+            }
+            if((int.Parse(attributes[6], System.Globalization.NumberStyles.HexNumber) & 1<<i) > 0) {
+                result[8*6+i] = true;
+            }
         }
         return result;
     }

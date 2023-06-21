@@ -99,6 +99,7 @@ public class TPlayerSoundEffect
 	public PlayerAudioClip drawAttackSpecial_end;
 	public PlayerAudioClip slash_01;
 	public PlayerAudioClip slash_02;
+	public PlayerAudioClip slash_03;
 	public PlayerAudioClip dodge;
 }
 [Serializable]
@@ -106,6 +107,7 @@ public class TPlayerSoundVoice
 {
 	public PlayerAudioClip[] attack;
 	public PlayerAudioClip[] hit;
+	public PlayerAudioClip down;
 	public PlayerAudioClip attack_combo_6;
 	public PlayerAudioClip attack_combo_7;
 	public PlayerAudioClip drawAttackSpecialEnd;
@@ -143,11 +145,11 @@ public class TPlayerSoundVoice
 		{
 			if (UnityEngine.Random.Range(1f, 101f) <= probability)
 			{
-				int nextPlayAttackIdx = 0;
-				while (playedHitIdx == nextPlayAttackIdx)
-					nextPlayAttackIdx = UnityEngine.Random.Range(0, attack.Length);
-				attack[nextPlayAttackIdx].Play(audioSource, ESoundType.voice);
-				playedHitIdx = nextPlayAttackIdx;
+				int index = 0;
+				while (playedHitIdx == index)
+					index = UnityEngine.Random.Range(0, hit.Length);
+				hit[index].Play(audioSource, ESoundType.voice);
+				playedHitIdx = index;
 				isPlayHit = false;
 			}
 		}

@@ -262,11 +262,13 @@ public class TPlayer : NetworkBehaviour, IDamageable
         downState.onActive = (State prev) => {
 			ChangeAnimation("Down");
 			// isSuperArmor = true;
-			SoundManager.instance.tPlayer.voice.HitRandom(audioSourceVoice, 100f);
+			// SoundManager.instance.tPlayer.voice.HitRandom(audioSourceVoice, 100f);
+			if(!prev.Compare(downState))
+				SoundManager.instance.tPlayer.voice.down.PlayOneShot(audioSourceVoice, ESoundType.voice);
 		};
         damageState.onActive = (State prev) => {
 			ChangeAnimation("Damage");
-			SoundManager.instance.tPlayer.voice.HitRandom(audioSourceVoice, 60f);
+			SoundManager.instance.tPlayer.voice.hit[Random.Range(0, 3)].PlayOneShot(audioSourceVoice, ESoundType.voice);
 		};
 		chargingStart.onActive = (State prev) => {
 			ChangeAnimation("Charging");
@@ -922,7 +924,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		else { 
 			skill.charging_DrawSwordAttackFlyTrail.Use(damage);
 		}
-		SoundManager.instance.tPlayer.effect.slash_01.PlayOneShot(audioSourceEffect, ESoundType.effect);
+		SoundManager.instance.tPlayer.effect.slash_03.PlayOneShot(audioSourceEffect, ESoundType.effect);
 		SoundManager.instance.tPlayer.voice.AttackRandom(audioSourceVoice, 70f);
 	}
 	public void ChackDrawSwordAttackNonCharging()

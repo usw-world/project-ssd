@@ -120,7 +120,7 @@ public class QPlayer : NetworkBehaviour
         InitializeCamera();
         InitializedState();
         if(SSDNetworkManager.instance.isHost)
-            NetworkClient.RegisterHandler<C2SMessage.SynchronizeQSkillMessage>(OnSynchronizeQSkill);
+            NetworkServer.RegisterHandler<C2SMessage.SynchronizeQSkillMessage>(OnSynchronizeQSkill);
     }
 	void Update()
 	{
@@ -792,6 +792,8 @@ public class QPlayer : NetworkBehaviour
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 150f, 1<<6)) {
             movingDestination = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+            // print(transform.position + "  ::  " + movingDestination);
+            // print(hit.collider.name);
             movement.MoveToPoint(movingDestination, 5f);
             transform.LookAt(movingDestination);
             ChangeState(moveState, false);
@@ -963,15 +965,20 @@ public class QPlayer : NetworkBehaviour
         stateMachine.ChangeState(statesSkillMap[skills[skillIndex]]);
         DisableAim();
     }
-    private void OnSynchronizeQSkill(C2SMessage.SynchronizeQSkillMessage message) {
-        bool[][] attributes = message.attributeStates;
+    private void OnSynchronizeQSkill(NetworkConnectionToClient conn, C2SMessage.SynchronizeQSkillMessage message) {
+        bool[] attributes = message.attributeStates;
+        print(attributes);
 
-        for(int i=0; i<8; i++) { (skills[0] as QPlayerSkillUnityBall).options[i].active = attributes[0][i]; }
-        for(int i=0; i<8; i++) { (skills[1] as QPlayerSkillAoe).options[i].active = attributes[1][i]; }
-        for(int i=0; i<8; i++) { (skills[2] as QPlayerSkillBuffering).options[i].active = attributes[2][i]; }
-        for(int i=0; i<8; i++) { (skills[3] as QPlayerSkillShield).options[i].active = attributes[3][i]; }
-        for(int i=0; i<8; i++) { (skills[4] as QPlayerSkillFlagit).options[i].active = attributes[4][i]; }
-        for(int i=0; i<8; i++) { (skills[5] as QPlayerSkillLightning).options[i].active = attributes[5][i]; }
-        for(int i=0; i<8; i++) { (skills[6] as QPlayerSkillFightGhostFist).options[i].active = attributes[6][i]; }
+        foreach(var attribute in attributes) {
+            print(attribute);
+        }
+
+        for(int i=0; i<8; i++) { (skills[0] as QPlayerSkillUnityBall).options[i].active = attributes[8*0+i]; }
+        for(int i=0; i<8; i++) { (skills[1] as QPlayerSkillAoe).options[i].active = attributes[8*1+i]; }
+        for(int i=0; i<8; i++) { (skills[2] as QPlayerSkillBuffering).options[i].active = attributes[8*2+i]; }
+        for(int i=0; i<8; i++) { (skills[3] as QPlayerSkillShield).options[i].active = attributes[8*3+i]; }
+        for(int i=0; i<8; i++) { (skills[4] as QPlayerSkillFlagit).options[i].active = attributes[8*4+i]; }
+        for(int i=0; i<8; i++) { (skills[5] as QPlayerSkillLightning).options[i].active = attributes[8*5+i]; }
+        for(int i=0; i<8; i++) { (skills[6] as QPlayerSkillFightGhostFist).options[i].active = attributes[8*6+i]; }
     }
-}
+} 

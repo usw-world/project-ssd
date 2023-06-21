@@ -10,7 +10,6 @@ public class TPlayerSkillUi : MonoBehaviour
 	[SerializeField] private List<TPlayerSkillBtnEvent> mainBranch;
 	[SerializeField] private List<Image> optionBtnImg;
 	[SerializeField] private List<GameObject> cantClickZone;
-	[SerializeField] private TextMeshProUGUI skillPoint;
 	[SerializeField] private List<TextMeshProUGUI> optionNames;
 	[SerializeField] private List<TextMeshProUGUI> optionInfo;
 	[SerializeField] private Color offColor;
@@ -21,6 +20,10 @@ public class TPlayerSkillUi : MonoBehaviour
 	private bool isActive = false;
 	private bool isPlayingAnimation = false;
 	private int currSubBranch = -1;
+
+	public int skillPoint = 0;
+	[SerializeField] private TextMeshProUGUI skillPointText;
+
 	private void Awake()
 	{
 		animator = GetComponent<Animator>();
@@ -85,9 +88,13 @@ public class TPlayerSkillUi : MonoBehaviour
 	private void AcceptSaveData() {
 		bool[] skillData = GameManager.instance.GetTSkillData();
 		for(int i=0; i<TPlayer.instance.options.Length; i++) {
-			print(skillData[i]);
 			TPlayer.instance.options[i].active = skillData[i];
 		}
+		SetSkillPoint(GameManager.instance.GetRemainingSkillPoint());
+	}
+	private void SetSkillPoint(int point) {
+		skillPoint = point;
+		skillPointText.text = skillPoint.ToString();
 	}
 	public bool OnPressEscape() 
 	{
@@ -159,8 +166,17 @@ public class TPlayerSkillUi : MonoBehaviour
 	public void EndAnimation() { isPlayingAnimation = false; }
 	public void ActiveOption(int number)
 	{
-		if (isPlayingAnimation) return;
+		if (isPlayingAnimation)
+			return;
 		SkillOptionInformation option = TPlayer.instance.options[number];
+		if(!option.active && skillPoint <= 0)
+			return;
+			
+		if(option.active)
+			SetSkillPoint(skillPoint + 1);
+		else
+			SetSkillPoint(skillPoint - 1);
+
 		option.active = (option.active) ? false : true;
 		if (option.active)
 		{

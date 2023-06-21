@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 {
-	[SerializeField] private Damage.DamageType damageType = Damage.DamageType.Normal;
+	[SerializeField] public Damage.DamageType damageType = Damage.DamageType.Normal;
 	[SerializeField] private Mode mode;
 	[SerializeField] private ETPlayerAttackEffect attackType;
 	[SerializeField] private GameObject hitEffect;
 	[SerializeField] private Vector3 damageZoneSize;
     [SerializeField] private Vector3 localPos;
     [SerializeField] private bool previewAttackZone = false;
+
+	[SerializeField] private AudioClip[] hitClip;
+
+	private AudioSource audioSource;
 	private GameObject previewBoxPrefab;
 	private string hitEffectKey;
 
@@ -22,6 +26,8 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 			hitEffectKey = hitEffect.GetComponent<IPoolableObject>().GetKey();
 			PoolerManager.instance.InsertPooler(hitEffectKey, hitEffect, false);
 		}
+		gameObject.AddComponent<AudioSource>();
+		audioSource = GetComponent<AudioSource>();
 	}
 	public virtual void OnActive(float damageAmount)
 	{
@@ -59,19 +65,24 @@ public class TPlayerAttackEffect : MonoBehaviour, IPoolableObject
 				hit = Physics.OverlapSphere(position, damageZoneSize.x, 1 << 8);
 				break;
 		}
-		if (hit != null)
-		{
-			for (int i = 0; i < hit.Length; i++)
-			{
+		if (hit != null) {
+			bool hasPlayAudio = false;
+
+			for (int i = 0; i < hit.Length; i++) {
 				IDamageable target = hit[i].GetComponent<IDamageable>();
 
-				if (target != null)
-				{
+				if (target != null) {
+					if(!hasPlayAudio) {
+						audioSource.volume = SoundManager.instance.GetEffectVolume();
+						audioSource.PlayOneShot(hitClip[Random.Range(0, hitClip.Length)]);
+						hasPlayAudio = true;
+					}
+
 					Damage damage = new Damage(
 						damageAmount,
 						.75f,
 						(hit[i].transform.position - transform.position).normalized * 5f,
-						damageType
+						this.damageType
 					);
 					target.OnDamage(damage);
 

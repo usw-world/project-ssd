@@ -142,6 +142,7 @@ namespace uwu_webServer
                                 string sql = "";
                                 JsonDocument requestBody = await JsonDocument.ParseAsync(context.Request.Body);
                                 JsonElement json = requestBody.RootElement;
+                                Console.WriteLine(json.ToString());
 
                                 string? token = json.GetProperty("token").GetString();
                                 if(token == null)
@@ -207,6 +208,7 @@ namespace uwu_webServer
                             var token = requestBody.RootElement.GetProperty("token").GetString();
                             var userId = dbc.FindId(token);
                             (string t, string q) skillDatas = dbc.ReadSkillData(userId);
+                            answer["token"] = token;
                             answer["tSkillData"] = skillDatas.t;
                             answer["qSkillData"] = skillDatas.q;
                             var userDatas = dbc.ReadUserData(userId);

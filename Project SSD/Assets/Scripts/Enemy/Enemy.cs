@@ -57,6 +57,7 @@ public abstract class Enemy : MonoBehaviour, IDamageable {
     }
     protected virtual void OnEnable() {
         Initialize();
+        target = target ?? FindObjectOfType<TPlayer>()?.gameObject;
     }
     protected virtual void Update() {
         InterpolateTransform();

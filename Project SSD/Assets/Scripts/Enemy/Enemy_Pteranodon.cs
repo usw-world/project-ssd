@@ -30,6 +30,10 @@ class Enemy_Pteranodon : MovableEnemy {
     private Coroutine hitCoroutine;
     #endregion Hit
 
+    #region Audio
+    [SerializeField] AudioSource audioSource;
+    #endregion Audio
+
     [SerializeField] private ParticleSystem recoveryParticle;
 
     #region Unity Events
@@ -128,7 +132,6 @@ class Enemy_Pteranodon : MovableEnemy {
         enemyStatesMap.Add(dieState.stateName, dieState);
     }
     protected override void ChaseTarget(Vector3 point) {
-        print(enemyStateMachine.currentState);
         if(enemyStateMachine.Compare(hitState)
         || enemyStateMachine.Compare(dieState)
         || enemyStateMachine.Compare(attackState)
@@ -136,20 +139,16 @@ class Enemy_Pteranodon : MovableEnemy {
             return;
 
         targetPosition = point;
-
-        print(2);
+        
         if(!TryAttack()
         && !TryAssault()) {
             if((   enemyStateMachine.Compare(idleState)
                 || enemyStateMachine.Compare(chaseState))
             && !IsArrive) {
-                print(3);
                 SendChangeState(chaseState, true);
             }
         }
     }
-
-
     protected override void OnLostTarget() {
         SendChangeState(idleState);
     }
@@ -183,6 +182,10 @@ class Enemy_Pteranodon : MovableEnemy {
     }
     public void AnimationEent_OnAssaultStart() {
         assaultEffectParticle.Play();
+        
+        audioSource.volume = SoundManager.instance.GetEffectVolume();
+        audioSource.Play();
+
         assaultEffect.Active();
     }
     public void AnimationEent_OnAssaultEnd() {

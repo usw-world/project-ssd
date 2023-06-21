@@ -42,6 +42,12 @@ class Enemy_XBot : MovableEnemy {
     private Coroutine airCoroutine;
     #endregion Hit
 
+    #region Audio
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip jumpAttackStartClip;
+    [SerializeField] private AudioClip jumpAttackLandingClip;
+    #endregion Audio
+
     #region Unity Events
     protected override void Awake() {
         base.Awake();
@@ -53,6 +59,7 @@ class Enemy_XBot : MovableEnemy {
         InitializePoolers();
     }
     protected override void Update() {
+        base.Update();
         if(currentJumpAttackCooltime > 0)
             currentJumpAttackCooltime -= Time.deltaTime;
     }
@@ -190,6 +197,10 @@ class Enemy_XBot : MovableEnemy {
         Vector3 distance = point2 - point1;
         distance.y = 0;
         float offset = 0;
+        
+        audioSource.volume = SoundManager.instance.GetEffectVolume();
+        audioSource.PlayOneShot(jumpAttackStartClip);
+        
         while(offset < 1) {
             offset += Time.deltaTime;
             enemyMovement.MoveToward(distance * Time.deltaTime*.8f, Space.World, moveLayerMask);
@@ -228,6 +239,9 @@ class Enemy_XBot : MovableEnemy {
         /* temporary >> */
         GameObject effect = PoolerManager.instance.OutPool(this.jumpAttackEffect.GetKey());
         effect.GetComponent<Effect_XBotJumpAttack>()?.AttackArea(jumpAttackEffectPoint.position);
+
+        audioSource.volume = SoundManager.instance.GetEffectVolume();
+        audioSource.PlayOneShot(jumpAttackLandingClip);
         /* << temporary */
     }
     public void AnimationEvent_OnEndCrouch() {

@@ -9871,6 +9871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c205cd3b16d2b194687586fc5bfc0621, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageType: 0
   mode: 0
   attackType: 3
   hitEffect: {fileID: 1111155747428441479, guid: 0b162a747a5f9ab4993fb62eca24eb65,
@@ -9878,6 +9879,8 @@ MonoBehaviour:
   damageZoneSize: {x: 3, y: 1, z: 4}
   localPos: {x: 0, y: 1, z: 2.5}
   previewAttackZone: 0
+  hitClip:
+  - {fileID: 8300000, guid: bc43824944627a140b8ac06cfdaf313c, type: 3}
 --- !u!1 &8858624475384098362
 GameObject:
   m_ObjectHideFlags: 0

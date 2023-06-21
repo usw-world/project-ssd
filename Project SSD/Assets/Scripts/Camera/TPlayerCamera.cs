@@ -57,7 +57,6 @@ public class TPlayerCamera : PlayerCamera {
     public void SetActiveMouseMove(bool active) {
         CinemachinePOV pov = virtualCamera.GetCinemachineComponent<CinemachinePOV>();
         if(pov != null) {
-            print(pov);
             pov.m_VerticalAxis.m_MaxSpeed = active ? mouseSensitivity : 0;
             pov.m_HorizontalAxis.m_MaxSpeed = active ? mouseSensitivity : 0;
         }
