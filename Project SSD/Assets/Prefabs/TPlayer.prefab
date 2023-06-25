@@ -1,5 +1,63 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &81697965
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 81697966}
+  - component: {fileID: 81697967}
+  m_Layer: 0
+  m_Name: TS_DrawSwordAttack_Charging
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &81697966
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 81697965}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1767405251464710321}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &81697967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 81697965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57783fa8828bf14429dbbfde6cbac746, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  info:
+    effect: {fileID: 0}
+    skillImage: {fileID: 0}
+    skillText: 
+    name: 
+  areaAmout: 3
+  property:
+    coolTime: 5
+    skillAP: 0.8
+    nowCoolTime: 100
+    ready: 0
+    quickUse: 0
+  usingSP: 0
+  damageType: 0
 --- !u!1 &119072938
 GameObject:
   m_ObjectHideFlags: 0
@@ -91,6 +149,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 10
+  damageType: 0
 --- !u!1 &471938826
 GameObject:
   m_ObjectHideFlags: 0
@@ -4976,6 +5035,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &595730146
 GameObject:
   m_ObjectHideFlags: 0
@@ -19650,6 +19710,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 80
+  damageType: 0
 --- !u!1 &916169676
 GameObject:
   m_ObjectHideFlags: 0
@@ -43990,6 +44051,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 1
 --- !u!1 &1328860466
 GameObject:
   m_ObjectHideFlags: 0
@@ -49005,6 +49067,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 30
+  damageType: 0
 --- !u!1 &1821690292
 GameObject:
   m_ObjectHideFlags: 0
@@ -58761,6 +58824,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &1902763024
 GameObject:
   m_ObjectHideFlags: 0
@@ -58819,6 +58883,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &1941292915
 GameObject:
   m_ObjectHideFlags: 0
@@ -58876,6 +58941,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &1975903016
 GameObject:
   m_ObjectHideFlags: 0
@@ -59029,7 +59095,8 @@ MonoBehaviour:
     nowCoolTime: 100
     ready: 0
     quickUse: 0
-  usingSP: 50
+  usingSP: 30
+  damageType: 0
 --- !u!1 &106922774982019176
 GameObject:
   m_ObjectHideFlags: 0
@@ -60670,6 +60737,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &1818058126214277158
 GameObject:
   m_ObjectHideFlags: 0
@@ -61047,6 +61115,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &2617498036627435297
 GameObject:
   m_ObjectHideFlags: 0
@@ -66885,6 +66954,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &3098844804988122951
 GameObject:
   m_ObjectHideFlags: 0
@@ -66974,12 +67044,13 @@ MonoBehaviour:
     name: 
   areaAmout: 3
   property:
-    coolTime: 30
+    coolTime: 15
     skillAP: 0.8
     nowCoolTime: 100
     ready: 0
     quickUse: 0
-  usingSP: 50
+  usingSP: 30
+  damageType: 0
 --- !u!1 &3115816950828979281
 GameObject:
   m_ObjectHideFlags: 0
@@ -67038,6 +67109,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &3116490492908575160
 GameObject:
   m_ObjectHideFlags: 0
@@ -67688,6 +67760,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &3327967643626573486
 GameObject:
   m_ObjectHideFlags: 0
@@ -68344,6 +68417,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 10
+  damageType: 0
 --- !u!1 &3687386396720038392
 GameObject:
   m_ObjectHideFlags: 0
@@ -68402,6 +68476,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &3718127337461090363
 GameObject:
   m_ObjectHideFlags: 0
@@ -68522,6 +68597,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &3933273701738385684
 GameObject:
   m_ObjectHideFlags: 0
@@ -69129,6 +69205,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &4631806966597548536
 GameObject:
   m_ObjectHideFlags: 0
@@ -70258,6 +70335,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 1
 --- !u!1 &5057436720175463374
 GameObject:
   m_ObjectHideFlags: 0
@@ -85450,6 +85528,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &6123209108387700642
 GameObject:
   m_ObjectHideFlags: 0
@@ -90711,6 +90790,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &6410919741541939096
 GameObject:
   m_ObjectHideFlags: 0
@@ -90913,11 +90993,11 @@ MonoBehaviour:
   syncInterval: 0.1
   status:
     speed: 3
-    hp: 3000
-    sp: 100
+    hp: 500000
+    sp: 150
     ap: 10
-    maxHp: 100
-    maxSp: 100
+    maxHp: 500000
+    maxSp: 150
     speedBoost: 1
     recoveryHp: 1
     recoverySp: 1
@@ -91028,6 +91108,7 @@ MonoBehaviour:
     - {fileID: 7222296353261984109}
     counterattack: {fileID: 7863236827843360317}
     powerUp: {fileID: 1941292917}
+    charging: {fileID: 81697967}
   trackEffect:
     motionTrailEffect: {fileID: 8547884751396219203}
     dodgeMaehwa: {fileID: 471938830}
@@ -91633,6 +91714,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &6533470572637779906
 GameObject:
   m_ObjectHideFlags: 0
@@ -98372,6 +98454,7 @@ Transform:
   - {fileID: 6489930288179634999}
   - {fileID: 1993733963465828547}
   - {fileID: 438464808382390490}
+  - {fileID: 81697966}
   m_Father: {fileID: 4270244478218396843}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -100205,6 +100288,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &8875089487762569642
 GameObject:
   m_ObjectHideFlags: 0
@@ -100453,6 +100537,7 @@ MonoBehaviour:
     ready: 0
     quickUse: 0
   usingSP: 0
+  damageType: 0
 --- !u!1 &9142152650279966671
 GameObject:
   m_ObjectHideFlags: 0

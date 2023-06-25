@@ -18,8 +18,8 @@ public class ServerConnector : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
     }
 
-    private string apiUrl = "https://uwu-web.azurewebsites.net";
-    //private string apiUrl = "http://localhost:5034";
+    // private string apiUrl = "https://uwu-web.azurewebsites.net";
+    private string apiUrl = "http://localhost:5034";
 
     public void Ping(Action callback=null, Action<string> errorCallback=null) {
         StartCoroutine(PingCorourine(callback, errorCallback));
@@ -80,7 +80,7 @@ public class ServerConnector : MonoBehaviour
         byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
         UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/register", "POST");
         
-        request.uploadHandler.Dispose(); // 메모리 누수 관련 >> dispose 해줘야함
+        request.uploadHandler.Dispose();
         request.uploadHandler = (UploadHandler) new UploadHandlerRaw(postDataBytes); 
         request.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer(); 
         
@@ -107,19 +107,21 @@ public class ServerConnector : MonoBehaviour
     }
     
     public IEnumerator SendIngameDataCoroutine(string postData) {
-        Debug.Log(postData);
-        byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
-        UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/update", "POST");
-        request.uploadHandler.Dispose();
-        request.uploadHandler = (UploadHandler) new UploadHandlerRaw(postDataBytes); 
-        request.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer(); 
-        yield return request.SendWebRequest(); 
-        if (request.responseCode == 200) {
-            Debug.Log("Update Success");
-        } else {
-            Debug.LogError(request.responseCode);
+        if(!GameManager.instance.withoutSavedata) {
+            Debug.Log(postData);
+            byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(postData.ToString());
+            UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/update", "POST");
+            request.uploadHandler.Dispose();
+            request.uploadHandler = (UploadHandler) new UploadHandlerRaw(postDataBytes); 
+            request.downloadHandler = (DownloadHandler) new DownloadHandlerBuffer(); 
+            yield return request.SendWebRequest();
+            if (request.responseCode == 200) {
+                Debug.Log("Update Success");
+            } else {
+                Debug.LogError(request.responseCode);
+            }
+            request.Dispose();
         }
-        request.Dispose();
     }
     
     public void RequestIngameData(Action<string> errorCallback=null) {
@@ -133,26 +135,27 @@ public class ServerConnector : MonoBehaviour
         }
     }
     private IEnumerator RequestIngameDataCoroutiune(string json) {
-        byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(json);
-        UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/get-data", "POST");
-        request.uploadHandler.Dispose();
-        request.uploadHandler = (UploadHandler)new UploadHandlerRaw(postDataBytes); 
-        request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer(); 
-        yield return request.SendWebRequest(); 
-        if (request.responseCode == 200) {
-            string jsonResponse = request.downloadHandler.text;
-            print(jsonResponse);
-            SaveDataVO saveData = new SaveDataVO();
-            saveData.Write(jsonResponse);
-            saveData = JsonUtility.FromJson<SaveDataVO>(jsonResponse);
-            print(saveData);
-            GameManager.instance.SetSaveData(saveData);
-            Debug.Log("download Success");
-        } else {
-            Debug.LogError(request.responseCode);
-        }
+        if(!GameManager.instance.withoutSavedata) {
+            byte[] postDataBytes = System.Text.Encoding.UTF8.GetBytes(json);
+            UnityWebRequest request = UnityWebRequest.Post(apiUrl+"/get-data", "POST");
+            request.uploadHandler.Dispose();
+            request.uploadHandler = (UploadHandler)new UploadHandlerRaw(postDataBytes); 
+            request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer(); 
+            yield return request.SendWebRequest(); 
+            if (request.responseCode == 200) {
+                string jsonResponse = request.downloadHandler.text;
+                print(jsonResponse);
+                SaveDataVO saveData = new SaveDataVO();
+                saveData.Write(jsonResponse);
+                saveData = JsonUtility.FromJson<SaveDataVO>(jsonResponse);
+                print(saveData);
+                GameManager.instance.SetSaveData(saveData);
+                Debug.Log("download Success");
+            } else {
+                Debug.LogError(request.responseCode);
+            }
 
-        request.Dispose();
-        // 위와 동일
+            request.Dispose();
+        }
     }
 }

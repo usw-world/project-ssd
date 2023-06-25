@@ -70,6 +70,7 @@ public class QPlayerSkillUi : MonoBehaviour
 		}
 	}
 	public void AcceptSaveData() {
+		SetSkillPoint(GameManager.instance.GetRemainingSkillPoint());
 		bool[] skillData = GameManager.instance.GetQSkillData();
 		if (skillData == null) return;
 		for(int i=0; i<(QPlayer.instance.skills[0] as QPlayerSkillUnityBall).options.Length; i++) {
@@ -93,7 +94,6 @@ public class QPlayerSkillUi : MonoBehaviour
 		for(int i=0; i<(QPlayer.instance.skills[6] as QPlayerSkillFightGhostFist).options.Length; i++) {
 			(QPlayer.instance.skills[6] as QPlayerSkillFightGhostFist).options[i].active = skillData[8*6+i];
 		}
-		SetSkillPoint(GameManager.instance.GetRemainingSkillPoint());
 	}
 	private void SetSkillPoint(int point) {
 		skillPoint = point;

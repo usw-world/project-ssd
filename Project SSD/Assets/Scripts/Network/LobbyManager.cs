@@ -71,6 +71,8 @@ public class LobbyManager : MonoBehaviour {
         );
     }
     public void StartWithoutSaveDate() {
+        GameManager.instance.withoutSavedata = true;
+        GameManager.instance.SetSaveData(new SaveDataVO());
         onStartWithoutSaveData?.Invoke();
     }
     public void OnClickHostButton() {

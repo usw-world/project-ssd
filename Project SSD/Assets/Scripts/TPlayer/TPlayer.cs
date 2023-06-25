@@ -549,7 +549,7 @@ public class TPlayer : NetworkBehaviour, IDamageable
 		damage.amount = shieldManager.UsingShield(damage.amount); // 실드가 있으면 데미지 차감
 
 		status.hp -= damage.amount;
-		UIManager.instance.tPlayerHUD.RefreshHp(status.hp / status.maxHp);
+		UIManager.instance.tPlayerHUD.RefreshHp(status.hp);
 
 		if (damage.forceVector != Vector3.zero && damage.amount > 0) {
 			LookDirection(-damage.forceVector);

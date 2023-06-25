@@ -97,8 +97,7 @@ public class TPlayerUI : MonoBehaviour {
 	{
 		sliderCharging.value = value;
 	}
-	public void RefreshHp(float value)
-	{
+	public void RefreshHp(float value) {
 		sliderHP.value = value;
 	}
 	public void ReFreshStamina(float value)

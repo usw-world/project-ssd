@@ -83,12 +83,12 @@ public class TPlayerSkillUi : MonoBehaviour
 		}
 	}
 	public void AcceptSaveData() {
+		SetSkillPoint(GameManager.instance.GetRemainingSkillPoint());
 		bool[] skillData = GameManager.instance.GetTSkillData();
 		if (skillData == null) return;
 		for(int i=0; i<TPlayer.instance.options.Length; i++) {
 			TPlayer.instance.options[i].active = skillData[i];
 		}
-		SetSkillPoint(GameManager.instance.GetRemainingSkillPoint());
 	}
 	private void SetSkillPoint(int point) {
 		skillPoint = point;

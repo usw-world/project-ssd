@@ -1,6 +1,5 @@
 {
   "version": 2,
-<<<<<<< Updated upstream
   "dgSpecHash": "I5Row9JJkt/aiJpEga8/JNZ242C7kFvZ2Q7960OY/KEMboLY4SFtb/nLzCbSM4MhYCELhqT2biS2++l9xqZgAw==",
   "success": true,
   "projectFilePath": "C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
@@ -36,11 +35,12 @@
     "C:\\Users\\pjun2\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\pjun2\\.nuget\\packages\\system.windows.extensions\\4.7.0\\system.windows.extensions.4.7.0.nupkg.sha512"
   ],
-=======
-  "dgSpecHash": "dbwoPdEUfaHq80HVWBx4HfHcAgQapYEamHe+WGwx4n6w6ZKfSRGPMba1SjZZY9K3YQrSizRssjeBxjb06EmLUg==",
-  "success": true,
-  "projectFilePath": "E:\\GitHub\\project-ssd\\web_server\\uwu_webServer\\uwu_webServer.csproj",
-  "expectedPackageFiles": [],
->>>>>>> Stashed changes
-  "logs": []
+  "logs": [
+    {
+      "code": "Undefined",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "캐시 파일 C:\\Users\\pjun2\\Desktop\\workspace\\unity\\project-ssd\\web_server\\uwu_webServer\\obj\\project.nuget.cache을(를) 읽는 동안 문제가 발생했습니다. Invalid property identifier character: <. Path 'version', line 3, position 0."
+    }
+  ]
 }

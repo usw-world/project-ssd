@@ -3,6 +3,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
     public static GameManager instance;
 
+    public bool withoutSavedata = false;
+
     public SaveDataVO saveData { get; private set; }
 
     public GameResult result = null;
@@ -77,6 +79,9 @@ public class GameManager : MonoBehaviour {
 
     #region Skill
     public int GetRemainingSkillPoint() {
+        if(GameManager.instance.withoutSavedata)
+            return 999;
+
         bool isTPlayer = SSDNetworkManager.instance.isHost;
 
         string skillData = isTPlayer ? saveData.tSkillData : saveData.qSkillData;
